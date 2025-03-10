@@ -4,40 +4,27 @@ require_once './Databases/database.php';
 class UserModel
 {
     private $pdo;
-    function __construct()
-    {
-        $this->pdo = new Database();
+    private $db;
+
+    // Constructor accepts a PDO connection
+    public function __construct($dbConnection = null) {
+        if ($dbConnection) {
+            $this->db = $dbConnection;
+        } else {
+            $this->pdo = new Database();
+        }
     }
-    function getUsers()
-    {
-        $users = $this->pdo->query("SELECT * FROM users ORDER BY id DESC");
-        return $users->fetchAll();
+    // Function to get a user by username
+    public function getUserByUsername($username) {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE username = :username");
+        $stmt->bindParam(':username', $username);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    function createUser($data)
-    {
-        $this->pdo->query("INSERT INTO users ( image ,name) VALUES ( :image, :name)", [
-            'image' => $data['image'],
-            'name' => $data['name'],
-        ]);
-    }
-
-    function getUser($id)
-    {
-        $stmt = $this->pdo->query("SELECT * FROM users WHERE id = :id", ['id' => $id]);
-        $user = $stmt->fetch();
-        return $user;
-    }
-    function updateUser($id, $data)
-    {
-        $this->pdo->query("UPDATE users SET image = :image, name = :name WHERE id = :id", [
-            'image' => $data['image'],
-            'name' => $data['name'],
-            'id' => $id
-        ]);
-    }
-    function deleteUser($id)
-    {
-        $this->pdo->query("DELETE FROM users WHERE id = :id", ['id' => $id]);
+    // Function to validate a password
+    public function validatePassword($storedPassword, $inputPassword) {
+        return password_verify($inputPassword, $storedPassword); 
     }
 }
+?>

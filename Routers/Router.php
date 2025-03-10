@@ -51,4 +51,23 @@ class Router
         http_response_code(404);
         require_once  "Views/errors/404.php";
     }
+
+    // login routes------------------------------------------------------------
+
+    public function add($route, $action) {
+        // Store routes as a closure (function) or controller/action pair
+        $this->routes[$route] = $action;
+    }
+
+    public function match($url) {
+        // If the route matches, return the action (closure or controller)
+        foreach ($this->routes as $route => $action) {
+            if ($url == $route) {
+                return $action;
+            }
+        }
+        return null;
+    }
 }
+
+

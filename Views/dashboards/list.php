@@ -163,9 +163,7 @@
         </ul>
     </div>
     <div class="sidenav-footer position-absolute w-100 bottom-0 ">
-        <div class="mx-3">
-            <a class="btn bg-gradient-primary mt-4 w-100" href="https://www.creative-tim.com/product/material-dashboard-pro?ref=sidebarfree" type="button">Upgrade to pro</a>
-        </div>
+
     </div>
 </aside>
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
@@ -188,7 +186,7 @@
 
         <!-- Profile -->
         <div class="profile">
-            <img src="../../images/image.png" alt="User">
+            <img src="../../assets/images/image.png" alt="User">
             <div class="profile-info">
                 <span>Jimmy Sullivan</span>
                 <span class="store-name">Odama Store</span>

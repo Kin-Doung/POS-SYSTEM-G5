@@ -2,12 +2,14 @@
 require 'Router.php';
 require 'Controllers/UserController.php';
 require_once './Controllers/DashboardController.php';
+require_once './Controllers/InventoryController.php';
 
 $routes = new Router();
 
 // dashboard
 
 $routes->get('/', [DashboardController::class, 'index']);
+$routes->get('/inventory', [InventoryController::class, 'index']);
 
 // user 
 

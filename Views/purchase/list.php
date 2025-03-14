@@ -152,30 +152,30 @@
                 <option value="30">Up to $30</option>
             </select>
             <a href="/purchase/create" class="btn btn-primary">Add New</a>
+
         </form>
     </div>
     <!-- Modal structure -->
     <div class="container">
         <div class="product-grid" id="productGrid">
-
             <?php
-            // Assume $products is an array fetched from a database
-            $purchases = [
-                ['name' => 'Adapter', 'category' => 'appliances', 'price' => 12, 'image' => 'assets/images/Adapter.png'],
-                ['name' => 'Cake Mixer', 'category' => 'kitchen', 'price' => 15, 'image' => 'assets/images/Cake mixer.png'],
-                ['name' => 'Cocktail Machine', 'category' => 'appliances', 'price' => 20, 'image' => 'assets/images/download.png']
-            ];
+            foreach ($purchases as $purchase): ?>
+                <div class="card" data-name="<?= $purchase['product_name'] ?>" data-category="<?= $purchase['product_name'] ?>" data-price="<?= $purchase['price'] ?>">
+                    <a href="/purchase/edit?id=<?= $purchase['id'] ?>" class="btn btn-warning"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#purchase<?= $purchase['id'] ?>">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                    <?php require 'delete.php' ?>;
 
-            foreach ($purchases as $purchase):
-            ?>
-                <div class="card" data-name="<?= $purchase['name'] ?>" data-category="<?= $purchase['category'] ?>" data-price="<?= $purchase['price'] ?>">
-                    <img src="<?= $purchase['image'] ?>" alt="<?= $purchase['name'] ?>" />
+                    <img src="uploads/<?= $purchase['image'] ?>" alt="<?= $purchase['product_name'] ?>" />
                     <div class="product-name"><?= $purchase['product_name'] ?></div>
-                    <input type="number" class="quantity" id="quantity<?= $purchase['name'] ?>" value="0" min="0" />
+                    <input type="number" class="quantity" id="quantity<?= $purchase['product_name'] ?>" value="0" min="0" />
                     <div class="price">Price: $<?= number_format($purchase['price'], 2) ?></div>
-                    <button class="buy-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['name'] ?>', true)">Add to Cart</button>
-                    <button class="subtract-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['name'] ?>', false)">Remove</button>
+                    <button class="buy-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['product_name'] ?>', true)">Add to Cart</button>
+                    <button class="subtract-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['product_name'] ?>', false)">Remove</button>
                 </div>
+
+
             <?php endforeach; ?>
         </div>
         <div class="detail-section">

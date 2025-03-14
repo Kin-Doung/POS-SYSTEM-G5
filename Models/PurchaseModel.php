@@ -13,19 +13,34 @@ class PurchaseModel {
     }
     function createPurchase($data)
     {
-        $this->pdo->query("INSERT INTO purchases ( product_name, image, quantity, price, purchase_date) VALUES ( :product_name,:image, :quantity, :price, purchase_date)", [
-            'image' => $data['image'],
+        $this->pdo->query("INSERT INTO purchases (product_name, image, quantity, price, purchase_date) 
+            VALUES (:product_name, :image, :quantity, :price, :purchase_date)", [
             'product_name' => $data['product_name'],
+            'image' => $data['image'],
             'quantity' => $data['quantity'],
             'price' => $data['price'],
             'purchase_date' => $data['purchase_date'],
         ]);
     }
+    
     function getPurchases($id)   
     {
         $stmt = $this->pdo->query("SELECT * FROM purchases WHERE id = :id", ['id' => $id]);
         $purchase = $stmt->fetch();
         return $purchase;
+    }
+    function updatePurchase($id, $data)
+    {
+        $this->pdo->query("UPDATE purchases SET product_name = :product_name, image = :image, price = :price WHERE id = :id", [
+            'product_name' => $data['product_name'],
+            'image' => $data['image'],
+            'price' => $data['price'],
+            'id' => $id
+        ]);
+    }
+    function deletePurchase($id)
+    {
+        $this->pdo->query("DELETE FROM purchases WHERE id = :id", ['id' => $id]);
     }
 }
 

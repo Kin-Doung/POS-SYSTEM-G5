@@ -19,9 +19,9 @@ $routes->get('/products', [ProductController::class, 'index']);
 $routes->get('/purchase', [PurchaseController::class, 'index']);
 $routes->get('/purchase/create', [PurchaseController::class, 'create']);
 $routes->post('/purchase/store', [PurchaseController::class, 'store']);
-// $routes->get('/purchase/edit', [PurchaseController::class, 'edit']);
-// $routes->put('/purchase/update', [PurchaseController::class, 'update']);
-// $routes->delete('/purchase/delete', [PurchaseController::class, 'destroy']);
+$routes->get('/purchase/edit', [PurchaseController::class, 'edit']);
+$routes->put('/purchase/update', [PurchaseController::class, 'update']);
+$routes->delete('/purchase/delete', [PurchaseController::class, 'destroy']);
 
 // dispatch
 $routes->dispatch();

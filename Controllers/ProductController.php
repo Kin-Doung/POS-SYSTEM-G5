@@ -5,6 +5,6 @@ class ProductController extends BaseController
 {
     function index()
     {
-        $this->views('products/list.php');
+        $this->views('products/list');
     }
 }

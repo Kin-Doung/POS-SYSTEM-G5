@@ -151,51 +151,33 @@
                 <option value="25">Up to $25</option>
                 <option value="30">Up to $30</option>
             </select>
-            <button type="button" id="addProductBtn" data-bs-toggle="modal" data-bs-target="#productModal">Add Product</button>
+            <a href="/purchase/create" class="btn btn-primary">Add New</a>
         </form>
     </div>
-
-    <!-- Modal for adding a new product -->
-    <div class="modal" id="productModal">
-        <div class="modal-content">
-            <span class="close" id="closeModal">&times;</span>
-            <h2>Add New Product</h2>
-            <form action="/addProduct" method="POST" enctype="multipart/form-data">
-                <label for="productName">Product Name:</label>
-                <input type="text" id="productName" name="productName" required /><br />
-                <label for="productImage">Upload Image:</label>
-                <input type="file" id="productImage" name="productImage" accept="image/*" onchange="previewImage(event)" required /><br />
-                <img id="imagePreview" class="preview-image" src="" alt="Image Preview" style="display: none;" /><br />
-                <label for="productPrice">Price:</label>
-                <input type="number" id="productPrice" name="productPrice" min="0" required /><br />
-                <button type="submit">Submit</button>
-            </form>
-        </div>
-    </div>
-
+    <!-- Modal structure -->
     <div class="container">
         <div class="product-grid" id="productGrid">
+
             <?php
             // Assume $products is an array fetched from a database
-            $products = [
+            $purchases = [
                 ['name' => 'Adapter', 'category' => 'appliances', 'price' => 12, 'image' => 'assets/images/Adapter.png'],
                 ['name' => 'Cake Mixer', 'category' => 'kitchen', 'price' => 15, 'image' => 'assets/images/Cake mixer.png'],
                 ['name' => 'Cocktail Machine', 'category' => 'appliances', 'price' => 20, 'image' => 'assets/images/download.png']
             ];
 
-            foreach ($products as $product):
+            foreach ($purchases as $purchase):
             ?>
-                <div class="card" data-name="<?= $product['name'] ?>" data-category="<?= $product['category'] ?>" data-price="<?= $product['price'] ?>">
-                    <div class="product-name"><?= $product['name'] ?></div>
-                    <img src="<?= $product['image'] ?>" alt="<?= $product['name'] ?>" />
-                    <div class="price">Price: $<?= number_format($product['price'], 2) ?></div>
-                    <input type="number" class="quantity" id="quantity<?= $product['name'] ?>" value="0" min="0" />
-                    <button class="buy-button" onclick="updateCart(<?= $product['price'] ?>, 'quantity<?= $product['name'] ?>', true)">Add to Cart</button>
-                    <button class="subtract-button" onclick="updateCart(<?= $product['price'] ?>, 'quantity<?= $product['name'] ?>', false)">Remove</button>
+                <div class="card" data-name="<?= $purchase['name'] ?>" data-category="<?= $purchase['category'] ?>" data-price="<?= $purchase['price'] ?>">
+                    <img src="<?= $purchase['image'] ?>" alt="<?= $purchase['name'] ?>" />
+                    <div class="product-name"><?= $purchase['product_name'] ?></div>
+                    <input type="number" class="quantity" id="quantity<?= $purchase['name'] ?>" value="0" min="0" />
+                    <div class="price">Price: $<?= number_format($purchase['price'], 2) ?></div>
+                    <button class="buy-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['name'] ?>', true)">Add to Cart</button>
+                    <button class="subtract-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['name'] ?>', false)">Remove</button>
                 </div>
             <?php endforeach; ?>
         </div>
-
         <div class="detail-section">
             <div class="detail-title">Order Summary</div>
             <table class="order-table">
@@ -216,5 +198,6 @@
             <button class="buy-button" style="margin-top: 15px; width: 100%; background-color: #27ae60;" onclick="processPurchase()">Place Order</button>
         </div>
     </div>
+
     <?php require_once 'Views/layouts/footer.php'; ?>
 </main>

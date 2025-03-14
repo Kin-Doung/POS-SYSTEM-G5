@@ -5,7 +5,7 @@ class BaseController{
         ob_start();
         $content = ob_get_clean();
         require_once 'Views/layout.php';
-        require_once 'Views/'. $view;
+        require_once 'Views/'. $view . '.php';
     }
     public function redirect($uri){
         header('Location:'.$uri);

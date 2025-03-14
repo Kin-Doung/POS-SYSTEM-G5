@@ -70,6 +70,7 @@
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
 }
+
 .card:hover {
     transform: translateY(-8px);
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
@@ -78,6 +79,7 @@
     transform: scale(1.05);
 }
 .product-name {
+ 
     font-size: 22px;
     font-weight: 600;
     color: #2c3e50;
@@ -224,44 +226,188 @@
 }
 
 
+/* Modal background */
 .modal {
     display: none;
     position: fixed;
-    z-index: 1;
-    left: 0;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
-    padding-top: 60px;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 9999;
 }
 
-.modal-content {
-    background-color: #fefefe;
-    margin: 5% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
+/* Modal background - Hidden by default */
+.modal {
+    display: none; /* Hidden until activated */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(6px);
+    transition: opacity 0.2s ease-in-out;
 }
 
+/* Show modal when active class is added */
+.modal.active {
+    display: flex; /* Visible only when .active is applied */
+}
+
+/* Modal content */
+/* .modal-content {
+    position: relative;
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    padding: 35px;
+    border-radius: 16px;
+    width: 10%;
+    max-width: 550px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    animation: slideIn 0.4s ease-out;
+    z-index: 10000;
+} */
+
+/* Slide-in animation */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Close button */
 .close {
-    color: #aaa;
-    float: right;
+    position: absolute;
+    top: 15px;
+    right: 20px;
     font-size: 28px;
-    font-weight: bold;
+    font-weight: 700;
+    color: #555;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.2s ease;
 }
 
 .close:hover,
 .close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+    color: #e63946;
+    transform: scale(1.1);
 }
 
-.preview-image {
-    max-width: 100%;
-    max-height: 200px;
-    margin-top: 10px;
+/* Form elements */
+form label {
+    font-size: 15px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 10px;
+    display: block;
+    letter-spacing: 0.2px;
 }
+
+form input[type="text"],
+form input[type="number"],
+form input[type="file"] {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 20px;
+    border: 1px solid #dfe1e5;
+    border-radius: 10px;
+    font-size: 16px;
+    color: #2d3748;
+    background-color: #fafafa;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.2s ease;
+}
+
+form input[type="text"]:focus,
+form input[type="number"]:focus,
+form input[type="file"]:focus {
+    border-color: #1e90ff;
+    box-shadow: 0 0 10px rgba(30, 144, 255, 0.25);
+    background-color: #ffffff;
+    outline: none;
+}
+
+/* Submit button */
+button[type="submit"] {
+    background-color: #1e90ff;
+    color: #ffffff;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
+    letter-spacing: 0.5px;
+}
+
+button[type="submit"]:hover {
+    background-color: #1873cc;
+    transform: translateY(-2px);
+}
+
+button[type="submit"]:active {
+    transform: translateY(0);
+}
+
+/* Add Product button styling (optional) */
+#addProductBtn {
+    background-color: #1e90ff;
+    color: #ffffff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#addProductBtn:hover {
+    background-color: #1873cc;
+}
+
+.modal-content {
+    width: 20%;
+    margin-left: 100px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        padding: 25px;
+        border-radius: 12px;
+    }
+
+    form label {
+        font-size: 14px;
+    }
+
+    form input[type="text"],
+    form input[type="number"],
+    form input[type="file"],
+    button[type="submit"] {
+        font-size: 15px;
+        padding: 12px;
+    }
+
+    .close {
+        font-size: 24px;
+        top: 12px;
+        right: 15px;
+    }
+}
+
+
+

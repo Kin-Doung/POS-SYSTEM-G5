@@ -22,3 +22,4 @@ class database
         return $stmt;
     }
 }
+

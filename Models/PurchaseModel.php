@@ -29,7 +29,7 @@ class PurchaseModel {
         $purchase = $stmt->fetch();
         return $purchase;
     }
-    function updatePurchase($id, $data)
+    public function updatePurchase($id, $data)
     {
         $this->pdo->query("UPDATE purchases SET product_name = :product_name, image = :image, price = :price WHERE id = :id", [
             'product_name' => $data['product_name'],
@@ -38,9 +38,19 @@ class PurchaseModel {
             'id' => $id
         ]);
     }
-    function deletePurchase($id)
+    
+    public function deletePurchase($id)
     {
         $this->pdo->query("DELETE FROM purchases WHERE id = :id", ['id' => $id]);
     }
+    public function updateQuantity($id, $newQuantity)
+{
+    $this->pdo->query("UPDATE purchases SET quantity = :quantity WHERE id = :id", [
+        'quantity' => $newQuantity,
+        'id' => $id
+    ]);
+}
+
+    
 }
 

@@ -192,6 +192,8 @@ function addProduct() {
     }
 
 }
+
+
 window.onload = function() {
     updateDetails();
 };

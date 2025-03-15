@@ -90,10 +90,8 @@
 
     </aside>
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-
         <?php require_once './Views/layouts/header.php'; ?>
         <div class="modal-content">
-            <span class="close" id="closeModal">&times;</span>
             <h2>Add New Product</h2>
             <form action="/purchase/store" method="POST" enctype="multipart/form-data">
                 <label for="productName">Product Name:</label>
@@ -110,5 +108,4 @@
             </form>
         </div>
         <?php require_once './Views/layouts/footer.php'; ?>
-
     </main>

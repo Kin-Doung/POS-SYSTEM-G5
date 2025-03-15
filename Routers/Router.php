@@ -1,54 +1,31 @@
 <?php
-class Router
-{
+class Router {
     private $routes = [];
 
-    function get($uri, $action)
-    {
-        $this->routes[$uri] = [
-            'method' => 'GET',
-            'action' => $action
-        ];
-    }
-    function post($uri, $action)
-    {
-        $this->routes[$uri] = [
-            'method' => 'POST',
-            'action' => $action
-        ];
-    }
-    function put($uri, $action)
-    {
-        $this->routes[$uri] = [
-            'method' => 'POST',
-            'action' => $action
-        ];
-    }
-    function delete($uri, $action)
-    {
-        $this->routes[$uri] = [
-            'method' => 'POST',
-            'action' => $action
-        ];
+    public function get($uri, $action) {
+        $this->routes['GET'][$uri] = $action;
     }
 
-    public function dispatch()
-    {
-        $request_method = $_SERVER['REQUEST_METHOD'];
-        $uri = parse_url($_SERVER['REQUEST_URI'])["path"];
-        $id = isset($_GET['id']) ? $_GET['id'] : null;
-        foreach ($this->routes as $routesLink => $routes) {
-            if ($uri == $routesLink && $request_method == $routes['method']) {
-                $action = $routes['action'];
-                $controler = $action[0];
-                $method =  $action[1];
+    public function post($uri, $action) {
+        $this->routes['POST'][$uri] = $action;
+    }
 
-                $objectController = new $controler;
-                $objectController->$method($id);
-                exit();
-            }
+    public function dispatch() {
+        $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $requestMethod = $_SERVER['REQUEST_METHOD'];
+
+        if (isset($this->routes[$requestMethod][$requestUri])) {
+            $action = $this->routes[$requestMethod][$requestUri];
+            $controller = new $action[0]();
+            call_user_func([$controller, $action[1]]);
+        }else {
+            echo "<div style='text-align: center;'>";
+            // echo "<h3 style='color:red;'>404 HZ PU " . htmlspecialchars($requestUri) . "</h3>";
+            echo "<img src='../assets/images/404.avif' alt='Error Image' style='max-width: 100%; height: auto; margin-top: 20px;'>";
+            echo "</div>";
         }
-        http_response_code(404);
-        require_once  "Views/errors/404.php";
+        
+        
     }
 }
+?>

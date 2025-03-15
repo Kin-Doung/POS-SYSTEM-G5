@@ -3,12 +3,12 @@
     <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
     <a class="navbar-brand m-0" href="/" target="_blank">
       <img src="../assets/img/logos/logo.png" class="navbar-brand-img h-100" alt="main_logo">
-
     </a>
   </div>
   <hr class="horizontal light mt-0 mb-2">
   <div>
     <ul class="navbar-nav">
+      <!-- nav dashboard -->
       <li class="nav-item">
         <a class="nav-link text-white active bg-gradient-primary" href="/">
           <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -17,14 +17,16 @@
           <span class="nav-link-text ms-1">Dashboard</span>
         </a>
       </li>
+      <!-- nav inventory -->
       <li class="nav-item">
-        <a class="nav-link text-white " href="../pages/tables.html">
+        <a class="nav-link text-white " href="/inventory">
           <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
             <i class="material-icons opacity-10">table_view</i>
           </div>
-          <span class="nav-link-text ms-1">Tables</span>
+          <span class="nav-link-text ms-1">Inventory</span>
         </a>
       </li>
+      <!-- nav product -->
       <li class="nav-item">
         <a class="nav-link text-white " href="/products">
           <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -33,6 +35,7 @@
           <span class="nav-link-text ms-1">Products</span>
         </a>
       </li>
+      <!-- nav purchase order -->
       <li class="nav-item">
         <a class="nav-link text-white " href="/purchase">
           <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -46,7 +49,7 @@
           <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
             <i class="material-icons opacity-10">format_textdirection_r_to_l</i>
           </div>
-          <span class="nav-link-text ms-1">RTL</span>
+          <span class="nav-link-text ms-1">Invoice</span>
         </a>
       </li>
       <li class="nav-item">
@@ -58,8 +61,11 @@
         </a>
       </li>
       <li class="nav-item mt-3">
-        <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Account pages</h6>
+        <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">
+          <i class="fas fa-cog"></i> Setting
+        </h6>
       </li>
+
       <li class="nav-item">
         <a class="nav-link text-white " href="../pages/profile.html">
           <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -69,28 +75,21 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link text-white " href="../pages/sign-in.html">
+        <a class="nav-link text-white" href="../pages/sign-in.html">
           <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">login</i>
+            <i class="material-icons opacity-10">logout</i>
           </div>
-          <span class="nav-link-text ms-1">Sign In</span>
+          <span class="nav-link-text ms-1">Log Out</span>
         </a>
+
       </li>
-      <li class="nav-item">
-        <a class="nav-link text-white " href="../pages/sign-up.html">
-          <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">assignment</i>
-          </div>
-          <span class="nav-link-text ms-1">Sign Up</span>
-        </a>
-      </li>
+
     </ul>
   </div>
   <div class="sidenav-footer position-absolute w-100 bottom-0 ">
 
   </div>
 </aside>
-
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
   <!-- Navbar -->
   <nav class="navbar">
@@ -99,7 +98,6 @@
       <i class="fas fa-search"></i>
       <input type="text" placeholder="Search...">
     </div>
-
     <!-- Icons -->
     <div class="icons">
       <i class="fas fa-globe icon-btn"></i>
@@ -108,13 +106,12 @@
         <span class="notification-badge" id="notification-count">8</span>
       </div>
     </div>
-
     <!-- Profile -->
     <div class="profile">
       <img src="../../assets/images/image.png" alt="User">
       <div class="profile-info">
-        <span>Jimmy Sullivan</span>
-        <span class="store-name">Odama Store</span>
+        <span>Eng Ly</span>
+        <span class="store-name">Owner Store</span>
       </div>
     </div>
     <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -205,7 +202,7 @@
       </div>
     </div>
     <div class="row mb-4">
-    <h1>🛒 Recent Sales</h1>
+      <h1>🛒 Recent Sales</h1>
       <div class="table-container">
         <table>
           <thead>

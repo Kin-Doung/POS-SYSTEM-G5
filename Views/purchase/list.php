@@ -151,7 +151,7 @@
                 <option value="25">Up to $25</option>
                 <option value="30">Up to $30</option>
             </select>
-            <a href="/purchase/create" class="btn btn-primary">Add New</a>
+            <a href="/purchase/create" class="btn bg-info text-light ">Add New</a>
 
         </form>
     </div>
@@ -161,11 +161,19 @@
             <?php
             foreach ($purchases as $purchase): ?>
                 <div class="card" data-name="<?= $purchase['product_name'] ?>" data-category="<?= $purchase['product_name'] ?>" data-price="<?= $purchase['price'] ?>">
-                    <a href="/purchase/edit?id=<?= $purchase['id'] ?>" class="btn btn-warning"><i class="fa-solid fa-pen-to-square"></i></a>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#purchase<?= $purchase['id'] ?>">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                    <?php require 'delete.php' ?>;
+                    <div class="delete_edit">
+                        <a href="/purchase/edit?id=<?= $purchase['id'] ?>" class="btn btn-warning">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
+                        <!-- Direct delete link with confirmation -->
+                        <form action="/purchase/destroy" method="POST" style="display:inline;">
+                            <input type="hidden" name="id" value="<?= $purchase['id'] ?>">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this product?');">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+
 
                     <img src="uploads/<?= $purchase['image'] ?>" alt="<?= $purchase['product_name'] ?>" />
                     <div class="product-name"><?= $purchase['product_name'] ?></div>
@@ -174,8 +182,6 @@
                     <button class="buy-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['product_name'] ?>', true)">Add to Cart</button>
                     <button class="subtract-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['product_name'] ?>', false)">Remove</button>
                 </div>
-
-
             <?php endforeach; ?>
         </div>
         <div class="detail-section">
@@ -191,13 +197,14 @@
                 </thead>
                 <tbody id="details"></tbody>
             </table>
-
             <div class="total" id="totalPrice">Cart Total: $0.00</div>
             <canvas id="qrCode" style="margin-top: 20px;"></canvas>
             <button class="buy-button" style="margin-top: 20px; width: 100%;" onclick="saveToPDF()">Save as PDF</button>
             <button class="buy-button" style="margin-top: 15px; width: 100%; background-color: #27ae60;" onclick="processPurchase()">Place Order</button>
         </div>
     </div>
+
+
 
     <?php require_once 'Views/layouts/footer.php'; ?>
 </main>

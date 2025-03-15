@@ -16,7 +16,6 @@ $routes->get('/inventory', [InventoryController::class, 'index']);
 $routes->get('/products', [ProductController::class, 'index']);
 
 
-
 // purchase order
 $routes->get('/purchase', [PurchaseController::class, 'index']);
 $routes->get('/purchase/create', [PurchaseController::class, 'create']);

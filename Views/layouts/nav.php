@@ -92,6 +92,7 @@
                 </a>
             </li>
         </ul>
+       
     </div>
     <div class="sidenav-footer position-absolute w-100 bottom-0 ">
         <div class="mx-3">

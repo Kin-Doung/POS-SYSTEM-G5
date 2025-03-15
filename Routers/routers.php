@@ -9,7 +9,7 @@ $router = new Router();
 $router->get('/login', [new LoginController(), 'showLogin']);
 $router->post('/login', [new LoginController(), 'processLogin']);
 $router->get('/logout', [new LoginController(), 'logout']);
-$router->get('/dashboard/list', [new DashboardController(), 'showDashboardList']); // ✅ Route to `/dashboard/list`
+$router->get('/dashboard/list', [new DashboardController(), 'showDashboardList']);
 
 $router->dispatch();
 ?>

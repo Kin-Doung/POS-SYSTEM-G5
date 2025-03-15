@@ -1,23 +1,26 @@
 <?php
 class Database {
-    private $host = 'localhost';
-    private $dbName = 'usershop';
-    private $username = 'root';
-    private $password = '';
-    private $charset = 'utf8';
-    private $connection;
+    private $host = "localhost";
+    private $dbname = "usershop";
+    private $username = "root";
+    private $password = "";
+    private $charset = "utf8mb4";
+    public $conn;
+
+    public function __construct() {
+        try {
+            $dsn = "mysql:host={$this->host};dbname={$this->dbname};charset={$this->charset}";
+            $this->conn = new PDO($dsn, $this->username, $this->password, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+            ]);
+        } catch (PDOException $e) {
+            die("Database connection failed: " . $e->getMessage());
+        }
+    }
 
     public function getConnection() {
-        if ($this->connection == null) {
-            try {
-                $dsn = "mysql:host={$this->host};dbname={$this->dbName};charset={$this->charset}";
-                $this->connection = new PDO($dsn, $this->username, $this->password);
-                $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            } catch (PDOException $e) {
-                echo "Connection failed: " . $e->getMessage();
-            }
-        }
-        return $this->connection;
+        return $this->conn;
     }
 }
 ?>

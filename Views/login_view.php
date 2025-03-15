@@ -1,17 +1,27 @@
-<!DOCTYPE html>
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+};
+$error = isset($_SESSION['error']) ? $_SESSION['error'] : '';
+unset($_SESSION['error']); // Remove error after showing
+?>
+
+
+        <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login account</title>
+    <title>Login & Registration Form</title>
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/assets/css/style/from.css">
+    <link rel="stylesheet" href="../assets/css/style/from.css">
 </head>
 <body>
 
 <div class="container">
     <input type="checkbox" id="flip">
+
     <!-- Cover Image -->
     <div class="cover">
         <div class="front">
@@ -28,10 +38,8 @@
         <div class="form-content">
             <div class="login-form">
                 <div class="title">Login</div>
-                
-                <!-- Error message div will be injected here -->
-                <div id="error-message"></div>  
-                <form method="POST" action="/login">
+
+                <form action="/login" method="POST">
                     <div class="input-boxes">
                         <div class="input-box">
                             <i class="fas fa-envelope"></i>
@@ -41,7 +49,9 @@
                             <i class="fas fa-lock"></i>
                             <input type="password" name="password" placeholder="Password" required>
                         </div>
-                        
+                        <?php if ($error): ?>
+            <p class="error" style="color: red; text-align: center"><?= $error; ?></p>
+        <?php endif; ?> <br>
                         <div class="text"><a href="#">Forgot password?</a></div>
                         <div class="button input-box">
                             <input type="submit" value="Login">
@@ -82,15 +92,7 @@
 </body>
 </html>
 
-<script>
-// This script is necessary to display the error message dynamically
-document.addEventListener("DOMContentLoaded", function() {
-    // If there's an error message set from the backend, display it
-    <?php if (isset($_SESSION['error_message'])): ?>
-        document.getElementById('error-message').innerHTML = 
-            '<div class="error-message"><?php echo $_SESSION['error_message']; ?></div>';
-        <?php unset($_SESSION['error_message']); ?>
-    <?php endif; ?>
-});
-</script>
+
+
+
 

@@ -11,6 +11,7 @@ class PurchaseModel {
         $users = $this->pdo->query("SELECT * FROM purchases ORDER BY id DESC");
         return $users->fetchAll();
     }
+
     function createPurchase($data)
     {
         $this->pdo->query("INSERT INTO purchases (product_name, image, quantity, price, purchase_date) 

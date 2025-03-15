@@ -190,8 +190,11 @@ function addProduct() {
     } else {
         alert("Please fill in all fields correctly.");
     }
+
 }
+
 
 window.onload = function() {
     updateDetails();
 };
+

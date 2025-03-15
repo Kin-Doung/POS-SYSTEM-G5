@@ -7,14 +7,13 @@ class database
         $servername = "localhost";
         $username = "root";
         $password = "";
-        $dbname = "con_db";
+        $dbname = "vc1_pos_system";
         try {
             $this->pdo  = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         } catch (PDOException $e) {
             echo "Connection failed: " . $e->getMessage();
         }
     }
-
     public function query($sql, $params = [])
     {
         $stmt = $this->pdo->prepare($sql);
@@ -22,3 +21,4 @@ class database
         return $stmt;
     }
 }
+

@@ -10,6 +10,7 @@
     <hr class="horizontal light mt-0 mb-2">
     <div class="collapse navbar-collapse  w-auto  max-height-vh-100" id="sidenav-collapse-main">
         <ul class="navbar-nav">
+            <!-- //Nav Dashboard page// -->
             <li class="nav-item">
                 <a class="nav-link text-white active bg-gradient-primary" href="/">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -18,12 +19,9 @@
                     <span class="nav-link-text ms-1">Dashboard</span>
                 </a>
             </li>
+            <!-- //Nav inventory page// -->
             <li class="nav-item">
-
-                <!-- //inventory page// -->
                 <a class="nav-link text-white" href="/inventory">
-
-
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">table_view</i>
                     </div>
@@ -53,7 +51,7 @@
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">format_textdirection_r_to_l</i>
                     </div>
-                    <span class="nav-link-text ms-1">RTL</span>
+                    <span class="nav-link-text ms-1">Setting</span>
                 </a>
             </li>
             <li class="nav-item">

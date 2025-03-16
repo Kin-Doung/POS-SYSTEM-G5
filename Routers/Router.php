@@ -1,4 +1,20 @@
 <?php
+require_once __DIR__ . '/../Controllers/InventoryController.php';
+require_once __DIR__ . '/../Controllers/NotificationController.php';
+require_once __DIR__ . '/../Controllers/SettingController.php';
+
+
+// if ($_GET['page'] == "settings") {
+//     $settingsController = new SettingsController();
+//     if ($_GET['action'] == "updateProfile") {
+//         $settingsController->updateProfile();
+//     } else {
+//         $settingsController->index();
+//     }
+// }
+
+
+
 class Router
 {
     private $routes = [];
@@ -40,10 +56,11 @@ class Router
         foreach ($this->routes as $routesLink => $routes) {
             if ($uri == $routesLink && $request_method == $routes['method']) {
                 $action = $routes['action'];
-                $controler = $action[0];
+                $controller = $action[0];
                 $method =  $action[1];
 
-                $objectController = new $controler;
+                $objectController = new $controller;
+
                 $objectController->$method($id);
                 exit();
             }

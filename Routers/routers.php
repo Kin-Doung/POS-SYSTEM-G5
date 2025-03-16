@@ -4,16 +4,24 @@ require_once './Controllers/DashboardController.php';
 require_once './Controllers/ProductController.php';
 require_once './Controllers/PurchaseController.php';
 
-
 $routes = new Router();
 
-// dashboard
+// setting
+$routes->get('/settings', [SettingController::class, 'index']);
 
 $routes->get('/', [DashboardController::class, 'index']);
+
+//inventory
 $routes->get('/inventory', [InventoryController::class, 'index']);
+
+//Notifications
+$routes->get('/notifications', [NotificationController::class, 'index']);
 
 // products
 $routes->get('/products', [ProductController::class, 'index']);
+$routes->post('/products/store', [ProductController::class, 'store']);
+$routes->get('/products/edit/(:num)', [ProductController::class, 'edit']);  // Edit product with ID
+$routes->post('/products/updatePrice/(:num)', [ProductController::class, 'updatePrice']); // Update price for a specific product
 
 
 
@@ -24,19 +32,3 @@ $routes->get('/purchase/create', [PurchaseController::class, 'create']);
 
 // dispatch
 $routes->dispatch();
-
-
-require_once __DIR__ . '/../Controllers/LoginController.php';
-require_once __DIR__ . '/../Controllers/DashboardController.php';
-require_once __DIR__ . '/Router.php';
-
-$router = new Router();
-
-// Define the routes
-$router->get('/login', [new LoginController(), 'showLogin']);
-$router->post('/login', [new LoginController(), 'processLogin']);
-$router->get('/logout', [new LoginController(), 'logout']);
-$router->get('/dashboard/list', [new DashboardController(), 'showDashboardList']);
-
-$router->dispatch();
-?>

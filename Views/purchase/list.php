@@ -158,8 +158,8 @@
     <!-- Modal structure -->
     <div class="container">
         <div class="product-grid" id="productGrid">
-            <?php
-            foreach ($purchases as $purchase): ?>
+            <?php foreach ($purchases as $purchase): ?>
+
                 <div class="card" data-name="<?= $purchase['product_name'] ?>" data-category="<?= $purchase['product_name'] ?>" data-price="<?= $purchase['price'] ?>">
                     <div class="delete_edit">
                         <a href="/purchase/edit?id=<?= $purchase['id'] ?>" class="btn btn-warning">
@@ -173,17 +173,19 @@
                             </button>
                         </form>
                     </div>
-
-
                     <img src="uploads/<?= $purchase['image'] ?>" alt="<?= $purchase['product_name'] ?>" />
                     <div class="product-name"><?= $purchase['product_name'] ?></div>
                     <input type="number" class="quantity" id="quantity<?= $purchase['product_name'] ?>" value="0" min="0" />
                     <div class="price">Price: $<?= number_format($purchase['price'], 2) ?></div>
-                    <button class="buy-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['product_name'] ?>', true)">Add to Cart</button>
-                    <button class="subtract-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['product_name'] ?>', false)">Remove</button>
+                    <div class="sum">
+
+                        <button class="buy-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['product_name'] ?>', true)">+</button>
+                        <button class="subtract-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['product_name'] ?>', false)">-</button>
+                    </div>
                 </div>
             <?php endforeach; ?>
         </div>
+
         <div class="detail-section">
             <div class="detail-title">Order Summary</div>
             <table class="order-table">
@@ -199,12 +201,12 @@
             </table>
             <div class="total" id="totalPrice">Cart Total: $0.00</div>
             <canvas id="qrCode" style="margin-top: 20px;"></canvas>
-            <button class="buy-button" style="margin-top: 20px; width: 100%;" onclick="saveToPDF()">Save as PDF</button>
-            <button class="buy-button" style="margin-top: 15px; width: 100%; background-color: #27ae60;" onclick="processPurchase()">Place Order</button>
+            <div class="buys">
+                <button class="buy-button" style="margin-top: 20px; width: 50%;" onclick="saveToPDF()">Save as PDF</button>
+                <button class="buy-button" style="margin-top: 15px; width: 50%; background-color: #27ae60;" onclick="processPurchase()">Place Order</button>
+            </div>
         </div>
     </div>
-
-
 
     <?php require_once 'Views/layouts/footer.php'; ?>
 </main>

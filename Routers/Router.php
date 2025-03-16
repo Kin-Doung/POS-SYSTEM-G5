@@ -18,14 +18,6 @@ class Router {
             $action = $this->routes[$requestMethod][$requestUri];
             $controller = new $action[0]();
             call_user_func([$controller, $action[1]]);
-        }else {
-            echo "<div style='text-align: center;'>";
-            // echo "<h3 style='color:red;'>404 HZ PU " . htmlspecialchars($requestUri) . "</h3>";
-            echo "<img src='../assets/images/404.avif' alt='Error Image' style='max-width: 100%; height: auto; margin-top: 20px;'>";
-            echo "</div>";
-        }
-        
-        
+        }     
     }
 }
-?>

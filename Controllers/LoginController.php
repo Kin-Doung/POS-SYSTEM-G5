@@ -1,12 +1,12 @@
 <?php
 session_start();
-require_once __DIR__ . '/../Models/UserModel.php';
+require_once './Models/UserModel.php';
 
 class LoginController {
 
     // Show the login form
     public function showLogin() {
-        include __DIR__ . '/../Views/login_view.php';
+        include __DIR__ . '/../Views/login_view.php'; // Display login form
     }
 
     // Process the login request
@@ -20,15 +20,15 @@ class LoginController {
 
             if (!$user) {
                 $_SESSION['error'] = "Username not found!";
-                header('Location: /login');
+                header('Location: /'); // Redirect back to login form if username not found
                 exit();
             } elseif ($password === $user['password']) { // Plain text password check
                 $_SESSION['username'] = $username;
-                header('Location: /dashboard/list'); // ✅ Redirect to `/dashboard/list`
+                header('Location: /dashboard/list'); // ✅ Redirect to `/dashboard/list` after successful login
                 exit();
             } else {
                 $_SESSION['error'] = "Incorrect password!";
-                header('Location: /login');
+                header('Location: /'); // Redirect back to login form if password is incorrect
                 exit();
             }
         }
@@ -37,7 +37,7 @@ class LoginController {
     // Handle logout
     public function logout() {
         session_destroy();
-        header('Location: /login');
+        header('Location: /'); // Redirect to login page after logout
         exit();
     }
 }

@@ -1,15 +1,15 @@
 <?php
-require_once __DIR__ . '/../Databases/database.php';
+require_once './Databases/database.php';
 
 class UserModel {
-    private $db;
+    private $pdo;
 
     public function __construct() {
-        $this->db = (new Database())->getConnection();
+        $this->pdo = (new Database())->getConnection();
     }
 
     public function getUserByUsername($username) {
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE username = :username");
+        $stmt = $this->pdo->prepare("SELECT * FROM admin WHERE username = :username");
         $stmt->execute(['username' => $username]);
         return $stmt->fetch();
     }

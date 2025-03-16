@@ -1,7 +1,12 @@
 <?php
-session_start();
+// At the top of your list.php file
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Your access control check
 if (!isset($_SESSION['username'])) {
-    header('Location: /login');
+    header('Location: /');
     exit();
 }
 
@@ -20,7 +25,7 @@ include __DIR__ . '/../layouts/header.php';
   <div>
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link text-white active bg-gradient-primary" href="/">
+        <a class="nav-link text-white active bg-gradient-primary" href="#">
           <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
             <i class="material-icons opacity-10">dashboard</i>
           </div>

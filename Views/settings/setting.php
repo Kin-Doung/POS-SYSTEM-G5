@@ -1,46 +1,4 @@
-<?php
-session_start();
-require_once './Databases/database.php'; // Database connection
 
-
-// Ensure user is logged in
-$user_id = $_SESSION['user_id'];
-
-// Fetch user details
-$query = $conn->prepare("SELECT name, email, profile_pic FROM users WHERE id = ?");
-$query->execute([$user_id]);
-$user = $query->fetch(PDO::FETCH_ASSOC);
-
-// Handle form submission
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $profile_pic = $_POST['existingPic'];
-
-    // Handle profile picture upload
-    if (!empty($_FILES['profilePic']['name'])) {
-        $target_dir = "../../uploads/";
-        $file_name = time() . "_" . basename($_FILES["profilePic"]["name"]);
-        $target_file = $target_dir . $file_name;
-
-        if (move_uploaded_file($_FILES["profilePic"]["tmp_name"], $target_file)) {
-            $profile_pic = "uploads/" . $file_name;
-        }
-    }
-
-    // Update user data
-    $update = $conn->prepare("UPDATE users SET name = ?, email = ?, profile_pic = ? WHERE id = ?");
-    $update->execute([$name, $email, $profile_pic, $user_id]);
-
-    $_SESSION['user_name'] = $name;
-    $_SESSION['user_email'] = $email;
-    $_SESSION['profile_pic'] = $profile_pic;
-    $_SESSION['success'] = "Profile updated successfully!";
-
-    header("Location: setting.php");
-    exit();
-}
-?>
 
 <!DOCTYPE html>
 <html lang="en">

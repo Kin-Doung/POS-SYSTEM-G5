@@ -33,6 +33,9 @@
   <!-- edit -->
   <link rel="stylesheet" href="../../assets//css/style/purchase.css">
   <link rel="icon" type="image/png" href="../assets/images/Logoapp.png">
+  <!-- css product -->
+   <link rel="stylesheet" href="../../assets/css/style/product.css">
+
 
 
 </head>

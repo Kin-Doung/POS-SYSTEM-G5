@@ -1,6 +1,6 @@
 <?php
 require_once 'Models/ProductModel.php';
-require_once 'BaseController.php';
+require_once './Models/ProductModel.php';
 
 class ProductController extends BaseController
 {
@@ -39,5 +39,6 @@ class ProductController extends BaseController
             echo "Invalid request method.";
         }
     }  
+
 }
 

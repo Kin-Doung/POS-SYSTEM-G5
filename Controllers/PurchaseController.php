@@ -1,7 +1,6 @@
-    <?php
+<?php
     require_once './Models/PurchaseModel.php';
-    require_once './Models/ProductModel.php';
-    require_once 'BaseController.php';
+
 
     class PurchaseController extends BaseController
     {
@@ -85,7 +84,7 @@
                 if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
                     // Handle Image Upload
                     $imagePath = time() . "_" . $_FILES['image']['name']; // Unique file name
-                    $targetDir = "./uploads/";
+                    $targetDir = "uploads";
 
                     if (!is_dir($targetDir)) {
                         mkdir($targetDir, 0777, true);

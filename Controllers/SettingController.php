@@ -1,11 +1,11 @@
 <?php
 require_once 'Models/SettingModel.php';
-require_once 'BaseController.php';
+
 class SettingController extends BaseController{
  
     function index()
     {
-        $this->views('settings/setting');
+        $this->views('settings/list');
     }
 }
 // class SettingsController {

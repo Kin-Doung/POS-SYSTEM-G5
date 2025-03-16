@@ -1,20 +1,4 @@
 <?php
-require_once __DIR__ . '/../Controllers/InventoryController.php';
-require_once __DIR__ . '/../Controllers/NotificationController.php';
-require_once __DIR__ . '/../Controllers/SettingController.php';
-
-
-// if ($_GET['page'] == "settings") {
-//     $settingsController = new SettingsController();
-//     if ($_GET['action'] == "updateProfile") {
-//         $settingsController->updateProfile();
-//     } else {
-//         $settingsController->index();
-//     }
-// }
-
-
-
 class Router
 {
     private $routes = [];

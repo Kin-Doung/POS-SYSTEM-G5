@@ -10,7 +10,12 @@ $routes = new Router();
 // dashboard
 
 $routes->get('/', [DashboardController::class, 'index']);
+
+//inventory
 $routes->get('/inventory', [InventoryController::class, 'index']);
+
+//Notifications
+$routes->get('/notifications', [NotificationController::class, 'index']);
 
 // products
 $routes->get('/products', [ProductController::class, 'index']);

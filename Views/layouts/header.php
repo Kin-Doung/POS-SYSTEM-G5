@@ -32,6 +32,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
   <!-- edit -->
   <link rel="stylesheet" href="../../assets//css/style/purchase.css">
+  <link rel="icon" type="image/png" href="../assets/images/Logoapp.png">
+
 
 </head>
 

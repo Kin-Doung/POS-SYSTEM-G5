@@ -7,7 +7,8 @@ require_once './Controllers/PurchaseController.php';
 
 $routes = new Router();
 
-// dashboard
+// setting
+$routes->get('/settings', [SettingController::class, 'index']);
 
 $routes->get('/', [DashboardController::class, 'index']);
 

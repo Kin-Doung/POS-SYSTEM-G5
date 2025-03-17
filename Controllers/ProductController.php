@@ -13,7 +13,7 @@ class ProductController extends BaseController
     public function index()
     {
         $purchases = $this->model->getPurchasesWithProductDetails();
-        $this->Views('products/list', ['purchases' => $purchases]);
+        $this->views('products/list', ['purchases' => $purchases]);
     }
 
     // ProductController.php
@@ -21,7 +21,7 @@ class ProductController extends BaseController
     public function edit($id)
     {
         $product = $this->model->getProduct($id);
-        $this->Views('products/edit', ['product' => $product]);
+        $this->views('products/edit', ['product' => $product]);
     }
     public function updatePrice($id)
     {

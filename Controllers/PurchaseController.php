@@ -14,12 +14,12 @@
         public function index()
         {
             $purchase = $this->model->getPurchase();
-            $this->Views('purchase/list', ['purchases' => $purchase]);
+            $this->views('purchase/list', ['purchases' => $purchase]);
 
         }
         function create()
         {
-            $this->Views('purchase/create');
+            $this->views('purchase/create');
         }
         function store()
         {

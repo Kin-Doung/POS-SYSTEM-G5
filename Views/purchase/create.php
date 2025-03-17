@@ -7,7 +7,6 @@
         <form action="/purchase/store" method="POST" enctype="multipart/form-data">
             <label for="productName">Product Name:</label>
             <input type="text" id="productName" name="product_name" required /><br />
-
             <label for="productCategory">Category:</label>
             <select id="productCategory" name="category_id" required>
                 <option value="">Select Category</option>

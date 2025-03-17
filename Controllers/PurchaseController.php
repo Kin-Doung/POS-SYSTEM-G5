@@ -13,9 +13,11 @@ class PurchaseController extends BaseController
 
     public function index()
     {
-        $purchase = $this->model->getPurchase();
-        $this->views('purchase/list', ['purchases' => $purchase]);
+        $purchases = $this->model->getPurchase();
+        $categories = $this->model->getCategory(); // ✅ Fetch categories
+        $this->views('purchase/list', ['purchases' => $purchases, 'categories' => $categories]);
     }
+    
     public function create()
     {
         $purchaseModel = new PurchaseModel();

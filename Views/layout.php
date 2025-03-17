@@ -1,9 +1,9 @@
-<?php require_once './Views/layouts/header.php'; ?>
-<?php require_once './Views/layouts/nav.php'; ?>
+<?php require_once './views/layouts/header.php'; ?>
+<?php require_once './views/layouts/nav.php'; ?>
 
 <?= $content ?>
 
-<?php require_once './Views/layouts/footer.php'; ?>
+<?php require_once './views/layouts/footer.php'; ?>
 
 
 

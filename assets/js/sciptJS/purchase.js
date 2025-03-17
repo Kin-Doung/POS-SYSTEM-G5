@@ -45,7 +45,7 @@ function generateQRCode(total) {
     const qr = new QRious({
         element: document.getElementById('qrCode'),
         value: `Total Amount: $${total.toFixed(2)}`,
-        size: 250,
+        size: 100,
         background: 'white',
         foreground: 'black',
     });
@@ -190,8 +190,12 @@ function addProduct() {
     } else {
         alert("Please fill in all fields correctly.");
     }
+
 }
+
+
 
 window.onload = function() {
     updateDetails();
 };
+

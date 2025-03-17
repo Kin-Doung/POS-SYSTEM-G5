@@ -1,10 +1,43 @@
 <?php
 require_once 'Models/ProductModel.php';
-require_once 'BaseController.php';
+
 class ProductController extends BaseController
 {
-    function index()
+    private $model;
+
+    function __construct()
     {
         $this->views('products/list');
     }
+
+    public function index()
+    {
+        $purchases = $this->model->getPurchasesWithProductDetails();
+        $this->views('products/list', ['purchases' => $purchases]);
+    }
+
+    // ProductController.php
+
+    public function edit($id)
+    {
+        $product = $this->model->getProduct($id);
+        $this->views('products/edit', ['product' => $product]);
+    }
+    public function updatePrice($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $newPrice = $_POST['price'] ?? null;
+    
+            if ($newPrice !== null) {
+                $this->model->updatePrice($id, $newPrice);
+                $this->redirect('/products'); // Redirect after updating the price
+            } else {
+                echo "Price is required.";
+            }
+        } else {
+            echo "Invalid request method.";
+        }
+    }  
+
 }
+

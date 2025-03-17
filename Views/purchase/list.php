@@ -1,94 +1,4 @@
-<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark" id="sidenav-main">
-    <div class="sidenav-header">
-        <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-        <a class="navbar-brand m-0" href="/" target="_blank">
-            <img src="../assets/img/logos/logo.png" class="navbar-brand-img h-100" alt="main_logo">
-        </a>
-    </div>
-    <hr class="horizontal light mt-0 mb-2">
-    <div id="sidenav-collapse-main">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link text-white" href="/">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">dashboard</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Dashboard</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/tables.html">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">table_view</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Tables</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white " href="/products">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">receipt_long</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Products</span>
-                </a>
-            </li>
-            <!-- Nav Purchase Orders -->
-            <li class="nav-item">
-                <a class="nav-link text-white active bg-gradient-primary" href="/purchase">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">receipt_long</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Purchase Orders</span>
-                </a>
-            </li>
-            <!-- Nav Purchase Orders -->
-            <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/rtl.html">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">format_textdirection_r_to_l</i>
-                    </div>
-                    <span class="nav-link-text ms-1">RTL</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/notifications.html">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">notifications</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Notifications</span>
-                </a>
-            </li>
-            <li class="nav-item mt-3">
-                <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Account pages</h6>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/profile.html">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">person</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Profile</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/sign-in.html">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">login</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Sign In</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/sign-up.html">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">assignment</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Sign Up</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-
-</aside>
+<?php require_once './views/layouts/side.php' ?>
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
     <nav class="navbar">
@@ -126,7 +36,7 @@
         </li>
     </nav>
     <!-- End Navbar -->
-    <?php require_once 'Views/layouts/header.php'; ?>
+    <?php require_once 'views/layouts/header.php'; ?>
     <div class="search-section">
         <form action="" method="POST">
             <input type="text" class="search-input" id="searchInput" name="searchInput" placeholder="Search for products..." onkeyup="filterProducts()" />
@@ -151,47 +61,37 @@
                 <option value="25">Up to $25</option>
                 <option value="30">Up to $30</option>
             </select>
-            <button type="button" id="addProductBtn" data-bs-toggle="modal" data-bs-target="#productModal">Add Product</button>
+            <a href="/purchase/create" class="btn bg-info text-light ">Add New</a>
+
         </form>
     </div>
-
-    <!-- Modal for adding a new product -->
-    <div class="modal" id="productModal">
-        <div class="modal-content">
-            <span class="close" id="closeModal">&times;</span>
-            <h2>Add New Product</h2>
-            <form action="/addProduct" method="POST" enctype="multipart/form-data">
-                <label for="productName">Product Name:</label>
-                <input type="text" id="productName" name="productName" required /><br />
-                <label for="productImage">Upload Image:</label>
-                <input type="file" id="productImage" name="productImage" accept="image/*" onchange="previewImage(event)" required /><br />
-                <img id="imagePreview" class="preview-image" src="" alt="Image Preview" style="display: none;" /><br />
-                <label for="productPrice">Price:</label>
-                <input type="number" id="productPrice" name="productPrice" min="0" required /><br />
-                <button type="submit">Submit</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="container">
+    <!-- Modal structure -->
+    <div class="container-purchase">
         <div class="product-grid" id="productGrid">
-            <?php
-            // Assume $products is an array fetched from a database
-            $products = [
-                ['name' => 'Adapter', 'category' => 'appliances', 'price' => 12, 'image' => 'assets/images/Adapter.png'],
-                ['name' => 'Cake Mixer', 'category' => 'kitchen', 'price' => 15, 'image' => 'assets/images/Cake mixer.png'],
-                ['name' => 'Cocktail Machine', 'category' => 'appliances', 'price' => 20, 'image' => 'assets/images/download.png']
-            ];
+            <?php foreach ($purchases as $purchase): ?>
 
-            foreach ($products as $product):
-            ?>
-                <div class="card" data-name="<?= $product['name'] ?>" data-category="<?= $product['category'] ?>" data-price="<?= $product['price'] ?>">
-                    <div class="product-name"><?= $product['name'] ?></div>
-                    <img src="<?= $product['image'] ?>" alt="<?= $product['name'] ?>" />
-                    <div class="price">Price: $<?= number_format($product['price'], 2) ?></div>
-                    <input type="number" class="quantity" id="quantity<?= $product['name'] ?>" value="0" min="0" />
-                    <button class="buy-button" onclick="updateCart(<?= $product['price'] ?>, 'quantity<?= $product['name'] ?>', true)">Add to Cart</button>
-                    <button class="subtract-button" onclick="updateCart(<?= $product['price'] ?>, 'quantity<?= $product['name'] ?>', false)">Remove</button>
+                <div class="card" data-name="<?= $purchase['product_name'] ?>" data-category="<?= $purchase['product_name'] ?>" data-price="<?= $purchase['price'] ?>">
+                    <div class="delete_edit">
+                        <a href="/purchase/edit?id=<?= $purchase['id'] ?>" class="btn btn-warning">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
+                        <!-- Direct delete link with confirmation -->
+                        <form action="/purchase/destroy" method="POST" style="display:inline;">
+                            <input type="hidden" name="id" value="<?= $purchase['id'] ?>">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this product?');">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                    <img src="uploads/<?= $purchase['image'] ?>" alt="<?= $purchase['product_name'] ?>" />
+                    <div class="product-name"><?= $purchase['product_name'] ?></div>
+                    <input type="number" class="quantity" id="quantity<?= $purchase['product_name'] ?>" value="0" min="0" />
+                    <div class="price">Price: $<?= number_format($purchase['price'], 2) ?></div>
+                    <div class="sum">
+
+                        <button class="buy-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['product_name'] ?>', true)">+</button>
+                        <button class="subtract-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['product_name'] ?>', false)">-</button>
+                    </div>
                 </div>
             <?php endforeach; ?>
         </div>
@@ -209,12 +109,14 @@
                 </thead>
                 <tbody id="details"></tbody>
             </table>
-
             <div class="total" id="totalPrice">Cart Total: $0.00</div>
             <canvas id="qrCode" style="margin-top: 20px;"></canvas>
-            <button class="buy-button" style="margin-top: 20px; width: 100%;" onclick="saveToPDF()">Save as PDF</button>
-            <button class="buy-button" style="margin-top: 15px; width: 100%; background-color: #27ae60;" onclick="processPurchase()">Place Order</button>
+            <div class="buys">
+                <button class="buy-button" style="margin-top: 20px; width: 50%;" onclick="saveToPDF()">Save as PDF</button>
+                <button class="buy-button" style="margin-top: 15px; width: 50%; background-color: #27ae60;" onclick="processPurchase()">Place Order</button>
+            </div>
         </div>
     </div>
-    <?php require_once 'Views/layouts/footer.php'; ?>
+
+    <?php require_once 'views/layouts/footer.php'; ?>
 </main>

@@ -40,15 +40,16 @@ class Router
         foreach ($this->routes as $routesLink => $routes) {
             if ($uri == $routesLink && $request_method == $routes['method']) {
                 $action = $routes['action'];
-                $controler = $action[0];
+                $controller = $action[0];
                 $method =  $action[1];
 
-                $objectController = new $controler;
+                $objectController = new $controller;
+
                 $objectController->$method($id);
                 exit();
             }
         }
         http_response_code(404);
-        require_once  "Views/errors/404.php";
+        require_once  "views/errors/404.php";
     }
 }

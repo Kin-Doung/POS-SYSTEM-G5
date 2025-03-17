@@ -6,24 +6,27 @@
         </a>
     </div>
     <hr class="horizontal light mt-0 mb-2">
-    <div id="sidenav-collapse-main">
+    <div>
         <ul class="navbar-nav">
+            <!-- nav dashboard -->
             <li class="nav-item">
-                <a class="nav-link text-white" href="/">
+                <a class="nav-link text-white active bg-gradient-primary" href="/">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">dashboard</i>
                     </div>
                     <span class="nav-link-text ms-1">Dashboard</span>
                 </a>
             </li>
+            <!-- nav inventory -->
             <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/tables.html">
+                <a class="nav-link text-white " href="/inventory">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">table_view</i>
                     </div>
-                    <span class="nav-link-text ms-1">Tables</span>
+                    <span class="nav-link-text ms-1">Inventory</span>
                 </a>
             </li>
+            <!-- nav product -->
             <li class="nav-item">
                 <a class="nav-link text-white " href="/products">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -32,26 +35,25 @@
                     <span class="nav-link-text ms-1">Products</span>
                 </a>
             </li>
-            <!-- Nav Purchase Orders -->
+            <!-- nav purchase order -->
             <li class="nav-item">
-                <a class="nav-link text-white active bg-gradient-primary" href="/purchase">
+                <a class="nav-link text-white " href="/purchase">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">receipt_long</i>
+                        <i class="material-icons opacity-10">view_in_ar</i>
                     </div>
-                    <span class="nav-link-text ms-1">Purchase Orders</span>
+                    <span class="nav-link-text ms-1">Purchase Oders</span>
                 </a>
             </li>
-            <!-- Nav Purchase Orders -->
             <li class="nav-item">
                 <a class="nav-link text-white " href="../pages/rtl.html">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">format_textdirection_r_to_l</i>
                     </div>
-                    <span class="nav-link-text ms-1">RTL</span>
+                    <span class="nav-link-text ms-1">Invoice</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/notifications.html">
+                <a class="nav-link text-white " href="/notifications">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">notifications</i>
                     </div>
@@ -59,32 +61,40 @@
                 </a>
             </li>
             <li class="nav-item mt-3">
-                <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Account pages</h6>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/profile.html">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">person</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Profile</span>
+                <a class="nav-link text-white" data-bs-toggle="collapse" href="#settingsMenu" role="button" aria-expanded="false" aria-controls="settingsMenu">
+                    <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">
+                        <i class="fas fa-cog"></i> Setting
+                    </h6>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/sign-in.html">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">login</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Sign In</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/sign-up.html">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">assignment</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Sign Up</span>
-                </a>
-            </li>
+
+            <div class="collapse ps-4" id="settingsMenu">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="../pages/profile.html">
+                        <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="material-icons opacity-10">person</i>
+                        </div>
+                        <span class="nav-link-text ms-1">Account</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="../pages/sign-in.html">
+                        <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="material-icons opacity-10">language</i>
+                        </div>
+                        <span class="nav-link-text ms-1">Language</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="../pages/sign-in.html">
+                        <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="material-icons opacity-10">logout</i>
+                        </div>
+                        <span class="nav-link-text ms-1">Log Out</span>
+                    </a>
+                </li>
+            </div>
+
         </ul>
     </div>
 

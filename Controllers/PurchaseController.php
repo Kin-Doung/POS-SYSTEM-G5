@@ -5,26 +5,29 @@ require_once 'BaseController.php';
 class PurchaseController extends BaseController
 {
     private $model;
+
     function __construct()
     {
-
         $this->model = new PurchaseModel();
     }
 
     public function index()
     {
-        $purchase = $this->model->getPurchase();
+        $purchase = $this->model->getAllPurchases();
         $this->Views('purchase/list', ['purchases' => $purchase]);
     }
+
     function create()
     {
         $this->Views('purchase/create');
     }
+
     function store()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $productName = $_POST['product_name'];
-            $productPrice = $_POST['price'];
+            // Sanitize input data
+            $productName = htmlspecialchars(trim($_POST['product_name']));
+            $productPrice = floatval($_POST['price']);
             $quantity = 1; // Default quantity
             $imageName = null;
             $purchaseDate = date('Y-m-d H:i:s'); // Current date and time
@@ -39,6 +42,14 @@ class PurchaseController extends BaseController
                 }
 
                 $targetFile = $targetDir . $imageName;
+
+                // Validate image type (optional, can be customized based on allowed extensions)
+                $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+                $fileExtension = pathinfo($imageName, PATHINFO_EXTENSION);
+                if (!in_array(strtolower($fileExtension), $allowedExtensions)) {
+                    die("Invalid file type.");
+                }
+
                 move_uploaded_file($_FILES['image']['tmp_name'], $targetFile);
             }
 
@@ -55,9 +66,10 @@ class PurchaseController extends BaseController
             $this->redirect('/purchase');
         }
     }
+
     public function edit($id)
     {
-        $purchase = $this->model->getPurchases($id);
+        $purchase = $this->model->getAllPurchases($id);
         if (!$purchase) {
             // Handle error if the purchase doesn't exist
             $this->redirect('/purchase');
@@ -65,13 +77,11 @@ class PurchaseController extends BaseController
         $this->Views('purchase/edit', ['purchase' => $purchase]);
     }
 
-
-    // Update Purchase Controller's update method
     public function update($id)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Get current purchase data
-            $purchase = $this->model->getPurchases($id);
+            $purchase = $this->model->getAllPurchases($id);
             if (!$purchase) {
                 // Handle error if the purchase doesn't exist
                 $this->redirect('/purchase');
@@ -90,14 +100,22 @@ class PurchaseController extends BaseController
                 }
 
                 $targetFile = $targetDir . $imagePath;
+
+                // Validate image type
+                $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+                $fileExtension = pathinfo($imagePath, PATHINFO_EXTENSION);
+                if (!in_array(strtolower($fileExtension), $allowedExtensions)) {
+                    die("Invalid file type.");
+                }
+
                 move_uploaded_file($_FILES['image']['tmp_name'], $targetFile);
             }
 
             // Prepare data to update purchase
             $data = [
-                'product_name'  => $_POST['product_name'],
+                'product_name' => htmlspecialchars(trim($_POST['product_name'])),
                 'image' => $imagePath,
-                'price'  => $_POST['price'],
+                'price' => floatval($_POST['price']),
             ];
 
             // Update purchase data in the database
@@ -117,5 +135,5 @@ class PurchaseController extends BaseController
         }
         $this->redirect('/purchase'); // Redirect after deletion
     }
-    
 }
+?>

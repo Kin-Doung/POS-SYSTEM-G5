@@ -3,12 +3,12 @@
         <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
         <a class="navbar-brand m-0" href="/" target="_blank">
             <img src="../assets/img/logos/logo.png" class="navbar-brand-img h-100" alt="main_logo">
-
         </a>
     </div>
     <hr class="horizontal light mt-0 mb-2">
-    <div id="sidenav-collapse-main">
+    <div>
         <ul class="navbar-nav">
+            <!-- nav dashboard -->
             <li class="nav-item">
                 <a class="nav-link text-white active bg-gradient-primary" href="/">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -17,32 +17,31 @@
                     <span class="nav-link-text ms-1">Dashboard</span>
                 </a>
             </li>
+            <!-- nav inventory -->
             <li class="nav-item">
-
-                <!-- //inventory page// -->
-                <a class="nav-link text-white" href="/inventory">
-
-
+                <a class="nav-link text-white " href="/inventory">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">table_view</i>
                     </div>
                     <span class="nav-link-text ms-1">Inventory</span>
                 </a>
             </li>
+            <!-- nav product -->
             <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/billing.html">
+                <a class="nav-link text-white " href="/products">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">receipt_long</i>
                     </div>
-                    <span class="nav-link-text ms-1">Billing</span>
+                    <span class="nav-link-text ms-1">Products</span>
                 </a>
             </li>
+            <!-- nav purchase order -->
             <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/virtual-reality.html">
+                <a class="nav-link text-white " href="/purchase">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">view_in_ar</i>
                     </div>
-                    <span class="nav-link-text ms-1">Virtual Reality</span>
+                    <span class="nav-link-text ms-1">Purchase Oders</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -50,11 +49,11 @@
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">format_textdirection_r_to_l</i>
                     </div>
-                    <span class="nav-link-text ms-1">RTL</span>
+                    <span class="nav-link-text ms-1">Invoice</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/notifications.html">
+                <a class="nav-link text-white " href="/notifications">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">notifications</i>
                     </div>
@@ -62,32 +61,41 @@
                 </a>
             </li>
             <li class="nav-item mt-3">
-                <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Account pages</h6>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/profile.html">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">person</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Profile</span>
+                <a class="nav-link text-white" data-bs-toggle="collapse" href="#settingsMenu" role="button" aria-expanded="false" aria-controls="settingsMenu">
+                    <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">
+                        <i class="fas fa-cog"></i> Setting
+                    </h6>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/sign-in.html">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">login</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Sign In</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/sign-up.html">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">assignment</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Sign Up</span>
-                </a>
-            </li>
+
+            <div class="collapse ps-4" id="settingsMenu">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="../pages/profile.html">
+                        <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="material-icons opacity-10">person</i>
+                        </div>
+                        <span class="nav-link-text ms-1">Account</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="../pages/sign-in.html">
+                        <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="material-icons opacity-10">language</i>
+                        </div>
+                        <span class="nav-link-text ms-1">Language</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="../pages/sign-in.html">
+                        <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="material-icons opacity-10">logout</i>
+                        </div>
+                        <span class="nav-link-text ms-1">Log Out</span>
+                    </a>
+                </li>
+            </div>
+
+
         </ul>
     </div>
     <div class="sidenav-footer position-absolute w-100 bottom-0 ">
@@ -136,40 +144,40 @@
     <!-- End Navbar -->
 
 
-<!-- /// alert fuction// -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/now-ui-kit@1.2.0/css/now-ui-kit.min.css">
+    <!-- /// alert fuction// -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/now-ui-kit@1.2.0/css/now-ui-kit.min.css">
 
-<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/now-ui-kit@1.2.0/css/now-ui-kit.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/now-ui-kit@1.2.0/css/now-ui-kit.min.css" rel="stylesheet">
 
-<div class="content">
-    <div class="row">
-        <div class="col-lg-3 col-md-6 mt-3 col-sm-6">
-            <div class="card card-stats">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-4 d-flex align-items-center justify-content-center">
-                        <i class="fas fa-globe text-warning" style="font-size: 2.5rem;"></i>
+    <div class="content">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mt-3 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-4 d-flex align-items-center justify-content-center">
+                                <i class="fas fa-globe text-warning" style="font-size: 2.5rem;"></i>
 
-                        </div>
-                        <div class="col-8 text-right">
-                            <p class="card-category">Capacity</p>
-                            <h4 class="card-title">150GB</h4>
+                            </div>
+                            <div class="col-8 text-right">
+                                <p class="card-category">Capacity</p>
+                                <h4 class="card-title">150GB</h4>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-footer">
-                    <hr>
-                    <div class="stats text-muted">
-                        <i class="fa fa-refresh"></i> Update Now
+                    <div class="card-footer">
+                        <hr>
+                        <div class="stats text-muted">
+                            <i class="fa fa-refresh"></i> Update Now
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- //end alert/ -->
+    <!-- //end alert/ -->
 
 
     <div class="container-fluid py-4">

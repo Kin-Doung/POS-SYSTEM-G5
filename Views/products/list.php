@@ -139,7 +139,8 @@
                 </thead>
                 <tbody id="details"></tbody>
             </table>
-            <div class="total" id="totalPrice">Cart Total: $0.00</div>
+            <div class="total" id="totalPrice"style= "margin-top:10px">Cart Total: $0.00</div>
+            
             <canvas id="qrCode" style="margin-top: 20px;"></canvas>
             <button class="buy-button" style="margin-top: 20px; width: 100%;" onclick="saveToPDF()">Save as PDF</button>
             <button class="buy-button" style="margin-top: 15px; width: 100%; background-color: #27ae60;" onclick="processPurchase()">Place Order</button>

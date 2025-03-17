@@ -193,6 +193,90 @@ th {
 .delete:hover {
     background: #c0392b;
 }
+.search-section {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-section form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 800px;
+}
+
+.search-input,
+.product-select,
+.category-select,
+.price-select {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.3s ease;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9f9f9;
+    flex: 1;
+    min-width: 150px;
+}
+
+.search-input:focus,
+.product-select:focus,
+.category-select:focus,
+.price-select:focus {
+    border-color: #17a2b8;
+    background-color: #ffffff;
+    box-shadow: 0 0 5px rgba(23, 162, 184, 0.5);
+}
+
+.search-input {
+    min-width: 220px;
+}
+
+.product-select,
+.category-select,
+.price-select {
+    min-width: 160px;
+}
+
+.btn {
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    background: linear-gradient(135deg, #17a2b8, #138496);
+    color: white;
+    border: none;
+    box-shadow: 0 3px 6px rgba(23, 162, 184, 0.3);
+    padding: 10px 15px;
+    border-radius: 8px;
+    height: 42px;
+    min-width: 160px;
+    margin-left: auto;
+}
+
+.btn:hover {
+    background: linear-gradient(135deg, #138496, #11707a);
+    transform: scale(1.05);
+    box-shadow: 0 5px 10px rgba(23, 162, 184, 0.5);
+}
+
 
 /* 📱 Mobile Optimization */
 @media (max-width: 768px) {

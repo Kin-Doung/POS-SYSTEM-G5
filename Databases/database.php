@@ -3,9 +3,14 @@ class Database {
     private $pdo;
 
     public function __construct() {
+        $servername = "localhost";
+        $username = "root";
+        $password = "";
+        $dbname = "vc1_pos_system";  // Change the DB name if needed
+
         try {
-            $this->pdo = new PDO("mysql:host=localhost;dbname=vc1_pos_system", "root", "");
-            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  // Set error mode to exception
         } catch (PDOException $e) {
             die("Database connection failed: " . $e->getMessage());
         }
@@ -34,5 +39,4 @@ class Database {
         $this->pdo->rollBack();
     }
 }
-
-
+?>

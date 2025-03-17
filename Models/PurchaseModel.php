@@ -3,6 +3,7 @@ require_once 'Databases/database.php';
 
 class PurchaseModel {
     private $pdo;
+
     function __construct() {
         $this->pdo = new Database();
     }

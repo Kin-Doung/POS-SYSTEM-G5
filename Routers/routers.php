@@ -10,13 +10,17 @@ require_once './Controllers/NotificationController.php';
 require_once './Controllers/SettingController.php';
 require_once './Controllers/LogoutController.php';
 require_once './Controllers/LanguageController.php';
+require_once './Controllers/LoginController.php';
 
 $routes = new Router();
+// login
+$routes->get('/', [LoginController::class, 'showLogin']); // Corrected the function name
+$routes->post('/login', [LoginController::class, 'processLogin']); // Handle login processing
+$routes->get('/dashboard', [DashboardController::class, 'index']); // Redirect to dashboard after successful login
 
 // setting
 $routes->get('/settings', [SettingController::class, 'index']);
 
-$routes->get('/', [DashboardController::class, 'index']);
 
 //inventory
 $routes->get('/inventory', [InventoryController::class, 'index']);

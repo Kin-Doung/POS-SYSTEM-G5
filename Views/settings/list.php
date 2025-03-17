@@ -1,31 +1,93 @@
-<div class="container">
-    <h2>Account Setting</h2>
-    <form action="" method="POST" enctype="multipart/form-data">
-        <label>Username</label>
-        <input type="text" name="username" value="<?php echo $admin['username']; ?>" required>
+<?php require_once './views/layouts/side.php' ?>
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="search-container">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search...">
+        </div>
+        <div class="icons">
+            <i class="fas fa-globe icon-btn"></i>
+            <div class="icon-btn" id="notification-icon">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge" id="notification-count">8</span>
+            </div>
+        </div>
+        <div class="profile">
+            <img src="../../assets/images/image.png" alt="User">
+            <div class="profile-info">
+                <span>Eng Ly</span>
+                <span class="store-name">Owner Store</span>
+            </div>
+        </div>
+    </nav>
+    <!-- End Navbar -->
+    <?php require_once 'views/layouts/header.php'; ?>
 
-        <label>Email</label>
-        <input type="email" name="email" value="<?php echo $admin['email']; ?>" required>
-
-        <label>Password</label>
-        <input type="password" name="password" value="<?php echo $admin['password']; ?>" required>
-
-        <label>Store Name</label>
-        <input type="text" name="store_name" value="<?php echo $admin['store_name']; ?>">
-
-        <label>Store Logo</label>
-        <input type="file" name="store_logo">
-
-        <?php if ($admin['store_logo']) { ?>
-            <img src="<?php echo $admin['store_logo']; ?>" width="100">
-        <?php } ?>
-
-        <label>Language</label>
-        <select name="language">
-            <option value="en" <?php if ($admin['language'] == 'en') echo 'selected'; ?>>English</option>
-            <option value="km" <?php if ($admin['language'] == 'km') echo 'selected'; ?>>Khmer</option>
-        </select>
-
-        <button type="submit">Save</button>
-    </form>
-</div>
+    <!-- Modal structure -->
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Admin Setting</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <!-- <th>ID</th> -->
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Password</th>
+                                <th>Store Name</th>
+                                <th>Store Logo</th>
+                                <th>Language</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($admins)) : ?>
+                                <?php foreach ($admins as $admin) : ?>
+                                    <tr>
+                                        <!-- <td><?= $admin['id'] ?></td> -->
+                                        <td><?= htmlspecialchars($admin['username']) ?></td>
+                                        <td><?= htmlspecialchars($admin['email']) ?></td>
+                                        <td><?= substr($admin['password'], 0, 2) . '****' ?></td>
+                                        <td><?= htmlspecialchars($admin['store_name']) ?></td>
+                                        <td>
+                                            <?php if (!empty($admin['store_logo'])) : ?>
+                                                <img src="data:image/jpeg;base64,<?= htmlspecialchars($admin['store_logo']) ?>" alt="Logo" class="img-thumbnail" width="50">
+                                                alt="Profile Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 360px;">
+                                            <?php else: ?>
+                                                No Logo
+                                            <?php endif; ?>
+                                        </td>
+                                        
+                                        <td><?= htmlspecialchars($admin['language']) ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <tr>
+                                    <td colspan="7" class="text-center">No admin users found.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-5">
+        <table class="table table-striped">
+            <tbody>
+                <?php foreach ($admins as $index => $admin) : ?>
+                    <tr>
+                        <td>
+                            <a href="/admin/edit?id=<?= $admin['id'] ?>" class="btn btn-warning">Edit</a>
+                        </td>
+                    </tr>
+                <?php endforeach ?>
+            </tbody>
+        </table>
+    </div>
+    <?php require_once 'views/layouts/footer.php'; ?>
+</main>

@@ -126,8 +126,6 @@
                 </table>
             </div>
         </div>
-
-
         <div class="detail-section">
             <div class="detail-title">Order Summary</div>
             <table class="order-table">

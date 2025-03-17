@@ -1,21 +1,29 @@
 <?php
 require_once 'Databases/database.php';
 
-class PurchaseModel {
+class PurchaseModel
+{
     private $pdo;
-    function __construct() {
+
+    function __construct()
+    {
         $this->pdo = new Database();
     }
+
     function getPurchase()
     {
         $purchase = $this->pdo->query("SELECT * FROM purchase ORDER BY id DESC");
         return $purchase->fetchAll();
     }
-    function getProduct()
+
+    function getCategory()
     {
-        $product = $this->pdo->query("SELECT * FROM products ORDER BY id DESC");
-        return $product->fetchAll();
+        // Assuming you have the Database connection already established
+        $stmt = $this->pdo->query("SELECT * FROM categories ORDER BY id DESC");
+        $categories = $stmt->fetchAll();  // Fetch all categories as an associative array
+        return $categories;
     }
+
     function createPurchase($data)
     {
         $this->pdo->query("INSERT INTO purchase (product_name, image, quantity, price, purchase_date) 
@@ -27,40 +35,42 @@ class PurchaseModel {
             'purchase_date' => $data['purchase_date'],
         ]);
     }
-    
-    function getPurchases($id)   
+
+    function getPurchases($id)
     {
         $stmt = $this->pdo->query("SELECT * FROM purchase WHERE id = :id", ['id' => $id]);
         $purchase = $stmt->fetch();
         return $purchase;
     }
+
     public function updatePurchase($id, $data)
     {
+        // First query to update the purchase table
         $this->pdo->query("UPDATE purchase SET product_name = :product_name, image = :image, price = :price WHERE id = :id", [
             'product_name' => $data['product_name'],
             'image' => $data['image'],
             'price' => $data['price'],
             'id' => $id
         ]);
+
+        // Second query to update the products table
         $this->pdo->query("UPDATE products SET name = :name, price = :price WHERE id = :id", [
-            'products' => $data['products'],
-            'name' => $data['name'],
+            'name' => $data['product_name'], // Ensure to pass the correct product_name
             'price' => $data['price'],
             'id' => $id
         ]);
-
     }
-    
+
     public function deletePurchase($id)
     {
         $this->pdo->query("DELETE FROM purchase WHERE id = :id", ['id' => $id]);
     }
-    public function updateQuantity($id, $newQuantity)
-{
-    $this->pdo->query("UPDATE purchase SET quantity = :quantity WHERE id = :id", [
-        'quantity' => $newQuantity,
-        'id' => $id
-    ]);
-}
 
+    public function updateQuantity($id, $newQuantity)
+    {
+        $this->pdo->query("UPDATE purchase SET quantity = :quantity WHERE id = :id", [
+            'quantity' => $newQuantity,
+            'id' => $id
+        ]);
+    }
 }

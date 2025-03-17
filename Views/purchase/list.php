@@ -40,13 +40,6 @@
     <div class="search-section">
         <form action="" method="POST">
             <input type="text" class="search-input" id="searchInput" name="searchInput" placeholder="Search for products..." onkeyup="filterProducts()" />
-            <select class="product-select" id="productSelect" name="productSelect" onchange="filterProducts()">
-                <option value="">Select Product</option>
-                <option value="Adapter">Adapter</option>
-                <option value="Cake Mixer">Cake Mixer</option>
-                <option value="Cocktail Machine">Cocktail Machine</option>
-                <option value="Electric Cooking Pot">Electric Cooking Pot</option>
-            </select>
             <select class="category-select" id="categorySelect" name="categorySelect" onchange="filterProducts()">
                 <option value="">Select Category</option>
                 <option value="all">All</option>

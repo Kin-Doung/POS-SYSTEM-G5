@@ -6,7 +6,6 @@ $error = isset($_SESSION['error']) ? $_SESSION['error'] : '';
 unset($_SESSION['error']); // Remove error after showing
 ?>
 
-
         <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -61,7 +61,7 @@
             <p>Email: engly@gmail.com</p>
         </div>
         <div class="logout-btn">
-            <a href="#">Logout</a>
+            <a href="/">Logout</a>
         </div>
     </div>
 </div>

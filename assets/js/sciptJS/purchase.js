@@ -199,3 +199,5 @@ window.onload = function() {
     updateDetails();
 };
 
+// search function 
+

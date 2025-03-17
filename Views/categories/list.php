@@ -1,4 +1,4 @@
-<?php require_once './Views/layouts/side.php' ?>
+<?php require_once './views/layouts/side.php' ?>
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
     <nav class="navbar">
@@ -57,7 +57,7 @@
                             </button>
 
                             <!-- Modal -->
-                            <?php require_once './Views/categories/delete.php'; ?>
+                            <?php require_once './views/categories/delete.php'; ?>
 
                         </td>
                     </tr>

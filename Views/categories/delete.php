@@ -13,9 +13,6 @@
                 <button type="submit" class="btn btn-danger">Delete</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Discard</button>
             </form>
-
-
-
         </div>
     </div>
 </div>

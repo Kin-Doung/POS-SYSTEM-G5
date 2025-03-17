@@ -7,7 +7,7 @@ class ProductModel
 
     public function __construct()
     {
-        $this->pdo = new Database(); // Assuming Database handles PDO connection
+        $this->pdo = new Database();
     }
 
     private function executeQuery($query, $params = [])
@@ -21,7 +21,6 @@ class ProductModel
             return null;
         }
     }
-
     public function getPurchasesWithProductDetails()
     {
         $query = "
@@ -30,16 +29,20 @@ class ProductModel
                    products.price AS product_price, 
                    products.image AS product_image, 
                    products.quantity AS product_quantity, 
+                   categories.id AS category_id, 
+                   categories.name AS category_name, 
                    purchase.quantity AS purchase_quantity, 
                    purchase.price AS purchase_price, 
                    purchase.purchase_date 
             FROM purchase
             LEFT JOIN products ON purchase.product_id = products.id
+            LEFT JOIN categories ON products.category_id = categories.id
             ORDER BY purchase.purchase_date DESC
         ";
         $stmt = $this->executeQuery($query);
         return $stmt ? $stmt->fetchAll() : [];
     }
+    
 
     public function createProduct($data)
     {

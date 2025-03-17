@@ -25,6 +25,7 @@
 
   <script src="../../assets/js/sciptJS/script.js" defer></script>
   <script src="../../assets/js/sciptJS/purchase.js" defer></script>
+  <script src="../../assets/js/sciptJS/logout.js" defer></script>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="assets/css/style/purchase.css">
@@ -33,6 +34,11 @@
   <!-- edit -->
   <link rel="stylesheet" href="../../assets//css/style/purchase.css">
   <link rel="icon" type="image/png" href="../assets/images/Logoapp.png">
+  <!-- css product -->
+   <link rel="stylesheet" href="../../assets/css/style/product.css">
+   <link rel="stylesheet" href="../../assets/css/style/logout.css">
+   
+
 
 
 </head>

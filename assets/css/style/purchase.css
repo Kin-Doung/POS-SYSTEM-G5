@@ -2,17 +2,16 @@ body {
     background-color: #f8f9fa;
 }
 
-.container {
+.container-purchase {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    max-width: 1280px;
-    margin-top: 30px;
-    gap: 30px;
+    max-width: 1200px;
+    margin: 30px auto;
 }
 
 @media (max-width: 992px) {
-    .container {
+    .container-purchase {
         flex-direction: column;
         align-items: center;
     }
@@ -35,7 +34,7 @@ body {
 .product-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
+    gap: 5px;
 }
 
 @media (max-width: 768px) {
@@ -55,9 +54,10 @@ body {
 }
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Two columns */
-    gap: 20px;
+    grid-template-columns: repeat(3, 1fr); /* Two columns */
+    gap: 10px;
     width: 100%;
+    padding-right: 10px;
 }
 
 /* Responsive: Switch to one column on smaller screens */
@@ -84,8 +84,8 @@ body {
 }
 .card img {
     margin: 0 auto;
-    width: 50%; /* Make all images take full width of the container */
-    height: 100px; /* Set a fixed height for uniformity */
+    width: 100%; /* Make all images take full width of the container */
+    height: 150px; /* Set a fixed height for uniformity */
     object-fit: cover; /* Ensures images cover the area without distortion */
     border-radius: 10px;
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
@@ -117,9 +117,10 @@ canvas{
    margin-left: 55px;
 }
 .buy-button,
+
 .subtract-button {
     border: none;
-    padding: 12px 20px;
+    padding: 5px;
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -154,9 +155,13 @@ canvas{
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width: 600px;
+    width: 400px;
+    font-size: 10px;
 }
 
+.buys{
+    display: flex;
+}
 @media (max-width: 768px) {
     .detail-section {
         width: 100%;
@@ -168,6 +173,7 @@ canvas{
     width: 100%;
     border-collapse: collapse;
 }
+
 
 .order-table th, .order-table td {
     padding: 10px;
@@ -271,6 +277,9 @@ canvas{
     margin-top: 15px;
     object-fit: cover;
 }
+.sum{
+    display: flex;
+}
 
 /* Button Styling */
 .btn-primary {
@@ -284,6 +293,7 @@ canvas{
     cursor: pointer;
     transition: background-color 0.3s ease-in-out;
 }
+
 
 .btn-primary:hover {
     background-color: #45a049;

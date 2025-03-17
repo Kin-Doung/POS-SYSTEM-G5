@@ -39,3 +39,7 @@
         <h1 style="text-align: center;">Welcome to logout</h1>
     </div>
 </main>
+<!-- 
+<div class="log-out">
+    <div class="card-logout"></div>
+</div> -->

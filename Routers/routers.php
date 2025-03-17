@@ -15,6 +15,9 @@ $routes = new Router();
 
 // setting
 $routes->get('/settings', [SettingController::class, 'index']);
+$routes->get('/settings/store', [SettingController::class, 'store']);
+$routes->get('/settings/edit', [SettingController::class, 'edit']);
+$routes->put('/settings/update', [SettingController::class, 'update']);
 
 $routes->get('/', [DashboardController::class, 'index']);
 

@@ -61,7 +61,7 @@
                                                 No Logo
                                             <?php endif; ?>
                                         </td>
-                                        
+
                                         <td><?= htmlspecialchars($admin['language']) ?></td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -82,8 +82,10 @@
                 <?php foreach ($admins as $index => $admin) : ?>
                     <tr>
                         <td>
-                            <a href="/admin/edit?id=<?= $admin['id'] ?>" class="btn btn-warning">Edit</a>
+                            <a href="Views/settings/edit.php?id=<?= $admin['id'] ?>" class="btn btn-warning">Edit</a>
+
                         </td>
+
                     </tr>
                 <?php endforeach ?>
             </tbody>

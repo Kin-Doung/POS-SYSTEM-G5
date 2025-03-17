@@ -7,6 +7,6 @@ class InventoryController extends BaseController
     function index()
     {
         // $users = $this->model->getUsers();
-        $this->views('inventory/list.php');
+        $this->views('inventory/list');
     }
 }

@@ -5,6 +5,6 @@ require_once 'BaseController.php';
 class PurchaseController extends BaseController {
 
     public function index() {
-        $this->views('purchase/list.php');
+        $this->views('purchase/list');
     }
 }

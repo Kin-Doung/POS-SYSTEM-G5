@@ -20,7 +20,7 @@
             <li class="nav-item">
 
                 <!-- //inventory page// -->
-                <a class="nav-link text-white" href="/inventory">
+                <a class="nav-link text-white" href="inventory">
 
 
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -30,7 +30,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/billing.html">
+                <a class="nav-link text-white " href="/product">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">receipt_long</i>
                     </div>
@@ -136,40 +136,40 @@
     <!-- End Navbar -->
 
 
-<!-- /// alert fuction// -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/now-ui-kit@1.2.0/css/now-ui-kit.min.css">
+    <!-- /// alert fuction// -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/now-ui-kit@1.2.0/css/now-ui-kit.min.css">
 
-<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/now-ui-kit@1.2.0/css/now-ui-kit.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/now-ui-kit@1.2.0/css/now-ui-kit.min.css" rel="stylesheet">
 
-<div class="content">
-    <div class="row">
-        <div class="col-lg-3 col-md-6 mt-3 col-sm-6">
-            <div class="card card-stats">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-4 d-flex align-items-center justify-content-center">
-                        <i class="fas fa-globe text-warning" style="font-size: 2.5rem;"></i>
+    <div class="content">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mt-3 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-4 d-flex align-items-center justify-content-center">
+                                <i class="fas fa-globe text-warning" style="font-size: 2.5rem;"></i>
 
-                        </div>
-                        <div class="col-8 text-right">
-                            <p class="card-category">Capacity</p>
-                            <h4 class="card-title">150GB</h4>
+                            </div>
+                            <div class="col-8 text-right">
+                                <p class="card-category">Capacity</p>
+                                <h4 class="card-title">150GB</h4>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-footer">
-                    <hr>
-                    <div class="stats text-muted">
-                        <i class="fa fa-refresh"></i> Update Now
+                    <div class="card-footer">
+                        <hr>
+                        <div class="stats text-muted">
+                            <i class="fa fa-refresh"></i> Update Now
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- //end alert/ -->
+    <!-- //end alert/ -->
 
 
     <div class="container-fluid py-4">
@@ -201,11 +201,10 @@
                                         <td>
                                             <div class="d-flex px-2">
                                                 <div>
-                                                    <img src="../assets/img/small-logos/logo-asana.svg" class="avatar avatar-sm rounded-circle me-2" alt="spotify">
+                                                    <img src="/assets/" alt="">
                                                 </div>
                                                 <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">Asana</h6>
-                                                    <h6 class="mb-0 mt-0 h-1 text-l fw-light">Product Name</h6>
+                                                    <h6 class="mb-0 text-sm">Product name</h6>
                                                     <h6 class="mb-0 mt-0 h-1 text-l fw-light">ID : 123</h6>
                                                 </div>
                                             </div>
@@ -216,7 +215,7 @@
 
                                         <td class="align-middle text-center">
                                             <div class="d-flex align-items-center justify-content-center">
-                                                <span class="me-2 text-xs font-weight-bold">60%</span>
+                                                <span class="me-2 text-xs font-weight-bold">60</span>
                                                 <div>
                                                     <div class="progress">
                                                         <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
@@ -225,15 +224,12 @@
                                             </div>
                                         </td>
                                         <td class="text-center w-auto">
-                                            <div class="dropdown">
-                                                <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    &#x22EE;
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                    <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
-                                                </ul>
-                                            </div>
+                                            <button class="btn btn-warning btn-sm">
+                                                <i class="fas fa-pencil-alt"></i> Edit
+                                            </button>
+                                            <button class="btn btn-danger btn-sm">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
                                         </td>
 
                                     </tr>
@@ -244,8 +240,8 @@
                                                     <img src="../assets/img/small-logos/github.svg" class="avatar avatar-sm rounded-circle me-2" alt="invision">
                                                 </div>
                                                 <div class="my-auto">
-                                                    <h6 class="mb-0 mt-0 h-1 text-sm">Github</h6>
-                                                    <h6 class="mb-0 mt-0 h-1 text-l fw-light">Product Name</h6>
+                                                    <h6 class="mb-0 mt-0 h-1 text-sm">product name</h6>
+                                                    
                                                     <h6 class="mb-0 mt-0 h-1 text-l fw-light">ID : 123</h6>
 
                                                 </div>
@@ -266,15 +262,12 @@
                                             </div>
                                         </td>
                                         <td class="text-center w-auto">
-                                            <div class="dropdown">
-                                                <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    &#x22EE;
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                    <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
-                                                </ul>
-                                            </div>
+                                            <button class="btn btn-warning btn-sm">
+                                                <i class="fas fa-pencil-alt"></i> Edit
+                                            </button>
+                                            <button class="btn btn-danger btn-sm">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                     <tr>
@@ -284,8 +277,8 @@
                                                     <img src="../assets/img/small-logos/logo-atlassian.svg" class="avatar avatar-sm rounded-circle me-2" alt="jira">
                                                 </div>
                                                 <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">Atlassian</h6>
-                                                    <h6 class="mb-0 mt-0 h-1 text-l fw-light">Product Name</h6>
+                                                    <h6 class="mb-0 text-sm">Product name</h6>
+                                                    
                                                     <h6 class="mb-0 mt-0 h-1 text-l fw-light">ID : 123</h6>
                                                 </div>
                                             </div>
@@ -296,7 +289,7 @@
 
                                         <td class="align-middle text-center">
                                             <div class="d-flex align-items-center justify-content-center">
-                                                <span class="me-2 text-xs font-weight-bold">30%</span>
+                                                <span class="me-2 text-xs font-weight-bold">30</span>
                                                 <div>
                                                     <div class="progress">
                                                         <div class="progress-bar bg-gradient-danger" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="30" style="width: 30%;"></div>
@@ -305,15 +298,12 @@
                                             </div>
                                         </td>
                                         <td class="text-center w-auto">
-                                            <div class="dropdown">
-                                                <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    &#x22EE;
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                    <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
-                                                </ul>
-                                            </div>
+                                            <button class="btn btn-warning btn-sm">
+                                                <i class="fas fa-pencil-alt"></i> Edit
+                                            </button>
+                                            <button class="btn btn-danger btn-sm">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
                                         </td>
 
                                     </tr>
@@ -324,8 +314,8 @@
                                                     <img src="../assets/img/small-logos/bootstrap.svg" class="avatar avatar-sm rounded-circle me-2" alt="webdev">
                                                 </div>
                                                 <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">Bootstrap</h6>
-                                                    <h6 class="mb-0 mt-0 h-1 text-l fw-light">Product Name</h6>
+                                                    <h6 class="mb-0 text-sm">product name</h6>
+                            
                                                     <h6 class="mb-0 mt-0 h-1 text-l fw-light">ID : 123</h6>
                                                 </div>
                                             </div>
@@ -336,7 +326,7 @@
 
                                         <td class="align-middle text-center">
                                             <div class="d-flex align-items-center justify-content-center">
-                                                <span class="me-2 text-xs font-weight-bold">80%</span>
+                                                <span class="me-2 text-xs font-weight-bold">80</span>
                                                 <div>
                                                     <div class="progress">
                                                         <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="80" style="width: 80%;"></div>
@@ -345,15 +335,12 @@
                                             </div>
                                         </td>
                                         <td class="text-center w-auto">
-                                            <div class="dropdown">
-                                                <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    &#x22EE;
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                    <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
-                                                </ul>
-                                            </div>
+                                            <button class="btn btn-warning btn-sm">
+                                                <i class="fas fa-pencil-alt"></i> Edit
+                                            </button>
+                                            <button class="btn btn-danger btn-sm">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
                                         </td>
 
                                     <tr>
@@ -363,8 +350,8 @@
                                                     <img src="../assets/img/small-logos/logo-slack.svg" class="avatar avatar-sm rounded-circle me-2" alt="slack">
                                                 </div>
                                                 <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">Slack</h6>
-                                                    <h6 class="mb-0 mt-0 h-1 text-l fw-light">Product Name</h6>
+                                                    <h6 class="mb-0 text-sm">product name</h6>
+                                                   
                                                     <h6 class="mb-0 mt-0 h-1 text-l fw-light">ID : 123</h6>
 
                                                 </div>
@@ -376,7 +363,7 @@
 
                                         <td class="align-middle text-center">
                                             <div class="d-flex align-items-center justify-content-center">
-                                                <span class="me-2 text-xs font-weight-bold">0%</span>
+                                                <span class="me-2 text-xs font-weight-bold">0</span>
                                                 <div>
                                                     <div class="progress">
                                                         <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="0" style="width: 0%;"></div>
@@ -385,15 +372,12 @@
                                             </div>
                                         </td>
                                         <td class="text-center w-auto">
-                                            <div class="dropdown">
-                                                <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    &#x22EE;
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                    <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
-                                                </ul>
-                                            </div>
+                                            <button class="btn btn-warning btn-sm">
+                                                <i class="fas fa-pencil-alt"></i> Edit
+                                            </button>
+                                            <button class="btn btn-danger btn-sm">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
                                         </td>
 
                                     </tr>
@@ -405,7 +389,7 @@
                                                 </div>
                                                 <div class="my-auto">
                                                     <h6 class="mb-0 text-sm">Devto</h6>
-                                                    <h6 class="mb-0 mt-0 h-1 text-l fw-light">Product Name</h6>
+
                                                     <h6 class="mb-0 mt-0 h-1 text-l fw-light">ID : 123</h6>
                                                 </div>
                                             </div>
@@ -416,7 +400,7 @@
 
                                         <td class="align-middle text-center">
                                             <div class="d-flex align-items-center justify-content-center">
-                                                <span class="me-2 text-xs font-weight-bold">100%</span>
+                                                <span class="me-2 text-xs font-weight-bold">100</span>
                                                 <div>
                                                     <div class="progress">
                                                         <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
@@ -425,18 +409,14 @@
                                             </div>
                                         </td>
                                         <td class="text-center w-auto">
-                                            <div class="dropdown">
-                                                <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    &#x22EE;
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                    <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
-                                                </ul>
-                                            </div>
+                                            <button class="btn btn-warning btn-sm">
+                                                <i class="fas fa-pencil-alt"></i> Edit
+                                            </button>
+                                            <button class="btn btn-danger btn-sm">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
                                         </td>
-
-                                        </td>
+                                        
                                     </tr>
                                 </tbody>
                             </table>

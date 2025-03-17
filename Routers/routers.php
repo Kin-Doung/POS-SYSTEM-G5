@@ -3,6 +3,7 @@ require 'Router.php';
 require_once './Controllers/DashboardController.php';
 require_once './Controllers/ProductController.php';
 require_once './Controllers/PurchaseController.php';
+require_once './Controllers/InventoryController.php';
 
 
 $routes = new Router();

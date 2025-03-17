@@ -1,4 +1,6 @@
 <?php require_once './views/layouts/side.php' ?>
+<?php require_once './views/layouts/header.php' ?>
+
 
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
@@ -40,31 +42,76 @@
 
 
     <!-- /// alert fuction// -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/now-ui-kit@1.2.0/css/now-ui-kit.min.css">
 
-    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/now-ui-kit@1.2.0/css/now-ui-kit.min.css" rel="stylesheet">
-
-    <div class="content">
-        <div class="row">
-            <div class="col-lg-3 col-md-6 mt-3 col-sm-6">
-                <div class="card card-stats">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-4 d-flex align-items-center justify-content-center">
-                                <i class="fas fa-globe text-warning" style="font-size: 2.5rem;"></i>
-
+    <div class="content mt-4 mb-3">
+        <div class="row justify-content-center">
+            <div class="col-lg-2.5 col-md-3 col-sm-4">
+                <div class="card card-stats shadow-sm border-0 rounded-lg">
+                    <div class="card-body p-2">
+                        <div class="row align-items-center">
+                            <div class="col-3 text-center">
+                                <i class="fas fa-box text-danger" style="font-size: 2.5rem;"></i>
                             </div>
-                            <div class="col-8 text-right">
-                                <p class="card-category">Capacity</p>
-                                <h4 class="card-title">150GB</h4>
+                            <div class="col-9 text-right">
+                                <p class="card-category text-muted" style="font-size: 0.85rem;">Out Inventory</p>
+                                <h4 class="card-title" style="font-size: 1.2rem;">12</h4>
                             </div>
                         </div>
                     </div>
-                    <div class="card-footer">
-                        <hr>
-                        <div class="stats text-muted">
-                            <i class="fa fa-refresh"></i> Update Now
+                    <div class="card-footer p-2 align-items-center">
+                        <hr class="my-1">
+                        <div class="d-flex justify-content-center">
+                            <button class="show-button d-flex align-items-center gap-2 border-0 rounded-pill py-1 px-6" style="font-size: 0.7rem;">
+                                <i class="fas fa-caret-down"></i> show
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-lg-2.5 col-md-3 col-sm-4">
+                <div class="card card-stats shadow-sm border-0 rounded-lg">
+                    <div class="card-body p-2">
+                        <div class="row align-items-center">
+                            <div class="col-3 text-center">
+                                <i class="fas fa-box text-warning" style="font-size: 2.5rem;"></i>
+                            </div>
+                            <div class="col-9 text-right">
+                                <p class="card-category text-muted" style="font-size: 0.85rem;">Low Inventory</p>
+                                <h4 class="card-title" style="font-size: 1.2rem;">12</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer p-2 align-items-center">
+                        <hr class="my-1">
+                        <div class="d-flex justify-content-center">
+                            <button class="show-button d-flex align-items-center gap-2 border-0 rounded-pill py-1 px-6" style="font-size: 0.7rem;">
+                                <i class="fas fa-caret-down"></i> show
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2.5 col-md-3 col-sm-4">
+                <div class="card card-stats shadow-sm border-0 rounded-lg">
+                    <div class="card-body p-2">
+                        <div class="row align-items-center">
+                            <div class="col-3 text-center">
+                                <i class="fas fa-box text-success" style="font-size: 2.5rem;"></i>
+                            </div>
+                            <div class="col-9 text-right">
+                                <p class="card-category text-muted" style="font-size: 0.85rem;">Full Inventory</p>
+                                <h4 class="card-title" style="font-size: 1.2rem;">12</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer p-2 align-items-center">
+                        <hr class="my-1">
+                        <div class="d-flex justify-content-center">
+                            <button class="show-button d-flex align-items-center gap-2 border-0 rounded-pill py-1 px-6" style="font-size: 0.7rem;">
+                                <i class="fas fa-caret-down"></i> show
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -72,13 +119,6 @@
         </div>
     </div>
 
-    <!-- //end alert/ -->
-
-
-    <div class="container-fluid py-4">
-        <div class="row">
-
-        </div>
         <div class="row text-center w-auto">
             <div class="col-12">
                 <div class="card my-4">
@@ -102,16 +142,57 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <div class="d-flex px-2">
-                                                <div>
-                                                    <img src="/assets/" alt="">
+                                            <div class="d-flex align-items-center px-2 flex-wrap">
+                                                <div class="imageinventory me-3">
+                                                    <img src="../../assets/images/Electric cooking pot.png" alt="Product Image" class="inventory-img">
                                                 </div>
                                                 <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">Product name</h6>
-                                                    <h6 class="mb-0 mt-0 h-1 text-l fw-light">ID : 123</h6>
+                                                    <h6 class="mb-0 text-sm">Product Name</h6>
+                                                    <h6 class="mb-0 mt-1 text-muted small">ID : 123</h6>
                                                 </div>
                                             </div>
                                         </td>
+
+                                        <td>
+                                            <p class="text-sm font-weight-bold mb-0">$2,500</p>
+                                        </td>
+
+                                        <td class="align-middle text-center">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <span class="me-2 text-xs font-weight-bold">0</span>
+                                                <div>
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center w-auto">
+                                        <div class="dropdown">
+                                                <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    &#x22EE;
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="#">Edit</a></li>
+                                                    <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center px-2 flex-wrap">
+                                                <div class="imageinventory me-3">
+                                                    <img src="../../assets/images/Cake mixer.png" alt="Product Image" class="inventory-img">
+                                                </div>
+                                                <div class="my-auto">
+                                                    <h6 class="mb-0 text-sm">Product Name</h6>
+                                                    <h6 class="mb-0 mt-1 text-muted small">ID : 123</h6>
+                                                </div>
+                                            </div>
+                                        </td>
+
                                         <td>
                                             <p class="text-sm font-weight-bold mb-0">$2,500</p>
                                         </td>
@@ -121,73 +202,81 @@
                                                 <span class="me-2 text-xs font-weight-bold">60</span>
                                                 <div>
                                                     <div class="progress">
-                                                        <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
+                                                        <div class="progress-bar bg-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
+
+
                                         <td class="text-center w-auto">
-                                            <button class="btn btn-warning btn-sm">
-                                                <i class="fas fa-pencil-alt"></i> Edit
-                                            </button>
-                                            <button class="btn btn-danger btn-sm">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
+                                        <div class="dropdown">
+                                                <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    &#x22EE;
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="#">Edit</a></li>
+                                                    <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
+                                                </ul>
+                                            </div>
                                         </td>
 
                                     </tr>
                                     <tr>
                                         <td>
-                                            <div class="d-flex px-2">
-                                                <div>
-                                                    <img src="../assets/img/small-logos/github.svg" class="avatar avatar-sm rounded-circle me-2" alt="invision">
+                                            <div class="d-flex align-items-center px-2 flex-wrap">
+                                                <div class="imageinventory me-3">
+                                                    <img src="../../assets/images/Cocktail machine.png" alt="Product Image" class="inventory-img">
                                                 </div>
                                                 <div class="my-auto">
-                                                    <h6 class="mb-0 mt-0 h-1 text-sm">product name</h6>
-                                                    
-                                                    <h6 class="mb-0 mt-0 h-1 text-l fw-light">ID : 123</h6>
-
+                                                    <h6 class="mb-0 text-sm">Product Name</h6>
+                                                    <h6 class="mb-0 mt-1 text-muted small">ID : 123</h6>
                                                 </div>
                                             </div>
                                         </td>
+
                                         <td>
-                                            <p class="text-sm font-weight-bold mb-0">$5,000</p>
+                                            <p class="text-sm font-weight-bold mb-0">$2,500</p>
                                         </td>
 
                                         <td class="align-middle text-center">
                                             <div class="d-flex align-items-center justify-content-center">
-                                                <span class="me-2 text-xs font-weight-bold">100%</span>
+                                                <span class="me-2 text-xs font-weight-bold">5</span>
                                                 <div>
                                                     <div class="progress">
-                                                        <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                                                        <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="text-center w-auto">
-                                            <button class="btn btn-warning btn-sm">
-                                                <i class="fas fa-pencil-alt"></i> Edit
-                                            </button>
-                                            <button class="btn btn-danger btn-sm">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
+                                        <div class="dropdown">
+                                                <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    &#x22EE;
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="#">Edit</a></li>
+                                                    <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
+                                                </ul>
+                                            </div>
                                         </td>
+
                                     </tr>
                                     <tr>
                                         <td>
-                                            <div class="d-flex px-2">
-                                                <div>
-                                                    <img src="../assets/img/small-logos/logo-atlassian.svg" class="avatar avatar-sm rounded-circle me-2" alt="jira">
+                                            <div class="d-flex align-items-center px-2 flex-wrap">
+                                                <div class="imageinventory me-3">
+                                                    <img src="../../assets/images/Fan.png" alt="Product Image" class="inventory-img">
                                                 </div>
                                                 <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">Product name</h6>
-                                                    
-                                                    <h6 class="mb-0 mt-0 h-1 text-l fw-light">ID : 123</h6>
+                                                    <h6 class="mb-0 text-sm">Product Name</h6>
+                                                    <h6 class="mb-0 mt-1 text-muted small">ID : 123</h6>
                                                 </div>
                                             </div>
                                         </td>
+
                                         <td>
-                                            <p class="text-sm font-weight-bold mb-0">$3,400</p>
+                                            <p class="text-sm font-weight-bold mb-0">$2,500</p>
                                         </td>
 
                                         <td class="align-middle text-center">
@@ -195,132 +284,105 @@
                                                 <span class="me-2 text-xs font-weight-bold">30</span>
                                                 <div>
                                                     <div class="progress">
-                                                        <div class="progress-bar bg-gradient-danger" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="30" style="width: 30%;"></div>
+                                                        <div class="progress-bar bg-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="text-center w-auto">
-                                            <button class="btn btn-warning btn-sm">
-                                                <i class="fas fa-pencil-alt"></i> Edit
-                                            </button>
-                                            <button class="btn btn-danger btn-sm">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
+                                        <div class="dropdown">
+                                                <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    &#x22EE;
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="#">Edit</a></li>
+                                                    <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
+                                                </ul>
+                                            </div>
                                         </td>
 
                                     </tr>
                                     <tr>
                                         <td>
-                                            <div class="d-flex px-2">
-                                                <div>
-                                                    <img src="../assets/img/small-logos/bootstrap.svg" class="avatar avatar-sm rounded-circle me-2" alt="webdev">
+                                            <div class="d-flex align-items-center px-2 flex-wrap">
+                                                <div class="imageinventory me-3">
+                                                    <img src="../../assets/images/electric grill.png" alt="Product Image" class="inventory-img">
                                                 </div>
                                                 <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">product name</h6>
-                            
-                                                    <h6 class="mb-0 mt-0 h-1 text-l fw-light">ID : 123</h6>
+                                                    <h6 class="mb-0 text-sm">Product Name</h6>
+                                                    <h6 class="mb-0 mt-1 text-muted small">ID : 123</h6>
                                                 </div>
                                             </div>
                                         </td>
+
                                         <td>
-                                            <p class="text-sm font-weight-bold mb-0">$14,000</p>
+                                            <p class="text-sm font-weight-bold mb-0">$2,500</p>
                                         </td>
 
                                         <td class="align-middle text-center">
                                             <div class="d-flex align-items-center justify-content-center">
-                                                <span class="me-2 text-xs font-weight-bold">80</span>
+                                                <span class="me-2 text-xs font-weight-bold">60</span>
                                                 <div>
                                                     <div class="progress">
-                                                        <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="80" style="width: 80%;"></div>
+                                                        <div class="progress-bar bg-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="text-center w-auto">
-                                            <button class="btn btn-warning btn-sm">
-                                                <i class="fas fa-pencil-alt"></i> Edit
-                                            </button>
-                                            <button class="btn btn-danger btn-sm">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </td>
-
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex px-2">
-                                                <div>
-                                                    <img src="../assets/img/small-logos/logo-slack.svg" class="avatar avatar-sm rounded-circle me-2" alt="slack">
-                                                </div>
-                                                <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">product name</h6>
-                                                   
-                                                    <h6 class="mb-0 mt-0 h-1 text-l fw-light">ID : 123</h6>
-
-                                                </div>
+                                        <div class="dropdown">
+                                                <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    &#x22EE;
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="#">Edit</a></li>
+                                                    <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
+                                                </ul>
                                             </div>
-                                        </td>
-                                        <td>
-                                            <p class="text-sm font-weight-bold mb-0">$1,000</p>
-                                        </td>
-
-                                        <td class="align-middle text-center">
-                                            <div class="d-flex align-items-center justify-content-center">
-                                                <span class="me-2 text-xs font-weight-bold">0</span>
-                                                <div>
-                                                    <div class="progress">
-                                                        <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="0" style="width: 0%;"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="text-center w-auto">
-                                            <button class="btn btn-warning btn-sm">
-                                                <i class="fas fa-pencil-alt"></i> Edit
-                                            </button>
-                                            <button class="btn btn-danger btn-sm">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
                                         </td>
 
                                     </tr>
                                     <tr>
                                         <td>
-                                            <div class="d-flex px-2">
-                                                <div>
-                                                    <img src="../assets/img/small-logos/devto.svg" class="avatar avatar-sm rounded-circle me-2" alt="xd">
+                                            <div class="d-flex align-items-center px-2 flex-wrap">
+                                                <div class="imageinventory me-3">
+                                                    <img src="../../assets/images/download.png" alt="Product Image" class="inventory-img">
                                                 </div>
                                                 <div class="my-auto">
-                                                    <h6 class="mb-0 text-sm">Devto</h6>
-
-                                                    <h6 class="mb-0 mt-0 h-1 text-l fw-light">ID : 123</h6>
+                                                    <h6 class="mb-0 text-sm">Product Name</h6>
+                                                    <h6 class="mb-0 mt-1 text-muted small">ID : 123</h6>
                                                 </div>
                                             </div>
                                         </td>
+
                                         <td>
-                                            <p class="text-sm font-weight-bold mb-0">$2,300</p>
+                                            <p class="text-sm font-weight-bold mb-0">$2,500</p>
                                         </td>
 
                                         <td class="align-middle text-center">
                                             <div class="d-flex align-items-center justify-content-center">
-                                                <span class="me-2 text-xs font-weight-bold">100</span>
+                                                <span class="me-2 text-xs font-weight-bold">60</span>
                                                 <div>
                                                     <div class="progress">
-                                                        <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                                                        <div class="progress-bar bg-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="text-center w-auto">
-                                            <button class="btn btn-warning btn-sm">
-                                                <i class="fas fa-pencil-alt"></i> Edit
-                                            </button>
-                                            <button class="btn btn-danger btn-sm">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
+                                        <div class="dropdown">
+                                                <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    &#x22EE;
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="#">Edit</a></li>
+                                                    <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
+                                                </ul>
+                                            </div>
                                         </td>
-                                        
+
                                     </tr>
+
                                 </tbody>
                             </table>
                         </div>

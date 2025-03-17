@@ -35,6 +35,8 @@
   <link rel="icon" type="image/png" href="../assets/images/Logoapp.png">
   <!-- css product -->
    <link rel="stylesheet" href="../../assets/css/style/product.css">
+   <!-- inventory.css -->
+   <link rel="stylesheet" href="../../assets/css/style/inventory.css">
 
 
 

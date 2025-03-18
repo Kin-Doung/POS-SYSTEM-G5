@@ -26,6 +26,7 @@
 
     <!-- Modal structure -->
     <div class="container mt-4">
+        <a href="/settings/create" style="width: 150px;" class="btn btn-primary ">Add New</a>
         <div class="card">
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0">Admin Setting</h4>
@@ -35,13 +36,13 @@
                     <table class="table table-striped table-hover">
                         <thead class="table-dark">
                             <tr>
-                                <!-- <th>ID</th> -->
                                 <th>Username</th>
                                 <th>Email</th>
                                 <th>Password</th>
                                 <th>Store Name</th>
                                 <th>Store Logo</th>
                                 <th>Language</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -55,14 +56,24 @@
                                         <td><?= htmlspecialchars($admin['store_name']) ?></td>
                                         <td>
                                             <?php if (!empty($admin['store_logo'])) : ?>
-                                                <img src="data:image/jpeg;base64,<?= htmlspecialchars($admin['store_logo']) ?>" alt="Logo" class="img-thumbnail" width="50">
-                                                alt="Profile Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 360px;">
+                                                <img src="data:image/jpeg;base64,<?= base64_encode($admin['store_logo']) ?>"
+                                                    alt="Profile Image"
+                                                    style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
                                             <?php else: ?>
                                                 No Logo
                                             <?php endif; ?>
                                         </td>
 
+
                                         <td><?= htmlspecialchars($admin['language']) ?></td>
+                                        <td>
+                                            <a href="settings/edit?id=<?= $admin['id'] ?>" class="btn btn-warning">Edit</a> |
+                                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#user<?= $user['id'] ?>">
+                                                delete
+                                            </button>
+                                            <!-- Modal -->
+                                            <?php require 'delete.php' ?>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else : ?>
@@ -74,22 +85,14 @@
                     </table>
                 </div>
             </div>
+            <div class="text-start">
+                <a href="/logout" class="btn btn-warning">Logout</a>
+            </div>
+
         </div>
     </div>
-    <div class="container mt-5">
-        <table class="table table-striped">
-            <tbody>
-                <?php foreach ($admins as $index => $admin) : ?>
-                    <tr>
-                        <td>
-                            <a href="Views/settings/edit.php?id=<?= $admin['id'] ?>" class="btn btn-warning">Edit</a>
 
-                        </td>
 
-                    </tr>
-                <?php endforeach ?>
-            </tbody>
-        </table>
-    </div>
+
     <?php require_once 'views/layouts/footer.php'; ?>
 </main>

@@ -20,9 +20,11 @@ $routes->get('/dashboard', [DashboardController::class, 'index']); // Redirect t
 
 // setting
 $routes->get('/settings', [SettingController::class, 'index']);
-$routes->get('/settings/store', [SettingController::class, 'store']);
+$routes->get('/settings/create', [SettingController::class, 'create']);
+$routes->post('/settings/store', [SettingController::class, 'store']);
 $routes->get('/settings/edit', [SettingController::class, 'edit']);
 $routes->put('/settings/update', [SettingController::class, 'update']);
+$routes->delete('/settings/destroy', [SettingController::class, 'destroy']);
 
 
 //inventory

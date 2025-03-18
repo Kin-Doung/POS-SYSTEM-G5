@@ -1,8 +1,10 @@
 <?php
-class Database {
+class Database
+{
     private $pdo;
 
-    public function __construct() {
+    public function __construct()
+    {
         $servername = "localhost";
         $username = "root";
         $password = "";
@@ -17,26 +19,36 @@ class Database {
     }
 
     // Add this method to return the PDO instance
-    public function getConnection() {
+    public function getConnection()
+    {
         return $this->pdo;
     }
 
-    public function query($sql, $params = []) {
+    public function query($sql, $params = [])
+    {
         $stmt = $this->pdo->prepare($sql);
+
+        // Debugging - Print SQL Query & Parameters
+        echo "SQL: " . $sql . "<br>";
+        echo "Params: " . json_encode($params) . "<br>";
+
         $stmt->execute($params);
         return $stmt;
     }
 
-    public function beginTransaction() {
+
+    public function beginTransaction()
+    {
         $this->pdo->beginTransaction();
     }
 
-    public function commit() {
+    public function commit()
+    {
         $this->pdo->commit();
     }
 
-    public function rollBack() {
+    public function rollBack()
+    {
         $this->pdo->rollBack();
     }
 }
-?>

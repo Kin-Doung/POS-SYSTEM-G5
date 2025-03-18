@@ -1,38 +1,69 @@
 <?php
 require_once 'Models/SettingModel.php';
 require_once 'BaseController.php';
-class SettingController extends BaseController{
+
+class SettingController extends BaseController {
     private $model;
 
     public function __construct() {
         $this->model = new SettingModel();
     }
 
-    // Display admin settings
+    // Display all admin settings (index)
     public function index() {
         $admins = $this->model->getAdminUsers();
-        require_once 'views/settings/list.php'; // Ensure this path is correct
+        require_once 'views/settings/list.php';
     }
 
-    // Edit admin info
+    // Show form to create a new admin (create)
+    public function create() {
+        require_once 'views/settings/create.php';
+    }
+
+    // Store new admin data (store)
+    public function store() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $imageData = null;
+            if (isset($_FILES['store_logo']) && $_FILES['store_logo']['error'] === UPLOAD_ERR_OK) {
+                $imageData = file_get_contents($_FILES['store_logo']['tmp_name']);
+            }
+
+            $data = [
+                'username' => $_POST['username'],
+                'email' => $_POST['email'],
+                'password' => password_hash($_POST['password'], PASSWORD_DEFAULT),
+                'store_name' => $_POST['store_name'],
+                'store_logo' => $imageData,
+                'language' => $_POST['language']
+            ];
+
+            $this->model->saveAdmin($data);
+
+            header("Location: /settings");
+            exit();
+        }
+    }
+
+    // Edit admin info (edit)
     public function edit($id) {
         $admin = $this->model->getAdmin($id);
-        require_once 'views/settings/edit.php'; // Load edit page
+        require_once 'views/settings/edit.php';  // Make sure this path is correct
     }
+    
 
-    // Update admin info
+    // Update admin info (update)
     public function update($id) {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $admin = $this->model->getAdmin($id);
+            $imageData = $admin['store_logo'];
 
-            $imageData = $admin['store_logo']; // Keep old logo if not changed
             if (isset($_FILES['store_logo']) && $_FILES['store_logo']['error'] === UPLOAD_ERR_OK) {
                 $imageData = file_get_contents($_FILES['store_logo']['tmp_name']);
             }
 
             $password = !empty($_POST['password']) 
                 ? password_hash($_POST['password'], PASSWORD_DEFAULT) 
-                : $admin['password']; // Keep old password if not updated
+                : $admin['password'];
 
             $data = [
                 'username' => $_POST['username'],
@@ -45,9 +76,16 @@ class SettingController extends BaseController{
 
             $this->model->updateAdmin($id, $data);
 
-            // Redirect to settings page
             header("Location: /settings");
             exit();
         }
     }
+
+    // Delete admin (destroy)
+    public function destroy($id) {
+        $this->model->deleteAdmin($id);
+        header("Location: /settings");
+        exit();
+    }
 }
+

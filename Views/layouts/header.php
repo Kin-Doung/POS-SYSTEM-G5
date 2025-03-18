@@ -40,7 +40,7 @@
    <link rel="stylesheet" href="../../assets/css/style/inventory.css">
    <link rel="stylesheet" href="../../assets/css/style/logout.css">
    
-
+  
 
 
 </head>

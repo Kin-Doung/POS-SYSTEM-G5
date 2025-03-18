@@ -13,13 +13,18 @@ class PurchaseController extends BaseController
 
     public function index()
     {
-        $purchase = $this->model->getPurchase();
-        $this->Views('purchase/list', ['purchases' => $purchase]);
+        $purchases = $this->model->getPurchase();
+        $categories = $this->model->getCategory(); // ✅ Fetch categories
+        $this->views('purchase/list', ['purchases' => $purchases, 'categories' => $categories]);
     }
-    function create()
+    
+    public function create()
     {
-        $this->Views('purchase/create');
+        $purchaseModel = new PurchaseModel();
+        $categories = $purchaseModel->getCategory();
+        $this->views('purchase/create', ['categories' => $categories]);
     }
+
     function store()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -57,12 +62,10 @@ class PurchaseController extends BaseController
     }
     public function edit($id)
     {
-        $purchase = $this->model->getPurchases($id);
-        if (!$purchase) {
-            // Handle error if the purchase doesn't exist
-            $this->redirect('/purchase');
-        }
-        $this->Views('purchase/edit', ['purchase' => $purchase]);
+        $purchaseModel = new PurchaseModel();  // Fetch categories from the database
+        $purchase = $purchaseModel->getPurchases($id);
+        $this->views('purchase/edit', ['purchase' => $purchase]);
+
     }
 
 

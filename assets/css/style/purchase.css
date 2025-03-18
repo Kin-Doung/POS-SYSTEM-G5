@@ -56,7 +56,12 @@ body {
     white-space: nowrap;
     margin-top: 15px;
 }
-
+.btn-deleteP{
+    background: red;
+}
+/* .card {
+    display: block !important;
+} */
 
 
 

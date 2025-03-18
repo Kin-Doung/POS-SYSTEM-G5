@@ -159,7 +159,7 @@
     <div class="container">
         <div class="product-grid" id="productGrid">
             <?php
-            foreach ($purchases as $purchase): ?>
+            foreach ($purchase as $purchase): ?>
                 <div class="card" data-name="<?= $purchase['product_name'] ?>" data-category="<?= $purchase['product_name'] ?>" data-price="<?= $purchase['price'] ?>">
                     <div class="delete_edit">
                         <a href="/purchase/edit?id=<?= $purchase['id'] ?>" class="btn btn-warning">

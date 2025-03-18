@@ -5,21 +5,26 @@ require_once 'BaseController.php';
 class PurchaseController extends BaseController
 {
     private $model;
+
     function __construct()
     {
-
         $this->model = new PurchaseModel();
     }
 
+    // Display all purchases
     public function index()
     {
         $purchase = $this->model->getPurchase();
-        $this->Views('purchase/list', ['purchases' => $purchase]);
+        $this->Views('purchase/list', ['purchase' => $purchase]);
     }
+
+    // Show create form
     function create()
     {
         $this->Views('purchase/create');
     }
+
+    // Store new purchase
     function store()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -31,6 +36,13 @@ class PurchaseController extends BaseController
 
             // Handle Image Upload
             if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+                // Validate the image file type
+                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                if (!in_array($_FILES['image']['type'], $allowedTypes)) {
+                    // Invalid file type, redirect or show error message
+                    $this->redirect('/purchase/create');
+                }
+
                 $imageName = time() . "_" . $_FILES['image']['name']; // Unique file name
                 $targetDir = "./uploads/";
 
@@ -55,6 +67,8 @@ class PurchaseController extends BaseController
             $this->redirect('/purchase');
         }
     }
+
+    // Edit purchase
     public function edit($id)
     {
         $purchase = $this->model->getPurchases($id);
@@ -65,8 +79,7 @@ class PurchaseController extends BaseController
         $this->Views('purchase/edit', ['purchase' => $purchase]);
     }
 
-
-    // Update Purchase Controller's update method
+    // Update purchase
     public function update($id)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -81,6 +94,13 @@ class PurchaseController extends BaseController
 
             // Check if the user has uploaded a new image
             if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+                // Validate the image file type
+                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                if (!in_array($_FILES['image']['type'], $allowedTypes)) {
+                    // Invalid file type, show error message
+                    $this->redirect('/purchase/edit?id=' . $id);
+                }
+
                 // Handle Image Upload
                 $imagePath = time() . "_" . $_FILES['image']['name']; // Unique file name
                 $targetDir = "./uploads/";
@@ -106,6 +126,7 @@ class PurchaseController extends BaseController
         }
     }
 
+    // Delete purchase
     public function destroy()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -117,5 +138,4 @@ class PurchaseController extends BaseController
         }
         $this->redirect('/purchase'); // Redirect after deletion
     }
-    
 }

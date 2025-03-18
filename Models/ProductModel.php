@@ -10,6 +10,21 @@ class ProductModel
         $this->pdo = new Database();
     }
 
+    function getPurchase()
+    {
+        $purchase = $this->pdo->query("SELECT * FROM purchase ORDER BY id DESC");
+        return $purchase->fetchAll();
+    }
+
+    // Function to fetch all categories
+    function getCategory()
+    {
+        // Query to get categories from the categories table
+        $stmt = $this->pdo->query("SELECT * FROM categories ORDER BY id DESC");
+        $categories = $stmt->fetchAll();  // Fetch all categories as an associative array
+        return $categories;
+    }
+
     private function executeQuery($query, $params = [])
     {
         try {
@@ -42,7 +57,7 @@ class ProductModel
         $stmt = $this->executeQuery($query);
         return $stmt ? $stmt->fetchAll() : [];
     }
-    
+
 
     public function createProduct($data)
     {

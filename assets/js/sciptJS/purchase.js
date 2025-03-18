@@ -41,16 +41,6 @@ function updateDetails() {
     generateQRCode(totalOrderPrice); // Generate QR code for the total
 }
 
-function generateQRCode(total) {
-    const qr = new QRious({
-        element: document.getElementById('qrCode'),
-        value: `Total Amount: $${total.toFixed(2)}`,
-        size: 100,
-        background: 'white',
-        foreground: 'black',
-    });
-}
-
 function filterProducts() {
     const searchInput = document.getElementById("searchInput").value.toLowerCase();
     const productSelect = document.getElementById("productSelect").value.toLowerCase();

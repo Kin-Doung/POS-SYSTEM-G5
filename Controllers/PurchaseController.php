@@ -17,7 +17,7 @@ class PurchaseController extends BaseController
         $categories = $this->model->getCategory(); // ✅ Fetch categories
         $this->views('purchase/list', ['purchases' => $purchases, 'categories' => $categories]);
     }
-    
+
     public function create()
     {
         $purchaseModel = new PurchaseModel();
@@ -25,12 +25,13 @@ class PurchaseController extends BaseController
         $this->views('purchase/create', ['categories' => $categories]);
     }
 
-    function store()
+    public function store()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $productName = $_POST['product_name'];
             $productPrice = $_POST['price'];
             $quantity = 1; // Default quantity
+            $categoryId = $_POST['category_id']; // Get the category ID from the form
             $imageName = null;
             $purchaseDate = date('Y-m-d H:i:s'); // Current date and time
 
@@ -50,22 +51,23 @@ class PurchaseController extends BaseController
             // Save data to database
             $data = [
                 'product_name' => $productName,
+                'category_id' => $categoryId, // Add category_id to data
                 'image' => $imageName,
                 'quantity' => $quantity,
                 'price' => $productPrice,
                 'purchase_date' => $purchaseDate,
             ];
 
-            $this->model->createPurchase($data);
+            $this->model->createPurchase($data); // Call the model to insert the data
             $this->redirect('/purchase');
         }
     }
+
     public function edit($id)
     {
         $purchaseModel = new PurchaseModel();  // Fetch categories from the database
         $purchase = $purchaseModel->getPurchases($id);
         $this->views('purchase/edit', ['purchase' => $purchase]);
-
     }
 
 

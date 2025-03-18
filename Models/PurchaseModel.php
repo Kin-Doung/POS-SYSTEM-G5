@@ -37,7 +37,7 @@ class PurchaseModel
             'quantity' => $data['quantity'],
             'price' => $data['price'],
             'purchase_date' => $data['purchase_date'],
-            'category_id' => $data['category_id'],  // Add category_id
+            'category_id' => $data['category_id']
         ]);
     }
 

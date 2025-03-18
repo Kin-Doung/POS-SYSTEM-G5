@@ -11,24 +11,28 @@ class PurchaseController extends BaseController
         $this->model = new PurchaseModel();
     }
 
-        public function index()
-        {
-            $purchase = $this->model->getPurchase();
-            $this->views('purchase/list', ['purchases' => $purchase]);
+    public function index()
+    {
+        $purchases = $this->model->getPurchase();
+        $categories = $this->model->getCategory(); // ✅ Fetch categories
+        $this->views('purchase/list', ['purchases' => $purchases, 'categories' => $categories]);
+    }
+    
+    public function create()
+    {
+        $purchaseModel = new PurchaseModel();
+        $categories = $purchaseModel->getCategory();
+        $this->views('purchase/create', ['categories' => $categories]);
+    }
 
-        }
-        function create()
-        {
-            $this->views('purchase/create');
-        }
-        function store()
-        {
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                $productName = $_POST['product_name'];
-                $productPrice = $_POST['price'];
-                $quantity = 1; // Default quantity
-                $imageName = null;
-                $purchaseDate = date('Y-m-d H:i:s'); // Current date and time
+    function store()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $productName = $_POST['product_name'];
+            $productPrice = $_POST['price'];
+            $quantity = 1; // Default quantity
+            $imageName = null;
+            $purchaseDate = date('Y-m-d H:i:s'); // Current date and time
 
             // Handle Image Upload
             if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
@@ -75,7 +79,36 @@ class PurchaseController extends BaseController
                 // Handle error if the purchase doesn't exist
                 $this->redirect('/purchase');
             }
-            $this->views('purchase/edit', ['purchase' => $purchase]);
+
+            $imagePath = $purchase['image']; // Store the current image path
+
+            // Check if the user has uploaded a new image
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+                // Handle Image Upload
+                $imagePath = time() . "_" . $_FILES['image']['name']; // Unique file name
+                $targetDir = "./uploads/";
+
+                if (!is_dir($targetDir)) {
+                    mkdir($targetDir, 0777, true);
+                }
+
+                $targetFile = $targetDir . $imagePath;
+                move_uploaded_file($_FILES['image']['tmp_name'], $targetFile);
+            } else {
+                // If no new image uploaded, keep the existing image
+                $imagePath = $_POST['existing_image'];
+            }
+
+            // Prepare data to update purchase
+            $data = [
+                'product_name'  => $_POST['product_name'],
+                'image' => $imagePath,
+                'price'  => $_POST['price'],
+            ];
+
+            // Update purchase data in the database
+            $this->model->updatePurchase($id, $data);
+            $this->redirect('/purchase');
         }
     }
 

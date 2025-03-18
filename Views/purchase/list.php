@@ -83,7 +83,8 @@
                             </button>
                         </form>
                     </div>
-                    <img src="uploads/<?= $purchase['image'] ?>" alt="<?= $purchase['product_name'] ?>" />
+                    <img src="<?= '/uploads/' . $purchase['image']; ?>" alt="Product Image">
+
                     <div class="product-name"><?= $purchase['product_name'] ?></div>
                     <input type="number" class="quantity" id="quantity<?= $purchase['product_name'] ?>" value="0" min="0" />
                     <div class="price">Price: $<?= number_format($purchase['price'], 2) ?></div>

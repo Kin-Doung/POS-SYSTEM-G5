@@ -21,7 +21,6 @@ $routes->get('/dashboard', [DashboardController::class, 'index']); // Redirect t
 // setting
 $routes->get('/settings', [SettingController::class, 'index']);
 
-
 //inventory
 $routes->get('/inventory', [InventoryController::class, 'index']);
 

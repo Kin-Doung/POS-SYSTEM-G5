@@ -75,7 +75,7 @@
                         <button class="subtract-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['product_name'] ?>', false)">-</button>
                     </div>
   
-                    
+        
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap">View detail</button>
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -83,15 +83,10 @@
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Product Detail</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        <form action="/purchase/destroy" method="POST" style="display:inline;">
-                            <input type="hidden" name="id" value="<?= $purchase['id'] ?>">
-                            <button type="submit"  style="background: red;" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete this product?');">
-                                delete 
-                            </button>
-                        </form>
+        
       </div>
       <div class="modal-body">
-      <div class="delete_edit">
+         <div class="delete_edit">
                         <form action="/purchase/update?id=<?= isset($purchase['id']) ? htmlspecialchars($purchase['id']) : '' ?>" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="existing_image" value="<?= htmlspecialchars($purchase['image'] ?? '') ?>">
 
@@ -113,18 +108,37 @@
             <input type="number" class="form-control" name="price" id="price" value="<?= htmlspecialchars($purchase['price'] ?? '') ?>" required>
         </div>
 
-        <button type="submit" class="btn btn-primary">Update</button>
+        <!-- <button type="submit" class="btn btn-primary  btn-update">Update</button> -->
+        <button type="submit" 
+    style="padding: 10px 14px; 
+           background-color: darkblue !important; 
+           width: 50px; 
+           min-width: 350px; 
+           border: none; 
+           color: white; 
+           font-weight: bold; 
+           border-radius: 8px; 
+           cursor: pointer; 
+           transition: all 0.3s ease;" 
+    onmouseover="this.style.backgroundColor=' rgb(0, 216, 29) ';" 
+    onmouseout="this.style.backgroundColor='darkblue';">
+    Update
+</button>
+
     </form>
               
-    </div>
+     </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      <form action="/purchase/destroy" method="POST" style="display:inline;">
+            <input type="hidden" name="id" value="<?= $purchase['id'] ?>">
+            <button type="submit"  style="background: red; max-width:100px;" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete this product?');">delete</button>
+        </form>
       </div>
     </div>
   </div>
 </div>
-                </div>
+    </div>
             <?php endforeach; ?>
         </div>
 

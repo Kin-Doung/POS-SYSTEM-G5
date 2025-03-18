@@ -56,12 +56,36 @@ body {
     white-space: nowrap;
     margin-top: 15px;
 }
-.btn-deleteP{
-    background: red;
+.custom-btn {
+    font-size: 18px; /* Adjust font size */
+    padding: 15px 30px; /* Adjust padding */
+    border-radius: 10px; /* Modify border radius */
+  }
+  .modal-body {
+    padding: 5px !important; /* Reduce padding inside modal body */
 }
-/* .card {
-    display: block !important;
-} */
+
+.modal-header, .modal-footer {
+    padding: 5px 10px !important; /* Reduce padding for header and footer */
+}
+
+.modal-content {
+    padding: 5px !important; /* Reduce padding inside modal */
+}
+
+.mb-3 {
+    margin-bottom: 2px !important; /* Reduce space between form fields */
+}
+
+img {
+    margin-top: 5px !important; /* Reduce space above image */
+    display: block;
+}
+
+.btn.btn-primary.btn-update {
+    padding: 4px 8px !important;
+    background-color: yellow !important;
+}
 
 
 

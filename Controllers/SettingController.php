@@ -1,40 +1,53 @@
 <?php
 require_once 'Models/SettingModel.php';
-
+require_once 'BaseController.php';
 class SettingController extends BaseController{
- 
-    function index()
-    {
-        $this->views('settings/list');
+    private $model;
+
+    public function __construct() {
+        $this->model = new SettingModel();
+    }
+
+    // Display admin settings
+    public function index() {
+        $admins = $this->model->getAdminUsers();
+        require_once 'views/settings/list.php'; // Ensure this path is correct
+    }
+
+    // Edit admin info
+    public function edit($id) {
+        $admin = $this->model->getAdmin($id);
+        require_once 'views/settings/edit.php'; // Load edit page
+    }
+
+    // Update admin info
+    public function update($id) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $admin = $this->model->getAdmin($id);
+
+            $imageData = $admin['store_logo']; // Keep old logo if not changed
+            if (isset($_FILES['store_logo']) && $_FILES['store_logo']['error'] === UPLOAD_ERR_OK) {
+                $imageData = file_get_contents($_FILES['store_logo']['tmp_name']);
+            }
+
+            $password = !empty($_POST['password']) 
+                ? password_hash($_POST['password'], PASSWORD_DEFAULT) 
+                : $admin['password']; // Keep old password if not updated
+
+            $data = [
+                'username' => $_POST['username'],
+                'email' => $_POST['email'],
+                'password' => $password,
+                'store_name' => $_POST['store_name'],
+                'store_logo' => $imageData,
+                'language' => $_POST['language']
+            ];
+
+            $this->model->updateAdmin($id, $data);
+
+            // Redirect to settings page
+            header("Location: /settings");
+            exit();
+        }
     }
 }
-// class SettingsController {
-//     public function index() {
-//         require_once "./Views/settings/index.php"; // Load the settings view
-//     }
-
-//     public function updateProfile() {
-//         require_once "./Databases/Database.php"; // Include database connection
-//         session_start();
-//         $userID = $_SESSION['user_id'];
-
-//         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-//             $name = $_POST['name'];
-//             $email = $_POST['email'];
-
-//             // Handle Profile Picture Upload
-//             $profilePic = $_FILES['profilePic']['name'] ? "uploads/" . basename($_FILES["profilePic"]["name"]) : $_POST['existingPic'];
-//             if ($_FILES['profilePic']['name']) {
-//                 move_uploaded_file($_FILES["profilePic"]["tmp_name"], $profilePic);
-//             }
-
-//             // Update Database
-//             $sql = "UPDATE users SET name=?, email=?, profile_pic=? WHERE id=?";
-//             $stmt = $conn->prepare($sql);
-//             $stmt->bind_param("sssi", $name, $email, $profilePic, $userID);
-//             $stmt->execute();
-//             header("Location: index.php?page=settings");
-//         }
-//     }
-// }
-// ?>

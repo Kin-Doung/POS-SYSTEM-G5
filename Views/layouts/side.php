@@ -35,7 +35,7 @@
           <span class="nav-link-text ms-1">Order</span>
         </a>
       </li>
-      <!-- nav purchase order -->
+      <!-- nav Suppliers -->
       <li class="nav-item">
         <a class="nav-link text-white " href="/purchase">
           <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -44,7 +44,8 @@
           <span class="nav-link-text ms-1">Product</span>
         </a>
       </li>
-      <li class="nav-item">
+      <!-- nav Categories -->
+      <li class="nav-item"> 
         <a class="nav-link text-white " href="/category">
           <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
             <i class="material-icons opacity-10">format_textdirection_r_to_l</i>
@@ -52,6 +53,7 @@
           <span class="nav-link-text ms-1">Categories</span>
         </a>
       </li>
+      <!-- nav Notifications -->
       <li class="nav-item">
         <a class="nav-link text-white" href="/notifications">
           <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -60,6 +62,7 @@
           <span class="nav-link-text ms-1">Notifications</span>
         </a>
       </li>
+      <!-- nav setting -->
       <li class="nav-item mt-3">
         <a class="nav-link text-white" data-bs-toggle="collapse" href="#settingsMenu" role="button" aria-expanded="false" aria-controls="settingsMenu">
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">
@@ -77,14 +80,7 @@
             <span class="nav-link-text ms-1">Account</span>
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" href="/language">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">language</i>
-            </div>
-            <span class="nav-link-text ms-1">Language</span>
-          </a>
-        </li>
+ 
         <li class="nav-item">
           <a class="nav-link text-white" href="/logout">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">

@@ -24,7 +24,6 @@ $routes->get('/settings/store', [SettingController::class, 'store']);
 $routes->get('/settings/edit', [SettingController::class, 'edit']);
 $routes->put('/settings/update', [SettingController::class, 'update']);
 
-
 //inventory
 $routes->get('/inventory', [InventoryController::class, 'index']);
 

@@ -7,13 +7,15 @@ class ProductController extends BaseController
 
     function __construct()
     {
-        $this->model = new ProductModel();
+        $this->views('products/list');
     }
 
     public function index()
     {
         $purchases = $this->model->getPurchasesWithProductDetails();
-        $this->views('products/list', ['purchases' => $purchases]);
+        $purchases = $this->model->getPurchase();
+        $categories = $this->model->getCategory(); // ✅ Fetch categories
+        $this->views('products/list', ['purchases' => $purchases, 'purchases' => $purchases, 'categories' => $categories]);
     }
 
     // ProductController.php
@@ -27,7 +29,7 @@ class ProductController extends BaseController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $newPrice = $_POST['price'] ?? null;
-    
+
             if ($newPrice !== null) {
                 $this->model->updatePrice($id, $newPrice);
                 $this->redirect('/products'); // Redirect after updating the price
@@ -37,7 +39,5 @@ class ProductController extends BaseController
         } else {
             echo "Invalid request method.";
         }
-    }  
-
+    }
 }
-

@@ -28,18 +28,14 @@
     <div class="search-section">
         <form action="" method="POST">
             <input type="text" class="search-input" id="searchInput" name="searchInput" placeholder="Search for products..." onkeyup="filterProducts()" />
-            <select class="product-select" id="productSelect" name="productSelect" onchange="filterProducts()">
-                <option value="">Select Product</option>
-                <option value="Adapter">Adapter</option>
-                <option value="Cake Mixer">Cake Mixer</option>
-                <option value="Cocktail Machine">Cocktail Machine</option>
-                <option value="Electric Cooking Pot">Electric Cooking Pot</option>
-            </select>
             <select class="category-select" id="categorySelect" name="categorySelect" onchange="filterProducts()">
                 <option value="">Select Category</option>
                 <option value="all">All</option>
-                <option value="kitchen">Kitchen</option>
-                <option value="appliances">Appliances</option>
+                <?php foreach ($categories as $category): ?>
+                    <option value="<?= htmlspecialchars($category['name']) ?>">
+                        <?= htmlspecialchars($category['name']) ?>
+                    </option>
+                <?php endforeach; ?>
             </select>
             <select class="price-select" id="priceSelect" name="priceSelect" onchange="filterProducts()">
                 <option value="">Select Price Range</option>
@@ -51,10 +47,11 @@
             </select>
         </form>
     </div>
+
     <div class="container-product">
         <div class="container">
             <div class="container mt-3">
-                <table class="table-dark, bg-light">
+                <table class="table-dark bg-light">
                     <thead class="table-dark">
                         <tr>
                             <th>Product</th>
@@ -112,6 +109,7 @@
                 </table>
             </div>
         </div>
+
         <div class="detail-section">
             <div class="detail-title">Order Summary</div>
             <table class="order-table">
@@ -125,13 +123,13 @@
                 </thead>
                 <tbody id="details"></tbody>
             </table>
-            <div class="total" id="totalPrice"style= "margin-top:10px">Cart Total: $0.00</div>
-            
-            <canvas id="qrCode" style="margin-top: 20px;"></canvas>
-            <button class="buy-button" style="margin-top: 20px; width: 100%;" onclick="saveToPDF()">Save as PDF</button>
-            <button class="buy-button" style="margin-top: 15px; width: 100%; background-color: #27ae60;" onclick="processPurchase()">Place Order</button>
+            <div class="total" id="totalPrice">Cart Total: $0.00</div>
+            <canvas id="qrCode"></canvas>
+            <button class="buy-button" onclick="saveToPDF()">Save as PDF</button>
+            <button class="buy-button" style="background-color: #27ae60;" onclick="processPurchase()">Place Order</button>
         </div>
     </div>
+
 
     <?php require_once 'views/layouts/footer.php'; ?>
 </main>

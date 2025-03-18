@@ -35,10 +35,19 @@
                     </option>
                 <?php endforeach; ?>
             </select>
+            <select class="price-select" id="priceSelect" name="priceSelect" onchange="filterProducts()">
+                    <option value="">Select Price Range</option>
+                    <option value="0">Up to $10</option>
+                    <option value="15">Up to $15</option>
+                    <option value="20">Up to $20</option>
+                    <option value="25">Up to $25</option>
+                    <option value="30">Up to $30</option>
+                </select>
         </form>
         <a href="/purchase/create" class="btn bg-info text-light ">Add New</a>
 
         </form>
+
     </div>
     <!-- Modal structure -->
     <div class="container-purchase">
@@ -124,7 +133,6 @@
                 <tbody id="details"></tbody>
             </table>
             <div class="total" id="totalPrice">Cart Total: $0.00</div>
-            <canvas id="qrCode" style="margin-top: 20px;"></canvas>
             <div class="buys">
                 <button class="buy-button" style="margin-top: 20px; width: 50%;" onclick="saveToPDF()">Save as PDF</button>
                 <button class="buy-button" style="margin-top: 15px; width: 50%; background-color: #27ae60;" onclick="processPurchase()">Restock</button>

@@ -25,7 +25,10 @@ class PurchaseModel
         $categories = $stmt->fetchAll();  // Fetch all categories as an associative array
         return $categories;
     }
+    
 
+    
+    // Function to create a new purchase
     function createPurchase($data)
     {
         // Insert the purchase data into the purchase table
@@ -36,11 +39,9 @@ class PurchaseModel
             'quantity' => $data['quantity'],
             'price' => $data['price'],
             'purchase_date' => $data['purchase_date'],
-            'category_id' => $data['category_id'],  // Ensure category_id is included
+            'category_id' => $data['category_id'],  // Add category_id
         ]);
     }
-    
-
 
     // Function to fetch a specific purchase by ID
     function getPurchases($id)
@@ -50,6 +51,7 @@ class PurchaseModel
         return $purchase;
     }
 
+    // Function to update a purchase
     public function updatePurchase($id, $data)
     {
         // First query to update the purchase table
@@ -57,18 +59,17 @@ class PurchaseModel
             'product_name' => $data['product_name'],
             'image' => $data['image'],
             'price' => $data['price'],
-            'category_id' => $data['category_id'],
+            'category_id' => $data['category_id'],  // Ensure category_id is updated
             'id' => $id
         ]);
 
-        // Second query to update the products table (if needed)
+        // Second query to update the products table
         $this->pdo->query("UPDATE products SET name = :name, price = :price WHERE id = :id", [
-            'name' => $data['product_name'],
+            'name' => $data['product_name'], // Ensure to pass the correct product_name
             'price' => $data['price'],
             'id' => $id
         ]);
     }
-
 
     // Function to delete a purchase
     public function deletePurchase($id)

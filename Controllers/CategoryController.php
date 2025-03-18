@@ -51,6 +51,8 @@ class CategoryController extends BaseController
     function destroy()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id'])) {
+            var_dump($_POST);  // Debugging line
+            die();  // Stop execution to inspect the data
             $id = $_POST['id'];
             $this->model->deleteCategory($id);
             $this->redirect('/category');

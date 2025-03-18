@@ -40,6 +40,7 @@
     <div class="search-section">
         <form action="" method="POST">
             <input type="text" class="search-input" id="searchInput" name="searchInput" placeholder="Search for products..." onkeyup="filterProducts()" />
+
             <select class="category-select" id="categorySelect" name="categorySelect" onchange="filterProducts()">
                 <option value="">Select Category</option>
                 <option value="all">All</option>
@@ -49,15 +50,17 @@
                     </option>
                 <?php endforeach; ?>
             </select>
+
             <select class="price-select" id="priceSelect" name="priceSelect" onchange="filterProducts()">
-                    <option value="">Select Price Range</option>
-                    <option value="0">Up to $10</option>
-                    <option value="15">Up to $15</option>
-                    <option value="20">Up to $20</option>
-                    <option value="25">Up to $25</option>
-                    <option value="30">Up to $30</option>
-                </select>
+                <option value="">Select Price Range</option>
+                <option value="0">Up to $10</option>
+                <option value="15">Up to $15</option>
+                <option value="20">Up to $20</option>
+                <option value="25">Up to $25</option>
+                <option value="30">Up to $30</option>
+            </select>
         </form>
+
         <a href="/purchase/create" class="btn bg-info text-light ">Add New</a>
 
         </form>
@@ -66,8 +69,7 @@
     <!-- Modal structure -->
     <div class="container-purchase">
         <div class="product-grid" id="productGrid">
-            <?php foreach ($purchases as $purchase): ?>
-
+            <?php foreach ($purchase as $purchase): ?>
                 <div class="card" data-name="<?= $purchase['product_name'] ?>" data-category="<?= $purchase['product_name'] ?>" data-price="<?= $purchase['price'] ?>">
                     <img src="<?= '/uploads/' . $purchase['image']; ?>" alt="Product Image">
 
@@ -79,8 +81,6 @@
                         <button class="buy-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['product_name'] ?>', true)">+</button>
                         <button class="subtract-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['product_name'] ?>', false)">-</button>
                     </div>
-
-
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap">View detail</button>
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">

@@ -13,18 +13,19 @@ class ProductController extends BaseController
     public function index()
     {
         $purchases = $this->model->getPurchasesWithProductDetails();
-        $purchases = $this->model->getPurchase();
-        $categories = $this->model->getCategory(); // ✅ Fetch categories
-        $this->views('products/list', ['purchases' => $purchases, 'purchases' => $purchases, 'categories' => $categories]);
+        $categories = $this->model->getCategory();
+    
+    
+        $this->views('products/list', ['purchase' => $purchases, 'categories' => $categories]);
     }
 
-    // ProductController.php
 
     public function edit($id)
     {
         $product = $this->model->getProduct($id);
         $this->views('products/edit', ['product' => $product]);
     }
+
     public function updatePrice($id)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {

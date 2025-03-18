@@ -8,7 +8,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/purchase/update?id=<?= isset($purchase['id']) ? htmlspecialchars($purchase['id']) : '' ?>" method="POST" enctype="multipart/form-data">
+                    <form action="purchase_update.php?id=<?= htmlspecialchars($purchase['id'] ?? '') ?>" method="POST" enctype="multipart/form-data">
+
+
                         <input type="hidden" name="existing_image" value="<?= htmlspecialchars($purchase['image'] ?? '') ?>">
 
                         <div class="mb-3">

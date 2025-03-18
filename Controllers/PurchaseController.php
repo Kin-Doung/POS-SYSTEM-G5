@@ -1,7 +1,5 @@
 <?php
 require_once './Models/PurchaseModel.php';
-
-
 class PurchaseController extends BaseController
 {
     private $model;
@@ -15,7 +13,7 @@ class PurchaseController extends BaseController
     {
         $purchases = $this->model->getPurchase();
         $categories = $this->model->getCategory(); // ✅ Fetch categories
-        $this->views('purchase/list', ['purchases' => $purchases, 'categories' => $categories]);
+        $this->views('purchase/list', ['purchase' => $purchases, 'categories' => $categories]);
     }
 
     public function create()
@@ -51,6 +49,7 @@ class PurchaseController extends BaseController
             // Save data to database
             $data = [
                 'product_name' => $productName,
+                'category_name' => $productName,
                 'category_id' => $categoryId, // Add category_id to data
                 'image' => $imageName,
                 'quantity' => $quantity,
@@ -69,7 +68,6 @@ class PurchaseController extends BaseController
         $purchase = $purchaseModel->getPurchases($id);
         $this->views('purchase/edit', ['purchase' => $purchase]);
     }
-
 
     // Update Purchase Controller's update method
     public function update($id)
@@ -113,7 +111,6 @@ class PurchaseController extends BaseController
             $this->redirect('/purchase');
         }
     }
-
 
     public function destroy()
     {

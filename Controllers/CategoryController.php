@@ -10,12 +10,12 @@ class CategoryController extends BaseController
     function index()
     {
         $category = $this->model->getCategory();
-        $this->Views('categories/list', ['categories' => $category]);
+        $this->views('categories/list', ['categories' => $category]);
     }
 
     function create()
     {
-        $this->Views('categories/create');
+        $this->views('categories/create');
     }
 
     function store()
@@ -32,7 +32,7 @@ class CategoryController extends BaseController
     function edit($id)
     {
         $category = $this->model->getCategorys($id);
-        $this->Views('categories/edit', ['category' => $category]); 
+        $this->views('categories/edit', ['category' => $category]); 
     }
     
 
@@ -41,6 +41,7 @@ class CategoryController extends BaseController
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $data = [
                 'name' => $_POST['name'],
+                'category_id' => $_POST['category_id'],
             ];
             $this->model->updateCategory($id, $data);
             $this->redirect('/category');

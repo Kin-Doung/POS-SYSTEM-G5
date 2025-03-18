@@ -34,8 +34,38 @@
         </li>
     </nav>
     <!-- End Navbar -->
-    <div class="logout">
-
-        <h1 style="text-align: center;">Welcome to logout</h1>
-    </div>
 </main>
+
+
+
+<!-- log out form -->
+<div class="auth-container">
+    <div class="logout-card">
+        <div class="profile-pic">
+            <img src="../../assets/images/image.png" alt="">
+        </div>
+        <div class="eng-ly">Engly shop</div>
+        <div class="user-info">
+            <p>Username: 
+                <span id="username" class="blur-text">Engly</span> 
+                <i class="toggle-icon" onclick="toggleVisibility('username', this)">👁️</i>
+            </p>
+        </div>
+        <div class="user-pass">
+            <p>Password: 
+                <span id="password" class="blur-text">123</span> 
+                <i class="toggle-icon" onclick="toggleVisibility('password', this)">👁️</i>
+            </p>
+        </div>
+        <div class="user-email">
+            <p>Email: engly@gmail.com</p>
+        </div>
+        <div class="logout-btn">
+            <a href="/">Logout</a>
+        </div>
+    </div>
+</div>
+
+
+<!-- end of logout form -->
+

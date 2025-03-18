@@ -42,8 +42,6 @@
             <div class="form-group">
                 <label for="" class="form-label">Name:</label>
                 <input type="text" value="" name="name" class="form-control">
-                <label for="" class="form-label">Descriptiont:</label>
-                <input type="text" value="" name="descriptions" class="form-control">
             </div>
             <button type="submit" class="btn btn-success mt-3">Submit</button>
         </form>
@@ -51,4 +49,3 @@
 
     <?php require_once 'views/layouts/footer.php'; ?>
 </main>
-<?php require_once 'views/layouts/header.php'; ?>

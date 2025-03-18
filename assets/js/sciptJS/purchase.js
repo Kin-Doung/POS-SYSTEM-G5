@@ -38,7 +38,7 @@ function updateDetails() {
     });
 
     document.getElementById("totalPrice").innerText = "Cart Total: $" + totalOrderPrice.toFixed(2);
-    generateQRCode(totalOrderPrice); // Generate QR code for the total
+  
 }
 
 function generateQRCode(total) {

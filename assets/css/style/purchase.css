@@ -8,6 +8,73 @@ body {
     max-width: 1200px;
     margin: 30px auto;
 }
+
+/* Container to hold cards */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 equal columns */
+    gap: 20px; /* Space between cards */
+    margin: 0 auto; /* Center the grid container */
+    padding: 20px; /* Optional: Add some padding */
+}
+
+/* Card Styling */
+.product-grid .card {
+    width: 100%; /* Ensure the card fills its column */
+    height: auto;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/* Image Styling */
+.product-grid .card img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Other Styling as previously defined */
+.product-grid .product-name {
+    font-size: 14px;
+    text-align: center;
+    margin-top: 8px;
+}
+
+.product-grid .quantity {
+    width: 40px;
+    margin-top: 5px;
+    text-align: center;
+}
+
+.product-grid .price {
+    font-size: 12px;
+    margin-top: 8px;
+    text-align: center;
+}
+
+.product-grid .buy-button,
+.product-grid .subtract-button {
+    width: 25px;
+    height: 25px;
+    font-size: 18px;
+    border-radius: 50%;
+    margin: 5px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+}
+
+.product-grid .subtract-button {
+    background-color: #dc3545;
+}
+
+
 .search-section {
     display: flex;
     justify-content: center;
@@ -86,9 +153,6 @@ img {
     padding: 4px 8px !important;
     background-color: yellow !important;
 }
-
-
-
 @media (max-width: 992px) {
     .container-purchase {
         flex-direction: column;

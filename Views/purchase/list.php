@@ -1,40 +1,44 @@
 <?php require_once './views/layouts/side.php'?>
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
-    <nav class="navbar">
-        <!-- Search Bar -->
-        <div class="search-container">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search...">
-        </div>
+    <nav class="navbar" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background-color: #fff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+    <!-- Search Bar -->
+    <div class="search-container" style="display: flex; align-items: center; max-width: 600px; width: 100%; border-radius: 25px; border: 2px solid #ccc; padding: 5px 15px; background-color: #f9f9f9;">
+        <i class="fas fa-search" style="color: #aaa; font-size: 16px; margin-right: 10px;"></i>
+        <input type="text" placeholder="Search..." class="search-bar" 
+               style="border: none; outline: none; flex: 1; padding: 5px 10px; font-size: 14px; border-radius: 20px; background-color: transparent; color: #333;">
+    </div>
 
-        <!-- Icons -->
-        <div class="icons">
-            <i class="fas fa-globe icon-btn"></i>
-            <div class="icon-btn" id="notification-icon">
-                <i class="fas fa-bell"></i>
-                <span class="notification-badge" id="notification-count">8</span>
-            </div>
+    <!-- Icons -->
+    <div class="icons" style="display: flex; align-items: center; gap: 20px;">
+        <i class="fas fa-globe icon-btn" style="font-size: 18px; cursor: pointer;"></i>
+        <div class="icon-btn" id="notification-icon" style="position: relative; cursor: pointer;">
+            <i class="fas fa-bell" style="font-size: 18px;"></i>
+            <span class="notification-badge" id="notification-count" style="position: absolute; top: -5px; right: -5px; background-color: red; color: white; font-size: 10px; width: 18px; height: 18px; border-radius: 50%; text-align: center; line-height: 18px;">8</span>
         </div>
+    </div>
 
-        <!-- Profile -->
-        <div class="profile">
-            <img src="../../assets/images/image.png" alt="User">
-            <div class="profile-info">
-                <span>Jimmy Sullivan</span>
-                <span class="store-name">Odama Store</span>
-            </div>
+    <!-- Profile -->
+    <div class="profile" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+        <img src="../../assets/images/image.png" alt="User" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+        <div class="profile-info" style="display: flex; flex-direction: column; align-items: flex-start;">
+            <span style="font-weight: bold; font-size: 14px;">Engly</span>
+            <span class="store-name" style="font-size: 12px; color: #888;">Engly Store</span>
         </div>
-        <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
-            <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
-                <div class="sidenav-toggler-inner">
-                    <i class="sidenav-toggler-line"></i>
-                    <i class="sidenav-toggler-line"></i>
-                    <i class="sidenav-toggler-line"></i>
-                </div>
-            </a>
-        </li>
-    </nav>
+    </div>
+
+    <!-- Sidenav toggle button for smaller screens -->
+    <li class="nav-item d-xl-none ps-3 d-flex align-items-center" style="display: none;">
+        <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+            <div class="sidenav-toggler-inner">
+                <i class="sidenav-toggler-line"></i>
+                <i class="sidenav-toggler-line"></i>
+                <i class="sidenav-toggler-line"></i>
+            </div>
+        </a>
+    </li>
+</nav>
+
     <!-- End Navbar -->
     <?php require_once 'views/layouts/header.php'; ?>
     <div class="search-section">
@@ -54,7 +58,7 @@
                 <option value="25">Up to $25</option>
                 <option value="30">Up to $30</option>
             </select>
-            <a href="/purchase/create" class="btn bg-info text-light ">Add New</a>
+            <a href="/purchase/create" class="btn text-light" style="background-color: darkblue;">Add New</a>
 
         </form>
     </div>
@@ -66,9 +70,13 @@
                 <div class="card" data-name="<?= $purchase['product_name'] ?>" data-category="<?= $purchase['product_name'] ?>" data-price="<?= $purchase['price'] ?>">
                     <img src="<?= '/uploads/' . $purchase['image']; ?>" alt="Product Image">
 
-                    <div class="product-name"><?= $purchase['product_name'] ?></div>
-                    <input type="number" class="quantity" id="quantity<?= $purchase['product_name'] ?>" value="0" min="0" />
-                    <div class="price">Price: $<?= number_format($purchase['price'], 2) ?></div>
+                    <div class="product-name" >Name : <b> <?= $purchase['product_name'] ?> </b> </div>
+    
+                    <div class="quantity-container">
+                <span>Quantity:</span>
+            <input type="number" class="quantity" id="quantity<?= $purchase['product_name'] ?>" value="0" min="0" />
+            </div>
+                    <div class="price">Price: <b> $<?= number_format($purchase['price'], 2) ?> </b>  </div>
                     <div class="sum">
 
                         <button class="buy-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['product_name'] ?>', true)">+</button>
@@ -76,7 +84,13 @@
                     </div>
   
         
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap">View detail</button>
+<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap">View detail</button> -->
+<button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap" 
+        style="padding: 3px 6px; font-size: 10px; height: 30px; line-height: 15px; border-radius: 3px; background-color: #007bff; color: white; border: none; cursor: pointer; transition: background-color 0.3s ease; text-transform: uppercase; margin-right:1px; width: 40px; margin-bottom:-2px;">
+    View detail
+</button>
+
+
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -156,13 +170,21 @@
                 <tbody id="details"></tbody>
             </table>
             <div class="total" id="totalPrice">Cart Total: $0.00</div>
-            <canvas id="qrCode" style="margin-top: 20px;"></canvas>
+            
             <div class="buys">
-                <button class="buy-button" style="margin-top: 20px; width: 50%;" onclick="saveToPDF()">Save as PDF</button>
-                <button class="buy-button" style="margin-top: 15px; width: 50%; background-color: #27ae60;" onclick="processPurchase()">Restock</button>
+            <button class="buy-button" 
+        style="margin-top: 10px; width: 45%; background-color:#7eb7f5; padding: 7px 11px; font-size: 14px;" 
+        onclick="saveToPDF()">Save as PDF</button>
+
+<button class="buy-button" 
+        style="margin-top: 10px; width: 45%; background-color:rgb(8, 202, 89); padding: 7px 11px; font-size: 14px;" 
+        onclick="processPurchase()">Restock</button>
+
             </div>
         </div>
     </div>
 
     <?php require_once 'views/layouts/footer.php'; ?>
 </main>
+
+

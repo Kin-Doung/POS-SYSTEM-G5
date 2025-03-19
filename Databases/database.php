@@ -24,17 +24,17 @@ class Database
         return $this->pdo;
     }
 
-    public function query($sql, $params = [])
-    {
-        $stmt = $this->pdo->prepare($sql);
-
-        // Debugging - Print SQL Query & Parameters
-        echo "SQL: " . $sql . "<br>";
-        echo "Params: " . json_encode($params) . "<br>";
-
-        $stmt->execute($params);
-        return $stmt;
+    public function query($sql, $params = []) {
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute($params);
+            return $stmt;
+        } catch (PDOException $e) {
+            error_log("SQL Error: " . $e->getMessage()); // Log instead of echo
+            die("Database error occurred.");
+        }
     }
+    
 
 
     public function beginTransaction()

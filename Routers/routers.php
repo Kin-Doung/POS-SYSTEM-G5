@@ -22,9 +22,10 @@ $routes->get('/dashboard', [DashboardController::class, 'index']); // Redirect t
 $routes->get('/settings', [SettingController::class, 'index']);
 $routes->get('/settings/create', [SettingController::class, 'create']);
 $routes->post('/settings/store', [SettingController::class, 'store']);
-$routes->get('/settings/edit', [SettingController::class, 'edit']);
-$routes->put('/settings/update', [SettingController::class, 'update']);
-$routes->delete('/settings/destroy', [SettingController::class, 'destroy']);
+$routes->get('/settings/edit/(:num)', [SettingController::class, 'edit']);
+$routes->put('/settings/update/(:num)', [SettingController::class, 'update']);
+$routes->delete('/settings/destroy/(:num)', [SettingController::class, 'destroy']);
+
 
 //inventory
 $routes->get('/inventory', [InventoryController::class, 'index']);

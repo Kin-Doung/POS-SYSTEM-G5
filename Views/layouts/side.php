@@ -2,14 +2,9 @@
   <div class="sidenav-header">
     <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
     <a class="navbar-brand m-0" target="_blank">
-      <img src="<?= !empty($admin['store_logo']) ? 'data:image/jpeg;base64,' . base64_encode($admin['store_logo']) : '../assets/img/logos/diamond.png'; ?>"
-        class="navbar-brand-img h-100" alt="store_logo" style="width: 50px; height: 50px; object-fit: cover; border-radius: 360px;">
+      <img src="../assets/img/logos/logo.png" class="navbar-brand-img h-100" alt="main_logo">
     </a>
-    <span class="ml-2">
-      <?= !empty($admin['store_name']) ? htmlspecialchars($admin['store_name']) : 'Default Store' ?>
-    </span>
-
-
+   
   </div>
   <hr class="horizontal light mt-0 mb-2">
   <div>

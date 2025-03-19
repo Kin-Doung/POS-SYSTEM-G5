@@ -16,27 +16,22 @@ class SettingModel
         $stmt = $this->pdo->query("SELECT * FROM admin");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
     public function saveAdmin($data)
     {
-        $query = "UPDATE admin SET 
-                    username = :username, 
-                    email = :email, 
-                    password = :password, 
-                    store_name = :store_name, 
-                    store_logo = :store_logo, 
-                    language = :language 
-                  WHERE id = 1";  // Ensure there's only ONE admin
+        $sql = "UPDATE admin SET 
+                username = :username, 
+                email = :email, 
+                password = :password, 
+                store_name = :store_name, 
+                store_logo = :store_logo, 
+                language = :language
+            WHERE id = 1"; // Change 1 to the actual admin ID
 
-        $stmt = $this->pdo->query($query);
-        $stmt->bindParam(':username', $data['username']);
-        $stmt->bindParam(':email', $data['email']);
-        $stmt->bindParam(':password', $data['password']);
-        $stmt->bindParam(':store_name', $data['store_name']);
-        $stmt->bindParam(':store_logo', $data['store_logo'], PDO::PARAM_LOB);
-        $stmt->bindParam(':language', $data['language']);
-        return $stmt->execute();
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute($data);
     }
+
+
 
 
     // Get a single admin user by ID

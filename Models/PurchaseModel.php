@@ -26,21 +26,21 @@ class PurchaseModel
         return $categories;
     }
 
+    // Function to create a new purchase
     function createPurchase($data)
     {
         // Insert the purchase data into the purchase table
-        $this->pdo->query("INSERT INTO purchase (product_name, image, quantity, price, purchase_date, category_id) 
-            VALUES (:product_name, :image, :quantity, :price, :purchase_date, :category_id)", [
-            'product_name' => $data['product_name'],
+        $this->pdo->query("INSERT INTO purchase (product_id, product_name, image, quantity, price, purchase_date, category_id) 
+        VALUES (:product_id, :product_name, :image, :quantity, :price, :purchase_date, :category_id)", [
+            'product_id' => $data['product_id'],
+            'product_name' => $data['product_name'], // ✅ Add product_name here
             'image' => $data['image'],
             'quantity' => $data['quantity'],
             'price' => $data['price'],
             'purchase_date' => $data['purchase_date'],
-            'category_id' => $data['category_id'],  // Ensure category_id is included
+            'category_id' => $data['category_id'],
         ]);
     }
-    
-
 
     // Function to fetch a specific purchase by ID
     function getPurchases($id)
@@ -50,9 +50,18 @@ class PurchaseModel
         return $purchase;
     }
 
+    // Function to update a purchase
     public function updatePurchase($id, $data)
     {
-        // First query to update the purchase table
+        // Get the existing purchase data to find the correct `product_id`
+        $purchase = $this->getPurchases($id);
+        if (!$purchase) {
+            return; // Exit if no purchase is found
+        }
+
+        $productId = $purchase['product_id']; // Get the linked product ID
+
+        // ✅ Update `purchase` table
         $this->pdo->query("UPDATE purchase SET product_name = :product_name, image = :image, price = :price, category_id = :category_id WHERE id = :id", [
             'product_name' => $data['product_name'],
             'image' => $data['image'],
@@ -61,11 +70,12 @@ class PurchaseModel
             'id' => $id
         ]);
 
-        // Second query to update the products table (if needed)
-        $this->pdo->query("UPDATE products SET name = :name, price = :price WHERE id = :id", [
+        // ✅ Update `products` table as well
+        $this->pdo->query("UPDATE products SET name = :name, price = :price, category_id = :category_id WHERE id = :id", [
             'name' => $data['product_name'],
             'price' => $data['price'],
-            'id' => $id
+            'category_id' => $data['category_id'],
+            'id' => $productId // Ensure correct product ID is used
         ]);
     }
 

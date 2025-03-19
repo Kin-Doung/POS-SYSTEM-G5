@@ -7,22 +7,24 @@ class ProductController extends BaseController
 
     function __construct()
     {
-        $this->views('products/list');
+        // Initialize the model here
+        $this->model = new ProductModel();
     }
 
     public function index()
     {
+        // Now, you can call the method on the model
         $purchases = $this->model->getPurchasesWithProductDetails();
         $categories = $this->model->getCategory();
     
-    
+        // Pass data to the views
         $this->views('products/list', ['purchase' => $purchases, 'categories' => $categories]);
     }
 
-
     public function edit($id)
     {
-        $product = $this->model->getProduct($id);
+        // Fetch product details based on ID
+        $product = $this->model->getProducts($id);
         $this->views('products/edit', ['product' => $product]);
     }
 

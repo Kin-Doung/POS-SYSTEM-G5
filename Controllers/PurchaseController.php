@@ -12,7 +12,6 @@ class PurchaseController extends BaseController
         $this->model = new PurchaseModel();
         $this->productModel = new ProductModel(); // Instantiate the ProductModel
     }
-
     public function index()
     {
         $purchases = $this->model->getPurchase();

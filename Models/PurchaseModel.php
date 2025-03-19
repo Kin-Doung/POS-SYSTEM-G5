@@ -30,15 +30,14 @@ class PurchaseModel
     function createPurchase($data)
     {
         // Insert the purchase data into the purchase table
-        $this->pdo->query("INSERT INTO purchase (product_id, product_name, image, quantity, price, purchase_date, category_id) 
-        VALUES (:product_id, :product_name, :image, :quantity, :price, :purchase_date, :category_id)", [
-            'product_id' => $data['product_id'],
-            'product_name' => $data['product_name'], // ✅ Add product_name here
+        $this->pdo->query("INSERT INTO purchase (product_id, image, quantity, price, purchase_date, category_id) 
+            VALUES (:product_id, :image, :quantity, :price, :purchase_date, :category_id)", [
+            'product_id' => $data['product_id'],  // Use product_id from the Product model
             'image' => $data['image'],
             'quantity' => $data['quantity'],
             'price' => $data['price'],
             'purchase_date' => $data['purchase_date'],
-            'category_id' => $data['category_id'],
+            'category_id' => $data['category_id'],  // Add category_id
         ]);
     }
 

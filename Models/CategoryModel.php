@@ -27,7 +27,7 @@ class CategoryModel
         $category = $stmt->fetch();
         return $category;
     }
-    
+
     function updateCategory($id, $data)
     {
         $this->pdo->query("UPDATE categories SET name = :name WHERE id = :id", [
@@ -39,8 +39,14 @@ class CategoryModel
     {
         $stmt = $this->pdo->query("DELETE FROM categories WHERE id = :id");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        return $stmt->execute();
-    }    
     
+        if ($stmt->execute()) {
+            return true;  // Success
+        } else {
+            // If there was an issue, output the error for debugging
+            echo "Error: " . implode(", ", $stmt->errorInfo());
+            return false;  // Failure
+        }
+    }
     
 }

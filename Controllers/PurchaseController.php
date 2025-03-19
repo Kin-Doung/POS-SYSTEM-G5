@@ -1,31 +1,41 @@
 <?php
 require_once './Models/PurchaseModel.php';
-
+require_once './Models/ProductModel.php'; // Include the ProductModel
 
 class PurchaseController extends BaseController
 {
     private $model;
+    private $productModel; // Add reference to ProductModel
+
     function __construct()
     {
-
         $this->model = new PurchaseModel();
+        $this->productModel = new ProductModel(); // Instantiate the ProductModel
     }
 
     public function index()
     {
-        $purchase = $this->model->getPurchase();
-        $this->Views('purchase/list', ['purchases' => $purchase]);
+        $purchases = $this->model->getPurchase();
+        $categories = $this->model->getCategory(); // ✅ Fetch categories
+        $this->views('purchase/list', ['purchases' => $purchases, 'categories' => $categories]);
     }
-    function create()
+
+    public function create()
     {
-        $this->Views('purchase/create');
+        $purchaseModel = new PurchaseModel();
+        $categories = $purchaseModel->getCategory();
+        $this->views('purchase/create', ['categories' => $categories]);
     }
-    function store()
+    
+
+    public function store()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Retrieve form data
             $productName = $_POST['product_name'];
             $productPrice = $_POST['price'];
-            $quantity = 1; // Default quantity
+            $quantity = 0; // Default quantity
+            $categoryId = $_POST['category_id']; // Get the category ID from the form
             $imageName = null;
             $purchaseDate = date('Y-m-d H:i:s'); // Current date and time
 
@@ -42,29 +52,43 @@ class PurchaseController extends BaseController
                 move_uploaded_file($_FILES['image']['tmp_name'], $targetFile);
             }
 
-            // Save data to database
-            $data = [
-                'product_name' => $productName,
+            // Insert the product into the 'products' table
+            $productData = [
+                'product_name' => $_POST['product_name'],
+                'name' => $productName,
+                'category_id' => $categoryId,
+                'price' => $productPrice,
                 'image' => $imageName,
                 'quantity' => $quantity,
-                'price' => $productPrice,
-                'purchase_date' => $purchaseDate,
+               
             ];
 
-            $this->model->createPurchase($data);
+            // Insert product data and get the product ID
+            $productId = $this->productModel->createProduct($productData); // Use ProductModel to insert product
+
+            // Insert purchase data
+            $purchaseData = [
+                'product_name' => $_POST['product_name'],
+                'product_id' => $productId, // Product ID from the product table
+                'category_id' => $categoryId,
+                'price' => $productPrice,
+                'quantity' => $quantity,
+                'purchase_date' => $purchaseDate,
+                'image' => $imageName
+            ];
+
+            // Save purchase data
+            $this->model->createPurchase($purchaseData); // Call the model to insert the data
             $this->redirect('/purchase');
         }
-    }
-    public function edit($id)
-    {
-        $purchase = $this->model->getPurchases($id);
-        if (!$purchase) {
-            // Handle error if the purchase doesn't exist
-            $this->redirect('/purchase');
-        }
-        $this->Views('purchase/edit', ['purchase' => $purchase]);
     }
 
+    public function edit($id)
+    {
+        $purchaseModel = new PurchaseModel();  // Fetch categories from the database
+        $purchase = $purchaseModel->getPurchases($id);
+        $this->views('purchase/edit', ['purchase' => $purchase]);
+    }
 
     // Update Purchase Controller's update method
     public function update($id)
@@ -73,42 +97,41 @@ class PurchaseController extends BaseController
             // Get current purchase data
             $purchase = $this->model->getPurchases($id);
             if (!$purchase) {
-                // Handle error if the purchase doesn't exist
-                $this->redirect('/purchase');
+                $this->redirect('/purchase'); // Redirect if not found
             }
-
-            $imagePath = $purchase['image']; // Store the current image path
-
-            // Check if the user has uploaded a new image
+    
+            $imagePath = $purchase['image']; // Keep existing image by default
+    
+            // Check if user uploaded a new image
             if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-                // Handle Image Upload
                 $imagePath = time() . "_" . $_FILES['image']['name']; // Unique file name
                 $targetDir = "./uploads/";
-
+    
                 if (!is_dir($targetDir)) {
                     mkdir($targetDir, 0777, true);
                 }
-
+    
                 $targetFile = $targetDir . $imagePath;
                 move_uploaded_file($_FILES['image']['tmp_name'], $targetFile);
             } else {
-                // If no new image uploaded, keep the existing image
+                // Keep existing image if no new one uploaded
                 $imagePath = $_POST['existing_image'];
             }
-
-            // Prepare data to update purchase
+    
+            // ✅ Ensure `category_id` is included
             $data = [
-                'product_name'  => $_POST['product_name'],
+                'product_name' => $_POST['product_name'],
                 'image' => $imagePath,
-                'price'  => $_POST['price'],
+                'price' => $_POST['price'],
+                'category_id' => $_POST['category_id'], // Fix: Ensure category is updated
             ];
-
-            // Update purchase data in the database
+    
+            // Update the purchase
             $this->model->updatePurchase($id, $data);
             $this->redirect('/purchase');
         }
     }
-
+    
 
     public function destroy()
     {

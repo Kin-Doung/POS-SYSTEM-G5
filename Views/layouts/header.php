@@ -27,6 +27,10 @@
   <script src="../../assets/js/sciptJS/purchase.js" defer></script>
   <script src="../../assets/js/sciptJS/logout.js" defer></script>
   <script src="../../assets/js/sciptJS/search.js" defer></script>
+  <!-- boostrap -->
+
+ 
+
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="assets/css/style/purchase.css">
@@ -40,6 +44,8 @@
    <link rel="stylesheet" href="../../assets/css/style/logout.css">
 
    <!-- boostrapt  -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+
 
 </head>
 

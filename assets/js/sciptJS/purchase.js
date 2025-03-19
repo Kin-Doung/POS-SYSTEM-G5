@@ -50,86 +50,66 @@ function updateDetails() {
 }
 
 function filterProducts() {
-    const searchInput = document.getElementById('searchInput').value.toLowerCase();
-    const categorySelect = document.getElementById('categorySelect').value;
-    const priceSelect = document.getElementById('priceSelect').value;
+  const searchInput = document
+    .getElementById("searchInput")
+    .value.toLowerCase();
+  const categorySelect = document.getElementById("categorySelect").value;
+  const priceSelect = document.getElementById("priceSelect").value;
 
-    const products = document.querySelectorAll('.product'); // All products on the page
+  const products = document.querySelectorAll(".product"); // All products on the page
 
-    products.forEach(product => {
-        const productName = product.getAttribute('data-product-name').toLowerCase();
-        const productCategory = product.getAttribute('data-category');
-        const productPrice = parseFloat(product.getAttribute('data-price'));
+  products.forEach((product) => {
+    const productName = product.getAttribute("data-product-name").toLowerCase();
+    const productCategory = product.getAttribute("data-category");
+    const productPrice = parseFloat(product.getAttribute("data-price"));
 
-        // Check category match
-        const matchesCategory = categorySelect === 'all' || categorySelect === productCategory;
+    // Check category match
+    const matchesCategory =
+      categorySelect === "all" || categorySelect === productCategory;
 
-        // Check search match
-        const matchesSearch = productName.includes(searchInput);
+    // Check search match
+    const matchesSearch = productName.includes(searchInput);
 
-        // Check price match
-        const matchesPrice = (priceSelect === "" || (priceSelect === "0" && productPrice <= 10) ||
-            (priceSelect === "15" && productPrice <= 15) ||
-            (priceSelect === "20" && productPrice <= 20) ||
-            (priceSelect === "25" && productPrice <= 25) ||
-            (priceSelect === "30" && productPrice <= 30));
+    // Check price match
+    const matchesPrice =
+      priceSelect === "" ||
+      (priceSelect === "0" && productPrice <= 10) ||
+      (priceSelect === "15" && productPrice <= 15) ||
+      (priceSelect === "20" && productPrice <= 20) ||
+      (priceSelect === "25" && productPrice <= 25) ||
+      (priceSelect === "30" && productPrice <= 30);
 
-        // Show product if all conditions are met
-        if (matchesCategory && matchesSearch && matchesPrice) {
-            product.style.display = '';  // Show product
-        } else {
-            product.style.display = 'none';  // Hide product
-        }
-    });
+    // Show product if all conditions are met
+    if (matchesCategory && matchesSearch && matchesPrice) {
+      product.style.display = ""; // Show product
+    } else {
+      product.style.display = "none"; // Hide product
+    }
+  });
 }
 
-
 function saveToPDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
+  // Hide the buttons temporarily before saving to PDF
+  const buttons = document.querySelector('.buys');
+  buttons.style.display = 'none';  // Hide the buttons
 
-  doc.setFontSize(18);
-  doc.text("Cooking Electrice Order", 10, 10);
+  // Select the content to be saved (everything except the buttons)
+  const content = document.querySelector('.detail-section');
 
-  doc.setFontSize(12);
-  doc.text(`Date: ${new Date().toLocaleDateString()}`, 10, 20);
+  // PDF options for better formatting
+  const options = {
+      margin: 10,
+      filename: 'order_summary.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
 
-  const table = document.querySelector(".order-table");
-  const rows = table.querySelectorAll("tbody tr");
-  const total = document.getElementById("totalPrice").innerText;
+  // Convert the selected content to PDF and save it
+  html2pdf().from(content).set(options).save();
 
-  doc.setFontSize(12);
-  let y = 30;
-  doc.text("Product", 10, y);
-  doc.text("Qty", 70, y);
-  doc.text("Price", 90, y);
-  doc.text("Total", 120, y);
-  y += 5;
-  doc.line(10, y, 150, y);
-
-  y += 5;
-  rows.forEach((row) => {
-    const cells = row.querySelectorAll("td");
-    doc.text(cells[0].innerText, 10, y);
-    doc.text(cells[1].innerText, 70, y);
-    doc.text(cells[2].innerText, 90, y);
-    doc.text(cells[3].innerText, 120, y);
-    y += 10;
-  });
-
-  y += 5;
-  doc.line(10, y, 150, y);
-  y += 10;
-  doc.setFontSize(14);
-  doc.text(total, 10, y);
-
-  // Add the QR code
-  const qrCodeCanvas = document.getElementById("qrCode");
-  const qrCodeDataUrl = qrCodeCanvas.toDataURL("image/png");
-  doc.addImage(qrCodeDataUrl, "PNG", 10, y + 20, 50, 50); // Adjust size and position as needed
-
-  // Save the PDF
-  doc.save("order_details.pdf");
+  // Re-show the buttons after PDF is saved
+  buttons.style.display = 'block';  // Show the buttons again
 }
 
 function processPurchase() {

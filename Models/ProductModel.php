@@ -43,20 +43,19 @@ class ProductModel
     public function getPurchasesWithProductDetails()
     {
         $query = "
-                    SELECT products.id AS product_id, 
-                        products.name AS product_name, 
-                        products.price AS product_price, 
-                        products.image AS product_image, 
-                        products.quantity AS product_quantity, 
-                        categories.id AS category_id, 
-                        categories.name AS category_name, 
-                        purchase.quantity AS purchase_quantity, 
-                        purchase.price AS purchase_price, 
-                        purchase.purchase_date 
-                    FROM purchase
-                    LEFT JOIN products ON purchase.product_id = products.id
-                    LEFT JOIN categories ON products.category_id = categories.id
-                    ORDER BY purchase.purchase_date DESC
+                   SELECT 
+    purchase.id AS id, 
+    purchase.product_name AS product_name, 
+    purchase.quantity AS product_quantity, 
+    purchase.image AS product_image, 
+    purchase.price AS product_price,  
+    categories.name AS category_name, 
+    purchase.purchase_date 
+FROM purchase
+LEFT JOIN products ON purchase.id = products.purchase_id
+LEFT JOIN categories ON products.category_id = categories.id
+ORDER BY purchase.purchase_date DESC
+LIMIT 25;
         ";
         $stmt = $this->executeQuery($query);
         if ($stmt) {
@@ -80,26 +79,27 @@ class ProductModel
         ]);
     }
 
-    public function getProduct($id)
-    {
-        $query = "
-            SELECT products.*, purchase.quantity AS purchase_quantity, purchase.purchase_date 
-            FROM products 
-            LEFT JOIN purchase ON products.id = purchase.product_id 
-            WHERE products.id = :id
-            ORDER BY products.id DESC
-        ";
-        $stmt = $this->executeQuery($query, ['id' => $id]);
-        return $stmt ? $stmt->fetch(PDO::FETCH_ASSOC) : [];
-    }
+    // public function getProduct($id)
+    // {
+    //     $query = "
+    //         SELECT products.*, purchase.quantity AS purchase_quantity, purchase.purchase_date 
+    //         FROM products 
+    //         LEFT JOIN purchase ON products.id = purchase.product_id 
+    //         WHERE products.id = :id
+    //         ORDER BY products.id DESC
+    //     ";
+    //     $stmt = $this->executeQuery($query, ['id' => $id]);
+    //     return $stmt ? $stmt->fetch(PDO::FETCH_ASSOC) : [];
+    // }
 
     public function updateProduct($id, $data)
     {
-        $query = "UPDATE products SET name = :name, image = :image, price = :price WHERE id = :id";
+        $query = "UPDATE products SET name = :name, image = :image, price = :price, quantity = :quantity WHERE id = :id";
         $this->executeQuery($query, [
             'name' => $data['name'],
             'image' => $data['image'],
             'price' => $data['price'],
+            'quantity' => $data['quantity'],
             'id' => $id
         ]);
     }

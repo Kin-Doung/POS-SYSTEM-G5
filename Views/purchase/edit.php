@@ -10,7 +10,6 @@
                 <div class="modal-body">
                     <form action="purchase_update.php?id=<?= htmlspecialchars($purchase['id'] ?? '') ?>" method="POST" enctype="multipart/form-data">
 
-
                         <input type="hidden" name="existing_image" value="<?= htmlspecialchars($purchase['image'] ?? '') ?>">
 
                         <div class="mb-3">
@@ -27,6 +26,7 @@
                                         <option value="<?= htmlspecialchars($category['id']); ?>" <?= ($purchase['category_id'] == $category['id']) ? 'selected' : ''; ?>>
                                             <?= htmlspecialchars($category['name']); ?>
                                         </option>
+
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <option value="">No categories available</option>

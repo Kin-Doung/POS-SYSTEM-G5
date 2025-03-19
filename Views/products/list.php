@@ -85,7 +85,9 @@
                         <td>
                             <input type="number" class="form-control text-center"
                                 id="quantity<?= isset($purchase['product_name']) ? htmlspecialchars($purchase['product_name']) : 'N/A' ?>"
-                                value="0" min="0" style="width: 80px;">
+                                value="<?= isset($purchase['product_quantity']) ? htmlspecialchars($purchase['product_quantity']) : '0' ?>"
+                                min="0" style="width: 80px;">
+
                         </td>
                         <td>
                             <a href="/products/edit?id=<?= isset($purchase['id']) ? $purchase['id'] : '#' ?>" class="btn btn-warning btn-sm">

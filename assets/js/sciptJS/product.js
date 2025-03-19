@@ -28,3 +28,39 @@ function updateTotals(productName, productPrice) {
     }
     document.getElementById('totalPrice').innerText = 'Cart Total: $' + overallTotal.toFixed(2);
 }
+
+
+// scripts.js
+
+// JavaScript to handle the button click and show details
+document.querySelector('.btn-info').addEventListener('click', function() {
+    const rows = document.querySelectorAll('tbody tr');
+    let details = "";
+
+    rows.forEach(row => {
+        const imgSrc = row.cells[0].querySelector('img').src;
+        const name = row.cells[1].innerText;
+        const price = row.cells[2].innerText;
+        const quantity = row.querySelector('input[type="number"]').value;
+
+        details += `
+            <tr>
+                <td><img src="${imgSrc}" alt="${name}" class="img-fluid rounded-circle" style="max-width: 50px;"></td>
+                <td>${name}</td>
+                <td>${price}</td>
+                <td>${quantity}</td>
+            </tr>
+        `;
+    });
+
+    document.getElementById('modalBodyContent').innerHTML = details;
+});
+
+// JavaScript for handling button actions
+document.getElementById('savePdfBtn').addEventListener('click', function() {
+    alert('Save PDF functionality not implemented yet.');
+});
+
+document.getElementById('restockBtn').addEventListener('click', function() {
+    alert('Restock functionality not implemented yet.');
+});

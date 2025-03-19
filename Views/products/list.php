@@ -65,62 +65,45 @@
     <div class="container-product">
         <div class="container">
             <div class="container mt-3">
-                <table class="table-dark bg-light">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Product</th>
-                            <th>Image</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (!isset($purchases) || !is_array($purchases)): ?>
-                            <tr>
-                                <td colspan="5" class="text-danger fw-bold">No products available.</td>
-                            </tr>
-                        <?php else: ?>
-                            <?php foreach ($purchases as $purchase): ?>
-                                <tr>
-                                    <td class="text-primary fw-bold">
-                                        <?= isset($purchase['product_name']) ? htmlspecialchars($purchase['product_name']) : 'N/A' ?>
-                                    </td>
-                                    <td>
-                                        <?php
-                                        $imagePath = "uploads/" . htmlspecialchars($purchase['product_image']);
-                                        if (!file_exists($imagePath)) {
-                                            echo "<span class='text-danger'>Image not found</span>";
-                                        }
-                                        ?>
-                                        <img src="<?= $imagePath ?>" alt="<?= htmlspecialchars($purchase['product_name'] ?? 'No Name') ?>"
-                                            onerror="this.onerror=null; this.src='/uploads/default.png';"
-                                            class="img-thumbnail rounded shadow-sm" width="60" height="60">
-                                    </td>
-                                    <td class="text-success fw-bold">$<?= isset($purchase['price']) ? number_format($purchase['price'], 2) : '0.00' ?></td>
-                                    <td>
-                                        <input type="number" class="form-control text-center"
-                                            id="quantity<?= isset($purchase['product_name']) ? htmlspecialchars($purchase['product_name']) : 'N/A' ?>"
-                                            value="0" min="0" style="width: 80px;">
-                                    </td>
-                                    <td>
-                                        <a href="/products/edit?id=<?= isset($purchase['id']) ? $purchase['id'] : '#' ?>" class="btn btn-warning btn-sm">
-                                            <i class="fa-solid fa-pen-to-square"></i> Edit
-                                        </a>
-                                        <button class="btn btn-success btn-sm"
-                                            onclick="updateCart(<?= isset($purchase['price']) ? $purchase['price'] : '0' ?>, 'quantity<?= isset($purchase['product_name']) ? htmlspecialchars($purchase['product_name']) : 'N/A' ?>', true)">
-                                            <i class="fa-solid fa-cart-plus"></i> Add
-                                        </button>
-                                        <button class="btn btn-danger btn-sm"
-                                            onclick="updateCart(<?= isset($purchase['price']) ? $purchase['price'] : '0' ?>, 'quantity<?= isset($purchase['product_name']) ? htmlspecialchars($purchase['product_name']) : 'N/A' ?>', false)">
-                                            <i class="fa-solid fa-minus"></i> Remove
-                                        </button>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                <?php foreach ($purchase as $purchase): ?>
+                    <tr>
+                        <td class="text-primary fw-bold">
+                            <?= isset($purchase['product_name']) ? htmlspecialchars($purchase['product_name']) : 'N/A' ?>
+                        </td>
+                        <td>
+                            <?php
+                            $imagePath = "uploads/" . htmlspecialchars($purchase['product_image']);
+                            if (!file_exists($imagePath)) {
+                                echo "<span class='text-danger'>Image not found</span>";
+                            }
+                            ?>
+                            <img src="<?= $imagePath ?>" alt="<?= htmlspecialchars($purchase['product_name'] ?? 'No Name') ?>"
+                                onerror="this.onerror=null; this.src='/uploads/default.png';"
+                                class="img-thumbnail rounded shadow-sm" width="60" height="60">
+                        </td>
+                        <td class="text-success fw-bold">$<?= isset($purchase['price']) ? number_format($purchase['price'], 2) : '0.00' ?></td>
+                        <td>
+                            <input type="number" class="form-control text-center"
+                                id="quantity<?= isset($purchase['product_name']) ? htmlspecialchars($purchase['product_name']) : 'N/A' ?>"
+                                value="<?= isset($purchase['product_quantity']) ? htmlspecialchars($purchase['product_quantity']) : '0' ?>"
+                                min="0" style="width: 80px;">
+
+                        </td>
+                        <td>
+                            <a href="/products/edit?id=<?= isset($purchase['id']) ? $purchase['id'] : '#' ?>" class="btn btn-warning btn-sm">
+                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                            </a>
+                            <button class="btn btn-success btn-sm"
+                                onclick="updateCart(<?= isset($purchase['price']) ? $purchase['price'] : '0' ?>, 'quantity<?= isset($purchase['product_name']) ? htmlspecialchars($purchase['product_name']) : 'N/A' ?>', true)">
+                                <i class="fa-solid fa-cart-plus"></i> Add
+                            </button>
+                            <button class="btn btn-danger btn-sm"
+                                onclick="updateCart(<?= isset($purchase['price']) ? $purchase['price'] : '0' ?>, 'quantity<?= isset($purchase['product_name']) ? htmlspecialchars($purchase['product_name']) : 'N/A' ?>', false)">
+                                <i class="fa-solid fa-minus"></i> Remove
+                            </button>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
             </div>
         </div>
 

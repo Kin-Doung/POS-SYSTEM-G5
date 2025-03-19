@@ -1,5 +1,7 @@
 <?php require_once './views/layouts/side.php' ?>
+
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <?php require_once './views/layouts/header.php'; ?>
     <!-- Navbar -->
     <nav class="navbar">
         <!-- Search Bar -->
@@ -42,13 +44,6 @@
     <div class="search-section">
         <form action="" method="POST">
             <input type="text" class="search-input" id="searchInput" name="searchInput" placeholder="Search for products..." onkeyup="filterProducts()" />
-            <select class="product-select" id="productSelect" name="productSelect" onchange="filterProducts()">
-                <option value="">Select Product</option>
-                <option value="Adapter">Adapter</option>
-                <option value="Cake Mixer">Cake Mixer</option>
-                <option value="Cocktail Machine">Cocktail Machine</option>
-                <option value="Electric Cooking Pot">Electric Cooking Pot</option>
-            </select>
             <select class="category-select" id="categorySelect" name="categorySelect" onchange="filterProducts()">
                 <option value="">Select Category</option>
                 <option value="all">All</option>
@@ -78,6 +73,8 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
+
+
                     <tbody>
                         <?php if (!isset($purchases) || !is_array($purchases)): ?>
                             <tr>
@@ -106,19 +103,16 @@
                                             id="quantity<?= isset($purchase['product_name']) ? htmlspecialchars($purchase['product_name']) : 'N/A' ?>"
                                             value="0" min="0" style="width: 80px;">
                                     </td>
-                                    <td>
-                                        <a href="/products/edit?id=<?= isset($purchase['id']) ? $purchase['id'] : '#' ?>" class="btn btn-warning btn-sm">
-                                            <i class="fa-solid fa-pen-to-square"></i> Edit
-                                        </a>
-                                        <button class="btn btn-success btn-sm"
-                                            onclick="updateCart(<?= isset($purchase['price']) ? $purchase['price'] : '0' ?>, 'quantity<?= isset($purchase['product_name']) ? htmlspecialchars($purchase['product_name']) : 'N/A' ?>', true)">
-                                            <i class="fa-solid fa-cart-plus"></i> Add
+                                    <td class="td-actions">
+                                        <button class="btn btn-edit" onclick="editProduct(1)">
+                                            <i class="fa-solid fa-pen-to-square"></i> EDIT
                                         </button>
-                                        <button class="btn btn-danger btn-sm"
-                                            onclick="updateCart(<?= isset($purchase['price']) ? $purchase['price'] : '0' ?>, 'quantity<?= isset($purchase['product_name']) ? htmlspecialchars($purchase['product_name']) : 'N/A' ?>', false)">
-                                            <i class="fa-solid fa-minus"></i> Remove
+
+                                        <button class="btn btn-enter" onclick="updateCart(100, 'Product Name', false)">
+                                            <i class="fa-solid fa-check"></i> ENTER
                                         </button>
                                     </td>
+
                                 </tr>
                             <?php endforeach; ?>
                         <?php endif; ?>
@@ -141,13 +135,11 @@
                 </thead>
                 <tbody id="details"></tbody>
             </table>
-            <div class="total" id="totalPrice"style= "margin-top:10px">Cart Total: $0.00</div>
-            
+            <div class="total" id="totalPrice" style="margin-top:10px;">Cart Total: $0.00</div>
             <canvas id="qrCode" style="margin-top: 20px;"></canvas>
-            <button class="buy-button" style="margin-top: 20px; width: 100%;" onclick="saveToPDF()">Save as PDF</button>
-            <button class="buy-button" style="margin-top: 15px; width: 100%; background-color: #27ae60;" onclick="processPurchase()">Place Order</button>
+            <button class="buy-button" style=" margin-top: 20px; width: 100%;" onclick="saveToPDF()">Save as PDF</button>
+            <button class="buy-button" style="margin-top: 15px; width: 100%; background-color: #27ae60; " onclick="processPurchase()">Place Order</button>
         </div>
     </div>
-
     <?php require_once 'views/layouts/footer.php'; ?>
 </main>

@@ -8,16 +8,102 @@ body {
     max-width: 1200px;
     margin: 30px auto;
 }
+.sum{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.subtract-button , .buy-button{
+    padding: 5px;
+    border-radius: 5px;
+}
+.quantity{
+    border: none;
+}
+/* .detail-section {
+    display: none; 
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
 
-/* Container to hold cards */
+.detail-section.show {
+    display: block;
+    opacity: 1;
+    transform: scaleY(1);
+} */
+
+.toggle-details {
+    position: fixed; /* Fix it to the screen */
+    top: 90vh; /* Distance from the top */
+    right: 20px; /* Distance from the right */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+    
+}
+
+
+.toggle-details:hover {
+    background-color: #0056b3;
+}
+
+/* Modal Background */
+.modal {
+    display: none; /* Hide by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Dark transparent background */
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+/* Modal Content */
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 50%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Close Button */
+.close {
+    color: red;
+    font-size: 24px;
+    float: right;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.close:hover {
+    color: darkred;
+}
+
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 5 equal columns */
+    grid-template-columns: repeat(4, 1fr); /* 4 cards per row */
     gap: 20px; /* Space between cards */
     margin: 0 auto; /* Center the grid container */
     padding: 20px; /* Optional: Add some padding */
-}
-
+}   
 /* Card Styling */
 .product-grid .card {
     width: 100%; /* Ensure the card fills its column */
@@ -52,22 +138,18 @@ body {
     text-align: center;
 }
 
-.product-grid .price {
-    font-size: 12px;
-    margin-top: 8px;
-    text-align: center;
-}
-
 .product-grid .buy-button,
 .product-grid .subtract-button {
-    width: 25px;
+    width: 55px;
     height: 25px;
-    font-size: 18px;
-    border-radius: 50%;
+    font-size: 12px;
     margin: 5px;
     background-color: #28a745;
     color: white;
     border: none;
+    display: flex;   
+    align-items: center; 
+    justify-content: center; 
 }
 
 .product-grid .subtract-button {
@@ -153,320 +235,3 @@ img {
     padding: 4px 8px !important;
     background-color: yellow !important;
 }
-@media (max-width: 992px) {
-    .container-purchase {
-        flex-direction: column;
-        align-items: center;
-    }
-}
-
-.search-section {
-    margin-left: 24px;
-    width: 96%;
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
-    margin-top: 20px;
-}
-
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 5px;
-}
-
-@media (max-width: 768px) {
-    .product-grid {
-        width: 100%;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    }
-}
-
-.title {
-    text-align: center;
-    font-size: 36px;
-    font-weight: 700;
-    color: #1a3c34;
-    margin-bottom: 30px;
-    letter-spacing: 1px;
-}
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    width: 100%;
-    padding-right: 10px;
-}
-
-@media (max-width: 768px) {
-    .product-grid {
-        grid-template-columns: repeat(1, 1fr); 
-    }
-}
-
-
-.card {
-    width: 100%;
-    background: #fff;
-    padding: 15px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease-in-out;
-    text-align: center;
-}
-.card:hover {
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-}
-.card img {
-    margin: 0 auto;
-    width: 100%;
-    height: 150px; 
-    object-fit: cover; 
-    border-radius: 10px;
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
-}
-
-
-.product-name {
-    font-size: 18px;
-    font-weight: 600;
-    margin-top: 10px;
-    color: #2c3e50;
-}
-.quantity{
-    border: none;
-    margin: 0 auto;
-}
-
-.price {
-    font-size: 16px;
-    color: #27ae60;
-    font-weight: bold;
-    margin-top: 5px;
-}
-canvas{
-   margin-left: 55px;
-}
-.buy-button,
-
-.subtract-button {
-    border: none;
-    padding: 5px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 16px;
-    font-weight: 500;
-    margin: 5px;
-    width: 100%;
-}
-
-.buy-button {
-    background-color: #007bff;
-    color: #fff;
-}
-
-.buy-button:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
-}
-
-.subtract-button {
-    background-color: #e74c3c;
-    color: white;
-}
-
-.subtract-button:hover {
-    background-color: #c0392b;
-    transform: translateY(-2px);
-}
-
-.detail-section {
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width: 400px;
-    font-size: 10px;
-}
-
-.buys{
-    display: flex;
-}
-@media (max-width: 768px) {
-    .detail-section {
-        width: 100%;
-        margin-top: 20px;
-    }
-}
-
-.order-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-
-.order-table th, .order-table td {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    text-align: center;
-}
-
-.category-select,
-.price-select,
-.product-select,
-
-.search-input {
-    padding: 12px;
-    width: 220px;
-    border: 1px solid #dfe6e9;
-    border-radius: 6px;
-    font-size: 15px;
-    background-color: #fff;
-    transition: border-color 0.3s ease;
-}
-
-@media (max-width: 576px) {
-    .category-select,
-    .price-select,
-    .product-select,
-    .search-input {
-        width: 100%;
-    }
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 9999;
-    justify-content: center;
-    align-items: center;
-    backdrop-filter: blur(6px);
-    transition: opacity 0.2s ease-in-out;
-}
-
-.modal.active {
-    display: flex;
-}
-
-
-.modal-content {
-    width: 100%;
-    margin-top: 15px;
-    background: linear-gradient(135deg, #ffffff, #f8f9fa);
-    padding: 35px;
-    border-radius: 16px;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-    animation: slideIn 0.4s ease-out;
-    transition: all 0.3s ease-in-out;
-}
-
-
-.form-title {
-    font-size: 26px;
-    font-weight: 700;
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
-}
-
-
-.form-label {
-    font-size: 14px;
-    font-weight: 500;
-    color: #333;
-    margin-bottom: 8px;
-    display: block;
-}
-
-
-.form-control {
-    width: 100%;
-    padding: 14px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 16px;
-    background-color: #f9f9f9;
-    margin-bottom: 15px;
-}
-
-
-#image {
-    padding: 12px;
-}
-
-
-.img-preview {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    margin-top: 15px;
-    object-fit: cover;
-}
-.sum{
-    display: flex;
-}
-
-
-.btn-primary {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 14px;
-    width: 100%;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
-}
-
-
-.btn-primary:hover {
-    background-color: #45a049;
-}
-
-
-@media (max-width: 768px) {
-    .modal-content {
-        width: 90%;
-        padding: 20px;
-        border-radius: 12px;
-    }
-
-    .btn-primary {
-        padding: 12px;
-        font-size: 14px;
-    }
-
-    .form-title {
-        font-size: 22px;
-    }
-}
-
-@keyframes slideIn {
-    0% { opacity: 0; transform: translateY(-20px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-

@@ -62,6 +62,10 @@
 
         </form>
     </div>
+
+
+    
+
     <!-- Modal structure -->
     <div class="container-purchase">
         <div class="product-grid" id="productGrid">
@@ -79,14 +83,14 @@
                     <div class="price">Price: <b> $<?= number_format($purchase['price'], 2) ?> </b>  </div>
                     <div class="sum">
 
-                        <button class="buy-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['product_name'] ?>', true)">+</button>
-                        <button class="subtract-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['product_name'] ?>', false)">-</button>
+                        <button class="buy-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['product_name'] ?>', true)">Add</button>
+                        <button class="subtract-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['product_name'] ?>', false)">Subtract</button>
                     </div>
   
         
 <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap">View detail</button> -->
 <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap" 
-        style="padding: 3px 6px; font-size: 10px; height: 30px; line-height: 15px; border-radius: 3px; background-color: #007bff; color: white; border: none; cursor: pointer; transition: background-color 0.3s ease; text-transform: uppercase; margin-right:1px; width: 40px; margin-bottom:-2px;">
+        style="padding: 3px 6px; font-size: 10px; height: 30px; line-height: 15px; border-radius: 3px; background-color: #007bff; color: white; border: none; cursor: pointer; transition: background-color 0.3s ease; text-transform: uppercase; margin-right:13px; margin-bottom:-2px;">
     View detail
 </button>
 
@@ -122,22 +126,23 @@
             <input type="number" class="form-control" name="price" id="price" value="<?= htmlspecialchars($purchase['price'] ?? '') ?>" required>
         </div>
 
-        <!-- <button type="submit" class="btn btn-primary  btn-update">Update</button> -->
-        <button type="submit" 
-    style="padding: 10px 14px; 
-           background-color: darkblue !important; 
-           width: 50px; 
-           min-width: 350px; 
-           border: none; 
-           color: white; 
-           font-weight: bold; 
-           border-radius: 8px; 
-           cursor: pointer; 
-           transition: all 0.3s ease;" 
-    onmouseover="this.style.backgroundColor=' rgb(0, 216, 29) ';" 
-    onmouseout="this.style.backgroundColor='darkblue';">
-    Update
-</button>
+        <div class="mb-3 text-center"> <!-- Centering div added -->
+    <button type="submit" 
+        style="padding: 10px 14px; 
+               background-color: darkblue !important; 
+               width: 50px; 
+               min-width: 350px; 
+               border: none; 
+               color: white; 
+               font-weight: bold; 
+               border-radius: 8px; 
+               cursor: pointer; 
+               transition: all 0.3s ease;" 
+        onmouseover="this.style.backgroundColor='rgb(0, 216, 29)';" 
+        onmouseout="this.style.backgroundColor='darkblue';">
+        Update
+    </button>
+</div>
 
     </form>
               
@@ -156,35 +161,57 @@
             <?php endforeach; ?>
         </div>
 
-        <div class="detail-section">
-            <div class="detail-title">Order Summary</div>
-            <table class="order-table">
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Qty</th>
-                        <th>Price</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody id="details"></tbody>
-            </table>
-            <div class="total" id="totalPrice">Cart Total: $0.00</div>
-            
-            <div class="buys">
-            <button class="buy-button" 
-        style="margin-top: 10px; width: 45%; background-color:#7eb7f5; padding: 7px 11px; font-size: 14px;" 
-        onclick="saveToPDF()">Save as PDF</button>
-
-<button class="buy-button" 
-        style="margin-top: 10px; width: 45%; background-color:rgb(8, 202, 89); padding: 7px 11px; font-size: 14px;" 
-        onclick="processPurchase()">Restock</button>
-
-            </div>
-        </div>
-    </div>
 
     <?php require_once 'views/layouts/footer.php'; ?>
 </main>
 
 
+<!-- Small button to open the popup -->
+<button class="toggle-details">Total</button> <!-- Small cart icon button -->
+
+<!-- Modal (Popup) -->
+<div id="detailModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span> <!-- Close button -->
+        <div class="detail-title">Order Summary</div>
+        <table class="order-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody id="details"></tbody>
+        </table>
+        <div class="total" id="totalPrice">Cart Total: $0.00</div>
+
+        <div class="buys">
+            <button class="buy-button" style="background-color:#7eb7f5;" onclick="saveToPDF()">Save as PDF</button>
+            <button class="buy-button" style="background-color:rgb(8, 202, 89);" onclick="processPurchase()">Restock</button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+document.querySelector(".toggle-details").addEventListener("click", function() {
+    document.getElementById("detailModal").style.display = "flex"; // Show modal
+});
+
+// Close the modal when clicking the close button
+document.querySelector(".close").addEventListener("click", function() {
+    document.getElementById("detailModal").style.display = "none";
+});
+
+// Close modal if user clicks outside of it
+window.addEventListener("click", function(event) {
+    let modal = document.getElementById("detailModal");
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+});
+
+
+</script>

@@ -10,7 +10,7 @@
     <ul class="navbar-nav">
       <!-- nav dashboard -->
       <li class="nav-item">
-        <a class="nav-link text-white active bg-gradient-primary" href="/">
+        <a class="nav-link text-white active bg-gradient-primary" href="/dashboard">
           <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
             <i class="material-icons opacity-10">dashboard</i>
           </div>
@@ -19,7 +19,7 @@
       </li>
       <!-- nav inventory -->
       <li class="nav-item">
-        <a class="nav-link text-white " href="/inventory">
+        <a class="nav-link text-white" href="/inventory">
           <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
             <i class="material-icons opacity-10">table_view</i>
           </div>
@@ -37,7 +37,7 @@
       </li>
       <!-- nav purchase order -->
       <li class="nav-item">
-        <a class="nav-link text-white " href="/purchase">
+        <a class="nav-link text-white" href="/purchase">
           <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
             <i class="material-icons opacity-10">view_in_ar</i>
           </div>
@@ -45,7 +45,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link text-white " href="/category">
+        <a class="nav-link text-white" href="/category">
           <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
             <i class="material-icons opacity-10">format_textdirection_r_to_l</i>
           </div>
@@ -53,7 +53,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link text-white " href="/notifications">
+        <a class="nav-link text-white" href="/notifications">
           <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
             <i class="material-icons opacity-10">notifications</i>
           </div>
@@ -67,7 +67,6 @@
           </h6>
         </a>
       </li>
-
       <div class="collapse ps-4" id="settingsMenu">
         <li class="nav-item">
           <a class="nav-link text-white" href="/settings">
@@ -94,8 +93,6 @@
           </a>
         </li>
       </div>
-
-
     </ul>
   </div>
   <div class="sidenav-footer position-absolute w-100 bottom-0 ">

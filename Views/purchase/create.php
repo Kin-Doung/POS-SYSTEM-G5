@@ -1,6 +1,7 @@
 <?php require_once './views/layouts/side.php' ?>
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <?php require_once './views/layouts/header.php'; ?>
+
     <div class="modal-content">
         <h2>Add New Product</h2>
         <form action="/purchase/store" method="POST" enctype="multipart/form-data">
@@ -8,11 +9,17 @@
             <input type="text" id="productName" name="product_name" required /><br />
 
             <label for="productCategory">Category:</label>
-            <select id="productCategory" name="category" required>
-                <option value="Category1">Category 1</option>
-                <option value="Category2">Category 2</option>
-                <option value="Category3">Category 3</option>
-                <!-- Add more categories dynamically from the database if needed -->
+            <select id="productCategory" name="category_id" required>
+                <option value="">Select Category</option>
+                <?php if (!empty($categories)): ?>
+                    <?php foreach ($categories as $category): ?>
+                        <option value="<?= htmlspecialchars($category['id']); ?>">
+                            <?= htmlspecialchars($category['name']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <option value="">No categories available</option>
+                <?php endif; ?>
             </select><br />
 
             <label for="productImage">Upload Image:</label>
@@ -26,5 +33,6 @@
         </form>
 
     </div>
-    <?php require_once './views/layouts/footer.php'; ?>
+
 </main>
+<?php require_once './views/layouts/footer.php'; ?>

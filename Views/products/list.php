@@ -47,8 +47,11 @@
             <select class="category-select" id="categorySelect" name="categorySelect" onchange="filterProducts()">
                 <option value="">Select Category</option>
                 <option value="all">All</option>
-                <option value="kitchen">Kitchen</option>
-                <option value="appliances">Appliances</option>
+                <?php foreach ($categories as $category): ?>
+                    <option value="<?= htmlspecialchars($category['name']) ?>">
+                        <?= htmlspecialchars($category['name']) ?>
+                    </option>
+                <?php endforeach; ?>
             </select>
             <select class="price-select" id="priceSelect" name="priceSelect" onchange="filterProducts()">
                 <option value="">Select Price Range</option>
@@ -60,6 +63,7 @@
             </select>
         </form>
     </div>
+
     <div class="container-product">
         <div class="container">
             <div class="container mt-3">
@@ -120,7 +124,6 @@
                 </table>
             </div>
         </div>
-
 
         <div class="detail-section">
             <div class="detail-title">Order Summary</div>

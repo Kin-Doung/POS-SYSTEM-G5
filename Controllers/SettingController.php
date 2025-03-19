@@ -57,11 +57,13 @@ class SettingController extends BaseController
     }
 
     // Edit admin info (edit)
-    public function edit($id)
+
+    public function edit()
     {
-        $admin = $this->model->getAdmin($id);
-        require_once 'views/settings/edit.php';  // Make sure this path is correct
+        $admin = $this->model->getAdmin(1); // Always get first admin
+        require_once 'views/settings/edit.php';
     }
+
 
 
     // Update admin info (update)

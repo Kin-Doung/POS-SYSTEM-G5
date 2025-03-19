@@ -26,7 +26,7 @@
 
     <!-- Modal structure -->
     <div class="container mt-4">
-        <a href="/settings/create" style="width: 150px;" class="btn btn-primary ">Add New</a>
+        <!-- <a href="/settings/create" style="width: 150px;" class="btn btn-primary ">Add New</a> -->
         <div class="card">
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0">Admin Setting</h4>
@@ -67,10 +67,10 @@
 
                                         <td><?= htmlspecialchars($admin['language']) ?></td>
                                         <td>
-                                            <a href="settings/edit?id=<?= $admin['id'] ?>" class="btn btn-warning">Edit</a> |
-                                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#user<?= $user['id'] ?>">
+                                            <a href="settings/edit?id=<?= $admin['id'] ?>" class="btn btn-warning">Edit</a>
+                                            <!-- <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#user<?= $user['id'] ?>">
                                                 delete
-                                            </button>
+                                            </button> -->
                                             <!-- Modal -->
                                             <?php require 'delete.php' ?>
                                         </td>

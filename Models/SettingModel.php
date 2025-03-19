@@ -45,7 +45,7 @@ class SettingModel
     }
 
     // Update admin information
-    public function updateAdmin($id, $data)
+    public function updateAdmin($data)
     {
         $query = "UPDATE admin SET 
                     username = :username, 
@@ -54,20 +54,19 @@ class SettingModel
                     store_name = :store_name, 
                     store_logo = :store_logo, 
                     language = :language 
-                  WHERE id = :id";
-        $stmt = $this->pdo->prepare($query); // Use prepare() instead of query()
+                  WHERE id = 1"; // Always update the first admin
 
-        // Bind parameters
+        $stmt = $this->pdo->query($query);
         $stmt->bindParam(':username', $data['username']);
         $stmt->bindParam(':email', $data['email']);
         $stmt->bindParam(':password', $data['password']);
         $stmt->bindParam(':store_name', $data['store_name']);
         $stmt->bindParam(':store_logo', $data['store_logo'], PDO::PARAM_LOB);
         $stmt->bindParam(':language', $data['language']);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
-        return $stmt->execute(); // Execute the statement
+        return $stmt->execute();
     }
+
 
     // Delete admin
     public function deleteAdmin($id)

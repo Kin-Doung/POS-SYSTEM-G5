@@ -15,11 +15,10 @@ class ProductModel
         $products = $this->pdo->query("SELECT * FROM products ORDER BY id DESC");
         return $products->fetchAll();
     }
-
     public function getPurchase()
     {
-        $stmt = $this->pdo->query("SELECT * FROM purchase ORDER BY id DESC");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $purchase = $this->pdo->query("SELECT * FROM purchase ORDER BY id DESC");
+        return $purchase->fetchAll();
     }
 
     public function getCategory()
@@ -31,7 +30,7 @@ class ProductModel
     private function executeQuery($query, $params = [])
     {
         try {
-            $stmt = $this->pdo->prepare($query);
+            $stmt = $this->pdo->query($query);
             $stmt->execute($params);
             return $stmt;
         } catch (Exception $e) {
@@ -43,20 +42,20 @@ class ProductModel
     public function getPurchasesWithProductDetails()
     {
         $query = "
-                   SELECT 
-    purchase.id AS id, 
-    purchase.product_name AS product_name, 
-    purchase.quantity AS product_quantity, 
-    purchase.image AS product_image, 
-    purchase.price AS product_price,  
-    categories.name AS category_name, 
-    purchase.purchase_date 
-FROM purchase
-LEFT JOIN products ON purchase.id = products.purchase_id
-LEFT JOIN categories ON products.category_id = categories.id
-ORDER BY purchase.purchase_date DESC
-LIMIT 25;
+            SELECT 
+                purchase.id AS id, 
+                purchase.product_name AS product_name, 
+                purchase.quantity AS product_quantity, 
+                purchase.image AS product_image, 
+                purchase.price AS product_price,  
+                categories.name AS category_name, 
+                purchase.purchase_date 
+            FROM purchase
+            LEFT JOIN categories ON purchase.category_id = categories.id
+            ORDER BY purchase.purchase_date DESC
+            LIMIT 25;
         ";
+    
         $stmt = $this->executeQuery($query);
         if ($stmt) {
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -66,6 +65,7 @@ LIMIT 25;
             return [];
         }
     }
+    
 
     public function createProduct($data)
     {

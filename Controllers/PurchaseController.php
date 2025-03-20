@@ -13,6 +13,8 @@ class PurchaseController extends BaseController
         $this->productModel = new ProductModel(); // Instantiate the ProductModel
     }
 
+    
+
     public function index()
     {
         $purchases = $this->model->getPurchase();
@@ -81,6 +83,7 @@ class PurchaseController extends BaseController
             $this->model->createPurchase($purchaseData); // Call the model to insert the data
             $this->redirect('/purchase');
         }
+        
     }
 
     public function edit($id)

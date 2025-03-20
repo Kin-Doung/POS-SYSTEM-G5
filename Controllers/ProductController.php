@@ -14,15 +14,15 @@ class ProductController extends BaseController
     {
         $purchases = $this->model->getPurchasesWithProductDetails();
         $categories = $this->model->getCategory();
-    
-    
+        
         $this->views('products/list', ['purchase' => $purchases, 'categories' => $categories]);
     }
+    
 
 
     public function edit($id)
     {
-        $product = $this->model->getProduct($id);
+        $product = $this->model->getProducts($id);
         $this->views('products/edit', ['product' => $product]);
     }
 

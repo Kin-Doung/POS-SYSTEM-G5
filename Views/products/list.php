@@ -64,8 +64,8 @@
 
     <div class="container mt-5">
         <h2 class="mb-4">Item List</h2>
-        <table class="table table-bordered table-striped">
-            <thead class="thead-dark">
+        <table class="table table-striped">
+            <thead class="table-dark">
                 <tr>
                     <th scope="col">Image</th>
                     <th scope="col">Name</th>
@@ -75,32 +75,58 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><img src="image1.jpg" alt="Item 1" class="img-fluid rounded-circle" style="max-width: 50px;"></td>
-                    <td>Timon Goff</td>
-                    <td>$0.00</td>
-                    <td><input type="number" min="0" value="0" class="form-control" style="width: 80px;"></td>
-                    <td class="text-center">
-                        <button class="btn-sm">EDIT</button>
-                        <button class="btn-success btn-sm">SALE</button>
-                        <button class="btn-danger btn-sm">REMOVE</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><img src="image2.jpg" alt="Item 2" class="img-fluid rounded-circle" style="max-width: 50px;"></td>
-                    <td>Marcia Shaffer</td>
-                    <td>$0.00</td>
-                    <td><input type="number" min="0" value="0" class="form-control" style="width: 80px;"></td>
-                    <td class="text-center">
-                        <button class="btn-sm">EDIT</button>
-                        <button class="btn-success btn-sm">SALE</button>
-                        <button class="btn-danger btn-sm">REMOVE</button>
-                    </td>
-                </tr>
+                <?php foreach ($purchase as $item): ?>
+                    <tr>
+                        <td>
+                            <img src="<?= '/uploads/' . htmlspecialchars($item['product_image']) ?>" alt="Product Image" class="img" width="50">
+                        </td>
+                        <td><?= htmlspecialchars($item['product_name']) ?></td>
+                        <td class="price">
+                            <?= $item['product_price'] == 0 ? 'Free' : '$' . number_format($item['product_price'], 2) ?>
+                        </td>
+                        <td>
+                            <input type="number" min="0" value="0" class="form-control quantity" style="width: 80px;">
+                        </td>
+                        <td class="text-center">
+                            <button type="submit" class="btn btn-success btn-sm buy-btn">Edit</button>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
             </tbody>
         </table>
-        <div class="text-right">
-            <button class="btn btn-info" data-toggle="modal" data-target="#detailModal">Show Details</button>
+
+        <!-- Purchase Modal -->
+        <div id="purchase-modal" class="purchase-card" style="display: none;">
+            <div class="card" style="width: 70%; margin: auto;">
+                <div class="card-body">
+                    <h5 class="card-title">Purchase Summary</h5>
+                    <!-- Product Details Table -->
+                    <table class="table table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="product-details-list">
+                            <!-- Product details will be populated here -->
+                        </tbody>
+                    </table>
+                    <hr>
+                    <p id="overall-total" class="text-right"><strong>Total Amount: $0.00</strong></p>
+                    <div class="text-right">
+                        <button class="btn btn-primary" id="confirm-purchase">Confirm Purchase</button>
+                        <button class="btn btn-secondary" id="close-modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-right mt-4">
+            <!-- Show Details Button -->
+            <button class="btn btn-info" id="show-details-btn">Show Details</button>
         </div>
     </div>
 

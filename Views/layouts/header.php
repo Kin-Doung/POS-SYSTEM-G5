@@ -31,7 +31,7 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="assets/css/style/purchase.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
   <!-- edit -->
   <link rel="stylesheet" href="../../assets//css/style/purchase.css">
   <link rel="icon" type="image/png" href="../assets/images/Logoapp.png">
@@ -40,10 +40,12 @@
    <!-- inventory.css -->
    <link rel="stylesheet" href="../../assets/css/style/inventory.css">
    <link rel="stylesheet" href="../../assets/css/style/logout.css">
+   <script src="../../assets/js/sciptJS/product.js"></script>
 
    <!-- boostrapt  -->
    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
-   
+   <!-- categories -->
+    <link rel="stylesheet" href="../../assets/css/style/categories.css">
 </head>
 
 <body class="g-sidenav-show  bg-gray-200">

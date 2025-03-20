@@ -49,6 +49,12 @@ $routes->get('/purchase/edit', [PurchaseController::class, 'edit']);
 $routes->put('/purchase/update', [PurchaseController::class, 'update']);
 $routes->delete('/purchase/destroy', [PurchaseController::class, 'destroy']);
 
+
+
+
+
+
+
 // logout
 $routes->get('/logout', [LogoutController::class, 'index']);
 

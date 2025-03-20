@@ -71,6 +71,7 @@
         <div class="product-grid" id="productGrid">
             <?php foreach ($purchases as $purchase): ?>
                 <div class="card"
+                    data-id="<?= htmlspecialchars($purchase['id']) ?>"
                     data-name="<?= htmlspecialchars($purchase['product_name']) ?>"
                     data-category="<?= htmlspecialchars($purchase['category_id']) ?>"
                     data-price="<?= htmlspecialchars($purchase['price']) ?>">
@@ -108,12 +109,12 @@
 
                                     <div class="mb-3">
                                         <label for="product_name<?= $purchase['id'] ?>" class="form-label">Name</label>
-                                        <input type="text" class="form-control" name="product_name" id="product_name<?= $purchase['id'] ?>" value="<?= htmlspecialchars($purchase['product_name'] ?? '') ?>" required>
+                                        <input type="text" class="formcofirm" name="product_name" id="product_name<?= $purchase['id'] ?>" value="<?= htmlspecialchars($purchase['product_name'] ?? '') ?>" required>
                                     </div>
 
                                     <div class="mb-3">
                                         <label for="image<?= $purchase['id'] ?>" class="form-label">Profile Image</label>
-                                        <input type="file" class="form-control" name="image" id="image<?= $purchase['id'] ?>" accept="image/*">
+                                        <input type="file" class="formcofirm" name="image" id="image<?= $purchase['id'] ?>" accept="image/*">
                                         <?php if (!empty($purchase['image'])) : ?>
                                             <img src="/uploads/<?= htmlspecialchars($purchase['image']) ?>" alt="Current Image" style="width: 80px; height: 80px; border-radius: 50%; margin-top: 10px;">
                                         <?php endif; ?>
@@ -121,12 +122,12 @@
 
                                     <div class="mb-3">
                                         <label for="price<?= $purchase['id'] ?>" class="form-label">Price</label>
-                                        <input type="number" class="form-control" name="price" id="price<?= $purchase['id'] ?>" value="<?= htmlspecialchars($purchase['price'] ?? '') ?>" required>
+                                        <input type="number" class="formcofirm" name="price" id="price<?= $purchase['id'] ?>" value="<?= htmlspecialchars($purchase['price'] ?? '') ?>" required>
                                     </div>
 
                                     <div class="mb-3">
                                         <label for="category_id<?= $purchase['id'] ?>" class="form-label">Category</label>
-                                        <select class="form-control" name="category_id" id="category_id" required>
+                                        <select class="formcofirm" name="category_id" id="category_id" required>
                                             <option value="">Select Category</option>
                                             <?php if (!empty($categories)): ?>
                                                 <?php foreach ($categories as $category): ?>
@@ -138,7 +139,6 @@
                                                 <option value="">No categories available</option>
                                             <?php endif; ?>
                                         </select>
-
                                     </div>
 
                                     <button type="submit" class="btn btn-primary">Update</button>
@@ -179,7 +179,7 @@
 
             <div class="buys">
                 <button class="buy-button" style="margin-top: 20px; width: 50%;" onclick="saveToPDF()">Save as PDF</button>
-                <button class="buy-button" style="margin-top: 15px; width: 50%; background-color: #27ae60;" onclick="processPurchase()">Restock</button>
+                <button class="buy-button" style="margin-top: 15px; width: 50%; background-color: #27ae60;" onclick="processRestock()">Restock</button>
             </div>
         </div>
     </div>

@@ -50,17 +50,37 @@ function updateDetails() {
 }
 
 function filterProducts() {
-  const searchInput = document.getElementById("searchInput").value.toLowerCase();
+  const searchInput = document
+    .getElementById("searchInput")
+    .value.toLowerCase();
+  const categorySelect = document.getElementById("categorySelect").value;
+  const priceSelect = document.getElementById("priceSelect").value;
+
   const products = document.querySelectorAll(".product"); // All products on the page
 
   products.forEach((product) => {
-    const productName = product.getAttribute("data-product-name").toLowerCase(); // Get the product name
+    const productName = product.getAttribute("data-product-name").toLowerCase();
+    const productCategory = product.getAttribute("data-category");
+    const productPrice = parseFloat(product.getAttribute("data-price"));
 
-    // Check if product name includes the search input
+    // Check category match
+    const matchesCategory =
+      categorySelect === "all" || categorySelect === productCategory;
+
+    // Check search match
     const matchesSearch = productName.includes(searchInput);
 
-    // Show product if name matches search input
-    if (matchesSearch) {
+    // Check price match
+    const matchesPrice =
+      priceSelect === "" ||
+      (priceSelect === "0" && productPrice <= 10) ||
+      (priceSelect === "15" && productPrice <= 15) ||
+      (priceSelect === "20" && productPrice <= 20) ||
+      (priceSelect === "25" && productPrice <= 25) ||
+      (priceSelect === "30" && productPrice <= 30);
+
+    // Show product if all conditions are met
+    if (matchesCategory && matchesSearch && matchesPrice) {
       product.style.display = ""; // Show product
     } else {
       product.style.display = "none"; // Hide product
@@ -68,29 +88,21 @@ function filterProducts() {
   });
 }
 
-
 function saveToPDF() {
-  // Hide the buttons temporarily before saving to PDF
-  const buttons = document.querySelector('.buys');
-  buttons.style.display = 'none';  // Hide the buttons
-
-  // Select the content to be saved (everything except the buttons)
-  const content = document.querySelector('.detail-section');
+  // Select only the content you want to include in the PDF (excluding buttons)
+  const content = document.querySelector(".detail-section");
 
   // PDF options for better formatting
   const options = {
-      margin: 10,
-      filename: 'order_summary.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    margin: 10,
+    filename: "order_summary.pdf",
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
   };
 
   // Convert the selected content to PDF and save it
   html2pdf().from(content).set(options).save();
-
-  // Re-show the buttons after PDF is saved
-  buttons.style.display = 'block';  // Show the buttons again
 }
 
 function processPurchase() {
@@ -136,6 +148,58 @@ function previewImage(event) {
     imagePreview.src = "";
     imagePreview.style.display = "none"; // Hide the image preview
   }
+}
+
+function processRestock() {
+  let products = [];
+  
+  // Collect products and quantities from the DOM
+  document.querySelectorAll(".product-grid .card").forEach(card => {
+    let quantity = parseInt(card.querySelector(".quantity").value);
+    
+    if (quantity > 0) {
+      products.push({
+        id: card.getAttribute("data-id"),
+        quantity: quantity
+      });
+    }
+  });
+
+  // If no products are selected, show an alert
+  if (products.length === 0) {
+    alert("No products selected for restock.");
+    return;
+  }
+
+  // Perform the fetch request to the backend
+  fetch('/purchase/restock', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ products: products })
+  })
+  .then(response => {
+    // Check if the response is okay (status 200-299)
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    // Handle success or failure based on the response
+    if (data.success) {
+      alert("Restock successful!");
+      location.reload();
+    } else {
+      alert("Restock failed: " + (data.message || 'Unknown error'));
+    }
+  })
+  .catch(error => {
+    // Log the error to the console and show an alert
+    console.error('Error:', error);
+    alert("An error occurred while processing the restock. Please try again.");
+  });
 }
 
 function addProduct() {
@@ -191,3 +255,5 @@ window.onload = function () {
 };
 
 // search function
+
+

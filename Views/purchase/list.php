@@ -89,7 +89,7 @@
                     </div>
 
                     <!-- Button to open the modal -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal<?= $purchase['id'] ?>">
+                    <button type="button" class="btn btn-primary views" data-bs-toggle="modal" data-bs-target="#modal<?= $purchase['id'] ?>">
                         View detail
                     </button>
                 </div>
@@ -161,27 +161,108 @@
         </div>
 
         <!-- Order Summary Section -->
-        <div class="detail-section">
-            <div class="detail-title">Order Summary</div>
-            <table class="order-table">
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Qty</th>
-                        <th>Price</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody id="details"></tbody>
-            </table>
+        <!-- Button to Open Modal -->
+        <!-- Show Details Button -->
+        <button class="btn btn-primary show" data-bs-toggle="modal" data-bs-target="#orderDetailsModal">
+            <i class="fas fa-eye"></i> Show Details
+        </button>
 
-            <div class="total" id="totalPrice">Cart Total: $0.00</div>
+        <!-- Order Details Modal -->
+        <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content shadow-lg rounded-4">
+                    <!-- Modal Header -->
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title fw-bold"><i class="fas fa-receipt"></i> Order Summary</h5>
+                        <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
 
-            <div class="buys">
-                <button class="buy-button" style="margin-top: 20px; width: 50%;" onclick="saveToPDF()">Save as PDF</button>
-                <button class="buy-button" style="margin-top: 15px; width: 50%; background-color: #27ae60;" onclick="processRestock()">Restock</button>
+                    <!-- Modal Body -->
+                    <div class="modal-body bg-light">
+                        <div class="table-responsive">
+                            <!-- Order Details Modal Table -->
+                            <table class="table table-hover align-middle">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Qty</th>
+                                        <th>Price</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="details">
+                                    <!-- The order items will be populated here -->
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div class="text-end fw-bold fs-5 mt-3">
+                            <span class="text-success"><i class="fas fa-shopping-cart"></i> Cart Total:</span>
+                            <span id="totalPrice">$0.00</span>
+                        </div>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer d-flex justify-content-between">
+                        <!-- Button to trigger restock for a specific product -->
+                        <button class="btn btn-outline-danger fw-bold px-4" onclick="processRestock(<?= $purchase['id'] ?>)">
+                            <i class="fas fa-undo"></i> Restock
+                        </button>
+
+                        <button class="btn btn-outline-success fw-bold px-4" onclick="saveToPDF()">
+                            <i class="fas fa-file-pdf"></i> Save as PDF
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <!-- FontAwesome for Icons -->
+        <!-- <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script> -->
+
+        <!-- <script>
+            function addOrderDetails(orderItems) {
+                let detailsTable = document.getElementById("details");
+                detailsTable.innerHTML = ''; // Clear the table before adding new rows
+
+                let totalPrice = 0;
+                orderItems.forEach(item => {
+                    let row = document.createElement("tr");
+
+                    // Create product name cell
+                    let productCell = document.createElement("td");
+                    productCell.innerText = item.product;
+                    row.appendChild(productCell);
+
+                    // Create quantity cell
+                    let qtyCell = document.createElement("td");
+                    qtyCell.classList.add("qty"); // Add the qty class
+                    qtyCell.innerText = item.qty;
+                    row.appendChild(qtyCell);
+
+                    // Create price cell
+                    let priceCell = document.createElement("td");
+                    priceCell.innerText = `$${item.price.toFixed(2)}`;
+                    row.appendChild(priceCell);
+
+                    // Create total cell
+                    let totalCell = document.createElement("td");
+                    totalCell.classList.add("total"); // Add the total class
+                    let total = item.qty * item.price;
+                    totalCell.innerText = `$${total.toFixed(2)}`;
+                    row.appendChild(totalCell);
+
+                    detailsTable.appendChild(row);
+
+                    totalPrice += total;
+                });
+
+                // Update the cart total
+                document.getElementById("totalPrice").innerText = `$${totalPrice.toFixed(2)}`;
+            }
+        </script> -->
+
     </div>
 
     <?php require_once 'views/layouts/footer.php'; ?>

@@ -16,9 +16,8 @@
 }
 .form-control{
     padding-left: 5px;
-    border: 1px solid;
+    border: 1px solid gray;
     width: 90px;
-    margin: 0 auto;
 }
 .img {
     max-width: 100px;
@@ -55,3 +54,9 @@
     margin-top: 10px;
 }
 
+.bg-info{
+    padding: 10px;
+    border-radius: 5px;
+    color: #fff;
+    text-align: center;
+}

@@ -16,6 +16,11 @@ class PurchaseModel
         $purchase = $this->pdo->query("SELECT * FROM purchase ORDER BY id DESC");
         return $purchase->fetchAll();
     }
+    function getInventory()
+    {
+        $purchase = $this->pdo->query("SELECT * FROM inventory ORDER BY id DESC");
+        return $purchase->fetchAll();
+    }
 
     // Function to fetch all categories
     function getCategory()
@@ -49,6 +54,7 @@ class PurchaseModel
         $purchase = $stmt->fetch();
         return $purchase;
     }
+
 
     // Function to update a purchase
     public function updatePurchase($id, $data)

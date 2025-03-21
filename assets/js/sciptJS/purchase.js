@@ -256,4 +256,33 @@ window.onload = function () {
 
 // search function
 
+function processRestock(productId) {
+  let qtyElement = document.querySelector(`#details tr[data-id='${productId}'] td.qty`);
+  let totalElement = document.querySelector(`#details tr[data-id='${productId}'] td.total`);
+
+  if (qtyElement && totalElement) {
+      qtyElement.innerText = "0";
+      totalElement.innerText = "$0.00";
+      updateCartTotal();
+  } else {
+      console.log(`Product with ID ${productId} not found in the order details.`);
+  }
+}
+
+function updateCartTotal() {
+  let total = 0;
+  document.querySelectorAll("#details tr").forEach(row => {
+      let totalText = row.querySelector(".total")?.innerText.replace("$", "") || "0";
+      total += parseFloat(totalText);
+  });
+
+  console.log(`Updated Cart Total: $${total.toFixed(2)}`);
+}
+
+document.querySelectorAll(".restock-btn").forEach(button => {
+  button.addEventListener("click", function () {
+      let productId = this.getAttribute("data-id");
+      processRestock(productId);
+  });
+});
 

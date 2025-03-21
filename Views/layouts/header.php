@@ -26,10 +26,11 @@
   <script src="../../assets/js/sciptJS/script.js" defer></script>
   <script src="../../assets/js/sciptJS/purchase.js" defer></script>
   <script src="../../assets/js/sciptJS/logout.js" defer></script>
+  <script src="../../assets/js/sciptJS/search.js" defer></script>
+  <!-- boostrap -->
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="assets/css/style/purchase.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
   <!-- edit -->
   <link rel="stylesheet" href="../../assets//css/style/purchase.css">
@@ -41,6 +42,7 @@
   
    <!-- inventory.css -->
    <link rel="stylesheet" href="../../assets/css/style/inventory.css">
+<<<<<<< HEAD
    <script src="../../assets/js/sciptJS/inventory.js" defer></script>
 
    
@@ -48,7 +50,15 @@
    
   
 
+=======
+   <link rel="stylesheet" href="../../assets/css/style/logout.css">
+   <script src="../../assets/js/sciptJS/product.js"></script>
+>>>>>>> 3692599a847752c684f78f6a88f1234bcff5f823
 
+   <!-- boostrapt  -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+   <!-- categories -->
+    <link rel="stylesheet" href="../../assets/css/style/categories.css">
 </head>
 
 <body class="g-sidenav-show  bg-gray-200">

@@ -3,9 +3,9 @@
     <?php require_once './views/layouts/header.php'; ?>
     <div class="modal-content">
         <!-- Assuming $product is passed from the controller -->
-        <form method="POST" action="/products/updatePrice/<?= $product['id'] ?>">
+        <form method="POST" action="/purhcase/updatePrice/<?= $purchase['id'] ?>">
             <label for="price">New Price:</label>
-            <input type="number" name="price" value="<?= $product['price'] ?>" required>
+            <input type="number" name="price" value="<?= $purchase['price'] ?>" required>
             <button type="submit">Update Price</button>
         </form>
     </div>

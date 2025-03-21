@@ -21,7 +21,6 @@ $routes->get('/dashboard', [DashboardController::class, 'index']); // Redirect t
 // setting
 $routes->get('/settings', [SettingController::class, 'index']);
 
-
 //inventory
 $routes->get('/inventory', [InventoryController::class, 'index']);
 
@@ -49,6 +48,12 @@ $routes->post('/purchase/store', [PurchaseController::class, 'store']);
 $routes->get('/purchase/edit', [PurchaseController::class, 'edit']);
 $routes->put('/purchase/update', [PurchaseController::class, 'update']);
 $routes->delete('/purchase/destroy', [PurchaseController::class, 'destroy']);
+
+
+
+
+
+
 
 // logout
 $routes->get('/logout', [LogoutController::class, 'index']);

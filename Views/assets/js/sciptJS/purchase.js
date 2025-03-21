@@ -89,21 +89,20 @@ function filterProducts() {
 }
 
 function saveToPDF() {
-  // Select only the content you want to include in the PDF (excluding buttons)
   const content = document.querySelector(".detail-section");
 
-  // PDF options for better formatting
-  const options = {
-    margin: 10,
-    filename: "order_summary.pdf",
-    image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-  };
+  if (!content) {
+      console.error("Error: .detail-section not found!");
+      return;
+  }
 
-  // Convert the selected content to PDF and save it
-  html2pdf().from(content).set(options).save();
+  console.log("Saving PDF for:", content); // Debugging
+
+  html2pdf().from(content).save();
 }
+
+
+
 
 function processPurchase() {
   const total = document.getElementById("totalPrice").innerText;

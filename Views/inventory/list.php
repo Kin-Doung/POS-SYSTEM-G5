@@ -20,7 +20,7 @@
 
         <!-- Profile -->
         <div class="profile">
-            <img src="../../images/image.png" alt="User">
+            <img src="../../views/assets/images/image.png" alt="User">
             <div class="profile-info">
                 <span>Jimmy Sullivan</span>
                 <span class="store-name">Odama Store</span>

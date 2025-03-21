@@ -119,6 +119,8 @@
         </div>
     </div>
 
+    <!-- //end alert function// -->
+     
         <div class="row text-center w-auto">
             <div class="col-12">
                 <div class="card my-4">

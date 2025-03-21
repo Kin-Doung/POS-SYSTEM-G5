@@ -36,9 +36,15 @@
   <link rel="icon" type="image/png" href="../assets/images/Logoapp.png">
   <!-- css product -->
    <link rel="stylesheet" href="../../assets/css/style/product.css">
+   <link rel="stylesheet" href="../../assets/css/style/logout.css">
+  
+  
    <!-- inventory.css -->
    <link rel="stylesheet" href="../../assets/css/style/inventory.css">
-   <link rel="stylesheet" href="../../assets/css/style/logout.css">
+   <script src="../../assets/js/sciptJS/inventory.js" defer></script>
+
+   
+
    
   
 

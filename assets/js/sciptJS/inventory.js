@@ -32,3 +32,24 @@ const data = [
   };
   
   export default RevenueChart;
+
+  // Close all dropdowns
+  function closeAllDropdowns() {
+    var dropdowns = document.getElementsByClassName("dropdown-menu");
+    for (var i = 0; i < dropdowns.length; i++) {
+      dropdowns[i].classList.remove("show");
+    }
+  }
+
+  // Toggle dropdown visibility
+  function toggleDropdown(button) {
+    closeAllDropdowns();
+    button.nextElementSibling.classList.toggle("show");
+  }
+
+  // Close dropdowns when clicking outside
+  window.onclick = function(event) {
+    if (!event.target.matches('.dropdown-button')) {
+      closeAllDropdowns();
+    }
+  }

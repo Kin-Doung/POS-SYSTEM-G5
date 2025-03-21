@@ -92,12 +92,13 @@ class PurchaseModel
         $this->pdo->query("DELETE FROM purchase WHERE id = :id", ['id' => $id]);
     }
 
-    // Function to update quantity for a purchase
     public function updateQuantity($id, $newQuantity)
     {
         $this->pdo->query("UPDATE purchase SET quantity = :quantity WHERE id = :id", [
             'quantity' => $newQuantity,
             'id' => $id
         ]);
-    }
+    }    
+
+
 }

@@ -102,8 +102,6 @@ function saveToPDF() {
 }
 
 
-
-
 function processPurchase() {
   const total = document.getElementById("totalPrice").innerText;
   const rows = document.querySelectorAll(".order-table tbody tr");
@@ -254,19 +252,35 @@ window.onload = function () {
 };
 
 // search function
+function processRestock(purchaseId) {
+  // Prompt the user for the restock quantity
+  const quantity = prompt("Enter the quantity to restock:");
 
-function processRestock(productId) {
-  let qtyElement = document.querySelector(`#details tr[data-id='${productId}'] td.qty`);
-  let totalElement = document.querySelector(`#details tr[data-id='${productId}'] td.total`);
+  // Check if the quantity is valid
+  if (quantity && !isNaN(quantity) && quantity > 0) {
+      // Create the request data
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "/restock", true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-  if (qtyElement && totalElement) {
-      qtyElement.innerText = "0";
-      totalElement.innerText = "$0.00";
-      updateCartTotal();
+      xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+              alert("Stock updated successfully!");
+              location.reload(); // Reload the page to reflect the new quantity
+          } else if (xhr.readyState === 4) {
+              alert("Error: " + xhr.statusText);
+          }
+      };
+
+      // Send the request with purchase ID and quantity
+      xhr.send("id=" + purchaseId + "&quantity=" + quantity);
   } else {
-      console.log(`Product with ID ${productId} not found in the order details.`);
+      alert("Please enter a valid quantity.");
   }
 }
+
+
+
 
 function updateCartTotal() {
   let total = 0;
@@ -284,4 +298,7 @@ document.querySelectorAll(".restock-btn").forEach(button => {
       processRestock(productId);
   });
 });
+
+
+
 

@@ -16,6 +16,11 @@ class PurchaseModel
         $purchase = $this->pdo->query("SELECT * FROM purchase ORDER BY id DESC");
         return $purchase->fetchAll();
     }
+    function getInventory()
+    {
+        $purchase = $this->pdo->query("SELECT * FROM inventory ORDER BY id DESC");
+        return $purchase->fetchAll();
+    }
 
     // Function to fetch all categories
     function getCategory()
@@ -30,15 +35,14 @@ class PurchaseModel
     function createPurchase($data)
     {
         // Insert the purchase data into the purchase table
-        $this->pdo->query("INSERT INTO purchase (product_id, product_name, image, quantity, price, purchase_date, category_id) 
-        VALUES (:product_id, :product_name, :image, :quantity, :price, :purchase_date, :category_id)", [
-            'product_id' => $data['product_id'],
-            'product_name' => $data['product_name'], // ✅ Add product_name here
+        $this->pdo->query("INSERT INTO purchase (product_id, image, quantity, price, purchase_date, category_id) 
+            VALUES (:product_id, :image, :quantity, :price, :purchase_date, :category_id)", [
+            'product_id' => $data['product_id'],  // Use product_id from the Product model
             'image' => $data['image'],
             'quantity' => $data['quantity'],
             'price' => $data['price'],
             'purchase_date' => $data['purchase_date'],
-            'category_id' => $data['category_id'],
+            'category_id' => $data['category_id'],  // Add category_id
         ]);
     }
 
@@ -49,6 +53,7 @@ class PurchaseModel
         $purchase = $stmt->fetch();
         return $purchase;
     }
+
 
     // Function to update a purchase
     public function updatePurchase($id, $data)

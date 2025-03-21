@@ -39,7 +39,7 @@
         <form action="/category/update?id=<?= $category['id'] ?>" method="POST">
             <div class="form-group">
                 <label for="" class="form-label">Name:</label>
-                <input type="text" value=" <?= $category['name'] ?>" name="name" class="form-control">
+                <input type="text" value=" <?= $category['name'] ?>" name="name" class="form-controll">
             </div>
             <button type="submit" class="btn btn-success mt-3">Update</button>
         </form>

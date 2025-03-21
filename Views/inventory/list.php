@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="profile">
-            <img src="../../assets/images/image.png" alt="User">
+            <img src="../../views/assets/images/image.png" alt="User">
             <div class="profile-info">
                 <span>Eng Ly</span>
                 <span class="store-name">Owner Store</span>

@@ -41,7 +41,7 @@
         <form action="/category/store" method="POST">
             <div class="form-group">
                 <label for="" class="form-label">Name:</label>
-                <input type="text" value="" name="name" class="form-control">
+                <input type="text" value="" name="name" class="form-controll">
             </div>
             <button type="submit" class="btn btn-success mt-3">Submit</button>
         </form>

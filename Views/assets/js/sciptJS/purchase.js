@@ -89,21 +89,20 @@ function filterProducts() {
 }
 
 function saveToPDF() {
-  // Select only the content you want to include in the PDF (excluding buttons)
   const content = document.querySelector(".detail-section");
 
-  // PDF options for better formatting
-  const options = {
-    margin: 10,
-    filename: "order_summary.pdf",
-    image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-  };
+  if (!content) {
+      console.error("Error: .detail-section not found!");
+      return;
+  }
 
-  // Convert the selected content to PDF and save it
-  html2pdf().from(content).set(options).save();
+  console.log("Saving PDF for:", content); // Debugging
+
+  html2pdf().from(content).save();
 }
+
+
+
 
 function processPurchase() {
   const total = document.getElementById("totalPrice").innerText;
@@ -256,4 +255,33 @@ window.onload = function () {
 
 // search function
 
+function processRestock(productId) {
+  let qtyElement = document.querySelector(`#details tr[data-id='${productId}'] td.qty`);
+  let totalElement = document.querySelector(`#details tr[data-id='${productId}'] td.total`);
+
+  if (qtyElement && totalElement) {
+      qtyElement.innerText = "0";
+      totalElement.innerText = "$0.00";
+      updateCartTotal();
+  } else {
+      console.log(`Product with ID ${productId} not found in the order details.`);
+  }
+}
+
+function updateCartTotal() {
+  let total = 0;
+  document.querySelectorAll("#details tr").forEach(row => {
+      let totalText = row.querySelector(".total")?.innerText.replace("$", "") || "0";
+      total += parseFloat(totalText);
+  });
+
+  console.log(`Updated Cart Total: $${total.toFixed(2)}`);
+}
+
+document.querySelectorAll(".restock-btn").forEach(button => {
+  button.addEventListener("click", function () {
+      let productId = this.getAttribute("data-id");
+      processRestock(productId);
+  });
+});
 

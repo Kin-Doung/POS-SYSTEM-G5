@@ -90,6 +90,9 @@ class PurchaseController extends BaseController
         $this->views('purchase/edit', ['purchase' => $purchase]);
     }
 
+
+
+
     // Update Purchase Controller's update method
     public function update($id)
     {

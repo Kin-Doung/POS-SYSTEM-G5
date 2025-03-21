@@ -43,7 +43,7 @@ unset($_SESSION['error']); // Remove error after showing
                     <form action="/login" method="POST">
                         <div class="input-boxes">
                             <div class="input-box">
-                                <i class="fas fa-envelope"></i>
+                                <i class="fas fa-user"></i>
                                 <input type="text" name="username" placeholder="Username" required>
                             </div>
                             <div class="input-box">

@@ -22,10 +22,10 @@
 
         <!-- Profile -->
         <div class="profile">
-            <img src="../../images/image.png" alt="User">
+            <img src="../../assets/images/image.png" alt="User">
             <div class="profile-info">
-                <span>Jimmy Sullivan</span>
-                <span class="store-name">Odama Store</span>
+                <span>Engly</span>
+                <span class="store-name">Engly store</span>
             </div>
         </div>
         <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -53,8 +53,8 @@
                                 <i class="fas fa-box text-danger" style="font-size: 2.5rem;"></i>
                             </div>
                             <div class="col-9 text-right">
-                                <p class="card-category text-muted" style="font-size: 0.85rem;">Out Inventory</p>
-                                <h4 class="card-title" style="font-size: 1.2rem;">12</h4>
+                                <p class="card-category text-muted" style="font-size: 0.85rem;">Out Stock</p>
+                                <h4 class="card-title" style="font-size: 1.2rem;">120</h4>
                             </div>
                         </div>
                     </div>
@@ -78,8 +78,8 @@
                                 <i class="fas fa-box text-warning" style="font-size: 2.5rem;"></i>
                             </div>
                             <div class="col-9 text-right">
-                                <p class="card-category text-muted" style="font-size: 0.85rem;">Low Inventory</p>
-                                <h4 class="card-title" style="font-size: 1.2rem;">12</h4>
+                                <p class="card-category text-muted" style="font-size: 0.85rem;">Low Stock</p>
+                                <h4 class="card-title" style="font-size: 1.2rem;">120</h4>
                             </div>
                         </div>
                     </div>
@@ -101,8 +101,8 @@
                                 <i class="fas fa-box text-success" style="font-size: 2.5rem;"></i>
                             </div>
                             <div class="col-9 text-right">
-                                <p class="card-category text-muted" style="font-size: 0.85rem;">Full Inventory</p>
-                                <h4 class="card-title" style="font-size: 1.2rem;">12</h4>
+                                <p class="card-category text-muted" style="font-size: 0.85rem;">Full Stock</p>
+                                <h4 class="card-title" style="font-size: 1.2rem;">120</h4>
                             </div>
                         </div>
                     </div>
@@ -121,19 +121,14 @@
 
         <div class="row text-center w-auto">
             <div class="col-12">
-                <div class="card my-4">
-                    <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                        <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-                            <h6 class="text-white text-capitalize ps-3">Inventory</h6>
-                        </div>
-                    </div>
-                    <div class="card-body px-0 pb-2">
-                        <div class="table-responsive p-0">
+                <div class="card my-4 m-4">
+                    <div class="card-body px-0 pb-2"> Inventory
+                        <div class="table-responsive p-0 " style="overflow: hidden;">
                             <table class="table align-items-center justify-content-center mb-0">
                                 <thead>
                                     <tr>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Product info</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Budget</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Price</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Quantity</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Option</th>
 
@@ -154,7 +149,7 @@
                                         </td>
 
                                         <td>
-                                            <p class="text-sm font-weight-bold mb-0">$2,500</p>
+                                            <p class="text-sm font-weight-bold mb-0">$25.00</p>
                                         </td>
 
                                         <td class="align-middle text-center">
@@ -169,13 +164,15 @@
                                         </td>
                                         <td class="text-center w-auto">
                                         <div class="dropdown">
-                                                <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    &#x22EE;
+                                                <button class="btn btn-sm text-lowercase border-0 shadow-none" 
+                                                    type="button" data-bs-toggle="dropdown" aria-expanded="false" 
+                                                     style="background: none; box-shadow: none; border: none; color:blue;">
+                                                            see more...
                                                 </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                    <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
-                                                </ul>
+                                                    <ul class="dropdown-menu">
+                                                            <li><a class="dropdown-item text-lowercase" href="#">edit</a></li>
+                                                            <li><a class="dropdown-item text-danger text-lowercase" href="#">delete</a></li>
+                                                    </ul>
                                             </div>
                                         </td>
 
@@ -194,7 +191,7 @@
                                         </td>
 
                                         <td>
-                                            <p class="text-sm font-weight-bold mb-0">$2,500</p>
+                                            <p class="text-sm font-weight-bold mb-0">$25.00</p>
                                         </td>
 
                                         <td class="align-middle text-center">
@@ -210,15 +207,27 @@
 
 
                                         <td class="text-center w-auto">
-                                        <div class="dropdown">
+                                        <!-- <div class="dropdown">
                                                 <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    &#x22EE;
+                                                    see...
                                                 </button>
                                                 <ul class="dropdown-menu">
                                                     <li><a class="dropdown-item" href="#">Edit</a></li>
                                                     <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
                                                 </ul>
+                                            </div> -->
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm text-lowercase border-0 shadow-none" 
+                                                    type="button" data-bs-toggle="dropdown" aria-expanded="false" 
+                                                     style="background: none; box-shadow: none; border: none; color:blue;">
+                                                            see more...
+                                                </button>
+                                                    <ul class="dropdown-menu">
+                                                            <li><a class="dropdown-item text-lowercase" href="#">edit</a></li>
+                                                            <li><a class="dropdown-item text-danger text-lowercase" href="#">delete</a></li>
+                                                    </ul>
                                             </div>
+
                                         </td>
 
                                     </tr>
@@ -236,7 +245,7 @@
                                         </td>
 
                                         <td>
-                                            <p class="text-sm font-weight-bold mb-0">$2,500</p>
+                                            <p class="text-sm font-weight-bold mb-0">$25.00</p>
                                         </td>
 
                                         <td class="align-middle text-center">
@@ -251,13 +260,15 @@
                                         </td>
                                         <td class="text-center w-auto">
                                         <div class="dropdown">
-                                                <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    &#x22EE;
+                                                <button class="btn btn-sm text-lowercase border-0 shadow-none" 
+                                                    type="button" data-bs-toggle="dropdown" aria-expanded="false" 
+                                                     style="background: none; box-shadow: none; border: none; color:blue;">
+                                                            see more...
                                                 </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                    <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
-                                                </ul>
+                                                    <ul class="dropdown-menu">
+                                                            <li><a class="dropdown-item text-lowercase" href="#">edit</a></li>
+                                                            <li><a class="dropdown-item text-danger text-lowercase" href="#">delete</a></li>
+                                                    </ul>
                                             </div>
                                         </td>
 
@@ -276,7 +287,7 @@
                                         </td>
 
                                         <td>
-                                            <p class="text-sm font-weight-bold mb-0">$2,500</p>
+                                            <p class="text-sm font-weight-bold mb-0">$25.00</p>
                                         </td>
 
                                         <td class="align-middle text-center">
@@ -291,13 +302,15 @@
                                         </td>
                                         <td class="text-center w-auto">
                                         <div class="dropdown">
-                                                <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    &#x22EE;
+                                                <button class="btn btn-sm text-lowercase border-0 shadow-none" 
+                                                    type="button" data-bs-toggle="dropdown" aria-expanded="false" 
+                                                     style="background: none; box-shadow: none; border: none; color:blue;">
+                                                            see more...
                                                 </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                    <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
-                                                </ul>
+                                                    <ul class="dropdown-menu">
+                                                            <li><a class="dropdown-item text-lowercase" href="#">edit</a></li>
+                                                            <li><a class="dropdown-item text-danger text-lowercase" href="#">delete</a></li>
+                                                    </ul>
                                             </div>
                                         </td>
 
@@ -316,7 +329,7 @@
                                         </td>
 
                                         <td>
-                                            <p class="text-sm font-weight-bold mb-0">$2,500</p>
+                                            <p class="text-sm font-weight-bold mb-0">$25.00</p>
                                         </td>
 
                                         <td class="align-middle text-center">
@@ -331,13 +344,15 @@
                                         </td>
                                         <td class="text-center w-auto">
                                         <div class="dropdown">
-                                                <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    &#x22EE;
+                                                <button class="btn btn-sm text-lowercase border-0 shadow-none" 
+                                                    type="button" data-bs-toggle="dropdown" aria-expanded="false" 
+                                                     style="background: none; box-shadow: none; border: none; color:blue;">
+                                                            see more...
                                                 </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                    <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
-                                                </ul>
+                                                    <ul class="dropdown-menu">
+                                                            <li><a class="dropdown-item text-lowercase" href="#">edit</a></li>
+                                                            <li><a class="dropdown-item text-danger text-lowercase" href="#">delete</a></li>
+                                                    </ul>
                                             </div>
                                         </td>
 
@@ -356,7 +371,7 @@
                                         </td>
 
                                         <td>
-                                            <p class="text-sm font-weight-bold mb-0">$2,500</p>
+                                            <p class="text-sm font-weight-bold mb-0">$25.00</p>
                                         </td>
 
                                         <td class="align-middle text-center">
@@ -371,13 +386,15 @@
                                         </td>
                                         <td class="text-center w-auto">
                                         <div class="dropdown">
-                                                <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    &#x22EE;
+                                                <button class="btn btn-sm text-lowercase border-0 shadow-none" 
+                                                    type="button" data-bs-toggle="dropdown" aria-expanded="false" 
+                                                     style="background: none; box-shadow: none; border: none; color:blue;">
+                                                            see more...
                                                 </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                    <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
-                                                </ul>
+                                                    <ul class="dropdown-menu">
+                                                            <li><a class="dropdown-item text-lowercase" href="#">edit</a></li>
+                                                            <li><a class="dropdown-item text-danger text-lowercase" href="#">delete</a></li>
+                                                    </ul>
                                             </div>
                                         </td>
 
@@ -398,15 +415,15 @@
                             © <script>
                                 document.write(new Date().getFullYear())
                             </script>,
-                            made with <i class="fa fa-heart"></i> by
-                            <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a>
-                            for a better web.
+                            made by
+                            <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">team G5</a>
+                            
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <ul class="nav nav-footer justify-content-center justify-content-lg-end">
                             <li class="nav-item">
-                                <a href="https://www.creative-tim.com" class="nav-link text-muted" target="_blank">Creative Tim</a>
+                                <a href="https://www.creative-tim.com" class="nav-link text-muted" target="_blank">Team G5</a>
                             </li>
                             <li class="nav-item">
                                 <a href="https://www.creative-tim.com/presentation" class="nav-link text-muted" target="_blank">About Us</a>

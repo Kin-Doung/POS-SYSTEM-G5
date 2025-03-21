@@ -1,46 +1,48 @@
 <?php require_once './views/layouts/side.php' ?>
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
-    <nav class="navbar" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background-color: #fff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
-    <!-- Search Bar -->
-    <div class="search-container" style="display: flex; align-items: center; max-width: 600px; width: 100%; border-radius: 25px; border: 2px solid #ccc; padding: 5px 15px; background-color: #f9f9f9;">
-        <i class="fas fa-search" style="color: #aaa; font-size: 16px; margin-right: 10px;"></i>
-        <input type="text" placeholder="Search..." class="search-bar" 
-               style="border: none; outline: none; flex: 1; padding: 5px 10px; font-size: 14px; border-radius: 20px; background-color: transparent; color: #333;">
-    </div>
-
-    <!-- Icons -->
-    <div class="icons" style="display: flex; align-items: center; gap: 20px;">
-        <i class="fas fa-globe icon-btn" style="font-size: 18px; cursor: pointer;"></i>
-        <div class="icon-btn" id="notification-icon" style="position: relative; cursor: pointer;">
-            <i class="fas fa-bell" style="font-size: 18px;"></i>
-            <span class="notification-badge" id="notification-count" style="position: absolute; top: -5px; right: -5px; background-color: red; color: white; font-size: 10px; width: 18px; height: 18px; border-radius: 50%; text-align: center; line-height: 18px;">8</span>
+     <!-- Navbar -->
+     <nav class="navbar">
+        <!-- Search Bar -->
+        <div class="search-container">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search..." class="search-bar">
         </div>
-    </div>
 
-    <!-- Profile -->
-    <div class="profile" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-        <img src="../../assets/images/image.png" alt="User" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
-        <div class="profile-info" style="display: flex; flex-direction: column; align-items: flex-start;">
-            <span style="font-weight: bold; font-size: 14px;">Engly</span>
-            <span class="store-name" style="font-size: 12px; color: #888;">Engly Store</span>
-        </div>
-    </div>
-
-    <!-- Sidenav toggle button for smaller screens -->
-    <li class="nav-item d-xl-none ps-3 d-flex align-items-center" style="display: none;">
-        <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
-            <div class="sidenav-toggler-inner">
-                <i class="sidenav-toggler-line"></i>
-                <i class="sidenav-toggler-line"></i>
-                <i class="sidenav-toggler-line"></i>
+        <!-- Icons -->
+        <div class="icons">
+            <i class="fas fa-globe icon-btn"></i>
+            <div class="icon-btn" id="notification-icon">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge" id="notification-count">8</span>
             </div>
-        </a>
-    </li>
-</nav>
+        </div>
+
+        <!-- Profile -->
+        <div class="profile">
+            <img src="../../assets/images/image.png" alt="User">
+            <div class="profile-info">
+                <span>Engly</span>
+                <span class="store-name">Engly Store</span>
+            </div>
+        </div>
+
+        <!-- Sidenav toggle button for smaller screens -->
+        <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+            <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                <div class="sidenav-toggler-inner">
+                    <i class="sidenav-toggler-line"></i>
+                    <i class="sidenav-toggler-line"></i>
+                    <i class="sidenav-toggler-line"></i>
+                </div>
+            </a>
+        </li>
+    </nav>
 
     <!-- End Navbar -->
     <?php require_once 'views/layouts/header.php'; ?>
+
+    <!-- Search Section -->
     <div class="search-section">
         <form action="" method="POST">
             <input type="text" class="search-input" id="searchInput" name="searchInput" placeholder="Search for products..." onkeyup="filterProducts()" />
@@ -63,15 +65,9 @@
                 <option value="25">Up to $25</option>
                 <option value="30">Up to $30</option>
             </select>
-            <a href="/purchase/create" class="btn bg-info text-light ">Add New</a>
+            <a href="/purchase/create" class="btn bg-info text-light" style="margin-top: -10px;">Add New</a>
         </form>
-
-
-        </form>
-
     </div>
-
-
     
 
     <!-- Modal structure -->
@@ -94,11 +90,10 @@
                         <button class="buy-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['id'] ?>', true)">+</button>
                         <button class="subtract-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['id'] ?>', false)">-</button>
                     </div>
+                    <button type="button" class=" btn-primary move-button" data-bs-toggle="modal" data-bs-target="#modal<?= $purchase['id'] ?>" >
+    View detail
+</button>
 
-                    <!-- Button to open the modal -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal<?= $purchase['id'] ?>">
-                        View detail
-                    </button>
                 </div>
 
                 <!-- Modal for each product -->
@@ -149,48 +144,137 @@
 
                                     </div>
 
-                                    <button type="submit" class="btn btn-primary">Update</button>
+                                    <button type="submit" class="btn btn-primary update-card" style="width: 40%;">Update</button>
+                                   
                                 </form>
-
-                                <!-- Delete Form -->
+        
+                            </div>
+                            <div class="modal-footer">
                                 <form action="/purchase/destroy" method="POST" style="margin-top: 10px;">
                                     <input type="hidden" name="id" value="<?= htmlspecialchars($purchase['id']) ?>">
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
+                                    <button type="submit" class="btn btn-danger delete-card" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
                                 </form>
                             </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            </div>
+                           
                         </div>
                     </div>
                 </div>
             <?php endforeach; ?>
         </div>
 
-        <!-- Order Summary Section -->
-        <div class="detail-section">
-            <div class="detail-title">Order Summary</div>
-            <table class="order-table">
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Qty</th>
-                        <th>Price</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody id="details"></tbody>
-            </table>
+<!-- Order Summary Button -->
+<button class="total-button" onclick="toggleOrderSummary()">Total</button>
 
-            <div class="total" id="totalPrice">Cart Total: $0.00</div>
+<!-- Order Summary Section -->
+<div class="detail-section" id="orderSummary">
+    <!-- Close button (X) -->
+    <button class="close-button" onclick="closeOrderSummary()">X</button>
+    
+    <div class="detail-title">Order Summary</div>
+    <table class="order-table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody id="details"></tbody>
+    </table>
 
-            <div class="buys">
-                <button class="buy-button" style="margin-top: 20px; width: 50%;" onclick="saveToPDF()">Save as PDF</button>
-                <button class="buy-button" style="margin-top: 15px; width: 50%; background-color: #27ae60;" onclick="processPurchase()">Restock</button>
-            </div>
-        </div>
+    <div class="total" id="totalPrice">Cart Total: $0.00</div>
+
+    <div class="buys">
+    <button class="buy-button" onclick="saveToPDF()">Save as PDF</button>
+    <button class="buy-button" onclick="processPurchase()">Restock</button>
+</div>
+
+</div>
+
+
     </div>
 
     <?php require_once 'views/layouts/footer.php'; ?>
 </main>
+
+<script>
+// Function to toggle the visibility of the order summary card
+let isDragging = false;
+let startX, startY;
+
+function toggleOrderSummary() {
+    const orderSummary = document.getElementById("orderSummary");
+
+    if (orderSummary.style.display === "none" || orderSummary.style.display === "") {
+        // Make the card visible
+        orderSummary.style.display = "block";
+
+        // Center the card if it's the first time opening
+        if (!orderSummary.dataset.moved) {
+            centerOrderSummary(orderSummary);
+        }
+
+        // Make the card draggable
+        makeDraggable(orderSummary);
+    } else {
+        orderSummary.style.display = "none";
+    }
+}
+
+function closeOrderSummary() {
+    document.getElementById("orderSummary").style.display = "none";
+}
+
+// Function to center the order summary card on the screen
+function centerOrderSummary(orderSummary) {
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+
+    const cardWidth = orderSummary.offsetWidth;
+    const cardHeight = orderSummary.offsetHeight;
+
+    const left = (screenWidth - cardWidth) / 2;
+    const top = (screenHeight - cardHeight) / 2;
+
+    orderSummary.style.left = `${left}px`;
+    orderSummary.style.top = `${top}px`;
+
+    // Mark it as moved to prevent resetting its position every time
+    orderSummary.dataset.moved = "true";
+}
+
+// Function to make the card draggable
+function makeDraggable(orderSummary) {
+    orderSummary.addEventListener('mousedown', function (e) {
+        if (e.target !== orderSummary) return;
+
+        isDragging = true;
+        startX = e.clientX - orderSummary.offsetLeft;
+        startY = e.clientY - orderSummary.offsetTop;
+
+        orderSummary.style.cursor = 'move';
+    });
+
+    document.addEventListener('mousemove', function (e) {
+        if (!isDragging) return;
+
+        const x = e.clientX - startX;
+        const y = e.clientY - startY;
+
+        orderSummary.style.transition = 'none';
+        orderSummary.style.left = `${x}px`;
+        orderSummary.style.top = `${y}px`;
+    });
+
+    document.addEventListener('mouseup', function () {
+        isDragging = false;
+        orderSummary.style.cursor = 'default';
+
+        setTimeout(() => {
+            orderSummary.style.transition = 'top 0.2s ease, left 0.2s ease';
+        }, 100);
+    });
+}
+
+</script>

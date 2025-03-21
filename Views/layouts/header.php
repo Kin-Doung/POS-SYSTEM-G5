@@ -44,9 +44,13 @@
    <!-- inventory.css -->
    <link rel="stylesheet" href="../../assets/css/style/inventory.css">
    <link rel="stylesheet" href="../../assets/css/style/logout.css">
+   <link rel="stylesheet" href="../../assets/css/style/create.css">
 
    <!-- boostrapt  -->
    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+   <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZjb4zYP9JpA5L5rD6xcgHq5fX39MlAOmoz8ejvISlFdf+5xUyn62U97cRa9L" crossorigin="anonymous">
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-vrA4Eih3FhKQxQun8FZBptPr82G5bKpZRdfOm/ZH6UpmXsnXrm1wJ9P3keK21n8D" crossorigin="anonymous"></script> -->
+
 
 
 </head>

@@ -42,7 +42,7 @@
 <div class="auth-container">
     <div class="logout-card">
         <div class="profile-pic">
-            <img src="../../assets/images/image.png" alt="">
+            <img src="../../views/assets/images/image.png" alt="">
         </div>
         <div class="eng-ly">Engly shop</div>
         <div class="user-info">

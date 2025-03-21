@@ -21,7 +21,7 @@
 
         <!-- Profile -->
         <div class="profile">
-            <img src="../../assets/images/image.png" alt="User">
+            <img src="../../views/assets/images/image.png" alt="User">
             <div class="profile-info">
                 <span>Jimmy Sullivan</span>
                 <span class="store-name">Odama Store</span>
@@ -66,7 +66,7 @@
 
     <div class="container mt-5">
         <h2 class="mb-4">Item List</h2>
-        <table class="table table-striped">
+        <table class="table-bordered table-hover">
             <thead class="table-dark">
                 <tr>
                     <th scope="col">Image</th>
@@ -87,7 +87,7 @@
                             <?= $item['product_price'] == 0 ? 'Free' : '$' . number_format($item['product_price'], 2) ?>
                         </td>
                         <td>
-                            <input type="number" min="0" value="0" class="form-control quantity" style="width: 80px;">
+                            <input type="number" min="0" value="0" class="form-control quantity">
                         </td>
                         <td class="text-center">
                             <button type="submit" class="btn btn-success btn-sm buy-btn">Edit</button>
@@ -133,7 +133,7 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel" aria-hidden="true">
+    <div class="modal fade" id="detailModal" tabindex="" role="" aria-labelledby="detailModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

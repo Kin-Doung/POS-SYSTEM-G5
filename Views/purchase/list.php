@@ -59,10 +59,9 @@
                 <div class="card"
                     data-id="<?= htmlspecialchars($purchase['id']) ?>"
                     data-name="<?= htmlspecialchars($purchase['product_name']) ?>"
-                    data-category="<?= htmlspecialchars($purchase['category_id']) ?>"
+                    data-category="<?= htmlspecialchars($purchase['category_id'] ?? '') ?>"
                     data-price="<?= htmlspecialchars($purchase['price']) ?>">
                     <img src="<?= '/uploads/' . htmlspecialchars($purchase['image']) ?>" alt="Product Image">
-
                     <div class="product-name"><?= htmlspecialchars($purchase['product_name']) ?></div>
 
                     <input type="number" class="quantity" id="quantity<?= $purchase['id'] ?>" value="0" min="0" />

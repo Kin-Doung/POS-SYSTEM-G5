@@ -59,9 +59,11 @@
                                 <a href="/category/edit?id=<?= $category['id'] ?>" class="btn btn-sm btn-warning">
                                     <i class="bi bi-pencil-square"></i> Edit
                                 </a>
-                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#category<?= $category['id'] ?>">
+                                <button type="button" class="btn btn-sm btn-danger text-white fw-bold" style="background-color: #dc3545 !important; border-color: #dc3545 !important;" data-bs-toggle="modal" data-bs-target="#category<?= $category['id'] ?>">
                                     <i class="bi bi-trash"></i> Delete
                                 </button>
+
+
 
                                 <!-- Modal -->
                                 <?php require_once './views/categories/delete.php'; ?>

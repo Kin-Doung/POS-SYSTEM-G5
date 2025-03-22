@@ -1,3 +1,4 @@
+
 <?php
 require_once './Databases/database.php';
 
@@ -16,21 +17,7 @@ class SettingModel
         $stmt = $this->pdo->query("SELECT * FROM admin");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function saveAdmin($data)
-    {
-        $sql = "UPDATE admin SET 
-                username = :username, 
-                email = :email, 
-                password = :password, 
-                store_name = :store_name, 
-                store_logo = :store_logo, 
-                language = :language
-            WHERE id = 1"; // Change 1 to the actual admin ID
-
-        $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute($data);
-    }
-
+   
 
 
 
@@ -45,6 +32,15 @@ class SettingModel
     }
 
     // Update admin information
+    public function saveAdmin($data)
+    {
+        $sql = "INSERT INTO admin (username, email, password, store_name, store_logo, language) 
+                VALUES (:username, :email, :password, :store_name, :store_logo, :language)";
+
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute($data);
+    }
+
     public function updateAdmin($data)
     {
         $query = "UPDATE admin SET 
@@ -53,10 +49,11 @@ class SettingModel
                     password = :password, 
                     store_name = :store_name, 
                     store_logo = :store_logo, 
-                    language = :language 
-                  WHERE id = 1"; // Always update the first admin
+                    language = :language
+                  WHERE id = :id";
 
-        $stmt = $this->pdo->query($query);
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':id', $data['id'], PDO::PARAM_INT);
         $stmt->bindParam(':username', $data['username']);
         $stmt->bindParam(':email', $data['email']);
         $stmt->bindParam(':password', $data['password']);
@@ -66,6 +63,7 @@ class SettingModel
 
         return $stmt->execute();
     }
+
 
 
     // Delete admin

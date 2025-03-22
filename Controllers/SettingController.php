@@ -58,22 +58,25 @@ class SettingController extends BaseController
 
     // Edit admin info (edit)
 
-    public function edit()
+    public function edit($id)
     {
-        $admin = $this->model->getAdmin(1); // Always get first admin
+        $admin = $this->model->getAdmin($id);
+
+        if (!$admin) {
+            die("Admin not found!"); // Debugging message
+        }
+
         require_once 'views/settings/edit.php';
     }
 
 
-
-    // Update admin info (update)
     public function update($id)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $admin = $this->model->getAdmin($id);
             $imageData = $admin['store_logo'];
 
-            if (isset($_FILES['store_logo']) && $_FILES['store_logo']['error'] === UPLOAD_ERR_OK) {
+            if (!empty($_FILES['store_logo']['tmp_name'])) {
                 $imageData = file_get_contents($_FILES['store_logo']['tmp_name']);
             }
 
@@ -82,6 +85,7 @@ class SettingController extends BaseController
                 : $admin['password'];
 
             $data = [
+                'id' => $id,
                 'username' => $_POST['username'],
                 'email' => $_POST['email'],
                 'password' => $password,
@@ -90,12 +94,12 @@ class SettingController extends BaseController
                 'language' => $_POST['language']
             ];
 
-            $this->model->updateAdmin($id, $data);
-
+            $this->model->updateAdmin($data);
             header("Location: /settings");
             exit();
         }
     }
+
 
     // Delete admin (destroy)
     public function destroy($id)

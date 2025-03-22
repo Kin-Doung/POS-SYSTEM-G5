@@ -1,15 +1,10 @@
 <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark" id="sidenav-main">
   <div class="sidenav-header">
     <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-<<<<<<< HEAD
     <a class="navbar-brand m-0" target="_blank">
-      <img src="../assets/img/logos/logo.png" class="navbar-brand-img h-100" alt="main_logo">
-=======
-    <a class="navbar-brand m-0"  target="_blank">
       <img src="../../views/assets/img/logos/logo.png" class="navbar-brand-img h-100" alt="main_logo">
->>>>>>> f52372ae21bfd18640694d9d4f58db2b5bf7cc80
     </a>
-   
+
   </div>
   <hr class="horizontal light mt-0 mb-2">
   <div>
@@ -70,24 +65,31 @@
       </li>
       <!-- nav setting -->
       <li class="nav-item mt-3">
-        <a class="nav-link text-white" data-bs-toggle="collapse" href="#settingsMenu" role="button" aria-expanded="false" aria-controls="settingsMenu">
+        <a class="nav-link text-white" data-bs-toggle="collapse" href="#settingsMenu" role="button"
+          aria-expanded="false" aria-controls="settingsMenu">
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">
             <i class="fas fa-cog"></i> Setting
           </h6>
         </a>
       </li>
 
-      <div class="collapse ps-4" id="settingsMenu">
-        <li class="nav-item">
-          <a class="nav-link text-white" href="/settings">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">person</i>
-            </div>
-            <span class="nav-link-text ms-1">Account</span>
-          </a>
-        </li>
-
+      <!-- Add data-bs-auto-close="outside" here -->
+      <div class="collapse ps-4" id="settingsMenu" data-bs-auto-close="outside">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link text-white" href="/settings">
+              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="material-icons opacity-10">person</i>
+              </div>
+              <span class="nav-link-text ms-1">Account</span>
+            </a>
+          </li>
+        </ul>
       </div>
+
+
+
+
     </ul>
   </div>
 </aside>

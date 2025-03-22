@@ -49,44 +49,7 @@ function updateDetails() {
   generateQRCode(totalOrderPrice); // Generate QR code for the total
 }
 
-function filterProducts() {
-  const searchInput = document
-    .getElementById("searchInput")
-    .value.toLowerCase();
-  const categorySelect = document.getElementById("categorySelect").value;
-  const priceSelect = document.getElementById("priceSelect").value;
 
-  const products = document.querySelectorAll(".product"); // All products on the page
-
-  products.forEach((product) => {
-    const productName = product.getAttribute("data-product-name").toLowerCase();
-    const productCategory = product.getAttribute("data-category");
-    const productPrice = parseFloat(product.getAttribute("data-price"));
-
-    // Check category match
-    const matchesCategory =
-      categorySelect === "all" || categorySelect === productCategory;
-
-    // Check search match
-    const matchesSearch = productName.includes(searchInput);
-
-    // Check price match
-    const matchesPrice =
-      priceSelect === "" ||
-      (priceSelect === "0" && productPrice <= 10) ||
-      (priceSelect === "15" && productPrice <= 15) ||
-      (priceSelect === "20" && productPrice <= 20) ||
-      (priceSelect === "25" && productPrice <= 25) ||
-      (priceSelect === "30" && productPrice <= 30);
-
-    // Show product if all conditions are met
-    if (matchesCategory && matchesSearch && matchesPrice) {
-      product.style.display = ""; // Show product
-    } else {
-      product.style.display = "none"; // Hide product
-    }
-  });
-}
 
 function saveToPDF() {
   const content = document.querySelector(".detail-section");

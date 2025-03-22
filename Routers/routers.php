@@ -23,6 +23,10 @@ $routes->get('/settings', [SettingController::class, 'index']);
 
 //inventory
 $routes->get('/inventory', [InventoryController::class, 'index']);
+$routes->get('/inventory/create', [InventoryController::class, 'create']);
+$routes->post('/inventory/store', [InventoryController::class, 'store']);
+$routes->get('/inventory/edit', [InventoryController::class, 'edit']);
+$routes->delete('/inventory/destroy', [InventoryController::class, 'destroy']);
 
 //Notifications
 $routes->get('/notifications', [NotificationController::class, 'index']);

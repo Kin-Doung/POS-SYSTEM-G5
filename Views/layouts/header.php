@@ -37,6 +37,26 @@
   <link rel="stylesheet" href="../../views/assets/css/style/purchase.css">
   <link rel="icon" type="image/png" href="../../views/assets/images/logoapp.png">
   <!-- css product -->
+
+   <link rel="stylesheet" href="../../assets/css/style/product.css">
+   <link rel="stylesheet" href="../../assets/css/style/logout.css">
+  
+  
+   <!-- inventory.css -->
+   <link rel="stylesheet" href="../../assets/css/style/inventory.css">
+
+   <script src="../../assets/js/sciptJS/inventory.js" defer></script>
+
+   
+
+   
+  
+
+
+   <link rel="stylesheet" href="../../assets/css/style/logout.css">
+   <script src="../../assets/js/sciptJS/product.js"></script>
+
+
   <link rel="stylesheet" href="../../views/assets/css/style/product.css">
   <link rel="stylesheet" href="../../views/assets/css/style/logout.css">
 
@@ -47,6 +67,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
   <!-- HTML to PDF Converter -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+
 
 
 

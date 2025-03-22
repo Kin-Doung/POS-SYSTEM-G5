@@ -19,38 +19,35 @@
   <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
   <!-- CSS Files -->
-  <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.0.0" rel="stylesheet" />
-  <link rel="stylesheet" href="../../assets/css/style/dashbaord.css" />
+  <link id="pagestyle" href="../../views/assets/css/material-dashboard.css?v=3.0.0" rel="stylesheet" />
+  <link rel="stylesheet" href="../../views/assets/css/style/dashbaord.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <script src="../../assets/js/sciptJS/script.js" defer></script>
-  <script src="../../assets/js/sciptJS/purchase.js" defer></script>
-  <script src="../../assets/js/sciptJS/logout.js" defer></script>
-  <script src="../../assets/js/sciptJS/search.js" defer></script>
+  <script src="../../views/assets/js/sciptJS/script.js" defer></script>
+  <script src="../../views/assets/js/sciptJS/purchase.js" defer></script>
+  <script src="../../views/assets/js/sciptJS/logout.js" defer></script>
+  <script src="../../views/assets/js/sciptJS/search.js" defer></script>
+  <script src="../../views/assets/js/sciptJS/product.js" defer></script>
   <!-- boostrap -->
-
- 
-
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="assets/css/style/purchase.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
   <!-- edit -->
-  <link rel="stylesheet" href="../../assets//css/style/purchase.css">
-  <link rel="icon" type="image/png" href="../assets/images/Logoapp.png">
+  <link rel="stylesheet" href="../../views/assets/css/style/purchase.css">
+  <link rel="icon" type="image/png" href="../../views/assets/images/logoapp.png">
   <!-- css product -->
-   <link rel="stylesheet" href="../../assets/css/style/product.css">
-   <!-- inventory.css -->
-   <link rel="stylesheet" href="../../assets/css/style/inventory.css">
-   <link rel="stylesheet" href="../../assets/css/style/logout.css">
-   <link rel="stylesheet" href="../../assets/css/style/create.css">
+  <link rel="stylesheet" href="../../views/assets/css/style/product.css">
+  <link rel="stylesheet" href="../../views/assets/css/style/logout.css">
+  <!-- link of inventory csss -->
+  <link rel="stylesheet" href="../../views/assets/css/style/inventory.css">
+  <!-- boostrapt  -->
+  <!-- categories -->
+  <link rel="stylesheet" href="../../views/assets/css/style/categories.css">
 
-   <!-- boostrapt  -->
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
-   <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZjb4zYP9JpA5L5rD6xcgHq5fX39MlAOmoz8ejvISlFdf+5xUyn62U97cRa9L" crossorigin="anonymous">
-   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-vrA4Eih3FhKQxQun8FZBptPr82G5bKpZRdfOm/ZH6UpmXsnXrm1wJ9P3keK21n8D" crossorigin="anonymous"></script> -->
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+  <!-- HTML to PDF Converter -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
 
 
 </head>

@@ -20,7 +20,7 @@
 
         <!-- Profile -->
         <div class="profile">
-            <img src="../../assets/images/image.png" alt="User">
+            <img src="../../views/assets/images/image.png" alt="User">
             <div class="profile-info">
                 <span>Engly</span>
                 <span class="store-name">Engly Store</span>
@@ -75,6 +75,7 @@
         <div class="product-grid" id="productGrid">
             <?php foreach ($purchases as $purchase): ?>
                 <div class="card"
+                    data-id="<?= htmlspecialchars($purchase['id']) ?>"
                     data-name="<?= htmlspecialchars($purchase['product_name']) ?>"
                     data-category="<?= htmlspecialchars($purchase['category_id']) ?>"
                     data-price="<?= htmlspecialchars($purchase['price']) ?>">
@@ -90,61 +91,76 @@
                         <button class="buy-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['id'] ?>', true)">+</button>
                         <button class="subtract-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['id'] ?>', false)">-</button>
                     </div>
-                    <button type="button" class=" btn-primary move-button" data-bs-toggle="modal" data-bs-target="#modal<?= $purchase['id'] ?>" >
-    View detail
-</button>
+                   
 
+                    <!-- Button to open the modal -->
+                    <button type="button" class="btn btn-primary views" data-bs-toggle="modal" data-bs-target="#modal<?= $purchase['id'] ?>">
+                        View detail
+                    </button>
                 </div>
 
                 <!-- Modal for each product -->
-                <div class="modal fade" id="modal<?= $purchase['id'] ?>" tabindex="-1" aria-labelledby="modalLabel<?= $purchase['id'] ?>" aria-hidden="true">
-                    <div class="modal-dialog">
+                <div class="modal fade " id="modal<?= $purchase['id'] ?>" tabindex="-1" aria-labelledby="modalLabel<?= $purchase['id'] ?>" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="modalLabel<?= $purchase['id'] ?>">Product Detail</h5>
+                                <h5 class="modal-title mt-n4" id="modalLabel<?= $purchase['id'] ?>">Product Detail</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
 
                             <div class="modal-body">
+
                                 <form action="/purchase/update?id=<?= htmlspecialchars($purchase['id']) ?>" method="POST" enctype="multipart/form-data">
+                                <div class="mb-3  mt-n5 text-center">
+                                        <!-- <label for="image<?= $purchase['id'] ?>" class="form-label mt-n3">Profile Image</label> -->
+                                        <?php if (!empty($purchase['image'])) : ?>
+                                            <img src="/uploads/<?= htmlspecialchars($purchase['image']) ?>" alt="Current Image" style="width: 180px; height: 180px; border-radius: 20%; margin-top: 10px;">
+                                        <?php endif; ?>
+                                        <input type="file" style="margin-left: 150px;" name="image" id="image<?= $purchase['id'] ?>" accept="image/*">
+                                       
+                                    </div>
                                     <input type="hidden" name="existing_image" value="<?= htmlspecialchars($purchase['image'] ?? '') ?>">
 
-                                    <div class="mb-3">
-                                        <label for="product_name<?= $purchase['id'] ?>" class="form-label">Name</label>
-                                        <input type="text" class="form-control" name="product_name" id="product_name<?= $purchase['id'] ?>" value="<?= htmlspecialchars($purchase['product_name'] ?? '') ?>" required>
-                                    </div>
+                        <div class="row mt-n5">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="product_name<?= $purchase['id'] ?>" class="form-label">Name</label>
+                                                <input type="text" style="width: 100%; height:43px; border:1px solid rgb(196, 196, 196);" class="formcofirm form-control" name="product_name" id="product_name<?= $purchase['id'] ?>" value="<?= htmlspecialchars($purchase['product_name'] ?? '') ?>" required>
+                                            </div>
+                                        </div>
 
-                                    <div class="mb-3">
-                                        <label for="image<?= $purchase['id'] ?>" class="form-label">Profile Image</label>
-                                        <input type="file" class="form-control" name="image" id="image<?= $purchase['id'] ?>" accept="image/*">
-                                        <?php if (!empty($purchase['image'])) : ?>
-                                            <img src="/uploads/<?= htmlspecialchars($purchase['image']) ?>" alt="Current Image" style="width: 80px; height: 80px; border-radius: 50%; margin-top: 10px;">
-                                        <?php endif; ?>
-                                    </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="price<?= $purchase['id'] ?>" class="form-label">Price</label>
+                                    <input type="number" style="width: 100%; height:43px; border:1px solid rgb(196, 196, 196);" class="formcofirm form-control" name="price" id="price<?= $purchase['id'] ?>" value="<?= htmlspecialchars($purchase['price'] ?? '') ?>" required>
+                                </div>
+                            </div>
+                        </div>
 
-                                    <div class="mb-3">
-                                        <label for="price<?= $purchase['id'] ?>" class="form-label">Price</label>
-                                        <input type="number" class="form-control" name="price" id="price<?= $purchase['id'] ?>" value="<?= htmlspecialchars($purchase['price'] ?? '') ?>" required>
-                                    </div>
+<div class="d-flex justify-content-between">
+<div style="width: 80%;">
+    <label for="category_id<?= $purchase['id'] ?>" class="form-label">Category</label>
+    <!-- <select class="formcofirm " style="width: 80%; height:43px; border:1px solid #f2f2f2" name="category_id" id="category_id" required> -->
+    <select class="formcofirm" style="width: 80%; height: 43px; border: 1px solid rgb(196, 196, 196); padding: 6px 8px; line-height: 1.5;" name="category_id" id="category_id" required>
 
-                                    <div class="mb-3">
-                                        <label for="category_id<?= $purchase['id'] ?>" class="form-label">Category</label>
-                                        <select class="form-control" name="category_id" id="category_id" required>
-                                            <option value="">Select Category</option>
-                                            <?php if (!empty($categories)): ?>
-                                                <?php foreach ($categories as $category): ?>
-                                                    <option value="<?= htmlspecialchars($category['id']); ?>" <?= ($purchase['category_id'] == $category['id']) ? 'selected' : ''; ?>>
-                                                        <?= htmlspecialchars($category['name']); ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-                                            <?php else: ?>
-                                                <option value="">No categories available</option>
-                                            <?php endif; ?>
-                                        </select>
+        <option value="">Select Category</option>
+        <?php if (!empty($categories)): ?>
+            <?php foreach ($categories as $category): ?>
+                <option value="<?= htmlspecialchars($category['id']); ?>" <?= ($purchase['category_id'] == $category['id']) ? 'selected' : ''; ?>>
+                    <?= htmlspecialchars($category['name']); ?>
+                </option>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <option value="">No categories available</option>
+        <?php endif; ?>
+    </select>
+</div>
 
-                                    </div>
+    <div style="width: 20%;">
+        <button type="submit" class=" btn-primary update-card">Update</button> 
+    </div>
+</div>
 
-                                    <button type="submit" class="btn btn-primary update-card" style="width: 40%;">Update</button>
                                    
                                 </form>
         

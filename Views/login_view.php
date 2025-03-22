@@ -12,10 +12,10 @@ unset($_SESSION['error']); // Remove error after showing
 <head>
     <meta charset="UTF-8">
     <title>Login & Registration Form</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="../views/assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../assets/css/style/from.css">
+    <link rel="stylesheet" href="../views/assets/css/style/from.css">
 </head>
 
 <body>
@@ -26,7 +26,7 @@ unset($_SESSION['error']); // Remove error after showing
         <!-- Cover Image -->
         <div class="cover">
             <div class="front">
-                <img src="/assets/images/image.png" alt="Cover Image">
+                <img src="../views/assets/images/image.png" alt="Cover Image">
             </div>
             <div class="back">
                 <img src="/assets/images/image.png" alt="Cover Image">

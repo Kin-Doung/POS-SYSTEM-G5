@@ -1,5 +1,5 @@
 <?php require_once './views/layouts/side.php' ?>
-<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+<main class="main-content position-relative max-height-vh-10 h-10 border-radius-lg ">
     <!-- Navbar -->
     <nav class="navbar">
         <!-- Search Bar -->
@@ -17,7 +17,7 @@
         </div>
         <!-- Profile -->
         <div class="profile">
-            <img src="../../assets/images/image.png" alt="User">
+            <img src="../../views/assets/images/image.png" alt="User">
             <div class="profile-info">
                 <span>Eng Ly</span>
                 <span class="store-name">Owner Store</span>
@@ -34,35 +34,43 @@
         </li>
     </nav>
     <!-- End Navbar -->
-    <div class="container mt-3">
-        <a href="/category/create" style="width: 150px;" class="btn btn-primary ">Add New</a>
-        <table class="table table-dark bg-light">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <a href="/category/create" class="bg-info create-ct" style="margin-top: 30px; width : 100px;">
+                <i class="bi-plus-lg"></i> Add New
+            </a>
+        </div>
 
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($categories as $index => $category): ?>
+        <div class="table-responsive">
+            <table class="table-bordered table-hover">
+                <thead class="table-dark">
                     <tr>
-                        <td><?= $index + 1 ?></td>
-                        <td><?= $category['name'] ?></td>
-                        <td>
-                            <a href="/category/edit?id=<?= $category['id'] ?>" class="btn btn-warning">Edit</a> |
-                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#category<?= $category['id'] ?>">
-                                delete
-                            </button>
-
-                            <!-- Modal -->
-                            <?php require_once './views/categories/delete.php'; ?>
-
-                        </td>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Action</th>
                     </tr>
-                <?php endforeach ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($categories as $index => $category): ?>
+                        <tr>
+                            <td><?= $index + 1 ?></td>
+                            <td><?= $category['name'] ?></td>
+                            <td class="text-center text-nowrap">
+                                <a href="/category/edit?id=<?= $category['id'] ?>" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#category<?= $category['id'] ?>">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+
+                                <!-- Modal -->
+                                <?php require_once './views/categories/delete.php'; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach ?>
+                </tbody>
+            </table>
+        </div>
     </div>
+
 </main>

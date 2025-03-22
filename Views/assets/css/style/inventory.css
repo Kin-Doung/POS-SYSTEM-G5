@@ -1,0 +1,41 @@
+.add-stock{
+    box-shadow: none !important;
+}
+/* Remove any extra sidebar or background */
+#second-sidebar, .sidenav-bg, .second-sidebar-bg {
+    display: none !important;
+  }
+  
+  /* Force no border-radius on the sidebar */
+.container{
+    border-radius: 0 !important;
+}
+.navbar {
+    box-shadow: none !important;
+}
+.add-input{
+    width: 100%;
+}
+.add-card{
+    width: 800px;
+}
+  /* Ensure the sidebar is white */
+  #sidenav-main {
+    background-color: white !important; /* White background */
+    z-index: 1050 !important; /* Keep the sidebar on top */
+    position: fixed; /* Fix the sidebar */
+    border-radius: 0 !important;
+
+  }
+  
+  /* Optional: Make sure there are no unexpected margins/paddings */
+  body, .sidenav {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* If you want to remove any box shadows from the sidebar */
+  .sidenav {
+    box-shadow: none !important;
+  }
+  

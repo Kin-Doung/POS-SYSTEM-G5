@@ -86,76 +86,8 @@
                 </div>
             </div>
         </div>
-
-
-        <div class="mt-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 class="mb-0 ms-3">Product Table</h2>
-                <button type="button" class="btn-primary add-stock" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Add Stock</button>
-
-                <!-- Modal for adding a product -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-xl">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Add Product</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <!-- Product Display Card Container (Flexbox Layout) -->
-                                <div id="product-card-container" class="d-flex flex-wrap mb-3 gap-3"></div>
-
-                                <!-- Form for adding products -->
-                                <form id="add-product-form">
-                                    <div class="d-flex justify-content-between mb-3">
-                                        <div class="flex-fill me-2">
-                                            <label for="product-name" class="col-form-label">Product Name:</label>
-                                            <input type="text" class="form-control add-input" id="product-name" placeholder="Enter product name">
-                                        </div>
-
-                                        <div class="flex-fill ms-2">
-                                            <label for="category" class="col-form-label">Category:</label>
-                                            <select class="form-select add-input" id="category">
-                                                <option selected>Choose category</option>
-                                                <option value="1">Category 1</option>
-                                                <option value="2">Category 2</option>
-                                                <option value="3">Category 3</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="flex-fill me-2 ms-3">
-                                            <label for="quantity" class="col-form-label">Quantity:</label>
-                                            <input type="number" class="form-control add-input" id="quantity" placeholder="Enter quantity">
-                                        </div>
-
-                                        <div class="flex-fill ms-2">
-                                            <label for="price" class="col-form-label">Price:</label>
-                                            <input type="text" class="form-control add-input" id="price" placeholder="Enter price">
-                                        </div>
-
-                                        <!-- Image Upload -->
-                                        <div class="mb-3 ms-3">
-                                            <label for="product-image" class="col-form-label">Choose Image:</label>
-                                            <input type="file" class="form-control add-input" id="product-image">
-                                        </div>
-                                    </div>
-
-                                    <!-- Add more button -->
-                                    <div>
-                                        <button type="button" class="btn-primary" id="add-more-btn">Add more</button>
-                                    </div>
-
-                                    <!-- Submit Button -->
-                                    <div class="text-end">
-                                        <button type="submit" class="btn-primary">Submit</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+        <h2 class="mb-0 ms-3">Product Table</h2>
+        <button type="button" class="btn-primary add-stock" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Add Stock</button>
             <!-- Product Table -->
             <table class="table table-striped table-bordered mt-3">
                 <thead class="table-dark">
@@ -179,9 +111,9 @@
                                     see more...
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item text-dark" href="#">View</a></li>
-                                    <li><a class="dropdown-item text-dark" href="#">Edit</a></li>
-                                    <li><a class="dropdown-item text-danger" href="#">Remove</a></li>
+                                    <li><a class="dropdown-item text-dark" href="#"><i class="fa-solid fa-eye"></i> View</a></li>
+                                    <li><a class="dropdown-item text-dark" href="#"><i class="fa-solid fa-pen-to-square"></i> Edit</a></li>
+                                    <li><a class="dropdown-item text-danger" href="#"><i class="fa-solid fa-trash"></i> Remove</a></li>
                                 </ul>
                             </div>
                         </td>
@@ -189,98 +121,6 @@
                 </tbody>
             </table>
         </div>
-
-        <!-- JavaScript for handling Add more and localStorage -->
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                const addMoreButton = document.getElementById("add-more-btn");
-                const productCardContainer = document.getElementById("product-card-container");
-
-                // Function to add product data and display it immediately in a card layout inside the modal
-                function addProduct() {
-                    const productName = document.getElementById("product-name").value;
-                    const category = document.getElementById("category").value;
-                    const quantity = document.getElementById("quantity").value;
-                    const price = document.getElementById("price").value;
-                    const productImage = document.getElementById("product-image").files[0];
-
-                    // Check if all fields are filled
-                    if (productName && category && quantity && price && productImage) {
-                        // Create an object for the product
-                        const newProduct = {
-                            name: productName,
-                            category: category,
-                            quantity: quantity,
-                            price: price,
-                            image: URL.createObjectURL(productImage) // Convert image file to URL
-                        };
-
-                        // Store the product in localStorage
-                        let productListData = JSON.parse(localStorage.getItem("productList")) || [];
-                        productListData.push(newProduct);
-                        localStorage.setItem("productList", JSON.stringify(productListData));
-
-                        // Display the product immediately in a card layout inside the modal
-                        displayProduct(newProduct);
-
-                        // Clear input fields after adding
-                        document.getElementById("product-name").value = "";
-                        document.getElementById("category").value = "Choose category";
-                        document.getElementById("quantity").value = "";
-                        document.getElementById("price").value = "";
-                        document.getElementById("product-image").value = "";
-                    }
-                }
-
-                // Function to display the product in a card layout inside the modal (using Flexbox)
-                // Function to display the product in a table layout inside the modal (using Flexbox)
-function displayProduct(product) {
-                    const productCard = document.createElement("div");
-                    productCard.classList.add("card", "m-2", "p-3", "col-md-3", "border", "shadow-sm");
-
-                    productCard.innerHTML = `
-        <div class="card-body">
-            <table class="table table-sm">
-                <thead>
-                    <tr>
-                        <th scope="col">Img</th>
-                        <th scope="col">Product Name</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><img src="${product.image}" alt="${product.name}" class="img-fluid" style="max-height: 50px; object-fit: cover;"></td>
-                        <td>${product.name}</td>
-                        <td>${product.category}</td>
-                        <td>${product.quantity}</td>
-                        <td>$${product.price}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    `;
-
-                    // Append the card to the container
-                    productCardContainer.appendChild(productCard);
-                }
-
-
-
-                // Add event listener to the "Add more" button
-                addMoreButton.addEventListener("click", function(e) {
-                    e.preventDefault(); // Prevent form submission
-                    addProduct();
-                });
-
-                // Load the products from localStorage and display them on page load (inside modal)
-                const storedProducts = JSON.parse(localStorage.getItem("productList")) || [];
-                storedProducts.forEach(product => displayProduct(product));
-            });
-        </script>
-
 
     </div>
     <footer class="footer py-4  ">
@@ -317,7 +157,3 @@ function displayProduct(product) {
     </footer>
     </div>
 </main>
-
-<script>
-
-</script>

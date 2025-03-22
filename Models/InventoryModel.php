@@ -1,59 +1,77 @@
 <?php
-require_once 'Databases/database.php';
+require_once 'Databases/database.php'; // Ensure correct path
 
-class InventoryModel {
+class InventoryModel
+{
     private $pdo;
-    function __construct() {
-        $this->pdo = new Database();
+
+    function __construct()
+    {
+        $this->pdo = new Database(); // Get the PDO connection
     }
+
     function getInventory()
     {
-        $inventory = $this->pdo->query("SELECT * FROM inventory ORDER BY id DESC");
-        return $inventory->fetchAll();
+        $stmt = $this->pdo->query("SELECT * FROM inventory ORDER BY id DESC");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    function getProduct()
-    {
-        $product = $this->pdo->query("SELECT * FROM products ORDER BY id DESC");
-        return $product->fetchAll();
-    }
+
     function addInventory($data)
     {
-        $this->pdo->query("INSERT INTO inventory (product_name, image, quantity, price, added_date) 
-            VALUES (:product_name, :image, :quantity, :price, :added_date)", [
-            'product_name' => $data['product_name'],
-            'image' => $data['image'],
-            'quantity' => $data['quantity'],
-            'price' => $data['price'],
-            'added_date' => $data['added_date'],
-        ]);
+        try {
+            $stmt = $this->pdo->query("INSERT INTO inventory (image, product_name, product_id, quantity, price, amount, expiration_date) 
+                VALUES (:image, :product_name, :product_id, :quantity, :price, :amount, :expiration_date)");
+    
+            $stmt->execute([
+                ':image' => $data['image'],
+                ':product_name' => $data['product_name'],
+                ':product_id' => $data['product_id'], // Add this line
+                ':quantity' => $data['quantity'],
+                ':price' => $data['price'],
+                ':amount' => $data['amount'],
+                ':expiration_date' => $data['expiration_date']
+            ]);
+    
+            echo "Record added successfully!";
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
     }
     
-    function getInventoryById($id)   
+
+    function getInventoryById($id)
     {
-        $stmt = $this->pdo->query("SELECT * FROM inventory WHERE id = :id", ['id' => $id]);
-        $inventory = $stmt->fetch();
-        return $inventory;
+        $stmt = $this->pdo->query("SELECT * FROM inventory WHERE id = :id");
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
+
     public function updateInventory($id, $data)
     {
-        $this->pdo->query("UPDATE inventory SET product_name = :product_name, image = :image, price = :price, quantity = :quantity WHERE id = :id", [
-            'product_name' => $data['product_name'],
-            'image' => $data['image'],
-            'price' => $data['price'],
-            'quantity' => $data['quantity'],
-            'id' => $id
+        $stmt = $this->pdo->query("UPDATE inventory 
+            SET image = :image, product_name = :product_name, quantity = :quantity 
+            WHERE id = :id");
+        $stmt->execute([
+            ':image' => $data['image'],
+            ':product_name' => $data['product_name'],
+            ':quantity' => $data['quantity'],
+            ':id' => $id
         ]);
     }
-    
+
     public function deleteInventory($id)
     {
-        $this->pdo->query("DELETE FROM inventory WHERE id = :id", ['id' => $id]);
+        $stmt = $this->pdo->query("DELETE FROM inventory WHERE id = :id");
+        $stmt->execute([':id' => $id]);
     }
+
     public function updateQuantity($id, $newQuantity)
     {
-        $this->pdo->query("UPDATE inventory SET quantity = :quantity WHERE id = :id", [
-            'quantity' => $newQuantity,
-            'id' => $id
+        $stmt = $this->pdo->query("UPDATE inventory SET quantity = :quantity WHERE id = :id");
+        $stmt->execute([
+            ':quantity' => $newQuantity,
+            ':id' => $id
         ]);
     }
 }

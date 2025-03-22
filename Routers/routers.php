@@ -23,6 +23,10 @@ $routes->get('/settings', [SettingController::class, 'index']);
 
 //inventory
 $routes->get('/inventory', [InventoryController::class, 'index']);
+$routes->get('/inventory/create', [InventoryController::class, 'create']);
+$routes->post('/inventory/store', [InventoryController::class, 'store']);
+$routes->get('/inventory/edit', [InventoryController::class, 'edit']);
+$routes->delete('/inventory/destroy', [InventoryController::class, 'destroy']);
 
 //Notifications
 $routes->get('/notifications', [NotificationController::class, 'index']);
@@ -48,6 +52,8 @@ $routes->post('/purchase/store', [PurchaseController::class, 'store']);
 $routes->get('/purchase/edit', [PurchaseController::class, 'edit']);
 $routes->put('/purchase/update', [PurchaseController::class, 'update']);
 $routes->delete('/purchase/destroy', [PurchaseController::class, 'destroy']);
+$routes->post('/purchase/restock', [PurchaseController::class, 'restock']);
+
 
 
 

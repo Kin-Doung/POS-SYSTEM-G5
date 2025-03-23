@@ -43,9 +43,11 @@
   
   
    <!-- inventory.css -->
-   <link rel="stylesheet" href="../../assets/css/style/inventory.css">
+   <link rel="stylesheet" href="/views/assets/css/style/inventory.css">
 
-   <script src="../../assets/js/sciptJS/inventory.js" defer></script>
+   <script src="/views/assets/js/sciptJS/inventory.js" defer></script>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
    
 

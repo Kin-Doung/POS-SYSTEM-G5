@@ -59,7 +59,7 @@
                         </div>
                     </div>
                     <div class="card-footer p-2 align-items-center">
-                        <hr class="my-1">
+                     
                         <div class="d-flex justify-content-center">
                             <button class="show-button d-flex align-items-center gap-2 border-0 rounded-pill py-1 px-6" style="font-size: 0.7rem;">
                                 <i class="fas fa-caret-down"></i> show
@@ -84,7 +84,7 @@
                         </div>
                     </div>
                     <div class="card-footer p-2 align-items-center">
-                        <hr class="my-1">
+                       
                         <div class="d-flex justify-content-center">
                             <button class="show-button d-flex align-items-center gap-2 border-0 rounded-pill py-1 px-6" style="font-size: 0.7rem;">
                                 <i class="fas fa-caret-down"></i> show
@@ -107,7 +107,7 @@
                         </div>
                     </div>
                     <div class="card-footer p-2 align-items-center">
-                        <hr class="my-1">
+                        
                         <div class="d-flex justify-content-center">
                             <button class="show-button d-flex align-items-center gap-2 border-0 rounded-pill py-1 px-6" style="font-size: 0.7rem;">
                                 <i class="fas fa-caret-down"></i> show
@@ -144,7 +144,7 @@
                                         <td>
                                             <div class="d-flex align-items-center px-2 flex-wrap">
                                                 <div class="imageinventory me-3">
-                                                    <img src="../../assets/images/Electric cooking pot.png" alt="Product Image" class="inventory-img">
+                                                    <img src="/views/assets/images/Adapter.png" alt="Product Image" class="inventory-img">
                                                 </div>
                                                 <div class="my-auto">
                                                     <h6 class="mb-0 text-sm">Product Name</h6>
@@ -184,7 +184,7 @@
                                         <td>
                                             <div class="d-flex align-items-center px-2 flex-wrap">
                                                 <div class="imageinventory me-3">
-                                                    <img src="../../assets/images/Cake mixer.png" alt="Product Image" class="inventory-img">
+                                                <img src="/views/assets/images/Cocktail machine.png" alt="Product Image" class="inventory-img">
                                                 </div>
                                                 <div class="my-auto">
                                                     <h6 class="mb-0 text-sm">Product Name</h6>
@@ -226,7 +226,7 @@
                                         <td>
                                             <div class="d-flex align-items-center px-2 flex-wrap">
                                                 <div class="imageinventory me-3">
-                                                    <img src="../../assets/images/Cocktail machine.png" alt="Product Image" class="inventory-img">
+                                                <img src="/views/assets/images/electric grill.png" alt="Product Image" class="inventory-img">
                                                 </div>
                                                 <div class="my-auto">
                                                     <h6 class="mb-0 text-sm">Product Name</h6>
@@ -266,7 +266,7 @@
                                         <td>
                                             <div class="d-flex align-items-center px-2 flex-wrap">
                                                 <div class="imageinventory me-3">
-                                                    <img src="../../assets/images/Fan.png" alt="Product Image" class="inventory-img">
+                                                <img src="/views/assets/images/Fan.png" alt="Product Image" class="inventory-img">
                                                 </div>
                                                 <div class="my-auto">
                                                     <h6 class="mb-0 text-sm">Product Name</h6>
@@ -306,7 +306,7 @@
                                         <td>
                                             <div class="d-flex align-items-center px-2 flex-wrap">
                                                 <div class="imageinventory me-3">
-                                                    <img src="../../assets/images/electric grill.png" alt="Product Image" class="inventory-img">
+                                                <img src="/views/assets/images/Adapter.png" alt="Product Image" class="inventory-img">
                                                 </div>
                                                 <div class="my-auto">
                                                     <h6 class="mb-0 text-sm">Product Name</h6>
@@ -346,7 +346,7 @@
                                         <td>
                                             <div class="d-flex align-items-center px-2 flex-wrap">
                                                 <div class="imageinventory me-3">
-                                                    <img src="../../assets/images/download.png" alt="Product Image" class="inventory-img">
+                                                <img src="/views/assets/images/Adapter.png" alt="Product Image" class="inventory-img">
                                                 </div>
                                                 <div class="my-auto">
                                                     <h6 class="mb-0 text-sm">Product Name</h6>

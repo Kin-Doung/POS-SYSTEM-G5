@@ -36,8 +36,6 @@
     <!-- End Navbar -->
 </main>
 
-
-
 <!-- log out form -->
 <div class="auth-container">
     <div class="logout-card">

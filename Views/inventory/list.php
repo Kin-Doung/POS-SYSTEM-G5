@@ -22,7 +22,7 @@
 
         <!-- Profile -->
         <div class="profile">
-            <img src="../../images/image.png" alt="User">
+            <img src="../../views/assets/images/image.png" alt="User">
             <div class="profile-info">
                 <span>Jimmy Sullivan</span>
                 <span class="store-name">Odama Store</span>
@@ -135,7 +135,7 @@
                                 <thead>
                                     <tr>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Product info</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Budget</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Price</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Quantity</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Option</th>
 

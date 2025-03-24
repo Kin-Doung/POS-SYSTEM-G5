@@ -318,6 +318,9 @@ body {
 .fa-trash{
   color: red;
 }
+.detail p{
+  margin-bottom: 15px;
+}
 
 
 

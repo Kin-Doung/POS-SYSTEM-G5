@@ -39,49 +39,49 @@
     <!-- End Navbar -->
     <!-- /// alert fuction// -->
     <div class="content mt-4 mb-3">
-    <div class="row justify-content-center">
-        <!-- In Stock Card -->
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card shadow-sm border-0 rounded-lg" style="height: 120px;">
-                <div class="card-body text-center mt-n4">
-                    <div class="position-relative">
-                        <i class="fas fa-warehouse text-success" style="font-size: 2.5rem;"></i>
-                        <p class="card-text position-absolute top-0 end-0 m-2" style="font-size: 1.2rem;">20</p>
+        <div class="row justify-content-center">
+            <!-- In Stock Card -->
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card shadow-sm border-0 rounded-lg" style="height: 120px;">
+                    <div class="card-body text-center mt-n4">
+                        <div class="position-relative">
+                            <i class="fas fa-warehouse text-success" style="font-size: 2.5rem;"></i>
+                            <p class="card-text position-absolute top-0 end-0 m-2" style="font-size: 1.2rem;">20</p>
+                        </div>
+                        <h5 class="card-title mt-4">In Stock</h5>
                     </div>
-                    <h5 class="card-title mt-4">In Stock</h5>
                 </div>
             </div>
-        </div>
 
-        <!-- Out of Stock Card -->
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card shadow-sm border-0 rounded-lg" style="height: 120px;">
-                <div class="card-body text-center mt-n4">
-                    <div class="position-relative">
-                        <i class="fas fa-times-circle text-danger" style="font-size: 2.5rem;"></i>
-                        <p class="card-text position-absolute top-0 end-0 m-2" style="font-size: 1.2rem;">30</p>
+            <!-- Out of Stock Card -->
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card shadow-sm border-0 rounded-lg" style="height: 120px;">
+                    <div class="card-body text-center mt-n4">
+                        <div class="position-relative">
+                            <i class="fas fa-times-circle text-danger" style="font-size: 2.5rem;"></i>
+                            <p class="card-text position-absolute top-0 end-0 m-2" style="font-size: 1.2rem;">30</p>
+                        </div>
+                        <h5 class="card-title mt-4">Out of Stock</h5>
                     </div>
-                    <h5 class="card-title mt-4">Out of Stock</h5>
                 </div>
             </div>
-        </div>
 
-        <!-- Full Stock Card -->
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card shadow-sm border-0 rounded-lg" style="height: 120px;">
-                <div class="card-body text-center mt-n4">
-                    <div class="position-relative">
-                        <i class="fas fa-check-circle text-warning" style="font-size: 2.5rem;"></i>
-                        <p class="card-text position-absolute top-0 end-0 m-2" style="font-size: 1.2rem;">50</p>
+            <!-- Full Stock Card -->
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card shadow-sm border-0 rounded-lg" style="height: 120px;">
+                    <div class="card-body text-center mt-n4">
+                        <div class="position-relative">
+                            <i class="fas fa-check-circle text-warning" style="font-size: 2.5rem;"></i>
+                            <p class="card-text position-absolute top-0 end-0 m-2" style="font-size: 1.2rem;">50</p>
+                        </div>
+                        <h5 class="card-title mt-4">Full Stock</h5>
                     </div>
-                    <h5 class="card-title mt-4">Full Stock</h5>
                 </div>
             </div>
-        </div>
 
-        
+
+        </div>
     </div>
-</div>
 
 
 
@@ -121,46 +121,80 @@
 
 
             <table class="table">
-    <thead>
-        <tr>
-            <th># </th>
-            <th>Image</th>
-            <th>Product Name </th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- PHP Loop for Data (example) -->
-        <?php foreach ($inventory as $index => $item): ?>
-            <tr>
-                <td><?= $index + 1 ?></td>
-                <td>
-                    <img src="<?= htmlspecialchars($item['image']) ?>" 
-                         alt="Image of <?= htmlspecialchars($item['product_name']) ?>"
-                         style="width: 40px; height: 40px; border-radius: 100%;">
-                </td>
-                <td><?= htmlspecialchars($item['product_name']) ?></td>
-                <td><span class="quantity-text"><?= htmlspecialchars($item['quantity']) ?></span></td>
-                <td><?= htmlspecialchars($item['amount']) ?></td>
-                <td>
-                <div class="dropdown">
-    <button class="btn-seemore dropdown-toggle" type="button" data-bs-toggle="dropdown" >
-        see more...
+                <thead>
+                    <tr>
+                        <th># </th>
+                        <th>Image</th>
+                        <th>Product Name </th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- PHP Loop for Data (example) -->
+                    <?php foreach ($inventory as $index => $item): ?>
+                        <tr>
+                            <td><?= $index + 1 ?></td>
+                            <td>
+                                <img src="<?= htmlspecialchars($item['image']) ?>"
+                                    alt="Image of <?= htmlspecialchars($item['product_name']) ?>"
+                                    style="width: 40px; height: 40px; border-radius: 100%;">
+                            </td>
+                            <td><?= htmlspecialchars($item['product_name']) ?></td>
+                            <td><span class="quantity-text"><?= htmlspecialchars($item['quantity']) ?></span></td>
+                            <td><?= htmlspecialchars($item['amount']) ?></td>
+                            <td>
+                            <div class="dropdown">
+    <button class="btn-seemore dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        See more...
     </button>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <li><a class="dropdown-item text-dark" href="#"> <i class="fa-solid fa-eye"></i> View Details</a></li>
+    <ul class="dropdown-menu">
+        <li> <a class="dropdown-item text-dark" href="#" data-bs-toggle="modal" data-bs-target="#viewModal<?= $item['id']; ?>"> <i class="fa-solid fa-eye"></i> View</a> </li>
         <li><a class="dropdown-item text-dark" href="/inventory/edit?id=<?= $item['id'] ?>"> <i class="fa-solid fa-pen-to-square"></i> Edit</a></li>
-        <li><a class="dropdown-item text-dark" href="/inventory/delete?id=<?= $item['id'] ?>"><i class="fa-solid fa-trash"></i> Delete</a></li>
+        <li> 
+        <a class="dropdown-item text-dark" href="/inventory/delete?id=<?= $item['id'] ?>" onclick="return confirm('Are you sure you want to delete this item?');"><i class="fa-solid fa-trash"></i> Delete</a></li>
+
     </ul>
 </div>
 
-                </td>
-            </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
+<div class="modal fade" id="viewModal<?= $item['id']; ?>" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">View Inventory Item</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex justify-content-between align-items-center"> <!-- Flexbox layout -->
+                <!-- Text on the Left -->
+                <div class="text-start d-inline-block detail "> <!-- Keeps text aligned left -->
+                    <p><strong>Product Name:</strong> <?= htmlspecialchars($item['product_name']); ?></p>
+                    <p><strong>Category:</strong> <?= !empty($item['category_name']) ? htmlspecialchars($item['category_name']) : '-'; ?></p>
+                    <p><strong>Quantity:</strong> <?= htmlspecialchars($item['quantity']); ?></p>
+                    <p><strong>Price:</strong> $<?= htmlspecialchars(number_format($item['amount'], 2)); ?></p>
+                    <p><strong>Expiration Date:</strong> <?= htmlspecialchars($item['expiration_date']); ?></p>
+                </div>
+
+                <!-- Image on the Right -->
+                <?php if (!empty($item['image'])): ?>
+                    <div class="mb-3">
+                        <img src="<?= htmlspecialchars($item['image']); ?>" alt="Product Image" width="150" class="img-fluid">
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
 
 
             <div class="update-quantity" id="updateQuantitySection" style="display: none;">

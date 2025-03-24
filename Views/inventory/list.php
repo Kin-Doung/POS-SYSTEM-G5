@@ -1,19 +1,16 @@
-<?php require_once './views/layouts/side.php' ?>
-<?php require_once './views/layouts/header.php' ?>
+<?php require_once './views/layouts/side.php'; ?>
+<?php require_once './views/layouts/header.php'; ?>
 
-
-<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-    <!-- Navbar -->
-
-    <div class="container">
-        <nav class="navbar ">
-            <!-- Search Bar -->
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    <!-- Main Content Area -->
+    <div class="content-area" style="margin-left: 250px; padding: 20px; width: calc(100% - 250px); background:white;">
+        <!-- Navbar -->
+        <div class="navbar mt-n1">
             <div class="search-container">
                 <i class="fas fa-search"></i>
                 <input type="text" placeholder="Search...">
             </div>
 
-            <!-- Icons -->
             <div class="icons">
                 <i class="fas fa-globe icon-btn"></i>
                 <div class="icon-btn" id="notification-icon">
@@ -22,14 +19,15 @@
                 </div>
             </div>
 
-            <!-- Profile -->
             <div class="profile">
                 <img src="../../views/assets/images/image.png" alt="User">
                 <div class="profile-info">
-                    <span style="color: black;">Engly</span>
-                    <span class="store-name">Engly store</span>
+                    <span class="user-name" style="color: black;">Engly</span>
+                    <span class="store-name">Engly Store</span>
                 </div>
             </div>
+
+            <!-- Sidenav toggle for small screens -->
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
                 <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                     <div class="sidenav-toggler-inner">
@@ -39,12 +37,13 @@
                     </div>
                 </a>
             </li>
-        </nav>
-        <!-- End Navbar -->
-        <div class="container mt-4">
+        </div>
+
+        <!-- Product Overview Cards -->
+        <div class="mt-4">
             <div class="row d-flex justify-content-center">
                 <!-- In Stock Card -->
-                <div class="col-12 col-sm-3 mb-3"> <!-- Reduced width from col-sm-4 to col-sm-3 -->
+                <div class="col-12 col-sm-3 mb-3">
                     <div class="card shadow-sm border-success position-relative" style="height: 120px;">
                         <div class="card-body text-center d-flex flex-column justify-content-start mt-n4">
                             <i class="fas fa-box-open fa-2x text-success mb-2"></i>
@@ -58,7 +57,7 @@
                 </div>
 
                 <!-- Out of Stock Card -->
-                <div class="col-12 col-sm-3 mb-3"> <!-- Reduced width from col-sm-4 to col-sm-3 -->
+                <div class="col-12 col-sm-3 mb-3">
                     <div class="card shadow-sm border-danger position-relative" style="height: 120px;">
                         <div class="card-body text-center d-flex flex-column justify-content-start mt-n4">
                             <i class="fas fa-times-circle fa-2x text-danger mb-2"></i>
@@ -72,7 +71,7 @@
                 </div>
 
                 <!-- Full Stock Card -->
-                <div class="col-12 col-sm-3 mb-3"> <!-- Reduced width from col-sm-4 to col-sm-3 -->
+                <div class="col-12 col-sm-3 mb-3">
                     <div class="card shadow-sm border-primary position-relative" style="height: 120px;">
                         <div class="card-body text-center d-flex flex-column justify-content-start mt-n4">
                             <i class="fas fa-cogs fa-2x text-primary mb-2"></i>
@@ -86,74 +85,123 @@
                 </div>
             </div>
         </div>
-        <h2 class="mb-0 ms-3">Product Table</h2>
-        <button type="button" class="btn-primary add-stock" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Add Stock</button>
-            <!-- Product Table -->
-            <table class="table table-striped table-bordered mt-3">
-                <thead class="table-dark">
+
+        <!-- Product Table -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0 ms-3">Product Table</h2>
+            <a href="/inventory/create" class="btn btn-primary add-stock">Add Stock</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
                     <tr>
-                        <th>Img</th>
+                        <th>Image</th> <!-- Add Image Column -->
                         <th>Product Name</th>
                         <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Action</th>
+                        <th>Amount</th>
+                        <th>Expiration Date</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><img src="../../views/assets/images/download.png" alt="Product" class="img-fluid" style="max-width: 30px; max-height: 30px;"></td>
-                        <td>Product A</td>
-                        <td>10</td>
-                        <td>$25.00</td>
-                        <td>
-                            <div class="dropdown">
-                                <button class="btn-light border-0 bg-transparent" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    see more...
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item text-dark" href="#"><i class="fa-solid fa-eye"></i> View</a></li>
-                                    <li><a class="dropdown-item text-dark" href="#"><i class="fa-solid fa-pen-to-square"></i> Edit</a></li>
-                                    <li><a class="dropdown-item text-danger" href="#"><i class="fa-solid fa-trash"></i> Remove</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
+                    <?php foreach ($inventoryItems as $item): ?>
+                        <tr>
+                            <!-- Display Image Column -->
+                            <td>
+                                <?php if (!empty($item['image_path'])): ?>
+                                    <img src="<?php echo htmlspecialchars($item['image_path']); ?>" alt="Product Image" style="width: 50px; height: 50px;">
+                                <?php else: ?>
+                                    <img src="default-image.jpg" alt="Default Image" style="width: 50px; height: 50px;">
+                                <?php endif; ?>
+                            </td>
+                            <td><?php echo htmlspecialchars($item['product_name']); ?></td>
+                            <td><?php echo htmlspecialchars($item['quantity']); ?></td>
+                            <td><?php echo htmlspecialchars($item['amount']); ?></td>
+                            <td><?php echo htmlspecialchars($item['expiration_date']); ?></td>
+
+                            <td>
+                                <div class="dropdown">
+                                    <button class="see-more-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        see more
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <!-- View Action: Opens the View Modal -->
+                                        <li><a class="dropdown-item text-dark" data-bs-toggle="modal" data-bs-target="#viewModal<?php echo $item['id']; ?>"><i class="fa-solid fa-eye"></i> View</a></li>
+                                        <!-- Edit Action: Opens the Edit Modal -->
+                                        <li><a class="dropdown-item text-dark" data-bs-toggle="modal" data-bs-target="#editModal<?php echo $item['id']; ?>"><i class="fa-solid fa-pen-to-square"></i> Edit</a></li>
+                                        <li><a class="dropdown-item text-dark" href="/inventory/destroy?id=<?php echo $item['id']; ?>" onclick="return confirm('Are you sure you want to delete?')"><i class="fa-solid fa-trash" style="color: red;"></i> Delete</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
 
-    </div>
-    <footer class="footer py-4  ">
-        <div class="container-fluid">
-            <div class="row align-items-center justify-content-lg-between">
-                <div class="col-lg-6 mb-lg-0 mb-4">
-                    <div class="copyright text-center text-sm text-muted text-lg-start">
-                        © <script>
-                            document.write(new Date().getFullYear())
-                        </script>,
-                        made by
-                        <a href="#" class="font-weight-bold" target="_blank">team G5</a>
+        <!-- Modal for View -->
+        <?php foreach ($inventoryItems as $item): ?>
+            <div class="modal fade" id="viewModal<?php echo $item['id']; ?>" tabindex="-1" aria-labelledby="viewModalLabel<?php echo $item['id']; ?>" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="viewModalLabel<?php echo $item['id']; ?>">Product Details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p><strong>Product Name:</strong> <?php echo htmlspecialchars($item['product_name']); ?></p>
+                            <p><strong>Quantity:</strong> <?php echo htmlspecialchars($item['quantity']); ?></p>
+                            <p><strong>Amount:</strong> <?php echo htmlspecialchars($item['amount']); ?></p>
+                            <p><strong>Expiration Date:</strong> <?php echo htmlspecialchars($item['expiration_date']); ?></p>
 
+                            <?php if ($item['image_path']): ?>
+                                <img src="<?php echo htmlspecialchars($item['image_path']); ?>" alt="Product Image" style="width: 150px;">
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
-                    <ul class="nav nav-footer justify-content-center justify-content-lg-end">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link text-muted" target="_blank">Team G5</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link text-muted" target="_blank">About Us</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link text-muted" target="_blank">Blog</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#  " class="nav-link pe-0 text-muted" target="_blank">License</a>
-                        </li>
-                    </ul>
+            </div>
+        <?php endforeach; ?>
+
+        <!-- Modal for Edit -->
+        <?php foreach ($inventoryItems as $item): ?>
+            <div class="modal fade" id="editModal<?php echo $item['id']; ?>" tabindex="-1" aria-labelledby="editModalLabel<?php echo $item['id']; ?>" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editModalLabel<?php echo $item['id']; ?>">Edit Product</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/inventory/update?id=<?php echo $item['id']; ?>" method="POST">
+                                <div class="mb-3">
+                                    <label for="product_name" class="form-label">Product Name</label>
+                                    <input type="text" class="form-control" id="product_name" name="product_name" value="<?php echo htmlspecialchars($item['product_name']); ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="quantity" class="form-label">Quantity</label>
+                                    <input type="number" class="form-control" id="quantity" name="quantity" value="<?php echo htmlspecialchars($item['quantity']); ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="amount" class="form-label">Amount</label>
+                                    <input type="number" class="form-control" id="amount" name="amount" value="<?php echo htmlspecialchars($item['amount']); ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="expiration_date" class="form-label">Expiration Date</label>
+                                    <input type="date" class="form-control" id="expiration_date" name="expiration_date" value="<?php echo htmlspecialchars($item['expiration_date']); ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </footer>
+        <?php endforeach; ?>
+
     </div>
 </main>
+
+

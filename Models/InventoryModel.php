@@ -1,59 +1,100 @@
 <?php
-require_once 'Databases/database.php';
+require_once './Databases/database.php';
 
 class InventoryModel {
-    private $pdo;
-    function __construct() {
-        $this->pdo = new Database();
+    private $db;
+
+    public function __construct() {
+        // Create an instance of the Database class and get the connection
+        $this->db = (new Database())->getConnection();  // Directly get the connection
     }
-    function getInventory()
-    {
-        $inventory = $this->pdo->query("SELECT * FROM inventory ORDER BY id DESC");
-        return $inventory->fetchAll();
+
+    // Add new inventory item
+    public function addInventory($data) {
+        try {
+            // Prepare SQL query to insert new inventory item
+            $sql = "INSERT INTO inventory (product_name, image, quantity, amount, expiration_date) 
+                    VALUES (:product_name, :image, :quantity, :amount, :expiration_date)";
+            
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':product_name', $data['product_name']);
+            $stmt->bindParam(':image', $data['image']);
+            $stmt->bindParam(':quantity', $data['quantity']);
+            $stmt->bindParam(':amount', $data['amount']);
+            $stmt->bindParam(':expiration_date', $data['expiration_date']);
+            
+            $stmt->execute(); // Execute the query
+        } catch (PDOException $e) {
+            throw new Exception("Failed to add inventory item: " . $e->getMessage());
+        }
     }
-    function getProduct()
-    {
-        $product = $this->pdo->query("SELECT * FROM products ORDER BY id DESC");
-        return $product->fetchAll();
+
+    // Get all inventory items
+    public function getAllInventory() {
+        try {
+            $sql = "SELECT * FROM inventory";
+            $stmt = $this->db->query($sql);  // Use the query method in Database class
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);  // Fetch all records as an associative array
+        } catch (PDOException $e) {
+            throw new Exception("Failed to retrieve inventory items: " . $e->getMessage());
+        }
     }
-    function addInventory($data)
-    {
-        $this->pdo->query("INSERT INTO inventory (product_name, image, quantity, price, added_date) 
-            VALUES (:product_name, :image, :quantity, :price, :added_date)", [
-            'product_name' => $data['product_name'],
-            'image' => $data['image'],
-            'quantity' => $data['quantity'],
-            'price' => $data['price'],
-            'added_date' => $data['added_date'],
-        ]);
+
+    // Get single inventory item by ID (for edit)
+    public function getInventoryById($id) {
+        try {
+            $sql = "SELECT * FROM inventory WHERE id = :id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);  // Fetch a single record
+        } catch (PDOException $e) {
+            throw new Exception("Failed to retrieve inventory item: " . $e->getMessage());
+        }
     }
-    
-    function getInventoryById($id)   
-    {
-        $stmt = $this->pdo->query("SELECT * FROM inventory WHERE id = :id", ['id' => $id]);
-        $inventory = $stmt->fetch();
-        return $inventory;
+
+    // Update an inventory item
+    public function updateInventory($data) {
+        try {
+            $sql = "UPDATE inventory 
+                    SET product_name = :product_name, image = :image, quantity = :quantity, 
+                        amount = :amount, expiration_date = :expiration_date 
+                    WHERE id = :id";
+            
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':product_name', $data['product_name']);
+            $stmt->bindParam(':image', $data['image']);
+            $stmt->bindParam(':quantity', $data['quantity']);
+            $stmt->bindParam(':amount', $data['amount']);
+            $stmt->bindParam(':expiration_date', $data['expiration_date']);
+            $stmt->bindParam(':id', $data['id']);
+            
+            $stmt->execute();
+        } catch (PDOException $e) {
+            throw new Exception("Failed to update inventory item: " . $e->getMessage());
+        }
     }
-    public function updateInventory($id, $data)
-    {
-        $this->pdo->query("UPDATE inventory SET product_name = :product_name, image = :image, price = :price, quantity = :quantity WHERE id = :id", [
-            'product_name' => $data['product_name'],
-            'image' => $data['image'],
-            'price' => $data['price'],
-            'quantity' => $data['quantity'],
-            'id' => $id
-        ]);
+
+    // Delete an inventory item
+    public function deleteInventory($id) {
+        try {
+            $sql = "DELETE FROM inventory WHERE id = :id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            throw new Exception("Failed to delete inventory item: " . $e->getMessage());
+        }
     }
-    
-    public function deleteInventory($id)
+
+    public function getItemById($id)
     {
-        $this->pdo->query("DELETE FROM inventory WHERE id = :id", ['id' => $id]);
-    }
-    public function updateQuantity($id, $newQuantity)
-    {
-        $this->pdo->query("UPDATE inventory SET quantity = :quantity WHERE id = :id", [
-            'quantity' => $newQuantity,
-            'id' => $id
-        ]);
+        // Query to get item by ID
+        $stmt = $this->db->prepare("SELECT * FROM inventory WHERE id = :id");
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC); // Return the item data
     }
 }
+?>

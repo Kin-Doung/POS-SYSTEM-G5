@@ -21,8 +21,19 @@ $routes->get('/dashboard', [DashboardController::class, 'index']); // Redirect t
 // setting
 $routes->get('/settings', [SettingController::class, 'index']);
 
-//inventory
+
+// Assuming you are using a routing library such as FastRoute or Slim
+// Inventory routes
 $routes->get('/inventory', [InventoryController::class, 'index']);
+$routes->get('/inventory/create', [InventoryController::class, 'create']);
+$routes->post('/inventory/store', [InventoryController::class, 'store']);
+$routes->get('/inventory/edit', [InventoryController::class, 'edit']);
+$routes->post('/inventory/update', [InventoryController::class, 'update']);
+$routes->get('/inventory/destroy', [InventoryController::class, 'destroy']);
+$routes->get('/inventory/view', [InventoryController::class, 'view']);
+
+
+
 
 //Notifications
 $routes->get('/notifications', [NotificationController::class, 'index']);
@@ -48,6 +59,8 @@ $routes->post('/purchase/store', [PurchaseController::class, 'store']);
 $routes->get('/purchase/edit', [PurchaseController::class, 'edit']);
 $routes->put('/purchase/update', [PurchaseController::class, 'update']);
 $routes->delete('/purchase/destroy', [PurchaseController::class, 'destroy']);
+$routes->post('/purchase/restock', [PurchaseController::class, 'restock']);
+
 
 
 

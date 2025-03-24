@@ -41,8 +41,11 @@ $routes->get('/inventory/edit', [InventoryController::class, 'edit']); // Show e
 $routes->put('/inventory/update', [InventoryController::class, 'update']); // Update a specific inventory item
 
 // Delete route should accept an 'id' parameter
-// Example route definition in routers.php
-$routes->delete('/inventory/delete', [InventoryController::class, 'destroy']); 
+// Assuming you're using some kind of routing library
+$routes->get('/inventory/delete', [InventoryController::class, 'destroy']);
+
+$routes->get('/inventory/view', [InventoryController::class, 'view']); // View an inventory item
+
 
 
 

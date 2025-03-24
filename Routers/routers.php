@@ -28,7 +28,27 @@ $routes->delete('/settings/destroy/(:num)', [SettingController::class, 'destroy'
 
 
 //inventory
-$routes->get('/inventory', [InventoryController::class, 'index']);
+$routes->get('/inventory', [InventoryController::class, 'index']); // Display all inventory
+
+$routes->get('/inventory/create', [InventoryController::class, 'create']); // Show create page
+
+$routes->post('/inventory/store', [InventoryController::class, 'store']); // Store new inventory item
+
+// Edit route should accept an 'id' parameter
+$routes->get('/inventory/edit', [InventoryController::class, 'edit']); // Show edit page for a specific inventory item
+
+// Update route should also accept an 'id' parameter
+$routes->put('/inventory/update', [InventoryController::class, 'update']); // Update a specific inventory item
+
+// Delete route should accept an 'id' parameter
+// Example route definition in routers.php
+$routes->delete('/inventory/delete', [InventoryController::class, 'destroy']); 
+
+
+
+
+// $routes->delete('/inventory/delete', [InventoryController::class, 'destroy']); // Delete a specific inventory item
+
 
 //Notifications
 $routes->get('/notifications', [NotificationController::class, 'index']);
@@ -54,9 +74,7 @@ $routes->post('/purchase/store', [PurchaseController::class, 'store']);
 $routes->get('/purchase/edit', [PurchaseController::class, 'edit']);
 $routes->put('/purchase/update', [PurchaseController::class, 'update']);
 $routes->delete('/purchase/destroy', [PurchaseController::class, 'destroy']);
-
-
-
+$routes->post('/purchase/restock', [PurchaseController::class, 'restock']);
 
 
 

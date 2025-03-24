@@ -11,6 +11,7 @@ class Database
         $dbname = "vc1_pos_system";  // Change the DB name if needed
 
         try {
+            // Set up the PDO connection
             $this->pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  // Set error mode to exception
         } catch (PDOException $e) {
@@ -18,37 +19,32 @@ class Database
         }
     }
 
-    // Add this method to return the PDO instance
-    public function getConnection()
-    {
+    // Method to return the PDO instance
+    public function getConnection() {
         return $this->pdo;
     }
 
+    // General query execution method
     public function query($sql, $params = []) {
-        try {
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute($params);
-            return $stmt;
-        } catch (PDOException $e) {
-            error_log("SQL Error: " . $e->getMessage()); // Log instead of echo
-            die("Database error occurred.");
-        }
-    }
-    
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt;
+    }   
 
-
-    public function beginTransaction()
-    {
+    // Start a transaction
+    public function beginTransaction() {
         $this->pdo->beginTransaction();
     }
 
-    public function commit()
-    {
+    // Commit the transaction
+    public function commit() {
         $this->pdo->commit();
     }
 
-    public function rollBack()
-    {
+    // Rollback the transaction
+    public function rollBack() {
         $this->pdo->rollBack();
     }
 }
+
+?>

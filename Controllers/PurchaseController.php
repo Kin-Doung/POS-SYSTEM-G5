@@ -12,6 +12,9 @@ class PurchaseController extends BaseController
         $this->model = new PurchaseModel();
         $this->productModel = new ProductModel(); // Instantiate the ProductModel
     }
+
+
+
     public function index()
     {
         $purchases = $this->model->getPurchase();
@@ -19,13 +22,15 @@ class PurchaseController extends BaseController
         $this->views('purchase/list', ['purchases' => $purchases, 'categories' => $categories]);
     }
 
+
+
     public function create()
     {
         $purchaseModel = new PurchaseModel();
         $categories = $purchaseModel->getCategory();
         $this->views('purchase/create', ['categories' => $categories]);
     }
-    
+
 
     public function store()
     {
@@ -59,7 +64,7 @@ class PurchaseController extends BaseController
                 'price' => $productPrice,
                 'image' => $imageName,
                 'quantity' => $quantity,
-               
+
             ];
 
             // Insert product data and get the product ID
@@ -98,25 +103,25 @@ class PurchaseController extends BaseController
             if (!$purchase) {
                 $this->redirect('/purchase'); // Redirect if not found
             }
-    
+
             $imagePath = $purchase['image']; // Keep existing image by default
-    
+
             // Check if user uploaded a new image
             if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
                 $imagePath = time() . "_" . $_FILES['image']['name']; // Unique file name
                 $targetDir = "./uploads/";
-    
+
                 if (!is_dir($targetDir)) {
                     mkdir($targetDir, 0777, true);
                 }
-    
+
                 $targetFile = $targetDir . $imagePath;
                 move_uploaded_file($_FILES['image']['tmp_name'], $targetFile);
             } else {
                 // Keep existing image if no new one uploaded
                 $imagePath = $_POST['existing_image'];
             }
-    
+
             // ✅ Ensure `category_id` is included
             $data = [
                 'product_name' => $_POST['product_name'],
@@ -124,13 +129,13 @@ class PurchaseController extends BaseController
                 'price' => $_POST['price'],
                 'category_id' => $_POST['category_id'], // Fix: Ensure category is updated
             ];
-    
+
             // Update the purchase
             $this->model->updatePurchase($id, $data);
             $this->redirect('/purchase');
         }
     }
-    
+
 
     public function destroy()
     {
@@ -143,4 +148,36 @@ class PurchaseController extends BaseController
         }
         $this->redirect('/purchase'); // Redirect after deletion
     }
+
+
+    public function restock()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['products'])) {
+            // Loop through each selected product and update its quantity
+            foreach ($_POST['products'] as $product) {
+                if (isset($product['id']) && isset($product['quantity']) && $product['quantity'] > 0) {
+                    $purchaseId = $product['id']; // Product ID
+                    $restockQuantity = $product['quantity']; // Quantity to restock
+    
+                    // Fetch the current purchase to get the current quantity
+                    $purchase = $this->model->getPurchases($purchaseId);
+    
+                    if ($purchase) {
+                        // Calculate the new quantity (current quantity + restock quantity)
+                        $newQuantity = $purchase['quantity'] + $restockQuantity;
+    
+                        // Update the quantity in the database
+                        $this->model->updateQuantity($purchaseId, $newQuantity);
+                    } else {
+                        echo "Purchase with ID $purchaseId not found.";
+                    }
+                }
+            }
+            // Redirect after processing all products
+            $this->redirect('/purchase');
+        } else {
+            echo "No products selected for restocking.";
+        }
+    }
+    
 }

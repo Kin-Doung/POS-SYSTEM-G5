@@ -73,7 +73,33 @@
                         <button class="buy-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['id'] ?>', true)">+</button>
                         <button class="subtract-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['id'] ?>', false)">-</button>
                     </div>
+  
+        
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap">View detail</button>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Product Detail</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        
+      </div>
+      <div class="modal-body">
+         <div class="delete_edit">
+                        <form action="/purchase/update?id=<?= isset($purchase['id']) ? htmlspecialchars($purchase['id']) : '' ?>" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="existing_image" value="<?= htmlspecialchars($purchase['image'] ?? '') ?>">
 
+                    <form action="purchase/restock" method="POST">
+                            <div>
+                                <input type="checkbox" name="products[<?= $purchase['id'] ?>][id]" value="<?= $purchase['id'] ?>">
+                                <?= $purchase['product_name'] ?> (Current Quantity: <?= $purchase['quantity'] ?>)
+                                <input type="number" name="products[<?= $purchase['id'] ?>][quantity]" min="0" required placeholder="Restock quantity">
+                            </div>
+                 
+                        <button type="submit" class="btn btn-outline-danger fw-bold px-4">
+                            <i class="fas fa-undo"></i> Restock Selected
+                        </button>
+                    </form>
                     <!-- Button to open the modal -->
                     <button type="button" class="btn btn-primary views" data-bs-toggle="modal" data-bs-target="#modal<?= $purchase['id'] ?>">
                         View detail
@@ -145,10 +171,6 @@
                 </div>
             <?php endforeach; ?>
         </div>
-
-        <!-- Order Summary Section -->
-        <!-- Button to Open Modal -->
-        <!-- Show Details Button -->
         <button class="btn btn-primary show" data-bs-toggle="modal" data-bs-target="#orderDetailsModal">
             <i class="fas fa-eye"></i> Show Details
         </button>
@@ -192,9 +214,21 @@
                     <!-- Modal Footer -->
                     <div class="modal-footer d-flex justify-content-between">
                         <!-- Button to trigger restock for a specific product -->
-                        <button class="btn btn-outline-danger fw-bold px-4" onclick="processRestock(<?= $purchase['id'] ?>)">
-                            <i class="fas fa-undo"></i> Restock
-                        </button>
+                        <!-- Restock button and form -->
+                        <!-- <form action="purchase/restock" method="POST">
+                            <?php foreach ($purchases as $purchase): ?>
+                                <div>
+                                    <input type="checkbox" name="products[<?= $purchase['id'] ?>][id]" value="<?= $purchase['id'] ?>">
+                                    <?= $purchase['product_name'] ?> (Current Quantity: <?= $purchase['quantity'] ?>)
+                                    <input type="number" name="products[<?= $purchase['id'] ?>][quantity]" min="0" required placeholder="Restock quantity">
+                                </div>
+                            <?php endforeach; ?>
+                            <button type="submit" class="btn btn-outline-danger fw-bold px-4">
+                                <i class="fas fa-undo"></i> Restock Selected
+                            </button>
+                        </form> -->
+
+
 
                         <button class="btn btn-outline-success fw-bold px-4" onclick="saveToPDF()">
                             <i class="fas fa-file-pdf"></i> Save as PDF
@@ -203,51 +237,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- FontAwesome for Icons -->
-        <!-- <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script> -->
-
-        <!-- <script>
-            function addOrderDetails(orderItems) {
-                let detailsTable = document.getElementById("details");
-                detailsTable.innerHTML = ''; // Clear the table before adding new rows
-
-                let totalPrice = 0;
-                orderItems.forEach(item => {
-                    let row = document.createElement("tr");
-
-                    // Create product name cell
-                    let productCell = document.createElement("td");
-                    productCell.innerText = item.product;
-                    row.appendChild(productCell);
-
-                    // Create quantity cell
-                    let qtyCell = document.createElement("td");
-                    qtyCell.classList.add("qty"); // Add the qty class
-                    qtyCell.innerText = item.qty;
-                    row.appendChild(qtyCell);
-
-                    // Create price cell
-                    let priceCell = document.createElement("td");
-                    priceCell.innerText = `$${item.price.toFixed(2)}`;
-                    row.appendChild(priceCell);
-
-                    // Create total cell
-                    let totalCell = document.createElement("td");
-                    totalCell.classList.add("total"); // Add the total class
-                    let total = item.qty * item.price;
-                    totalCell.innerText = `$${total.toFixed(2)}`;
-                    row.appendChild(totalCell);
-
-                    detailsTable.appendChild(row);
-
-                    totalPrice += total;
-                });
-
-                // Update the cart total
-                document.getElementById("totalPrice").innerText = `$${totalPrice.toFixed(2)}`;
-            }
-        </script> -->
 
     </div>
 

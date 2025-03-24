@@ -10,11 +10,12 @@
                 Are you sure you want to delete this item?
             </div>
             <div class="modal-footer">
-                <form action="/inventory/destroy" method="POST">
-                    <input type="hidden" name="id" value="<?= $inventory['id'] ?>">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <!-- Assuming you're displaying each inventory item here -->
+                <form action="/inventory/delete" method="POST">
+                    <input type="hidden" name="id" value="<?php echo $item['id']; ?>" />
+                    <button type="submit" onclick="return confirm('Are you sure you want to delete this item?')">Delete</button>
                 </form>
+
             </div>
         </div>
     </div>

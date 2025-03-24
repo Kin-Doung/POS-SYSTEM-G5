@@ -36,28 +36,22 @@ class InventoryModel
     // Create a new inventory item
     function createInventory($data)
     {
-        $categoryId = $data['category_id']; // Now use the category_id directly from the form
+        $categoryId = $data['category_id'];
         $totalPrice = $data['quantity'] * $data['amount']; // Calculate total price
-
-        $this->pdo->query("INSERT INTO inventory (image, product_name, quantity, amount, category_id, expiration_date, total_price) 
-                       VALUES (:image, :product_name, :quantity, :amount, :category_id, :expiration_date, :total_price)", [
+    
+        $stmt = $this->pdo->query("INSERT INTO inventory (image, product_name, quantity, amount, category_id, expiration_date, total_price) 
+                                    VALUES (:image, :product_name, :quantity, :amount, :category_id, :expiration_date, :total_price)");
+        $stmt->execute([
             'image' => $data['image'],
             'product_name' => $data['product_name'],
             'quantity' => $data['quantity'],
             'amount' => $data['amount'],
-            'category_id' => $categoryId, // Insert category_id into the inventory table
+            'category_id' => $categoryId, 
             'expiration_date' => $data['expiration_date'],
-            'total_price' => $totalPrice, // Insert the total price
+            'total_price' => $totalPrice,
         ]);
     }
-
-
-
-    // Fetch category_id from category_name
-
-
-
-    // Get a single inventory item by ID
+    
     function getInventorys($id)
     {
         $stmt = $this->pdo->query("SELECT * FROM inventory WHERE id = :id", ['id' => $id]);
@@ -65,17 +59,18 @@ class InventoryModel
         return $inventory;
     }
 
-    // Update an inventory item
+
     // Update an inventory item
     function updateInventory($id, $data)
     {
-        $totalPrice = $data['quantity'] * $data['amount']; // Calculate total price dynamically
+        $totalPrice = $data['quantity'] * $data['amount']; // Recalculate total price
     
-        $this->pdo->query("UPDATE inventory 
-                           SET image = :image, product_name = :product_name, quantity = :quantity, 
-                               amount = :amount, category_id = :category_id, expiration_date = :expiration_date,
-                               total_price = :total_price
-                           WHERE id = :id", [
+        $stmt = $this->pdo->query("UPDATE inventory 
+                                   SET image = :image, product_name = :product_name, quantity = :quantity, 
+                                       amount = :amount, category_id = :category_id, expiration_date = :expiration_date,
+                                       total_price = :total_price
+                                   WHERE id = :id");
+        $stmt->execute([
             'image' => $data['image'],
             'product_name' => $data['product_name'],
             'quantity' => $data['quantity'],
@@ -86,6 +81,7 @@ class InventoryModel
             'id' => $id
         ]);
     }
+    
     
 
 

@@ -45,8 +45,10 @@ class InventoryController extends BaseController
                 $imageName = time() . '_' . basename($_FILES['image']['name']);
                 $imagePath = $uploadDir . $imageName;
 
-                if (!move_uploaded_file($_FILES['image']['tmp_name'], $imagePath)) {
-                    $imagePath = null; // If upload fails, set to null
+                // Check if uploads directory exists, if not, create it
+                $uploadDir = 'uploads/';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);  // Creates directory with writable permissions
                 }
             }
 

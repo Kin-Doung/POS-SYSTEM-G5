@@ -141,7 +141,7 @@
             <div class="input-group">
                 <input type="text" id="searchInput" class="form-control" placeholder="Search...">
 
-                <select id="categorySelect" class=" ms-2" onchange="filterTable()">
+                <select id="categorySelect" class=" ms-2" onchange="filterTable()" required>
                     <option value="">Select Category</option>
                     <?php if (!empty($categories)): ?>
                         <?php foreach ($categories as $category): ?>
@@ -172,9 +172,8 @@
                         <tr data-id="<?= $item['id'] ?>"> <!-- Add data-id attribute here -->
                             <td><input type="checkbox" onclick="toggleEdit(this); toggleUpdateButton();"></td>
                             <td>
-                                <img src="<?= htmlspecialchars($item['image']) ?>"
-                                    alt="Image of <?= htmlspecialchars($item['product_name']) ?>"
-                                    style="width: 40px; height: 40px; border-radius: 100%;">
+                                <img src="<?= htmlspecialchars($item['image']) ?>" alt="Image of <?= htmlspecialchars($item['product_name']) ?>" style="width: 40px; height: 40px; border-radius: 100%;">
+
                             </td>
                             <td><?= htmlspecialchars($item['product_name']) ?></td>
                             <td><input type="number" class="form-control quantity-input" style="width: 80px;" value="<?= htmlspecialchars($item['quantity']) ?>" min="0" onchange="updatePrice(this)" disabled></td>
@@ -186,6 +185,7 @@
                                     <div class="dropdown-content">
                                         <a href="/inventory/edit?id=<?= $item['id'] ?>" class="btn-warning">Edit</a>
                                         <a href="/inventory/delete?id=<?= $item['id'] ?>" class="bg-danger text-white">Delete</a>
+
                                         <a href="#">View Details</a>
                                     </div>
                                 </div>
@@ -201,7 +201,7 @@
             </div>
         </div>
     </div>
-    
+
 
 </main>
 

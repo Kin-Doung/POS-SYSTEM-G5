@@ -22,8 +22,6 @@ class InventoryModel
         return $inventory->fetchAll();
     }
 
-
-
     public function getInventoryWithCategory()
     {
         $inventory = $this->pdo->query("
@@ -35,20 +33,24 @@ class InventoryModel
         return $inventory->fetchAll();
     }
     // Create a new inventory item
+    // Create a new inventory item
     function createInventory($data)
     {
         $categoryId = $data['category_id']; // Now use the category_id directly from the form
+        $totalPrice = $data['quantity'] * $data['amount']; // Calculate total price
 
-        $this->pdo->query("INSERT INTO inventory (image, product_name, quantity, amount, category_id, expiration_date) 
-                           VALUES (:image, :product_name, :quantity, :amount, :category_id, :expiration_date)", [
+        $this->pdo->query("INSERT INTO inventory (image, product_name, quantity, amount, category_id, expiration_date, total_price) 
+                       VALUES (:image, :product_name, :quantity, :amount, :category_id, :expiration_date, :total_price)", [
             'image' => $data['image'],
             'product_name' => $data['product_name'],
             'quantity' => $data['quantity'],
             'amount' => $data['amount'],
             'category_id' => $categoryId, // Insert category_id into the inventory table
             'expiration_date' => $data['expiration_date'],
+            'total_price' => $totalPrice, // Insert the total price
         ]);
     }
+
 
 
     // Fetch category_id from category_name
@@ -67,19 +69,25 @@ class InventoryModel
     // Update an inventory item
     function updateInventory($id, $data)
     {
+        $totalPrice = $data['quantity'] * $data['amount']; // Calculate total price dynamically
+    
         $this->pdo->query("UPDATE inventory 
-                       SET image = :image, product_name = :product_name, quantity = :quantity, 
-                           amount = :amount, category_id = :category_id, expiration_date = :expiration_date 
-                       WHERE id = :id", [
+                           SET image = :image, product_name = :product_name, quantity = :quantity, 
+                               amount = :amount, category_id = :category_id, expiration_date = :expiration_date,
+                               total_price = :total_price
+                           WHERE id = :id", [
             'image' => $data['image'],
             'product_name' => $data['product_name'],
             'quantity' => $data['quantity'],
             'amount' => $data['amount'],
             'category_id' => $data['category_id'],
             'expiration_date' => $data['expiration_date'],
+            'total_price' => $totalPrice,
             'id' => $id
         ]);
     }
+    
+
 
 
     // Delete an inventory item by ID

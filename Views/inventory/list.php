@@ -155,31 +155,31 @@
                 </select>
 
             </div>
-
-
             <table class="table">
-                <thead class="bg-dark text-white">
+                <thead class="bg-dark text-wite">
                     <tr>
-                        <th>#</th>
+                        <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)"></th>
                         <th>Image</th>
                         <th>Product Name</th>
                         <th>Quantity</th>
                         <th>Price</th>
+                        <th>Total Price</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($inventory as $index => $item): ?>
-                        <tr>
-                            <td><?= $index + 1 ?></td>
+                        <tr data-id="<?= $item['id'] ?>"> <!-- Add data-id attribute here -->
+                            <td><input type="checkbox" onclick="toggleEdit(this); toggleUpdateButton();"></td>
                             <td>
                                 <img src="<?= htmlspecialchars($item['image']) ?>"
                                     alt="Image of <?= htmlspecialchars($item['product_name']) ?>"
                                     style="width: 40px; height: 40px; border-radius: 100%;">
                             </td>
                             <td><?= htmlspecialchars($item['product_name']) ?></td>
-                            <td><?= htmlspecialchars($item['quantity']) ?></td>
-                            <td><?= htmlspecialchars($item['amount']) ?></td>
+                            <td><input type="number" class="form-control quantity-input" style="width: 80px;" value="<?= htmlspecialchars($item['quantity']) ?>" min="0" onchange="updatePrice(this)" disabled></td>
+                            <td><input type="text" class="form-control price-input" style="width: 80px;" value="<?= htmlspecialchars($item['amount']) ?>" readonly></td>
+                            <td><input type="number" class="form-control total-input" style="width: 80px;" value="<?= htmlspecialchars($item['total_price']) ?>" min="0" onchange="updatePrice(this)" disabled></td>
                             <td>
                                 <div class="dropdown">
                                     <button class="dropbtn" onclick="toggleDropdown(event)">...</button>
@@ -193,14 +193,18 @@
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
-            </table>
 
-            <div class="update-quantity" id="updateQuantitySection" style="display: none;">
+            </table>
+            <div class="update-quantity mt-4" id="updateButtonContainer" style="display: none;">
                 <h3>Update Quantity</h3>
-                <button class="btn btn-success" onclick="updateQuantities()">Update Selected Quantities</button>
+                <button class="btn btn-success" onclick="releaseCheckedCheckboxes()">Update Selected Quantities</button>
             </div>
         </div>
-
-
     </div>
+    
+
 </main>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>

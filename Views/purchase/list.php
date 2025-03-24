@@ -91,8 +91,33 @@
                         <button class="buy-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['id'] ?>', true)">+</button>
                         <button class="subtract-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['id'] ?>', false)">-</button>
                     </div>
-                   
+  
+        
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap">View detail</button>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Product Detail</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        
+      </div>
+      <div class="modal-body">
+         <div class="delete_edit">
+                        <form action="/purchase/update?id=<?= isset($purchase['id']) ? htmlspecialchars($purchase['id']) : '' ?>" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="existing_image" value="<?= htmlspecialchars($purchase['image'] ?? '') ?>">
 
+                    <form action="purchase/restock" method="POST">
+                            <div>
+                                <input type="checkbox" name="products[<?= $purchase['id'] ?>][id]" value="<?= $purchase['id'] ?>">
+                                <?= $purchase['product_name'] ?> (Current Quantity: <?= $purchase['quantity'] ?>)
+                                <input type="number" name="products[<?= $purchase['id'] ?>][quantity]" min="0" required placeholder="Restock quantity">
+                            </div>
+                 
+                        <button type="submit" class="btn btn-outline-danger fw-bold px-4">
+                            <i class="fas fa-undo"></i> Restock Selected
+                        </button>
+                    </form>
                     <!-- Button to open the modal -->
                     <button type="button" class="btn btn-primary views" data-bs-toggle="modal" data-bs-target="#modal<?= $purchase['id'] ?>">
                         View detail
@@ -177,9 +202,9 @@
                 </div>
             <?php endforeach; ?>
         </div>
-
-<!-- Order Summary Button -->
-<button class="total-button" onclick="toggleOrderSummary()">Total</button>
+        <button class="btn btn-primary show" data-bs-toggle="modal" data-bs-target="#orderDetailsModal">
+            <i class="fas fa-eye"></i> Show Details
+        </button>
 
 <!-- Order Summary Section -->
 <div class="detail-section" id="orderSummary">
@@ -208,11 +233,38 @@
 
 </div>
 
+                    <!-- Modal Footer -->
+                    <div class="modal-footer d-flex justify-content-between">
+                        <!-- Button to trigger restock for a specific product -->
+                        <!-- Restock button and form -->
+                        <!-- <form action="purchase/restock" method="POST">
+                            <?php foreach ($purchases as $purchase): ?>
+                                <div>
+                                    <input type="checkbox" name="products[<?= $purchase['id'] ?>][id]" value="<?= $purchase['id'] ?>">
+                                    <?= $purchase['product_name'] ?> (Current Quantity: <?= $purchase['quantity'] ?>)
+                                    <input type="number" name="products[<?= $purchase['id'] ?>][quantity]" min="0" required placeholder="Restock quantity">
+                                </div>
+                            <?php endforeach; ?>
+                            <button type="submit" class="btn btn-outline-danger fw-bold px-4">
+                                <i class="fas fa-undo"></i> Restock Selected
+                            </button>
+                        </form> -->
+
+
+
+                        <button class="btn btn-outline-success fw-bold px-4" onclick="saveToPDF()">
+                            <i class="fas fa-file-pdf"></i> Save as PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
 
     <?php require_once 'views/layouts/footer.php'; ?>
 </main>
+
 
 <script>
 // Function to toggle the visibility of the order summary card

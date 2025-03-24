@@ -28,19 +28,26 @@
   <script src="../../views/assets/js/sciptJS/logout.js" defer></script>
   <script src="../../views/assets/js/sciptJS/search.js" defer></script>
   <script src="../../views/assets/js/sciptJS/product.js" defer></script>
+  <script src="../../views/assets/js/sciptJS/inventory.js" defer></script>
   <!-- boostrap -->
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="assets/css/style/purchase.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
   <!-- edit -->
+
+
+  <link rel="stylesheet" href="../../views/assets/css/style/navx`.css">
   <link rel="stylesheet" href="../../views/assets/css/style/purchase.css">
   <link rel="icon" type="image/png" href="../../views/assets/images/logoapp.png">
   <!-- css product -->
+
+
   <link rel="stylesheet" href="../../views/assets/css/style/product.css">
   <link rel="stylesheet" href="../../views/assets/css/style/logout.css">
-  <!-- link of inventory csss -->
   <link rel="stylesheet" href="../../views/assets/css/style/inventory.css">
+
+
   <!-- boostrapt  -->
   <!-- categories -->
   <link rel="stylesheet" href="../../views/assets/css/style/categories.css">
@@ -48,6 +55,12 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
   <!-- HTML to PDF Converter -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+
+  <!-- link css create  -->
+   <link rel="stylesheet" href="../../views/assets/css/style/create.css">
+  
+
+
 
 
 </head>

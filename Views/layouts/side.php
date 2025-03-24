@@ -2,7 +2,7 @@
   <div class="sidenav-header ms-0 my-0">
     <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
     <a class="navbar-brand m-0"  target="_blank">
-      <img src="../../views/assets/img/logos/logo.png" class="navbar-brand-img h-100" alt="main_logo">
+      <img src="../../views/assets/img/logos/logo.png" class="navbar-brand-img" alt="main_logo">
     </a>
   </div>
   <hr class="horizontal dark mt-0 mb-2">
@@ -10,8 +10,8 @@
     <ul class="navbar-nav">
       <!-- nav dashboard -->
       <li class="nav-item">
-        <a class="nav-link text-white active" style="background-color: #6f42c1" href="/dashboard">
-          <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+        <a class="nav-link text-dark" href="/dashboard">
+          <div class="text-dark  text-center me-2 d-flex align-items-center justify-content-center">
             <i class="material-icons opacity-10">dashboard</i>
           </div>
           <span class="nav-link-text ms-1">Dashboard</span>
@@ -99,3 +99,5 @@
   <div class="sidenav-footer position-absolute w-100 bottom-0 ">
   </div>
 </aside>
+
+

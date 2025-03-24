@@ -1,0 +1,38 @@
+.imageinventory img {
+    width: 70px; /* Default size */
+    height: 70px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.imageinventory img:hover {
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+@media (max-width: 768px) {
+    .d-flex {
+        flex-direction: column; /* Stack items on smaller screens */
+        text-align: center;
+    }
+    
+    .imageinventory img {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .me-3 {
+        margin-right: 0 !important; /* Remove margin on small screens */
+        margin-bottom: 8px; /* Add spacing between image and text */
+    }
+}
+
+/* //button// */
+.custom-btn {
+    background-color: #F8F9FA;
+    border: 1px solid #E0E0E0;
+}
+.custom-btn:hover {
+    background-color: #E9ECEF; /* Slightly darker shade on hover */
+}

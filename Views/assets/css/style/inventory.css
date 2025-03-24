@@ -1,11 +1,6 @@
 .imageinventory img {
-<<<<<<< HEAD
-    width: 70px; /* Default size */
-    height: 70px;
-=======
     width: 60px; /* Default size */
     height: 60px;
->>>>>>> feature/inventory
     object-fit: cover;
     border-radius: 8px;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
@@ -35,18 +30,12 @@
 
 /* //button// */
 .custom-btn {
-<<<<<<< HEAD
     background-color: #F8F9FA;
-=======
-    background-color: #c63adec4;
->>>>>>> feature/inventory
     border: 1px solid #E0E0E0;
 }
 .custom-btn:hover {
     background-color: #E9ECEF; /* Slightly darker shade on hover */
 }
-<<<<<<< HEAD
-=======
 
 
 /* //// */
@@ -128,4 +117,3 @@
     border-radius: 10px;
     margin-bottom: 20px;
 }
->>>>>>> feature/inventory

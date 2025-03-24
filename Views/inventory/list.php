@@ -1,6 +1,6 @@
 <?php require_once './views/layouts/header.php' ?>
 <?php require_once './views/layouts/side.php' ?>
-<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <!-- Navbar -->
     <nav class="navbar">
         <div class="search-container">
@@ -14,8 +14,8 @@
                 <span class="notification-badge" id="notification-count">8</span>
             </div>
         </div>
-        <div class="profile" id="profile">
-            <img src="../../views/assets/images/image.png" alt="User">
+        <div class="profile">
+            <img src="../../images/image.png" alt="User">
             <div class="profile-info">
                 <span id="profile-name">Eng Ly</span>
                 <span class="store-name" id="store-name">Owner Store</span>
@@ -31,93 +31,55 @@
     </nav>
     <!-- End Navbar -->
     <!-- /// alert fuction// -->
-
     <div class="content mt-4 mb-3">
         <div class="row justify-content-center">
-            <div class="col-lg-2.5 col-md-3 col-sm-4">
-                <div class="card card-stats shadow-sm border-0 rounded-lg">
-                    <div class="card-body p-2">
-                        <div class="row align-items-center">
-                            <div class="col-3 text-center">
-                                <i class="fas fa-box text-danger" style="font-size: 2.5rem;"></i>
-                            </div>
-                            <div class="col-9 text-right">
-                                <p class="card-category text-muted" style="font-size: 0.85rem;">Out Inventory</p>
-                                <h4 class="card-title" style="font-size: 1.2rem;">12</h4>
-                            </div>
+            <!-- In Stock Card -->
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card shadow-sm border-0 rounded-lg" style="height: 120px;">
+                    <div class="card-body text-center mt-n4">
+                        <div class="position-relative">
+                            <i class="fas fa-warehouse text-success" style="font-size: 2.5rem;"></i>
+                            <p class="card-text position-absolute top-0 end-0 m-2" style="font-size: 1.2rem;">20</p>
                         </div>
+                        <h5 class="card-title mt-4">In Stock</h5>
                     </div>
-                    <div class="card-footer p-2 align-items-center">
-                        <hr class="my-1">
-                        <div class="d-flex justify-content-center">
-                            <button class="show-button d-flex align-items-center gap-2 border-0 rounded-pill py-1 px-6"
-                                style="font-size: 0.7rem;">
-                                <i class="fas fa-caret-down"></i> show
-                            </button>
-                        </div>
-                    </div>
-
                 </div>
             </div>
 
-            <div class="col-lg-2.5 col-md-3 col-sm-4">
-                <div class="card card-stats shadow-sm border-0 rounded-lg">
-                    <div class="card-body p-2">
-                        <div class="row align-items-center">
-                            <div class="col-3 text-center">
-                                <i class="fas fa-box text-warning" style="font-size: 2.5rem;"></i>
-                            </div>
-                            <div class="col-9 text-right">
-                                <p class="card-category text-muted" style="font-size: 0.85rem;">Low Inventory</p>
-                                <h4 class="card-title" style="font-size: 1.2rem;">12</h4>
-                            </div>
+            <!-- Out of Stock Card -->
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card shadow-sm border-0 rounded-lg" style="height: 120px;">
+                    <div class="card-body text-center mt-n4">
+                        <div class="position-relative">
+                            <i class="fas fa-times-circle text-danger" style="font-size: 2.5rem;"></i>
+                            <p class="card-text position-absolute top-0 end-0 m-2" style="font-size: 1.2rem;">30</p>
                         </div>
-                    </div>
-                    <div class="card-footer p-2 align-items-center">
-                        <hr class="my-1">
-                        <div class="d-flex justify-content-center">
-                            <button class="show-button d-flex align-items-center gap-2 border-0 rounded-pill py-1 px-6"
-                                style="font-size: 0.7rem;">
-                                <i class="fas fa-caret-down"></i> show
-                            </button>
-                        </div>
+                        <h5 class="card-title mt-4">Out of Stock</h5>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-2.5 col-md-3 col-sm-4">
-                <div class="card card-stats shadow-sm border-0 rounded-lg">
-                    <div class="card-body p-2">
-                        <div class="row align-items-center">
-                            <div class="col-3 text-center">
-                                <i class="fas fa-box text-success" style="font-size: 2.5rem;"></i>
-                            </div>
-                            <div class="col-9 text-right">
-                                <p class="card-category text-muted" style="font-size: 0.85rem;">Full Inventory</p>
-                                <h4 class="card-title" style="font-size: 1.2rem;">12</h4>
-                            </div>
+
+            <!-- Full Stock Card -->
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card shadow-sm border-0 rounded-lg" style="height: 120px;">
+                    <div class="card-body text-center mt-n4">
+                        <div class="position-relative">
+                            <i class="fas fa-check-circle text-warning" style="font-size: 2.5rem;"></i>
+                            <p class="card-text position-absolute top-0 end-0 m-2" style="font-size: 1.2rem;">50</p>
                         </div>
-                    </div>
-                    <div class="card-footer p-2 align-items-center">
-                        <hr class="my-1">
-                        <div class="d-flex justify-content-center">
-                            <button class="show-button d-flex align-items-center gap-2 border-0 rounded-pill py-1 px-6"
-                                style="font-size: 0.7rem;">
-                                <i class="fas fa-caret-down"></i> show
-                            </button>
-                        </div>
+                        <h5 class="card-title mt-4">Full Stock</h5>
                     </div>
                 </div>
             </div>
+
+
         </div>
     </div>
 
-    <title>Purchasing Orders</title>
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
 
 
-    <div class="container mt-4" style="width: 95%;">
+    <div class="container  table-inventory">
         <div class="orders">
-
 
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h2>Purchasing Orders</h2>
@@ -132,9 +94,10 @@
                 </div>
             </div>
             <div class="input-group">
-                <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+                <input type="text" id="searchInput" class="form-control input-group-search" placeholder="Search...">
 
-                <select id="categorySelect" class=" ms-2" onchange="filterTable()">
+
+                <select id="categorySelect" class=" ms-2 selected" onchange="filterTable()">
                     <option value="">Select Category</option>
                     <?php if (!empty($categories)): ?>
                         <?php foreach ($categories as $category): ?>
@@ -151,17 +114,18 @@
 
 
             <table class="table">
-                <thead class="bg-dark text-white ">
+                <thead>
                     <tr>
-                        <th>#</th>
+                        <th># </th>
                         <th>Image</th>
-                        <th>Product Name</th>
+                        <th>Product Name </th>
                         <th>Quantity</th>
                         <th>Price</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <!-- PHP Loop for Data (example) -->
                     <?php foreach ($inventory as $index => $item): ?>
                         <tr>
                             <td><?= $index + 1 ?></td>
@@ -171,22 +135,60 @@
                                     style="width: 40px; height: 40px; border-radius: 100%;">
                             </td>
                             <td><?= htmlspecialchars($item['product_name']) ?></td>
-                            <td><?= htmlspecialchars($item['quantity']) ?></td>
+                            <td><span class="quantity-text"><?= htmlspecialchars($item['quantity']) ?></span></td>
                             <td><?= htmlspecialchars($item['amount']) ?></td>
                             <td>
-                                <div class="dropdown">
-                                    <button class="dropbtn" onclick="toggleDropdown(event)">...</button>
-                                    <div class="dropdown-content">
-                                        <a href="/inventory/edit?id=<?= $item['id'] ?>" class="btn-warning">Edit</a>
-                                        <a href="/inventory/delete?id=<?= $item['id'] ?>" class="bg-danger text-white">Delete</a>
-                                        <a href="#">View Details</a>
-                                    </div>
-                                </div>
+                            <div class="dropdown">
+    <button class="btn-seemore dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        See more...
+    </button>
+    <ul class="dropdown-menu">
+        <li> <a class="dropdown-item text-dark" href="#" data-bs-toggle="modal" data-bs-target="#viewModal<?= $item['id']; ?>"> <i class="fa-solid fa-eye"></i> View</a> </li>
+        <li><a class="dropdown-item text-dark" href="/inventory/edit?id=<?= $item['id'] ?>"> <i class="fa-solid fa-pen-to-square"></i> Edit</a></li>
+        <li> 
+        <a class="dropdown-item text-dark" href="/inventory/delete?id=<?= $item['id'] ?>" onclick="return confirm('Are you sure you want to delete this item?');"><i class="fa-solid fa-trash"></i> Delete</a></li>
+
+    </ul>
+</div>
+
+<div class="modal fade" id="viewModal<?= $item['id']; ?>" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">View Inventory Item</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex justify-content-between align-items-center"> <!-- Flexbox layout -->
+                <!-- Text on the Left -->
+                <div class="text-start d-inline-block detail "> <!-- Keeps text aligned left -->
+                    <p><strong>Product Name:</strong> <?= htmlspecialchars($item['product_name']); ?></p>
+                    <p><strong>Category:</strong> <?= !empty($item['category_name']) ? htmlspecialchars($item['category_name']) : '-'; ?></p>
+                    <p><strong>Quantity:</strong> <?= htmlspecialchars($item['quantity']); ?></p>
+                    <p><strong>Price:</strong> $<?= htmlspecialchars(number_format($item['amount'], 2)); ?></p>
+                    <p><strong>Expiration Date:</strong> <?= htmlspecialchars($item['expiration_date']); ?></p>
+                </div>
+
+                <!-- Image on the Right -->
+                <?php if (!empty($item['image'])): ?>
+                    <div class="mb-3">
+                        <img src="<?= htmlspecialchars($item['image']); ?>" alt="Product Image" width="150" class="img-fluid">
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
+
 
             <div class="update-quantity" id="updateQuantitySection" style="display: none;">
                 <h3>Update Quantity</h3>

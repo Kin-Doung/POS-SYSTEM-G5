@@ -126,19 +126,40 @@ function edit($id)
         }
     }
 
+   
     public function destroy()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $id = $_POST['id'] ?? null;
+        // Get the ID from the query string
+        if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+            $id = $_GET['id'];  // Get the ID from the URL
 
-            // Debugging: Check if ID is being received
-            if (!$id) {
-                echo "ID is missing or invalid!";
-                return;
-            }
-
+            // Call the deleteItem method from the model to delete the inventory item
             $this->model->deleteItem($id);
-            $this->redirect('/inventory');
+
+            // Redirect back to the inventory list page
+            header('Location: /inventory');
+            exit();
+        } else {
+            echo "Invalid ID";  // Show error if ID is not valid
         }
     }
+
+
+    function view()
+{
+    if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+        die("Invalid ID provided.");
+    }
+
+    $id = $_GET['id']; // Get the ID from the URL parameter
+    $inventory = $this->model->viewInventory($id); // Fetch inventory details with category
+
+    if (!$inventory) {
+        die("Inventory item not found.");
+    }
+
+    // Pass data to the view page
+    $this->views('inventory/view', ['inventory' => $inventory]);
+}
+
 }

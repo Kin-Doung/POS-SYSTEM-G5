@@ -1,23 +1,28 @@
-function toggleDropdown(button) {
-  const dropdown = button.nextElementSibling;
-  dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+document.addEventListener("DOMContentLoaded", function () {
+  const searchInput = document.getElementById("searchInput");
+  const categorySelect = document.getElementById("categorySelect");
+  const tableRows = document.querySelectorAll("tbody tr");
 
-  // Close other dropdowns
-  const allDropdowns = document.querySelectorAll('.dropdown');
-  allDropdowns.forEach(d => {
-      if (d !== dropdown) {
-          d.style.display = 'none';
+  function filterTable() {
+    const searchValue = searchInput.value.toLowerCase();
+    const selectedCategory = categorySelect.value;
+
+    tableRows.forEach((row) => {
+      const productName = row.children[2].textContent.toLowerCase();
+      const categoryId = row.dataset.category; // Make sure category ID is stored in the row
+
+      const matchesSearch = productName.includes(searchValue);
+      const matchesCategory =
+        selectedCategory === "" || categoryId === selectedCategory;
+
+      if (matchesSearch && matchesCategory) {
+        row.style.display = "";
+      } else {
+        row.style.display = "none";
       }
-  });
-}
-
-// Close dropdown when clicking outside
-window.onclick = function(event) {
-  if (!event.target.matches('.action button')) {
-      const dropdowns = document.querySelectorAll('.dropdown');
-      dropdowns.forEach(d => d.style.display = 'none');
+    });
   }
-}
+
 
 function filterTable() {
   const searchInput = document.getElementById('searchInput').value.toLowerCase();
@@ -43,7 +48,6 @@ function toggleBatchAction(checkbox) {
   const checkboxes = document.querySelectorAll('.select-checkbox');
   const anyChecked = Array.from(checkboxes).some(chk => chk.checked);
   
-<<<<<<< HEAD
   // Enable or disable the batch action button
   batchActionBtn.disabled = !anyChecked;
   updateQuantitySection.style.display = anyChecked ? 'block' : 'none';
@@ -75,45 +79,7 @@ function updateQuantities() {
   document.getElementById('batchActionBtn').disabled = true;
   document.getElementById('updateQuantitySection').style.display = 'none';
 }
-=======
-  const RevenueChart = () => {
-    return (
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Bar dataKey="revenue" fill="#8884d8">
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
-    );
-  };
-  
-  export default RevenueChart;
 
-  // Close all dropdowns
-  function closeAllDropdowns() {
-    var dropdowns = document.getElementsByClassName("dropdown-menu");
-    for (var i = 0; i < dropdowns.length; i++) {
-      dropdowns[i].classList.remove("show");
-    }
-  }
-
-  // Toggle dropdown visibility
-  function toggleDropdown(button) {
-    closeAllDropdowns();
-    button.nextElementSibling.classList.toggle("show");
-  }
-
-  // Close dropdowns when clicking outside
-  window.onclick = function(event) {
-    if (!event.target.matches('.dropdown-button')) {
-      closeAllDropdowns();
-    }
-  }
->>>>>>> ae620a801a1ef0c3491467cca4c97c2d6484f33d
+  searchInput.addEventListener("input", filterTable);
+  categorySelect.addEventListener("change", filterTable);
+});

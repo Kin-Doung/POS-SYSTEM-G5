@@ -44,9 +44,18 @@ function updateDetails() {
     }
   });
 
-  document.getElementById("totalPrice").innerText =
-    "Cart Total: $" + totalOrderPrice.toFixed(2);
-  generateQRCode(totalOrderPrice); // Generate QR code for the total
+    document.getElementById("totalPrice").innerText = "Cart Total: $" + totalOrderPrice.toFixed(2);
+  
+}
+
+function generateQRCode(total) {
+    const qr = new QRious({
+        element: document.getElementById('qrCode'),
+        value: `Total Amount: $${total.toFixed(2)}`,
+        size: 100,
+        background: 'white',
+        foreground: 'black',
+    });
 }
 
 

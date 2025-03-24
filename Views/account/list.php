@@ -1,8 +1,7 @@
-<?php require_once './views/layouts/header.php' ?>
 <?php require_once './views/layouts/side.php' ?>
-<?php require_once './Databases/database.php' ?>
-<main class="main-content position-relative max-height-vh-50 h-50 border-radius-lg ">
-    <!-- Navbar -->
+<?php require_once './views/layouts/header.php' ?>
+
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <nav class="navbar">
         <div class="search-container">
             <i class="fas fa-search"></i>
@@ -16,29 +15,26 @@
             </div>
         </div>
         <div class="profile" id="profile">
-            <!-- <img src="../../views/assets/images/image.png" alt="User"> -->
-            <img id="profile-logo" src="data:image/jpeg;base64,<?= base64_encode($admin['store_logo']) ?>" alt="Store Logo" width="100">
+            <img src="../../views/assets/images/image.png" alt="User">
             <div class="profile-info">
-                <span id="profile-name"><?= $admin['username'] ?></span>
+                <span id="profile-name">Eng Ly</span>
                 <span class="store-name" id="store-name">Owner Store</span>
             </div>
             <ul class="menu" id="menu">
-                <li><a href="/account" class="item">Account</a></li>
+                <li><a href="/settings" class="item">Account</a></li>
                 <li><a href="/settings" class="item">Setting</a></li>
                 <li><a href="/logout" class="item">Logout</a></li>
             </ul>
             <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
             <script src="../../views/assets/js/setting.js"></script>
         </div>
-
     </nav>
 
-    <a href="/settings" class="btn-customm" style="width: 150px;">
-        <i class="fas fa-arrow-left mt-4 "></i> Back
-    </a>
-    <div class="container" style="max-width: 1000px;">
-
-        <div class="card shadow-sm p-5">
+    <div class="container mt-4" style="max-width: 1000px;">
+        <a href="/settings" class="btn-customm" style="width: 150px;">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+        <div class="card shadow-sm">
             <div class="card-header  text-white text-center">
                 <h4 class="mb-0">Edit Admin Settings</h4>
             </div>
@@ -75,7 +71,7 @@
                     </div>
                     <div class="form-group">
                         <form action="upload.php" method="POST" enctype="multipart/form-data">
-                            <label for="profile">Profile:</label>
+                            <label for="profile">Store Logo:</label>
                             <input type="file" name="profile" id="profile" accept="image/*" required>
                         </form>
                     </div>

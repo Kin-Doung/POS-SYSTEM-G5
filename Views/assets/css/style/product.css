@@ -162,10 +162,9 @@ body {
     text-align: center;
   }
   
-  img {
-    width: 50px; /* Adjust size as necessary */
+  /* img {
     height: auto;
-  }
+  } */
   
   .td-actions {
     display: flex;

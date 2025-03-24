@@ -1,4 +1,6 @@
 <?php require_once './views/layouts/side.php' ?>
+<?php require_once './views/layouts/nav.php' ?>
+<?php require_once './Databases/database.php' ?>
 <main class="main-content position-relative max-height-vh-50 h-50 border-radius-lg ">
     <!-- Navbar -->
     <nav class="navbar">
@@ -13,29 +15,37 @@
                 <span class="notification-badge" id="notification-count">8</span>
             </div>
         </div>
-        <div class="profile">
-            <img src="../../assets/images/image.png" alt="User">
+        <div class="profile" id="profile">
+            <!-- <img src="../../views/assets/images/image.png" alt="User"> -->
+            <img id="profile-logo" src="data:image/jpeg;base64,<?= base64_encode($admin['store_logo']) ?>" alt="Store Logo" width="100">
             <div class="profile-info">
-                <span>Eng Ly</span>
-                <span class="store-name">Owner Store</span>
+                <span id="profile-name"><?= $admin['username'] ?></span>
+                <span class="store-name" id="store-name">Owner Store</span>
             </div>
+            <ul class="menu" id="menu">
+                <li><a href="/account" class="item">Account</a></li>
+                <li><a href="/settings" class="item">Setting</a></li>
+                <li><a href="/logout" class="item">Logout</a></li>
+            </ul>
+            <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
+            <script src="../../views/assets/js/setting.js"></script>
         </div>
+
     </nav>
     <!-- End Navbar -->
     <?php require_once 'views/layouts/header.php'; ?>
 
     <!-- Modal structure -->
-
     <div class="container mt-5">
-        <a href="/settings/create" class="btn btn-primary btn-lg mb-3 shadow-sm" style="width: 150px;">Add New</a>
-        <div class="card shadow-lg rounded bg-light">
-            <div class="card-header bg-primary text-white text-center">
-                <h3 class="mb-0">Admin Setting</h3>
+        <!-- <a href="/settings/create" class="btn btn-primary btn-lg mb-3 shadow-sm" style="width: 150px;">Add New</a> -->
+        <div class="card shadow-lg ">
+            <div class="card-header text-center">
+                <h3 class="mb-0">Personal Setting</h3>
             </div>
             <div class="card-body p-4">
                 <div class="table-responsive">
                     <table class="table table-striped table-hover shadow-sm rounded">
-                        <thead class="table-dark">
+                        <thead class="bg-dark text-white mt-50">
                             <tr>
                                 <th>Username</th>
                                 <th>Email</th>
@@ -66,7 +76,7 @@
                                         </td>
                                         <td><?= htmlspecialchars($admin['language']) ?></td>
                                         <td>
-                                            <a href="settings/edit?id=<?= $admin['id'] ?>" class="btn btn-warning btn-sm">Edit</a>
+                                            <a href="settings/edit?id=<?= $admin['id'] ?>" class="custom-btn">Edit</a>
                                             <?php require 'delete.php' ?>
                                         </td>
                                     </tr>
@@ -81,7 +91,7 @@
                 </div>
             </div>
             <div class="card-footer text-start">
-                <a href="/logout" class="btn btn-warning btn-lg shadow-sm">Logout</a>
+                <a href="/logout" class="custom-btnn">Logout</a>
             </div>
         </div>
     </div>

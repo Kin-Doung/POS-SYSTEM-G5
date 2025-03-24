@@ -13,12 +13,19 @@
                 <span class="notification-badge" id="notification-count">8</span>
             </div>
         </div>
-        <div class="profile">
+        <div class="profile" id="profile">
             <img src="../../views/assets/images/image.png" alt="User">
             <div class="profile-info">
-                <span>Eng Ly</span>
-                <span class="store-name">Owner Store</span>
+                <span id="profile-name">Eng Ly</span>
+                <span class="store-name" id="store-name">Owner Store</span>
             </div>
+            <ul class="menu" id="menu">
+                <li><a href="/settings" class="item">Account</a></li>
+                <li><a href="/settings" class="item">Setting</a></li>
+                <li><a href="/logout" class="item">Logout</a></li>
+            </ul>
+            <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
+            <script src="../../views/assets/js/setting.js"></script>
         </div>
     </nav>
     <!-- End Navbar -->
@@ -73,181 +80,175 @@
                         <button class="subtract-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['id'] ?>', false)">-</button>
                     </div>
 
-                    <!-- Button to open the modal -->
-                    <button type="button" class="btn btn-primary views" data-bs-toggle="modal" data-bs-target="#modal<?= $purchase['id'] ?>">
-                        View detail
-                    </button>
-                </div>
 
-                <!-- Modal for each product -->
-                <div class="modal fade" id="modal<?= $purchase['id'] ?>" tabindex="-1" aria-labelledby="modalLabel<?= $purchase['id'] ?>" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalLabel<?= $purchase['id'] ?>">Product Detail</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap">View detail</button>
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Product Detail</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
-                            <div class="modal-body">
-                                <form action="/purchase/update?id=<?= htmlspecialchars($purchase['id']) ?>" method="POST" enctype="multipart/form-data">
-                                    <input type="hidden" name="existing_image" value="<?= htmlspecialchars($purchase['image'] ?? '') ?>">
+                                </div>
+                                <div class="modal-body">
+                                    <div class="delete_edit">
+                                        <form action="/purchase/update?id=<?= isset($purchase['id']) ? htmlspecialchars($purchase['id']) : '' ?>" method="POST" enctype="multipart/form-data">
+                                            <input type="hidden" name="existing_image" value="<?= htmlspecialchars($purchase['image'] ?? '') ?>">
 
-                                    <div class="mb-3">
-                                        <label for="product_name<?= $purchase['id'] ?>" class="form-label">Name</label>
-                                        <input type="text" class="formcofirm" name="product_name" id="product_name<?= $purchase['id'] ?>" value="<?= htmlspecialchars($purchase['product_name'] ?? '') ?>" required>
+                                            <form action="purchase/restock" method="POST">
+                                                <div>
+                                                    <input type="checkbox" name="products[<?= $purchase['id'] ?>][id]" value="<?= $purchase['id'] ?>">
+                                                    <?= $purchase['product_name'] ?> (Current Quantity: <?= $purchase['quantity'] ?>)
+                                                    <input type="number" name="products[<?= $purchase['id'] ?>][quantity]" min="0" required placeholder="Restock quantity">
+                                                </div>
+
+                                                <button type="submit" class="btn btn-outline-danger fw-bold px-4">
+                                                    <i class="fas fa-undo"></i> Restock Selected
+                                                </button>
+                                            </form>
+                                            <!-- Button to open the modal -->
+                                            <button type="button" class="btn btn-primary views" data-bs-toggle="modal" data-bs-target="#modal<?= $purchase['id'] ?>">
+                                                View detail
+                                            </button>
                                     </div>
 
-                                    <div class="mb-3">
-                                        <label for="image<?= $purchase['id'] ?>" class="form-label">Profile Image</label>
-                                        <input type="file" class="formcofirm" name="image" id="image<?= $purchase['id'] ?>" accept="image/*">
-                                        <?php if (!empty($purchase['image'])) : ?>
-                                            <img src="/uploads/<?= htmlspecialchars($purchase['image']) ?>" alt="Current Image" style="width: 80px; height: 80px; border-radius: 50%; margin-top: 10px;">
-                                        <?php endif; ?>
+                                    <!-- Modal for each product -->
+                                    <div class="modal fade" id="modal<?= $purchase['id'] ?>" tabindex="-1" aria-labelledby="modalLabel<?= $purchase['id'] ?>" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="modalLabel<?= $purchase['id'] ?>">Product Detail</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+
+                                                <div class="modal-body">
+                                                    <form action="/purchase/update?id=<?= htmlspecialchars($purchase['id']) ?>" method="POST" enctype="multipart/form-data">
+                                                        <input type="hidden" name="existing_image" value="<?= htmlspecialchars($purchase['image'] ?? '') ?>">
+
+                                                        <div class="mb-3">
+                                                            <label for="product_name<?= $purchase['id'] ?>" class="form-label">Name</label>
+                                                            <input type="text" class="formcofirm" name="product_name" id="product_name<?= $purchase['id'] ?>" value="<?= htmlspecialchars($purchase['product_name'] ?? '') ?>" required>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="image<?= $purchase['id'] ?>" class="form-label">Profile Image</label>
+                                                            <input type="file" class="formcofirm" name="image" id="image<?= $purchase['id'] ?>" accept="image/*">
+                                                            <?php if (!empty($purchase['image'])) : ?>
+                                                                <img src="/uploads/<?= htmlspecialchars($purchase['image']) ?>" alt="Current Image" style="width: 80px; height: 80px; border-radius: 50%; margin-top: 10px;">
+                                                            <?php endif; ?>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="price<?= $purchase['id'] ?>" class="form-label">Price</label>
+                                                            <input type="number" class="formcofirm" name="price" id="price<?= $purchase['id'] ?>" value="<?= htmlspecialchars($purchase['price'] ?? '') ?>" required>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="category_id<?= $purchase['id'] ?>" class="form-label">Category</label>
+                                                            <select class="formcofirm" name="category_id" id="category_id" required>
+                                                                <option value="">Select Category</option>
+                                                                <?php if (!empty($categories)): ?>
+                                                                    <?php foreach ($categories as $category): ?>
+                                                                        <option value="<?= htmlspecialchars($category['id']); ?>" <?= ($purchase['category_id'] == $category['id']) ? 'selected' : ''; ?>>
+                                                                            <?= htmlspecialchars($category['name']); ?>
+                                                                        </option>
+                                                                    <?php endforeach; ?>
+                                                                <?php else: ?>
+                                                                    <option value="">No categories available</option>
+                                                                <?php endif; ?>
+                                                            </select>
+                                                        </div>
+
+                                                        <button type="submit" class="btn btn-primary">Update</button>
+                                                    </form>
+
+                                                    <!-- Delete Form -->
+                                                    <form action="/purchase/destroy" method="POST" style="margin-top: 10px;">
+                                                        <input type="hidden" name="id" value="<?= htmlspecialchars($purchase['id']) ?>">
+                                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
+                                                    </form>
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+                                <?php endforeach; ?>
+                                </div>
+                                <button class="btn btn-primary show" data-bs-toggle="modal" data-bs-target="#orderDetailsModal">
+                                    <i class="fas fa-eye"></i> Show Details
+                                </button>
 
-                                    <div class="mb-3">
-                                        <label for="price<?= $purchase['id'] ?>" class="form-label">Price</label>
-                                        <input type="number" class="formcofirm" name="price" id="price<?= $purchase['id'] ?>" value="<?= htmlspecialchars($purchase['price'] ?? '') ?>" required>
+                                <!-- Order Details Modal -->
+                                <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content shadow-lg rounded-4">
+                                            <!-- Modal Header -->
+                                            <div class="modal-header bg-primary text-white">
+                                                <h5 class="modal-title fw-bold"><i class="fas fa-receipt"></i> Order Summary</h5>
+                                                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+
+                                            <!-- Modal Body -->
+                                            <div class="modal-body bg-light">
+                                                <div class="table-responsive">
+                                                    <!-- Order Details Modal Table -->
+                                                    <table class="table table-hover align-middle">
+                                                        <thead class="table-dark">
+                                                            <tr>
+                                                                <th>Product</th>
+                                                                <th>Qty</th>
+                                                                <th>Price</th>
+                                                                <th>Total</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="details">
+                                                            <!-- The order items will be populated here -->
+
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+                                                <div class="text-end fw-bold fs-5 mt-3">
+                                                    <span class="text-success"><i class="fas fa-shopping-cart"></i> Cart Total:</span>
+                                                    <span id="totalPrice">$0.00</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Modal Footer -->
+                                            <div class="modal-footer d-flex justify-content-between">
+                                                <!-- Button to trigger restock for a specific product -->
+                                                <!-- Restock button and form -->
+                                                <!-- <form action="purchase/restock" method="POST">
+                            <?php foreach ($purchases as $purchase): ?>
+                                <div>
+                                    <input type="checkbox" name="products[<?= $purchase['id'] ?>][id]" value="<?= $purchase['id'] ?>">
+                                    <?= $purchase['product_name'] ?> (Current Quantity: <?= $purchase['quantity'] ?>)
+                                    <input type="number" name="products[<?= $purchase['id'] ?>][quantity]" min="0" required placeholder="Restock quantity">
+                                </div>
+                            <?php endforeach; ?>
+                            <button type="submit" class="btn btn-outline-danger fw-bold px-4">
+                                <i class="fas fa-undo"></i> Restock Selected
+                            </button>
+                        </form> -->
+
+
+
+                                                <button class="btn btn-outline-success fw-bold px-4" onclick="saveToPDF()">
+                                                    <i class="fas fa-file-pdf"></i> Save as PDF
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
+                                </div>
 
-                                    <div class="mb-3">
-                                        <label for="category_id<?= $purchase['id'] ?>" class="form-label">Category</label>
-                                        <select class="formcofirm" name="category_id" id="category_id" required>
-                                            <option value="">Select Category</option>
-                                            <?php if (!empty($categories)): ?>
-                                                <?php foreach ($categories as $category): ?>
-                                                    <option value="<?= htmlspecialchars($category['id']); ?>" <?= ($purchase['category_id'] == $category['id']) ? 'selected' : ''; ?>>
-                                                        <?= htmlspecialchars($category['name']); ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-                                            <?php else: ?>
-                                                <option value="">No categories available</option>
-                                            <?php endif; ?>
-                                        </select>
-                                    </div>
-
-                                    <button type="submit" class="btn btn-primary">Update</button>
-                                </form>
-
-                                <!-- Delete Form -->
-                                <form action="/purchase/destroy" method="POST" style="margin-top: 10px;">
-                                    <input type="hidden" name="id" value="<?= htmlspecialchars($purchase['id']) ?>">
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
-                                </form>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
                 </div>
-            <?php endforeach; ?>
         </div>
-
-        <!-- Order Summary Section -->
-        <!-- Button to Open Modal -->
-        <!-- Show Details Button -->
-        <button class="btn btn-primary show" data-bs-toggle="modal" data-bs-target="#orderDetailsModal">
-            <i class="fas fa-eye"></i> Show Details
-        </button>
-
-        <!-- Order Details Modal -->
-        <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content shadow-lg rounded-4">
-                    <!-- Modal Header -->
-                    <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title fw-bold"><i class="fas fa-receipt"></i> Order Summary</h5>
-                        <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-
-                    <!-- Modal Body -->
-                    <div class="modal-body bg-light">
-                        <div class="table-responsive">
-                            <!-- Order Details Modal Table -->
-                            <table class="table table-hover align-middle">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>Product</th>
-                                        <th>Qty</th>
-                                        <th>Price</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="details">
-                                    <!-- The order items will be populated here -->
-
-                                </tbody>
-                            </table>
-
-                        </div>
-                        <div class="text-end fw-bold fs-5 mt-3">
-                            <span class="text-success"><i class="fas fa-shopping-cart"></i> Cart Total:</span>
-                            <span id="totalPrice">$0.00</span>
-                        </div>
-                    </div>
-
-                    <!-- Modal Footer -->
-                    <div class="modal-footer d-flex justify-content-between">
-                        <!-- Button to trigger restock for a specific product -->
-                        <button class="btn btn-outline-danger fw-bold px-4" onclick="processRestock(<?= $purchase['id'] ?>)">
-                            <i class="fas fa-undo"></i> Restock
-                        </button>
-
-                        <button class="btn btn-outline-success fw-bold px-4" onclick="saveToPDF()">
-                            <i class="fas fa-file-pdf"></i> Save as PDF
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- FontAwesome for Icons -->
-        <!-- <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script> -->
-
-        <!-- <script>
-            function addOrderDetails(orderItems) {
-                let detailsTable = document.getElementById("details");
-                detailsTable.innerHTML = ''; // Clear the table before adding new rows
-
-                let totalPrice = 0;
-                orderItems.forEach(item => {
-                    let row = document.createElement("tr");
-
-                    // Create product name cell
-                    let productCell = document.createElement("td");
-                    productCell.innerText = item.product;
-                    row.appendChild(productCell);
-
-                    // Create quantity cell
-                    let qtyCell = document.createElement("td");
-                    qtyCell.classList.add("qty"); // Add the qty class
-                    qtyCell.innerText = item.qty;
-                    row.appendChild(qtyCell);
-
-                    // Create price cell
-                    let priceCell = document.createElement("td");
-                    priceCell.innerText = `$${item.price.toFixed(2)}`;
-                    row.appendChild(priceCell);
-
-                    // Create total cell
-                    let totalCell = document.createElement("td");
-                    totalCell.classList.add("total"); // Add the total class
-                    let total = item.qty * item.price;
-                    totalCell.innerText = `$${total.toFixed(2)}`;
-                    row.appendChild(totalCell);
-
-                    detailsTable.appendChild(row);
-
-                    totalPrice += total;
-                });
-
-                // Update the cart total
-                document.getElementById("totalPrice").innerText = `$${totalPrice.toFixed(2)}`;
-            }
-        </script> -->
-
     </div>
 
     <?php require_once 'views/layouts/footer.php'; ?>

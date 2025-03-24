@@ -16,22 +16,20 @@
             </div>
         </div>
         <!-- Profile -->
-        <div class="profile">
+        <div class="profile" id="profile">
             <img src="../../views/assets/images/image.png" alt="User">
             <div class="profile-info">
-                <span>Eng Ly</span>
-                <span class="store-name">Owner Store</span>
+                <span id="profile-name">Eng Ly</span>
+                <span class="store-name" id="store-name">Owner Store</span>
             </div>
+            <ul class="menu" id="menu">
+                <li><a href="/settings" class="item">Account</a></li>
+                <li><a href="/settings" class="item">Setting</a></li>
+                <li><a href="/logout" class="item">Logout</a></li>
+            </ul>
+            <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
+            <script src="../../views/assets/js/setting.js"></script>
         </div>
-        <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
-            <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
-                <div class="sidenav-toggler-inner">
-                    <i class="sidenav-toggler-line"></i>
-                    <i class="sidenav-toggler-line"></i>
-                    <i class="sidenav-toggler-line"></i>
-                </div>
-            </a>
-        </li>
     </nav>
     <!-- End Navbar -->
     <div class="container">

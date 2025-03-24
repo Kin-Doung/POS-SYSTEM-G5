@@ -3,9 +3,11 @@
     <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
     <a class="navbar-brand m-0" target="_blank">
       <img src="../../views/assets/img/logos/logo.png" class="navbar-brand-img h-100" alt="main_logo">
+      <!-- <span id="profile-namee"><?= $admin['store_name'] ?></span> -->
+      <span id="profile-namee">Ly Store</span>
     </a>
-
   </div>
+  <link rel="stylesheet" href="../../views/assets/css/settings/aside.css">
   <hr class="horizontal light mt-0 mb-2">
   <div>
     <ul class="navbar-nav">
@@ -65,31 +67,12 @@
       </li>
       <!-- nav setting -->
       <li class="nav-item mt-3">
-        <a class="nav-link text-white" data-bs-toggle="collapse" href="#settingsMenu" role="button"
-          aria-expanded="false" aria-controls="settingsMenu">
+        <a class="nav-link text-white" href="/settings">
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">
             <i class="fas fa-cog"></i> Setting
           </h6>
         </a>
       </li>
-
-      <!-- Add data-bs-auto-close="outside" here -->
-      <div class="collapse ps-4" id="settingsMenu" data-bs-auto-close="outside">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a class="nav-link text-white" href="/settings">
-              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                <i class="material-icons opacity-10">person</i>
-              </div>
-              <span class="nav-link-text ms-1">Account</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-
-
-
-
     </ul>
   </div>
 </aside>

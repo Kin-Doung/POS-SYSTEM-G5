@@ -35,11 +35,16 @@
   <link rel="stylesheet" href="assets/css/style/purchase.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
   <!-- edit -->
+
+
+  <link rel="stylesheet" href="../../views/assets/css/style/navx`.css">
   <link rel="stylesheet" href="../../views/assets/css/style/purchase.css">
   <link rel="icon" type="image/png" href="../../views/assets/images/logoapp.png">
   <!-- css product -->
   <link rel="stylesheet" href="../../views/assets/css/style/product.css">
   <link rel="stylesheet" href="../../views/assets/css/style/logout.css">
+  <link rel="stylesheet" href="../../views/assets/css/style/inventory.css">
+
 
   <!-- boostrapt  -->
   <!-- categories -->

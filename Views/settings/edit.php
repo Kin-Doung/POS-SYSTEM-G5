@@ -42,8 +42,8 @@
             <div class="card-header  text-white text-center">
                 <h4 class="mb-0">Edit Admin Settings</h4>
             </div>
-            <div class="container">
-                <form action="/settings/update?id=<?= $user['id'] ?>" method="POST">
+            <div class="container mt-3">
+                <form action="/settings/update?id=<?= $admin['id'] ?>" method="POST">
                     <div class="form-group">
                         <div class="group">
                             <label for="" class="form-label">Username:</label>
@@ -55,7 +55,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="group">
                         <label for="" class="form-label">Email:</label>
                         <input type="text" value=" <?= $admin['email'] ?>" name="email" class="form-control">
                     </div>
@@ -73,7 +73,7 @@
                         </div>
 
                     </div>
-                    <div class="form-group">
+                    <div class="form-groupp mt-3">
                         <form action="upload.php" method="POST" enctype="multipart/form-data">
                             <label for="profile">Profile:</label>
                             <input type="file" name="profile" id="profile" accept="image/*" required>

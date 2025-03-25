@@ -2,12 +2,14 @@
         display: flex;
         justify-content: space-between;
         gap: 20px; /* Adjust space between inputs */
+      
     }
 
     .group {
-        flex: 1; /* Makes both fields equal width */
         display: flex;
         flex-direction: column;
+        align-items: flex-start;
+        margin-top: 15px;
     }
 
     .form-label {
@@ -28,4 +30,14 @@
         padding-left: 20px;
         color: rgb(4, 10, 62);
         font-size: 15px;
+    }
+
+    .form-groupp {
+        display: flex;
+        flex-direction: row;
+        gap: 30px;
+    }
+
+    #profile-name {
+        color: gray;
     }

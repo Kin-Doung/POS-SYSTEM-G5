@@ -16,10 +16,9 @@
             </div>
         </div>
         <div class="profile" id="profile">
-            <!-- <img src="../../views/assets/images/image.png" alt="User"> -->
-            <img id="profile-logo" src="data:image/jpeg;base64,<?= base64_encode($admin['store_logo']) ?>" alt="Store Logo" width="100">
+            <img src="../../views/assets/images/image.png" alt="User">
             <div class="profile-info">
-                <span id="profile-name"><?= $admin['username'] ?></span>
+                <span id="profile-name">Eng Ly</span>
                 <span class="store-name" id="store-name">Owner Store</span>
             </div>
             <ul class="menu" id="menu">
@@ -28,6 +27,7 @@
                 <li><a href="/logout" class="item">Logout</a></li>
             </ul>
             <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
+            <link rel="stylesheet" href="../../views/assets/css/settings/edit.css">
             <script src="../../views/assets/js/setting.js"></script>
         </div>
 

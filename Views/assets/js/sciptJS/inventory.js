@@ -225,3 +225,29 @@ document.addEventListener("DOMContentLoaded", function() {
   quantityInput.addEventListener("input", calculateTotalPrice);
   priceInput.addEventListener("input", calculateTotalPrice);
 });
+
+
+
+    // Filter the table when the category is selected
+    function filterTable() {
+      // Get the selected category ID
+      const categoryId = document.getElementById('categorySelect').value;
+      
+      // Get all table rows
+      const rows = document.querySelectorAll('table tbody tr');
+      
+      // Loop through all the rows and show/hide based on category match
+      rows.forEach(row => {
+          const rowCategoryId = row.getAttribute('data-category-id');
+          
+          // If no category is selected, show all rows
+          if (!categoryId || rowCategoryId === categoryId) {
+              row.style.display = ''; // Show the row
+          } else {
+              row.style.display = 'none'; // Hide the row
+          }
+      });
+  }
+
+  // Call filterTable on page load to ensure correct filtering if a category is pre-selected
+  window.onload = filterTable;

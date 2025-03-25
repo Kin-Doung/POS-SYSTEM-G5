@@ -1,5 +1,5 @@
 <?php
-    require_once './views/layouts/side.php';
+require_once './views/layouts/side.php';
 
 ?>
 <main class="main-content create-content position-relative max-height-vh-100 h-100">
@@ -19,18 +19,18 @@
                     <div class="form-group mb-3 col-12 col-md-2">
                         <label for="productCategory">Category</label>
                         <select id="productCategory" name="category_id" class="form-control" required>
-            
-                    <option value="">Select Category</option>
-                    <?php if (!empty($categories)): ?>
-                        <?php foreach ($categories as $category): ?>
-                            <option value="<?= htmlspecialchars($category['id']) ?>">
-                                <?= htmlspecialchars($category['name']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <option disabled>No Categories Found</option>
-                    <?php endif; ?>
-    
+
+                            <option value="">Select Category</option>
+                            <?php if (!empty($categories)): ?>
+                                <?php foreach ($categories as $category): ?>
+                                    <option value="<?= htmlspecialchars($category['id']) ?>">
+                                        <?= htmlspecialchars($category['name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <option disabled>No Categories Found</option>
+                            <?php endif; ?>
+
                         </select>
                     </div>
 
@@ -78,109 +78,3 @@
         </div>
     </div>
 </main>
-
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-    const productForm = document.getElementById('productForm');
-    const addMoreButton = document.getElementById('addMore');
-    const savedProductsContainer = document.getElementById('productList');
-
-    // Retrieve stored products from localStorage
-    const loadProducts = () => {
-        const products = JSON.parse(localStorage.getItem('products')) || [];
-        savedProductsContainer.innerHTML = '';
-        
-        products.forEach((product, index) => {
-            const productRow = document.createElement('div');
-            productRow.classList.add('d-flex', 'justify-content-between', 'mb-2');
-
-            productRow.innerHTML = `
-                <div class="col-2">${product.product_name}</div>
-                <div class="col-2">${product.category}</div>
-                <div class="col-2">${product.quantity}</div>
-                <div class="col-2">${product.amount}</div>
-                <div class="col-2">${product.expiration_date}</div>
-                <div class="col-2">
-                    <button class="btn btn-warning edit" data-index="${index}">Edit</button>
-                    <button class="btn btn-danger remove" data-index="${index}">Remove</button>
-                </div>
-            `;
-            savedProductsContainer.appendChild(productRow);
-        });
-    };
-
-    // Add product to localStorage
-    const addProductToLocalStorage = () => {
-        const productName = document.getElementById('product_name').value;
-        const category = document.getElementById('productCategory').value;
-        const quantity = document.getElementById('quantity').value;
-        const amount = document.getElementById('amount').value;
-        const expirationDate = document.getElementById('expiration_date').value;
-        
-        if (!productName || !category || !quantity || !amount || !expirationDate) {
-            alert('Please fill in all fields');
-            return;
-        }
-
-        const newProduct = {
-            product_name: productName,
-            category: category,
-            quantity: quantity,
-            amount: amount,
-            expiration_date: expirationDate
-        };
-
-        let products = JSON.parse(localStorage.getItem('products')) || [];
-        products.push(newProduct);
-        localStorage.setItem('products', JSON.stringify(products));
-
-        loadProducts(); // Reload saved products
-    };
-
-    // Remove product from localStorage
-    const removeProductFromLocalStorage = (index) => {
-        let products = JSON.parse(localStorage.getItem('products')) || [];
-        products.splice(index, 1);
-        localStorage.setItem('products', JSON.stringify(products));
-
-        loadProducts(); // Reload saved products
-    };
-
-    // Edit product in localStorage
-    const editProductInLocalStorage = (index) => {
-        let products = JSON.parse(localStorage.getItem('products')) || [];
-        const product = products[index];
-
-        // Pre-fill the form with the selected product's data
-        document.getElementById('product_name').value = product.product_name;
-        document.getElementById('productCategory').value = product.category;
-        document.getElementById('quantity').value = product.quantity;
-        document.getElementById('amount').value = product.amount;
-        document.getElementById('expiration_date').value = product.expiration_date;
-
-        // Optionally, remove the product before editing
-        removeProductFromLocalStorage(index);
-    };
-
-    // Add More button handler
-    addMoreButton.addEventListener('click', addProductToLocalStorage);
-
-    // Handle the Remove and Edit buttons dynamically
-    savedProductsContainer.addEventListener('click', (e) => {
-        if (e.target.classList.contains('remove')) {
-            const index = e.target.getAttribute('data-index');
-            removeProductFromLocalStorage(index);
-        }
-
-        if (e.target.classList.contains('edit')) {
-            const index = e.target.getAttribute('data-index');
-            editProductInLocalStorage(index);
-        }
-    });
-
-    // Load products on page load
-    loadProducts();
-});
-
-</script>

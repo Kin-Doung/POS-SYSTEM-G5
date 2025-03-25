@@ -5,124 +5,87 @@ class InventoryModel
 {
     private $pdo;
 
-    function __construct()
+    public function __construct()
     {
-        $this->pdo = new Database();
+        // Use the Database class to get the PDO instance
+        $database = new Database();
+        $this->pdo = $database->getConnection();
     }
 
     // Get all inventory items
-    function getInventory()
+    public function getInventory()
     {
-        $inventory = $this->pdo->query("SELECT * FROM inventory ORDER BY id DESC");
-        return $inventory->fetchAll();
+        $stmt = $this->pdo->query("SELECT * FROM inventory ORDER BY id DESC");
+        return $stmt->fetchAll();
     }
 
-    function getCategory()
+    public function getCategory()
     {
-        $inventory = $this->pdo->query("SELECT * FROM categories ORDER BY id DESC");
-        return $inventory->fetchAll();
+        $stmt = $this->pdo->query("SELECT * FROM categories ORDER BY id DESC");
+        return $stmt->fetchAll();
     }
 
     public function getInventoryWithCategory()
     {
-        // Debug the SQL query
-        $inventory = $this->pdo->query("
-        SELECT inventory.*, categories.category_name 
-        FROM inventory 
-        LEFT JOIN categories ON inventory.category_id = categories.id 
-        ORDER BY inventory.id DESC
-    ");
-
-        $inventoryData = $inventory->fetchAll();
-        var_dump($inventoryData); // Print to check the data
-
+        // Fetch inventory with category name
+        $stmt = $this->pdo->query("
+            SELECT inventory.*, categories.name 
+            FROM inventory 
+            LEFT JOIN categories ON inventory.category_id = categories.id 
+            ORDER BY inventory.id DESC
+        ");
+        return $stmt->fetchAll();
     }
+
     // Create a new inventory item
-    function createInventory($data)
+    public function createInventory($data)
     {
+        // Fetch the category name based on category_id using prepared statement
+        $stmt = $this->pdo->prepare("SELECT name FROM categories WHERE id = :id");
+        $stmt->execute(['id' => $data['category_id']]);
+        $category = $stmt->fetch();
+        $category_name = $category ? $category['name'] : null;
 
-        $categoryId = $data['category_id'];
-        // Now use the category_id directly from the form
+        // Insert inventory data along with category name
+        $stmt = $this->pdo->prepare("
+            INSERT INTO inventory (image, product_name, quantity, amount, category_id, category_name, expiration_date, total_price) 
+            VALUES (:image, :product_name, :quantity, :amount, :category_id, :category_name, :expiration_date, :total_price)
+        ");
 
-        $this->pdo->query("
-        INSERT INTO inventory (image, product_name, quantity, amount, category_id, expiration_date, total_price) 
-        VALUES (:image, :product_name, :quantity, :amount, :category_id, :expiration_date, :total_price)
-    ", [
+        $stmt->execute([
             'image' => $data['image'],
             'product_name' => $data['product_name'],
             'quantity' => $data['quantity'],
             'amount' => $data['amount'],
-            'category_id' => $categoryId,
+            'category_id' => $data['category_id'],
+            'category_name' => $category_name,
             'expiration_date' => $data['expiration_date'],
-            'total_price' => $data['total_price'],  // Ensure total_price is included
+            'total_price' => $data['total_price'],
         ]);
     }
 
-    // Function to insert multiple inventory items at once
-    public function createMultipleInventory($items)
-    {
-        try {
-            $this->pdo->beginTransaction(); // Start the transaction
-
-            $stmt = $this->pdo->query("INSERT INTO inventory (image, product_name, quantity, amount, category_id, expiration_date) 
-                                         VALUES (:image, :product_name, :quantity, :amount, :category_id, :expiration_date)");
-
-            // Loop through each item and execute the prepared statement
-            foreach ($items as $item) {
-                $stmt->execute([
-                    ':image' => $item['image'],
-                    ':product_name' => $item['product_name'],
-                    ':quantity' => $item['quantity'],
-                    ':amount' => $item['amount'],
-                    ':category_id' => $item['category_id'],
-                    ':expiration_date' => $item['expiration_date']
-                ]);
-            }
-
-            $this->pdo->commit(); // Commit the transaction
-            return true; // Return true if everything went well
-        } catch (Exception $e) {
-            $this->pdo->rollBack(); // Rollback the transaction if there's an error
-            echo "Error: " . $e->getMessage(); // Show error message
-            return false; // Return false if there was an error
-        }
-    }
-
-    // Get a single inventory item by ID
-    function getInventorys($id)
-    {
-        $stmt = $this->pdo->query("SELECT * FROM inventory WHERE id = :id", ['id' => $id]);
-        return $stmt->fetch();
-    }
-
-    // ✅ New function to fetch an inventory item with category name
-    function viewInventory($id)
-    {
-        $stmt = $this->pdo->query("
-            SELECT inventory.*, categories.category_name 
-            FROM inventory 
-            LEFT JOIN categories ON inventory.category_id = categories.id 
-            WHERE inventory.id = :id
-        ", ['id' => $id]);
-
-        return $stmt->fetch(); // Fetch only one row
-    }
-
     // Update an inventory item
-    public function updateInventory($id, $data) {
-        $sql = "UPDATE inventory SET 
-                category_id = :category_id,
-                product_name = :product_name,
-                quantity = :quantity,
-                amount = :amount,
-                total_price = :total_price,
-                expiration_date = :expiration_date,
-                image = :image
-                WHERE id = :id";
+    public function updateInventory($id, $data)
+    {
+        $stmt = $this->pdo->prepare("SELECT category_name FROM categories WHERE id = :id");
+        $stmt->execute(['id' => $data['category_id']]);
+        $category = $stmt->fetch();
+        $category_name = $category ? $category['category_name'] : null;
 
-        // Parameters to bind
-        $params = [
+        $stmt = $this->pdo->prepare("UPDATE inventory SET 
+            category_id = :category_id,
+            category_name = :category_name,
+            product_name = :product_name,
+            quantity = :quantity,
+            amount = :amount,
+            total_price = :total_price,
+            expiration_date = :expiration_date,
+            image = :image
+            WHERE id = :id");
+
+        $stmt->execute([
             ':category_id' => $data['category_id'],
+            ':category_name' => $category_name,
             ':product_name' => $data['product_name'],
             ':quantity' => $data['quantity'],
             ':amount' => $data['amount'],
@@ -130,26 +93,34 @@ class InventoryModel
             ':expiration_date' => $data['expiration_date'],
             ':image' => $data['image'],
             ':id' => $id
-        ];
-        
-        // Call the query method from the Database class
-        $this->pdo->query($sql, $params);
+        ]);
     }
+
+    // Get a single inventory item by ID
+    public function getInventorys($id)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM inventory WHERE id = :id");
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch();
+    }
+
+    // Get inventory item with category name
+    public function viewInventory($id)
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT inventory.*, categories.category_name 
+            FROM inventory 
+            LEFT JOIN categories ON inventory.category_id = categories.id 
+            WHERE inventory.id = :id
+        ");
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch(); // Fetch only one row
+    }
+
+    // Delete an inventory item
     public function deleteItem($id)
     {
-        try {
-            // Ensure that the ID is numeric
-            if (is_numeric($id)) {
-                // Use query() method directly without prepare
-                $sql = "DELETE FROM inventory WHERE id = $id"; // Use the ID directly in the SQL
-                $this->pdo->query($sql);  // Execute the query
-            } else {
-                throw new Exception("Invalid ID"); // Throw error if ID is not valid
-            }
-        } catch (Exception $e) {
-            // Handle the error if it occurs
-            echo "Error deleting item: " . $e->getMessage();
-        }
+        $stmt = $this->pdo->prepare("DELETE FROM inventory WHERE id = :id");
+        $stmt->execute(['id' => $id]);
     }
 }
-?>

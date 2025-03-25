@@ -27,6 +27,7 @@ class CategoryModel
         $category = $stmt->fetch();
         return $category;
     }
+    
 
     function updateCategory($id, $data)
     {

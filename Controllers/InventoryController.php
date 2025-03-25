@@ -40,25 +40,48 @@ class InventoryController extends BaseController
     function store()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Validate inputs
+            $errors = [];
+            if (empty($_POST['product_name'])) {
+                $errors[] = 'Product name is required.';
+            }
+            if (empty($_POST['category_id']) || !is_numeric($_POST['category_id'])) {
+                $errors[] = 'Valid category is required.';
+            }
+            if (empty($_POST['quantity']) || !is_numeric($_POST['quantity'])) {
+                $errors[] = 'Quantity must be a number.';
+            }
+            if (empty($_POST['amount']) || !is_numeric($_POST['amount'])) {
+                $errors[] = 'Amount must be a number.';
+            }
+    
+            // If there are validation errors, show them
+            if (!empty($errors)) {
+                foreach ($errors as $error) {
+                    echo "<p>$error</p>";
+                }
+                return;
+            }
+    
             // Handle image upload
             $imagePath = null;
             if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
                 $uploadDir = 'uploads/';
                 $imageName = time() . '_' . basename($_FILES['image']['name']);
                 $imagePath = $uploadDir . $imageName;
-
+    
                 if (!move_uploaded_file($_FILES['image']['tmp_name'], $imagePath)) {
                     $imagePath = null;
                 }
             }
-
+    
             // Get category_id from the form
             $category_id = $_POST['category_id'];
             $category_name = $_POST['category_name'];  // Optional if you're also saving the category name
-
+    
             // Calculate total_price
             $total_price = $this->calculateTotalPrice($_POST['quantity'], $_POST['amount']);
-
+    
             // Prepare data for creating the inventory item
             $data = [
                 'product_name' => $_POST['product_name'],
@@ -70,15 +93,15 @@ class InventoryController extends BaseController
                 'expiration_date' => $_POST['expiration_date'],
                 'image' => $imagePath
             ];
-
+    
             // Insert new inventory item into the database
             $this->model->createInventory($data);
-
+    
             // Redirect to inventory list
             $this->redirect('/inventory');
         }
     }
-
+    
 
     // Show the form to edit an existing inventory item
     function edit($id)

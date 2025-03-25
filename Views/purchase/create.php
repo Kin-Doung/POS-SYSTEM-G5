@@ -1,6 +1,8 @@
-<?php require_once './views/layouts/side.php' ?>
+<?php 
+    require_once './views/layouts/side.php'; 
+    require_once './views/layouts/header.php';
+?>
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-    <?php require_once './views/layouts/header.php'; ?>
 
     <div class="modal-content" style="max-width: 800px; margin: 20px auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
         <h2 style="text-align: center; font-size: 20px; color: #333; margin-bottom: 20px;">Add New Product</h2>

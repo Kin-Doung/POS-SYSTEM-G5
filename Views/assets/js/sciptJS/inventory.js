@@ -23,39 +23,45 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  function filterTable() {
+    const searchInput = document
+      .getElementById("searchInput")
+      .value.toLowerCase();
+    const categorySelect = document.getElementById("categorySelect").value;
+    const tableRows = document.querySelectorAll("#ordersTable tbody tr");
 
-function filterTable() {
-  const searchInput = document.getElementById('searchInput').value.toLowerCase();
-  const categorySelect = document.getElementById('categorySelect').value;
-  const tableRows = document.querySelectorAll('#ordersTable tbody tr');
-
-  tableRows.forEach(row => {
+    tableRows.forEach((row) => {
       const customerName = row.cells[2].textContent.toLowerCase();
-      const categoryMatch = categorySelect === "" || row.getAttribute('data-category') === categorySelect;
+      const categoryMatch =
+        categorySelect === "" ||
+        row.getAttribute("data-category") === categorySelect;
       const searchMatch = customerName.includes(searchInput);
 
-      row.style.display = (categoryMatch && searchMatch) ? '' : 'none';
-  });
-}
+      row.style.display = categoryMatch && searchMatch ? "" : "none";
+    });
+  }
 
-// Add event listener for search input
-document.getElementById('searchInput').addEventListener('input', filterTable);
+  // Add event listener for search input
+  document.getElementById("searchInput").addEventListener("input", filterTable);
 
-function toggleBatchAction(checkbox) {
-  const batchActionBtn = document.getElementById('batchActionBtn');
-  const updateQuantitySection = document.getElementById('updateQuantitySection');
+  function toggleBatchAction(checkbox) {
+    const batchActionBtn = document.getElementById("batchActionBtn");
+    const updateQuantitySection = document.getElementById(
+      "updateQuantitySection"
+    );
 
-  const checkboxes = document.querySelectorAll('.select-checkbox');
-  const anyChecked = Array.from(checkboxes).some(chk => chk.checked);
-  
-  // Enable or disable the batch action button
-  batchActionBtn.disabled = !anyChecked;
-  updateQuantitySection.style.display = anyChecked ? 'block' : 'none';
+    const checkboxes = document.querySelectorAll(".select-checkbox");
+    const anyChecked = Array.from(checkboxes).some((chk) => chk.checked);
 
-  // Enable or disable quantity inputs based on checkbox selection
-  checkboxes.forEach(chk => {
-      const quantityInput = chk.closest('tr').querySelector('.quantity-input');
+    // Enable or disable the batch action button
+    batchActionBtn.disabled = !anyChecked;
+    updateQuantitySection.style.display = anyChecked ? "block" : "none";
+
+    // Enable or disable quantity inputs based on checkbox selection
+    checkboxes.forEach((chk) => {
+      const quantityInput = chk.closest("tr").querySelector(".quantity-input");
       quantityInput.disabled = !chk.checked; // Enable if checked, disable if not
+<<<<<<< HEAD
   });
 }
 <<<<<<< HEAD
@@ -85,53 +91,56 @@ function updateQuantities() {
   categorySelect.addEventListener("change", filterTable);
 });
 =======
+=======
+    });
+  }
+>>>>>>> e4c15c689ffc64607bd755dc9ce42bfe44c8ca63
 
-function updateQuantities() {
-  const checkboxes = document.querySelectorAll('.select-checkbox:checked');
-  checkboxes.forEach(checkbox => {
-      const row = checkbox.closest('tr');
-      const quantityInput = row.querySelector('.quantity-input');
+  function updateQuantities() {
+    const checkboxes = document.querySelectorAll(".select-checkbox:checked");
+    checkboxes.forEach((checkbox) => {
+      const row = checkbox.closest("tr");
+      const quantityInput = row.querySelector(".quantity-input");
       quantityInput.disabled = false; // Enable input for editing
-  });
+    });
 
-  // Uncheck all checkboxes after updating
-  checkboxes.forEach(checkbox => {
+    // Uncheck all checkboxes after updating
+    checkboxes.forEach((checkbox) => {
       checkbox.checked = false;
-      const row = checkbox.closest('tr');
-      const quantityInput = row.querySelector('.quantity-input');
+      const row = checkbox.closest("tr");
+      const quantityInput = row.querySelector(".quantity-input");
       quantityInput.disabled = true; // Disable input after update
-  });
+    });
 
-  // Disable batch action button and hide update section
-  document.getElementById('batchActionBtn').disabled = true;
-  document.getElementById('updateQuantitySection').style.display = 'none';
-}
+    // Disable batch action button and hide update section
+    document.getElementById("batchActionBtn").disabled = true;
+    document.getElementById("updateQuantitySection").style.display = "none";
+  }
 
   searchInput.addEventListener("input", filterTable);
   categorySelect.addEventListener("change", filterTable);
 });
-
 
 // nav bar active js
 
 document.addEventListener("DOMContentLoaded", function () {
   let currentPath = window.location.pathname;
 
-  document.querySelectorAll(".nav-link").forEach(link => {
+  document.querySelectorAll(".nav-link").forEach((link) => {
     let icon = link.querySelector("i"); // Get the icon inside the link
 
     if (link.getAttribute("href") === currentPath) {
       link.classList.add("active");
-      link.style.backgroundColor = "#6f42c1"; 
-      link.style.color = "white"; 
+      link.style.backgroundColor = "#6f42c1";
+      link.style.color = "white";
 
       let span = link.querySelector(".nav-link-text");
       if (span) span.style.color = "white";
       if (icon) icon.style.color = "white"; // Change icon color
     } else {
       link.classList.remove("active");
-      link.style.backgroundColor = "transparent"; 
-      link.style.color = "black"; 
+      link.style.backgroundColor = "transparent";
+      link.style.color = "black";
 
       let span = link.querySelector(".nav-link-text");
       if (span) span.style.color = "black";
@@ -140,83 +149,115 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-
-// the style of the table
-
 // 1. Searching for specific data of HTML table
-const search = document.querySelector('.input-group input'),
-    tableRows = document.querySelectorAll('tbody tr'),
-    tableHeadings = document.querySelectorAll('thead th');
+const search = document.querySelector(".input-group input"),
+  tableRows = document.querySelectorAll("tbody tr"),
+  tableHeadings = document.querySelectorAll("thead th");
 
-search.addEventListener('input', searchTable);
+search.addEventListener("input", searchTable);
 
 function searchTable() {
-    tableRows.forEach((row, i) => {
-        let tableData = row.textContent.toLowerCase(),
-            searchData = search.value.toLowerCase();
+  tableRows.forEach((row, i) => {
+    let tableData = row.textContent.toLowerCase(),
+      searchData = search.value.toLowerCase();
 
-        row.classList.toggle('hide', tableData.indexOf(searchData) < 0);
-        row.style.setProperty('--delay', i / 25 + 's');
-    });
+    row.classList.toggle("hide", tableData.indexOf(searchData) < 0);
+    row.style.setProperty("--delay", i / 25 + "s");
+  });
 
-    document.querySelectorAll('tbody tr:not(.hide)').forEach((visibleRow, i) => {
-        visibleRow.style.backgroundColor = (i % 2 === 0) ? 'transparent' : '#0000000b';
-    });
+  document.querySelectorAll("tbody tr:not(.hide)").forEach((visibleRow, i) => {
+    visibleRow.style.backgroundColor =
+      i % 2 === 0 ? "transparent" : "#0000000b";
+  });
 }
 
 // 2. Sorting the table data based on column header click
 tableHeadings.forEach((head, i) => {
-    let sortAsc = true;
-    head.onclick = () => {
-        tableHeadings.forEach(head => head.classList.remove('active'));
-        head.classList.add('active');
+  let sortAsc = true;
+  head.onclick = () => {
+    tableHeadings.forEach((head) => head.classList.remove("active"));
+    head.classList.add("active");
 
-        document.querySelectorAll('td').forEach(td => td.classList.remove('active'));
-        tableRows.forEach(row => {
-            row.querySelectorAll('td')[i].classList.add('active');
-        });
+    document
+      .querySelectorAll("td")
+      .forEach((td) => td.classList.remove("active"));
+    tableRows.forEach((row) => {
+      row.querySelectorAll("td")[i].classList.add("active");
+    });
 
-        head.classList.toggle('asc', sortAsc);
-        sortAsc = head.classList.contains('asc') ? false : true;
+    head.classList.toggle("asc", sortAsc);
+    sortAsc = head.classList.contains("asc") ? false : true;
 
-        sortTable(i, sortAsc);
-    }
+    sortTable(i, sortAsc);
+  };
 });
 
 function sortTable(column, sortAsc) {
-    [...tableRows].sort((a, b) => {
-        let firstRow = a.querySelectorAll('td')[column].textContent.toLowerCase(),
-            secondRow = b.querySelectorAll('td')[column].textContent.toLowerCase();
+  [...tableRows]
+    .sort((a, b) => {
+      let firstRow = a.querySelectorAll("td")[column].textContent.toLowerCase(),
+        secondRow = b.querySelectorAll("td")[column].textContent.toLowerCase();
 
-        return sortAsc ? (firstRow < secondRow ? 1 : -1) : (firstRow < secondRow ? -1 : 1);
+      return sortAsc
+        ? firstRow < secondRow
+          ? 1
+          : -1
+        : firstRow < secondRow
+        ? -1
+        : 1;
     })
-    .map(sortedRow => document.querySelector('tbody').appendChild(sortedRow));
+    .map((sortedRow) => document.querySelector("tbody").appendChild(sortedRow));
 }
 
-
-
 // JavaScript to apply quantity background color
-const inventoryRows = document.querySelectorAll('tbody tr');
+const inventoryRows = document.querySelectorAll("tbody tr");
 
-inventoryRows.forEach(row => {
-    const quantityCell = row.querySelector('td:nth-child(4)'); // Assuming Quantity is the 4th column
-    const quantitySpan = quantityCell.querySelector('.quantity-text'); // Get the span containing the quantity
+inventoryRows.forEach((row) => {
+  const quantityCell = row.querySelector("td:nth-child(4)"); // Assuming Quantity is the 4th column
+  const quantitySpan = quantityCell.querySelector(".quantity-text"); // Get the span containing the quantity
 
-    const quantity = parseInt(quantitySpan.textContent, 10); // Get the quantity as a number
+  const quantity = parseInt(quantitySpan.textContent, 10); // Get the quantity as a number
 
-    // Remove any previously applied quantity background classes
-    quantitySpan.classList.remove('quantity-green', 'quantity-blue', 'quantity-orange', 'quantity-red');
+  // Remove any previously applied quantity background classes
+  quantitySpan.classList.remove(
+    "quantity-green",
+    "quantity-blue",
+    "quantity-orange",
+    "quantity-red"
+  );
 
-    // Add the appropriate class based on the quantity value
-    if (quantity >= 80) {
-        quantitySpan.classList.add('quantity-green');
-    } else if (quantity >= 60) {
-        quantitySpan.classList.add('quantity-blue');
-    } else if (quantity >= 40) {
-        quantitySpan.classList.add('quantity-orange');
-    } else {
-        quantitySpan.classList.add('quantity-red');
-    }
+  // Add the appropriate class based on the quantity value
+  if (quantity >= 80) {
+    quantitySpan.classList.add("quantity-green");
+  } else if (quantity >= 60) {
+    quantitySpan.classList.add("quantity-blue");
+  } else if (quantity >= 40) {
+    quantitySpan.classList.add("quantity-orange");
+  } else {
+    quantitySpan.classList.add("quantity-red");
+  }
 });
 
+<<<<<<< HEAD
 >>>>>>> main
+=======
+document.addEventListener("DOMContentLoaded", function() {
+  const quantityInput = document.getElementById("quantity");
+  const priceInput = document.getElementById("amount");
+  const totalPriceInput = document.getElementById("total_price");
+
+  // Function to calculate the total price
+  function calculateTotalPrice() {
+      const quantity = parseFloat(quantityInput.value) || 0; // Default to 0 if not a number
+      const price = parseFloat(priceInput.value) || 0; // Default to 0 if not a number
+      const totalPrice = quantity * price;
+
+      // Set the calculated total price in the hidden input
+      totalPriceInput.value = totalPrice.toFixed(2); // Set it with 2 decimal points
+  }
+
+  // Add event listeners to recalculate total price when quantity or price changes
+  quantityInput.addEventListener("input", calculateTotalPrice);
+  priceInput.addEventListener("input", calculateTotalPrice);
+});
+>>>>>>> e4c15c689ffc64607bd755dc9ce42bfe44c8ca63

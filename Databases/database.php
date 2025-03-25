@@ -20,31 +20,41 @@ class Database
     }
 
     // Method to return the PDO instance
-    public function getConnection() {
+    public function getConnection()
+    {
         return $this->pdo;
     }
 
     // General query execution method
-    public function query($sql, $params = []) {
+    // Database.php
+    public function query($sql, $params = [])
+    {
+        // Prepare the SQL statement
         $stmt = $this->pdo->prepare($sql);
+
+        // Execute the query with the provided parameters
         $stmt->execute($params);
+
         return $stmt;
-    }   
+    }
+
+
 
     // Start a transaction
-    public function beginTransaction() {
+    public function beginTransaction()
+    {
         $this->pdo->beginTransaction();
     }
 
     // Commit the transaction
-    public function commit() {
+    public function commit()
+    {
         $this->pdo->commit();
     }
 
     // Rollback the transaction
-    public function rollBack() {
+    public function rollBack()
+    {
         $this->pdo->rollBack();
     }
 }
-
-?>

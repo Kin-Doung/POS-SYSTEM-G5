@@ -133,7 +133,7 @@ body {
     background-color: #004085;
 }
 .container.table-inventory {
-  width: 100%;
+  width: 95%;
   border-radius: 10px !important;
 }
 
@@ -225,6 +225,7 @@ body {
   .selected{
     margin-top: -10px;
     padding: 5px !important;
+    width: 50%;
   }
   .input-group input {
     padding: 10px;

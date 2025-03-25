@@ -83,15 +83,11 @@
         </div>
     </div>
 
-
-
     <div class="container  table-inventory">
         <div class="orders">
 
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h2>Purchasing Orders</h2>
-
-
                 <div>
                     <a href="/inventory/create" class="btn btn-secondary">
                         <i class="bi-plus-lg"></i> + New Products
@@ -103,8 +99,6 @@
             </div>
             <div class="input-group">
                 <input type="text" id="searchInput" class="form-control input-group-search" placeholder="Search...">
-
-
                 <select id="categorySelect" class=" ms-2 selected" onchange="filterTable()">
                     <option value="">Select Category</option>
                     <?php if (!empty($categories)): ?>
@@ -129,6 +123,7 @@
                         <th>Product Name </th>
                         <th>Quantity</th>
                         <th>Price</th>
+                        <th>Total Price</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -145,6 +140,8 @@
                             <td><?= htmlspecialchars($item['product_name']) ?></td>
                             <td><span class="quantity-text"><?= htmlspecialchars($item['quantity']) ?></span></td>
                             <td><?= htmlspecialchars($item['amount']) ?></td>
+                            <td><?= htmlspecialchars($item['total_price']) ?></td>
+
                             <td>
                                 <div class="dropdown">
                                     <button class="btn-seemore dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -159,8 +156,6 @@
 
                                     </ul>
                                 </div>
-
-
                                 <div class="modal fade" id="viewModal<?= $item['id']; ?>" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -175,6 +170,7 @@
                                                     <p><strong>Category:</strong> <?= !empty($item['category_name']) ? htmlspecialchars($item['category_name']) : '-'; ?></p>
                                                     <p><strong>Quantity:</strong> <?= htmlspecialchars($item['quantity']); ?></p>
                                                     <p><strong>Price:</strong> $<?= htmlspecialchars(number_format($item['amount'], 2)); ?></p>
+                                                    <p><strong>Total Price:</strong> $<?= htmlspecialchars(number_format($item['total_price'], 2)); ?></p>
                                                     <p><strong>Expiration Date:</strong> <?= htmlspecialchars($item['expiration_date']); ?></p>
                                                 </div>
 

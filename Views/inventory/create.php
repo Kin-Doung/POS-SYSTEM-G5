@@ -1,6 +1,6 @@
-<?php 
+<?php
 require_once './views/layouts/side.php';
-require_once './views/layouts/header.php'; 
+require_once './views/layouts/header.php';
 ?>
 <main class="main-content create-content position-relative max-height-vh-100 h-100">
     <h2 class="text-center head-add" style="padding-top: 20px;">Add stock product</h2>
@@ -52,7 +52,7 @@ require_once './views/layouts/header.php';
                         <input type="number" class="form-control" id="amount" name="amount" min="0" step="0.01" required>
                         <div class="invalid-feedback">Please enter a valid price.</div>
                     </div>
-
+                    <input type="hidden" id="total_price" name="total_price">
                     <!-- Expiration Date -->
                     <div class="form-group mb-4 col-12 col-md-2">
                         <label for="expiration_date">Expiration Date</label>
@@ -63,8 +63,8 @@ require_once './views/layouts/header.php';
 
                 <!-- Submit Button -->
                 <div class="d-flex justify-content-end align-items-center">
-    <button type="submit" class="btn-add-product">Submit</button>
-</div>
+                    <button type="submit" class="btn-add-product">Submit</button>
+                </div>
 
             </form>
         </div>

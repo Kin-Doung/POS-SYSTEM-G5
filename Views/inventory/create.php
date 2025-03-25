@@ -1,3 +1,7 @@
+<?php
+    require_once './views/layouts/side.php';
+
+?>
 <main class="main-content create-content position-relative max-height-vh-100 h-100">
     <h2 class="text-center head-add" style="padding-top: 20px;">Add stock product</h2>
     <div class="col-md-12 mt-5 mx-auto">

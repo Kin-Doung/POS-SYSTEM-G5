@@ -2,8 +2,9 @@
   <div class="sidenav-header ms-0 my-0">
     <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
     <a class="navbar-brand m-0"  target="_blank">
-      <img src="../../views/assets/img/logos/logo.png" class="navbar-brand-img" alt="main_logo">
+      <img src="../../views/assets/img/logos/logo.png" class="navbar-brand-img h-100" alt="main_logo">
     </a>
+   
   </div>
   <hr class="horizontal dark mt-0 mb-2">
   <div>
@@ -35,7 +36,7 @@
           <span class="nav-link-text ms-1">Order</span>
         </a>
       </li>
-      <!-- nav purchase order -->
+      <!-- nav Suppliers -->
       <li class="nav-item">
         <a class="nav-link text-dark " href="/purchase">
           <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
@@ -44,6 +45,7 @@
           <span class="nav-link-text ms-1">Product</span>
         </a>
       </li>
+      <!-- nav Categories -->
       <li class="nav-item">
         <a class="nav-link text-dark " href="/category">
           <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
@@ -52,6 +54,7 @@
           <span class="nav-link-text ms-1">Categories</span>
         </a>
       </li>
+      <!-- nav Notifications -->
       <li class="nav-item">
         <a class="nav-link text-dark" href="/notifications">
           <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
@@ -60,6 +63,7 @@
           <span class="nav-link-text ms-1">Notifications</span>
         </a>
       </li>
+      <!-- nav setting -->
       <li class="nav-item mt-3">
         <a class="nav-link text-dark" data-bs-toggle="collapse" href="#settingsMenu" role="button" aria-expanded="false" aria-controls="settingsMenu">
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-8">

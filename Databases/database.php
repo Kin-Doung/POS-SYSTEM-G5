@@ -1,8 +1,10 @@
 <?php
-class Database {
+class Database
+{
     private $pdo;
 
-    public function __construct() {
+    public function __construct()
+    {
         $servername = "localhost";
         $username = "root";
         $password = "";

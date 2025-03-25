@@ -1,6 +1,7 @@
 <?php
 require_once './Models/InventoryModel.php';
 require_once './Models/CategoryModel.php';
+
 class InventoryController extends BaseController
 {
     private $model;
@@ -23,7 +24,6 @@ class InventoryController extends BaseController
             'categories' => $categories // Pass categories to the view
         ]);
     }
-
 
     // Show the form to create a new inventory item
     function create()
@@ -73,24 +73,56 @@ class InventoryController extends BaseController
         }
     }
 
+    // Store multiple inventory items at once
+    function storeMultiple()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $items = $_POST['items'];  // Assuming you're passing an array of items from the form
 
+            foreach ($items as $item) {
+                // Handle image upload for each item
+                $imagePath = null;
+                if (isset($item['image']) && $item['image']['error'] == UPLOAD_ERR_OK) {
+                    $uploadDir = 'uploads/';
+                    $imageName = time() . '_' . basename($item['image']['name']);
+                    $imagePath = $uploadDir . $imageName;
+
+                    if (!move_uploaded_file($item['image']['tmp_name'], $imagePath)) {
+                        $imagePath = null; // If upload fails, set to null
+                    }
+                }
+
+                $data = [
+                    'product_name' => $item['product_name'],
+                    'category_id' => $item['category_id'],
+                    'quantity' => $item['quantity'],
+                    'amount' => $item['amount'],
+                    'expiration_date' => $item['expiration_date'],
+                    'image' => $imagePath
+                ];
+
+                // Insert the new product into the database
+                $this->model->createInventory($data);
+            }
+
+            // Redirect after successful insertion of all items
+            $this->redirect('/inventory');
+        }
+    }
 
     // Show the form to edit an existing inventory item
-// Show the form to edit an existing inventory item
-function edit($id)
-{
-    $inventory = $this->model->getInventorys($id);  // Fetch the inventory item by ID
-    $categories = $this->categories->getCategory(); // Fetch all categories
+    function edit($id)
+    {
+        $inventory = $this->model->getInventorys($id);  // Fetch the inventory item by ID
+        $categories = $this->categories->getCategory(); // Fetch all categories
 
-    // Pass both inventory and categories to the view
-    $this->views('inventory/edit', [
-        'inventory' => $inventory,
-        'categories' => $categories
-    ]);
-}
+        // Pass both inventory and categories to the view
+        $this->views('inventory/edit', [
+            'inventory' => $inventory,
+            'categories' => $categories
+        ]);
+    }
 
-
-    // Update an inventory item
     // Update an inventory item
     function update($id)
     {
@@ -126,7 +158,7 @@ function edit($id)
         }
     }
 
-   
+    // Delete an inventory item
     public function destroy()
     {
         // Get the ID from the query string
@@ -144,22 +176,21 @@ function edit($id)
         }
     }
 
-
+    // View a single inventory item with category name
     function view()
-{
-    if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-        die("Invalid ID provided.");
+    {
+        if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+            die("Invalid ID provided.");
+        }
+
+        $id = $_GET['id']; // Get the ID from the URL parameter
+        $inventory = $this->model->viewInventory($id); // Fetch inventory details with category
+
+        if (!$inventory) {
+            die("Inventory item not found.");
+        }
+
+        // Pass data to the view page
+        $this->views('inventory/view', ['inventory' => $inventory]);
     }
-
-    $id = $_GET['id']; // Get the ID from the URL parameter
-    $inventory = $this->model->viewInventory($id); // Fetch inventory details with category
-
-    if (!$inventory) {
-        die("Inventory item not found.");
-    }
-
-    // Pass data to the view page
-    $this->views('inventory/view', ['inventory' => $inventory]);
-}
-
 }

@@ -50,6 +50,36 @@ class InventoryModel
         ]);
     }
 
+    // Function to insert multiple inventory items at once
+    public function createMultipleInventory($items)
+    {
+        try {
+            $this->pdo->beginTransaction(); // Start the transaction
+
+            $stmt = $this->pdo->query("INSERT INTO inventory (image, product_name, quantity, amount, category_id, expiration_date) 
+                                         VALUES (:image, :product_name, :quantity, :amount, :category_id, :expiration_date)");
+
+            // Loop through each item and execute the prepared statement
+            foreach ($items as $item) {
+                $stmt->execute([
+                    ':image' => $item['image'],
+                    ':product_name' => $item['product_name'],
+                    ':quantity' => $item['quantity'],
+                    ':amount' => $item['amount'],
+                    ':category_id' => $item['category_id'],
+                    ':expiration_date' => $item['expiration_date']
+                ]);
+            }
+
+            $this->pdo->commit(); // Commit the transaction
+            return true; // Return true if everything went well
+        } catch (Exception $e) {
+            $this->pdo->rollBack(); // Rollback the transaction if there's an error
+            echo "Error: " . $e->getMessage(); // Show error message
+            return false; // Return false if there was an error
+        }
+    }
+
     // Get a single inventory item by ID
     function getInventorys($id)
     {
@@ -103,8 +133,5 @@ class InventoryModel
             echo "Error deleting item: " . $e->getMessage();
         }
     }
-    
-
-    
-    
 }
+?>

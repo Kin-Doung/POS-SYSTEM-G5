@@ -1,136 +1,98 @@
-
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .container {
-            width: 400px;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h2,
-        h3 {
-            text-align: center;
-            color: #333;
-        }
-
-        label {
-            display: block;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="file"],
-        select {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        button {
-            width: 100%;
-            background: #4CAF50;
-            color: white;
-            padding: 10px;
-            margin-top: 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        button:hover {
-            background: #45a049;
-        }
-
-        .profile-img {
-            display: block;
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 50%;
-            margin: 10px auto;
-        }
-
-        .alert {
-            background: #d4edda;
-            color: #155724;
-            padding: 10px;
-            border-radius: 5px;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="container">
-        <h2>Settings</h2>
-
-        <?php if (isset($_SESSION['success'])): ?>
-            <div class="alert">
-                <?= $_SESSION['success'];
-                unset($_SESSION['success']); ?>
+<?php require_once './views/layouts/side.php' ?>
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="search-container">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search...">
+        </div>
+        <div class="icons">
+            <i class="fas fa-globe icon-btn"></i>
+            <div class="icon-btn" id="notification-icon">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge" id="notification-count">8</span>
             </div>
-        <?php endif; ?>
+        </div>
+        <div class="profile">
+            <img src="../../assets/images/image.png" alt="User">
+            <div class="profile-info">
+                <span>Eng Ly</span>
+                <span class="store-name">Owner Store</span>
+            </div>
+        </div>
+    </nav>
+    <!-- End Navbar -->
+    <?php require_once 'views/layouts/header.php'; ?>
 
-        <form action="setting.php" method="POST" enctype="multipart/form-data">
-            <label>Full Name:</label>
-            <input type="text" name="name" value="<?= htmlspecialchars($user['name']); ?>" required>
+    <!-- Modal structure -->
+    <div class="container mt-4">
+        <a href="/settings/create" style="width: 150px;" class="btn btn-primary ">Add New</a>
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Admin Setting</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Password</th>
+                                <th>Store Name</th>
+                                <th>Store Logo</th>
+                                <th>Language</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($admins)) : ?>
+                                <?php foreach ($admins as $admin) : ?>
+                                    <tr>
+                                        <!-- <td><?= $admin['id'] ?></td> -->
+                                        <td><?= htmlspecialchars($admin['username']) ?></td>
+                                        <td><?= htmlspecialchars($admin['email']) ?></td>
+                                        <td><?= substr($admin['password'], 0, 2) . '****' ?></td>
+                                        <td><?= htmlspecialchars($admin['store_name']) ?></td>
+                                        <td>
+                                            <?php if (!empty($admin['store_logo'])) : ?>
+                                                <img src="data:image/jpeg;base64,<?= base64_encode($admin['store_logo']) ?>"
+                                                    alt="Profile Image"
+                                                    style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
+                                            <?php else: ?>
+                                                No Logo
+                                            <?php endif; ?>
+                                        </td>
 
-            <label>Email:</label>
-            <input type="email" name="email" value="<?= htmlspecialchars($user['email']); ?>" required>
 
-            <label>Profile Picture:</label>
-            <input type="file" name="profilePic">
-            <input type="hidden" name="existingPic" value="<?= $user['profile_pic']; ?>">
-            <?php if (!empty($user['profile_pic'])): ?>
-                <img src="<?= $user['profile_pic']; ?>" class="profile-img">
-            <?php endif; ?>
+                                        <td><?= htmlspecialchars($admin['language']) ?></td>
+                                        <td>
+                                            <a href="settings/edit?id=<?= $admin['id'] ?>" class="btn btn-warning">Edit</a> |
+                                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#user<?= $user['id'] ?>">
+                                                delete
+                                            </button>
+                                            <!-- Modal -->
+                                            <?php require 'delete.php' ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <tr>
+                                    <td colspan="7" class="text-center">No admin users found.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="text-start">
+                <a href="/logout" class="btn btn-warning">Logout</a>
+            </div>
 
-            <button type="submit">Save Changes</button>
-        </form>
-
-        <h3>Change Language</h3>
-        <select id="languageSelect">
-            <option value="en">English</option>
-            <option value="kh">Khmer</option>
-        </select>
+        </div>
     </div>
 
-    <script>
-        document.getElementById("languageSelect").addEventListener("change", function() {
-            let selectedLang = this.value;
-            document.cookie = "language=" + selectedLang;
-            alert("Language changed to " + selectedLang);
-            location.reload();
-        });
-    </script>
 
-</body>
 
-</html>
+    <?php require_once 'views/layouts/footer.php'; ?>
+</main>

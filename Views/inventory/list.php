@@ -69,14 +69,11 @@
         </div>
     </div>
 
-
-
     <div class="container  table-inventory">
         <div class="orders">
 
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h2>Purchasing Orders</h2>
-
                 <div>
                     <a href="/inventory/create" class="btn btn-secondary">
                         <i class="bi-plus-lg"></i> + New Products
@@ -88,8 +85,6 @@
             </div>
             <div class="input-group">
                 <input type="text" id="searchInput" class="form-control input-group-search" placeholder="Search...">
-
-
                 <select id="categorySelect" class=" ms-2 selected" onchange="filterTable()">
                     <option value="">Select Category</option>
                     <?php if (!empty($categories)): ?>
@@ -114,6 +109,7 @@
                         <th>Product Name </th>
                         <th>Quantity</th>
                         <th>Price</th>
+                        <th>Total Price</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -130,6 +126,8 @@
                             <td><?= htmlspecialchars($item['product_name']) ?></td>
                             <td><span class="quantity-text"><?= htmlspecialchars($item['quantity']) ?></span></td>
                             <td><?= htmlspecialchars($item['amount']) ?></td>
+                            <td><?= htmlspecialchars($item['total_price']) ?></td>
+
                             <td>
                                 <div class="dropdown">
                                     <button class="btn-seemore dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -137,6 +135,10 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li> <a class="dropdown-item text-dark" href="#" data-bs-toggle="modal" data-bs-target="#viewModal<?= $item['id']; ?>"> <i class="fa-solid fa-eye"></i> View</a> </li>
+                                        <!-- <li><a class="dropdown-item text-dark" href="/inventory/edit?id=<?= $item['id'] ?>"> <i class="fa-solid fa-pen-to-square"></i> Edit</a></li> -->
+                                        <li>
+                                            <!-- <a class="dropdown-item text-dark" href="/inventory/delete?id=<?= $item['id'] ?>" onclick="return confirm('Are you sure you want to delete this item?');"><i class="fa-solid fa-trash"></i> Delete</a> -->
+                                        </li>
                                         <li>
                                             <a class="dropdown-item text-dark" href="#"
                                                 data-bs-toggle="modal"
@@ -257,7 +259,36 @@
                                     </div>
                                 </div>
 
+                                    </ul>
+                                </div>
+                                <div class="modal fade" id="viewModal<?= $item['id']; ?>" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h2 class="modal-title">View Inventory Item</h2>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body d-flex justify-content-between align-items-center"> <!-- Flexbox layout -->
+                                                <!-- Text on the Left -->
+                                                <div class="text-start d-inline-block detail "> <!-- Keeps text aligned left -->
+                                                    <p><strong>Product Name:</strong> <?= htmlspecialchars($item['product_name']); ?></p>
+                                                    <p><strong>Category:</strong> <?= !empty($item['category_name']) ? htmlspecialchars($item['category_name']) : '-'; ?></p>
+                                                    <p><strong>Quantity:</strong> <?= htmlspecialchars($item['quantity']); ?></p>
+                                                    <p><strong>Price:</strong> $<?= htmlspecialchars(number_format($item['amount'], 2)); ?></p>
+                                                    <p><strong>Total Price:</strong> $<?= htmlspecialchars(number_format($item['total_price'], 2)); ?></p>
+                                                    <p><strong>Expiration Date:</strong> <?= htmlspecialchars($item['expiration_date']); ?></p>
+                                                </div>
 
+                                                <!-- Image on the Right -->
+                                                <?php if (!empty($item['image'])): ?>
+                                                    <div class="mb-3">
+                                                        <img src="<?= htmlspecialchars($item['image']); ?>" alt="Product Image" width="150" class="img-fluid">
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <!-- JavaScript to populate the modal -->
                                 <script>
                                     document.querySelectorAll('.dropdown-item').forEach(link => {
@@ -292,8 +323,6 @@
                     <?php endforeach; ?>
                 </tbody>
             </table>
-
-
             <div class="update-quantity" id="updateQuantitySection" style="display: none;">
                 <h3>Update Quantity</h3>
                 <button class="btn btn-success" onclick="updateQuantities()">Update Selected Quantities</button>

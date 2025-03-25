@@ -19,6 +19,7 @@ class InventoryController extends BaseController
         $inventory = $this->model->getInventory();
         $categories = $this->model->getCategory(); // Fetch categories
 
+        // Pass inventory and categories to the view
         $this->views('inventory/list', [
             'inventory' => $inventory,
             'categories' => $categories // Pass categories to the view
@@ -35,6 +36,7 @@ class InventoryController extends BaseController
     }
 
     // Store a new inventory item
+    // In your controller store method
     function store()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -46,69 +48,37 @@ class InventoryController extends BaseController
                 $imagePath = $uploadDir . $imageName;
 
                 if (!move_uploaded_file($_FILES['image']['tmp_name'], $imagePath)) {
-                    $imagePath = null; // If upload fails, set to null
+                    $imagePath = null;
                 }
             }
 
-            // Get category_id and category_name from the form
-            $category_id = $_POST['category_id']; // Get category_id from the form
-            $category_name = $_POST['category_name']; // Get category_name from the form
+            // Get category_id from the form
+            $category_id = $_POST['category_id'];
+            $category_name = $_POST['category_name'];  // Optional if you're also saving the category name
 
-            // Prepare data
+            // Calculate total_price
+            $total_price = $this->calculateTotalPrice($_POST['quantity'], $_POST['amount']);
+
+            // Prepare data for creating the inventory item
             $data = [
                 'product_name' => $_POST['product_name'],
-                'category_id' => $category_id,  // Include the category ID in the data
-                'category_name' => $category_name,  // Include the category name in the data
+                'category_id' => $category_id,
+                'category_name' => $category_name,
                 'quantity' => $_POST['quantity'],
                 'amount' => $_POST['amount'],
+                'total_price' => $total_price,
                 'expiration_date' => $_POST['expiration_date'],
                 'image' => $imagePath
             ];
 
-            // Insert the new product into the database
+            // Insert new inventory item into the database
             $this->model->createInventory($data);
 
-            // Redirect after successful insertion
+            // Redirect to inventory list
             $this->redirect('/inventory');
         }
     }
 
-    // Store multiple inventory items at once
-    function storeMultiple()
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $items = $_POST['items'];  // Assuming you're passing an array of items from the form
-
-            foreach ($items as $item) {
-                // Handle image upload for each item
-                $imagePath = null;
-                if (isset($item['image']) && $item['image']['error'] == UPLOAD_ERR_OK) {
-                    $uploadDir = 'uploads/';
-                    $imageName = time() . '_' . basename($item['image']['name']);
-                    $imagePath = $uploadDir . $imageName;
-
-                    if (!move_uploaded_file($item['image']['tmp_name'], $imagePath)) {
-                        $imagePath = null; // If upload fails, set to null
-                    }
-                }
-
-                $data = [
-                    'product_name' => $item['product_name'],
-                    'category_id' => $item['category_id'],
-                    'quantity' => $item['quantity'],
-                    'amount' => $item['amount'],
-                    'expiration_date' => $item['expiration_date'],
-                    'image' => $imagePath
-                ];
-
-                // Insert the new product into the database
-                $this->model->createInventory($data);
-            }
-
-            // Redirect after successful insertion of all items
-            $this->redirect('/inventory');
-        }
-    }
 
     // Show the form to edit an existing inventory item
     function edit($id)
@@ -127,6 +97,7 @@ class InventoryController extends BaseController
     function update($id)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Get current inventory data
             $inventory = $this->model->getInventorys($id);
             $imagePath = $inventory['image']; // Keep old image path if no new image uploaded
 
@@ -144,21 +115,28 @@ class InventoryController extends BaseController
                 }
             }
 
+            // Calculate total_price if not set
+            $total_price = isset($_POST['total_price']) ? $_POST['total_price'] : $this->calculateTotalPrice($_POST['quantity'], $_POST['amount']);
+
             $data = [
                 'category_id' => $_POST['category_id'],
                 'product_name' => $_POST['product_name'],
                 'quantity' => $_POST['quantity'],
                 'amount' => $_POST['amount'],
+                'total_price' => $total_price,  // Ensure total_price is being passed
                 'expiration_date' => $_POST['expiration_date'],
-                'image' => $imagePath  // Make sure to include the image path
+                'image' => $imagePath
             ];
 
-            $this->model->updateInventory($id, $data);
+            $this->model->updateInventory($id, $data); // Pass the $data array with total_price
+
+            // Redirect to the inventory list page
             $this->redirect('/inventory');
         }
     }
 
-    // Delete an inventory item
+
+    // Destroy an inventory item
     public function destroy()
     {
         // Get the ID from the query string
@@ -176,7 +154,7 @@ class InventoryController extends BaseController
         }
     }
 
-    // View a single inventory item with category name
+    // View an inventory item
     function view()
     {
         if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
@@ -192,5 +170,11 @@ class InventoryController extends BaseController
 
         // Pass data to the view page
         $this->views('inventory/view', ['inventory' => $inventory]);
+    }
+
+    // Helper method to calculate total price
+    private function calculateTotalPrice($quantity, $amount)
+    {
+        return $quantity * $amount; // Calculate total price as quantity * amount
     }
 }

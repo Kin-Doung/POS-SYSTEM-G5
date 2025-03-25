@@ -54,7 +54,7 @@
                         <input type="number" class="form-control" id="amount" name="amount" min="0" step="0.01" required>
                         <div class="invalid-feedback">Please enter a valid price.</div>
                     </div>
-
+                    <input type="hidden" id="total_price" name="total_price">
                     <!-- Expiration Date -->
                     <div class="form-group mb-4 col-12 col-md-2">
                         <label for="expiration_date">Expiration Date</label>

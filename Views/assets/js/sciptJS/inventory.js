@@ -61,10 +61,9 @@ document.addEventListener("DOMContentLoaded", function () {
     checkboxes.forEach((chk) => {
       const quantityInput = chk.closest("tr").querySelector(".quantity-input");
       quantityInput.disabled = !chk.checked; // Enable if checked, disable if not
-<<<<<<< HEAD
   });
 }
-<<<<<<< HEAD
+
 
 function updateQuantities() {
   const checkboxes = document.querySelectorAll('.select-checkbox:checked');
@@ -90,11 +89,7 @@ function updateQuantities() {
   searchInput.addEventListener("input", filterTable);
   categorySelect.addEventListener("change", filterTable);
 });
-=======
-=======
-    });
-  }
->>>>>>> main
+
 
   function updateQuantities() {
     const checkboxes = document.querySelectorAll(".select-checkbox:checked");
@@ -119,7 +114,7 @@ function updateQuantities() {
 
   searchInput.addEventListener("input", filterTable);
   categorySelect.addEventListener("change", filterTable);
-});
+
 
 // nav bar active js
 
@@ -238,9 +233,6 @@ inventoryRows.forEach((row) => {
   }
 });
 
-<<<<<<< HEAD
->>>>>>> main
-=======
 document.addEventListener("DOMContentLoaded", function() {
   const quantityInput = document.getElementById("quantity");
   const priceInput = document.getElementById("amount");
@@ -260,4 +252,4 @@ document.addEventListener("DOMContentLoaded", function() {
   quantityInput.addEventListener("input", calculateTotalPrice);
   priceInput.addEventListener("input", calculateTotalPrice);
 });
->>>>>>> main
+

@@ -26,15 +26,12 @@ class InventoryModel
     {
         // Debug the SQL query
         $inventory = $this->pdo->query("
-        SELECT inventory.*, categories.category_name 
-        FROM inventory 
-        LEFT JOIN categories ON inventory.category_id = categories.id 
-        ORDER BY inventory.id DESC
-    ");
-
-        $inventoryData = $inventory->fetchAll();
-        var_dump($inventoryData); // Print to check the data
-
+            SELECT inventory.*, categories.category_name 
+            FROM inventory 
+            LEFT JOIN categories ON inventory.category_id = categories.id 
+            ORDER BY inventory.id DESC
+        ");
+        return $inventory->fetchAll();
     }
     // Create a new inventory item
     function createInventory($data)

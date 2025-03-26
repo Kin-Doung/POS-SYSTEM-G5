@@ -61,7 +61,7 @@ require_once './views/layouts/side.php';
             <!-- <a href="/purchase/create" class="btn bg-info text-light" style="margin-top: -10px;">Add New</a> -->
         </form>
     </div>
-    
+
     <div class="cards">
         <div class="card">
             <div class="new-badge">20</div>
@@ -75,167 +75,78 @@ require_once './views/layouts/side.php';
         </div>
     </div>
 
-    <!-- Modal -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h2 id="modal-product-name"></h2>
-            <img id="modal-product-image" src="" alt="" class="product-image" style="width:100px;height:auto;">
+            <img id="modal-product-image" src="" alt="Product Image" style="width:100%; height:auto;">
             <div>
                 <label for="quantity">Quantity:</label>
                 <input type="number" id="quantity" value="1" min="1" onchange="updateTotal()">
             </div>
-            <div>Total Price: $<span id="total-price">0.80</span></div>
-            <button onclick="orderProduct()">Order</button>
+            <div>Total Price: $<span id="total-price-usd">0.80</span></div>
+            <button onclick="orderAndUpdateTotal()">Order</button>
             <button onclick="saveAsPDF()">Save as PDF</button>
         </div>
     </div>
-        <script>
-            function openModal(productName, productPrice) {
-                document.getElementById('modal-product-name').innerText = productName;
-                document.getElementById('modal-product-image').src = '/views/assets/images/Cake mixer.png'; // Update as needed
-                document.getElementById('total-price').innerText = productPrice.toFixed(2);
-                document.getElementById('modal').style.display = 'block';
-            }
 
-            function closeModal() {
-                document.getElementById('card').style.display = 'none';
-            }
-
-            function updateTotal() {
-                const quantity = document.getElementById('quantity').value;
-                const price = 0.80; // Update to get the actual price dynamically
-                const total = (quantity * price).toFixed(2);
-                document.getElementById('total-price').innerText = total;
-            }
-
-            function orderProduct() {
-                alert('Order placed!');
-                closeModal();
-            }
-
-            function saveAsPDF() {
-                // Implement PDF saving functionality (you can use libraries like jsPDF)
-                alert('Save as PDF functionality to be implemented.');
-            }
-        </script>
-
-
-
-
-
-        <!-- Modal structure -->
-
-
-        <?php require_once 'views/layouts/footer.php'; ?>
-</main>
-<script>
-    function openModal(productName, productPrice) {
-        document.getElementById('modal-product-name').innerText = productName;
-        document.getElementById('modal-product-image').src = '/views/assets/images/Cake mixer.png'; // Update as needed
-        document.getElementById('total-price').innerText = productPrice.toFixed(2);
-        document.getElementById('modal').style.display = 'block';
-    }
-
-    function closeModal() {
-        document.getElementById('modal').style.display = 'none';
-    }
-
-    function updateTotal() {
-        const quantity = document.getElementById('quantity').value;
-        const price = 0.80; // Update to get the actual price dynamically
-        const total = (quantity * price).toFixed(2);
-        document.getElementById('total-price').innerText = total;
-    }
-
-    function orderProduct() {
-        alert('Order placed!');
-        closeModal();
-    }
-
-    function saveAsPDF() {
-        // Implement PDF saving functionality (you can use libraries like jsPDF)
-        alert('Save as PDF functionality to be implemented.');
-    }
-</script>
-
-
-<!-- <script>
-    // Function to toggle the visibility of the order summary card
-    let isDragging = false;
-    let startX, startY;
-
-    function toggleOrderSummary() {
-        const orderSummary = document.getElementById("orderSummary");
-
-        if (orderSummary.style.display === "none" || orderSummary.style.display === "") {
-            // Make the card visible
-            orderSummary.style.display = "block";
-
-            // Center the card if it's the first time opening
-            if (!orderSummary.dataset.moved) {
-                centerOrderSummary(orderSummary);
-            }
-
-            // Make the card draggable
-            makeDraggable(orderSummary);
-        } else {
-            orderSummary.style.display = "none";
+    <script>
+        function openModal(productName, productPrice, productImage) {
+            document.getElementById('modal-product-name').innerText = productName;
+            document.getElementById('modal-product-image').src = productImage;
+            updateTotal(productPrice);
+            document.getElementById('modal').style.display = 'block';
         }
-    }
 
-    function closeOrderSummary() {
-        document.getElementById("orderSummary").style.display = "none";
-    }
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
 
-    // Function to center the order summary card on the screen
-    function centerOrderSummary(orderSummary) {
-        const screenWidth = window.innerWidth;
-        const screenHeight = window.innerHeight;
+        function updateTotal(price) {
+            const quantity = document.getElementById('quantity').value;
+            const totalUSD = (quantity * price).toFixed(2);
+            document.getElementById('total-price-usd').innerText = totalUSD;
+        }
 
-        const cardWidth = orderSummary.offsetWidth;
-        const cardHeight = orderSummary.offsetHeight;
+        function orderAndUpdateTotal() {
+            const quantity = document.getElementById('quantity').value;
+            const totalPrice = document.getElementById('total-price-usd').innerText;
+            alert(`Order placed for ${quantity} items. Total Price: $${totalPrice}`);
+            closeModal();
+        }
 
-        const left = (screenWidth - cardWidth) / 2;
-        const top = (screenHeight - cardHeight) / 2;
+        function saveAsPDF() {
+            const {
+                jsPDF
+            } = window.jspdf;
+            const doc = new jsPDF();
 
-        orderSummary.style.left = `${left}px`;
-        orderSummary.style.top = `${top}px`;
+            const productName = document.getElementById('modal-product-name').innerText;
+            const totalUSD = document.getElementById('total-price-usd').innerText;
 
-        // Mark it as moved to prevent resetting its position every time
-        orderSummary.dataset.moved = "true";
-    }
+            doc.text(`Product: ${productName}`, 10, 10);
+            doc.text(`Total Price (USD): $${totalUSD}`, 10, 20);
 
-    // Function to make the card draggable
-    function makeDraggable(orderSummary) {
-        orderSummary.addEventListener('mousedown', function(e) {
-            if (e.target !== orderSummary) return;
+            doc.save('product-details.pdf');
+        }
+    </script>
+    
 
-            isDragging = true;
-            startX = e.clientX - orderSummary.offsetLeft;
-            startY = e.clientY - orderSummary.offsetTop;
 
-            orderSummary.style.cursor = 'move';
-        });
 
-        document.addEventListener('mousemove', function(e) {
-            if (!isDragging) return;
+    <!-- Modal structure -->
 
-            const x = e.clientX - startX;
-            const y = e.clientY - startY;
 
-            orderSummary.style.transition = 'none';
-            orderSummary.style.left = `${x}px`;
-            orderSummary.style.top = `${y}px`;
-        });
 
-        document.addEventListener('mouseup', function() {
-            isDragging = false;
-            orderSummary.style.cursor = 'default';
 
-            setTimeout(() => {
-                orderSummary.style.transition = 'top 0.2s ease, left 0.2s ease';
-            }, 100);
-        });
-    }
-</script> -->
+    <!-- Modal -->
+
+
+
+
+
+    <!-- Modal structure -->
+
+
+    <?php require_once 'views/layouts/footer.php'; ?>
+</main>

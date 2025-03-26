@@ -21,13 +21,22 @@ class CategoryModel
         ]);
     }
 
+    function getCategoryById($id)
+    {
+        $db = new Database(); // Create Database instance
+        $stmt = $db->query("SELECT name FROM categories WHERE id = :id", ['id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
+    
+
     function getCategorys($id)
     {
         $stmt = $this->pdo->query("SELECT * FROM categories WHERE id = :id", ['id' => $id]);
         $category = $stmt->fetch();
         return $category;
     }
-    
+
 
     function updateCategory($id, $data)
     {
@@ -40,7 +49,7 @@ class CategoryModel
     {
         $stmt = $this->pdo->query("DELETE FROM categories WHERE id = :id");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-    
+
         if ($stmt->execute()) {
             return true;  // Success
         } else {
@@ -49,5 +58,4 @@ class CategoryModel
             return false;  // Failure
         }
     }
-    
 }

@@ -104,7 +104,7 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th># </th>
+                        <th>#</th>
                         <th>Image</th>
                         <th>Product Name </th>
                         <th>Quantity</th>

@@ -28,17 +28,17 @@
         </a>
       </li>
       <!-- nav product -->
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <a class="nav-link text-dark" href="/products">
           <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
             <i class="material-icons opacity-10">receipt_long</i>
           </div>
           <span class="nav-link-text ms-1">Order</span>
         </a>
-      </li>
+      </li> -->
       <!-- nav Suppliers -->
       <li class="nav-item">
-        <a class="nav-link text-dark " href="/purchase">
+        <a class="nav-link text-dark " href="/products">
           <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
             <i class="material-icons opacity-10">view_in_ar</i>
           </div>

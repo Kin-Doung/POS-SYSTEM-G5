@@ -382,3 +382,27 @@ body {
     padding: 0 !important;
   }
   
+
+
+  /* General Table Styles */
+.table {
+  border-collapse: collapse;
+  width: 100%;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.table th {
+  background: #007bff;
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+.table td {
+  padding: 8px;
+  vertical-align: middle;
+  text-align: center;
+}
+

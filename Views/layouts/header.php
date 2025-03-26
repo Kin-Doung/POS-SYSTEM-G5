@@ -47,7 +47,6 @@
   <link rel="stylesheet" href="../../views/assets/css/style/logout.css">
   <link rel="stylesheet" href="../../views/assets/css/style/inventory.css">
 
-
   <!-- boostrapt  -->
   <!-- categories -->
   <link rel="stylesheet" href="../../views/assets/css/style/categories.css">

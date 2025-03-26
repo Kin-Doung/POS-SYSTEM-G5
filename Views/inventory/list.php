@@ -104,7 +104,7 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th># </th>
+                        <th>#</th>
                         <th>Image</th>
                         <th>Product Name </th>
                         <th>Quantity</th>
@@ -116,7 +116,7 @@
                 <tbody>
                     <!-- PHP Loop for Data (example) -->
                     <?php foreach ($inventory as $index => $item): ?>
-                        <tr>
+                        <tr data-category-id="<?= htmlspecialchars($item['category_id']); ?>">
                             <td><?= $index + 1 ?></td>
                             <td>
                                 <img src="<?= htmlspecialchars($item['image']) ?>"
@@ -174,6 +174,7 @@
                                                     <p><strong>Category:</strong> <?= !empty($item['category_name']) ? htmlspecialchars($item['category_name']) : '-'; ?></p>
                                                     <p><strong>Quantity:</strong> <?= htmlspecialchars($item['quantity']); ?></p>
                                                     <p><strong>Price:</strong> $<?= htmlspecialchars(number_format($item['amount'], 2)); ?></p>
+                                                    <p><strong>Total Price:</strong> $<?= htmlspecialchars(number_format($item['total_price'], 2)); ?></p>
                                                     <p><strong>Expiration Date:</strong> <?= htmlspecialchars($item['expiration_date']); ?></p>
                                                 </div>
 
@@ -332,3 +333,5 @@
 
     </div>
 </main>
+
+

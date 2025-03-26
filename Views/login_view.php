@@ -17,7 +17,11 @@ unset($_SESSION['error']); // Remove error after showing
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../views/assets/css/style/from.css">
 </head>
-
+<style>
+    body{
+        background:#ebf5fb;
+    }
+</style>
 <body>
 
     <div class="container">
@@ -26,10 +30,10 @@ unset($_SESSION['error']); // Remove error after showing
         <!-- Cover Image -->
         <div class="cover">
             <div class="front">
-                <img src="../views/assets/images/image.png" alt="Cover Image">
+                <img src="../views/assets/images/poster.png" alt="Cover Image">
             </div>
             <div class="back">
-                <img src="/assets/images/image.png" alt="Cover Image">
+                <img src="../views/assets/images/poster.png" alt="Cover Image">
             </div>
         </div>
 
@@ -55,7 +59,7 @@ unset($_SESSION['error']); // Remove error after showing
                             <?php endif; ?> <br>
                             <div class="text"><a href="#">Forgot password?</a></div>
                             <div class="button input-box">
-                                <input type="submit" value="Login">
+                                <input type="submit" value="Login" style="background-color:rgb(111, 199, 250);">
                             </div>
                             <div class="text sign-up-text">Don't have an account? <label for="flip">Sign up now</label></div>
                         </div>

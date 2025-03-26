@@ -294,10 +294,7 @@
             </table>
 
 
-            <div class="update-quantity" id="updateQuantitySection" style="display: none;">
-                <h3>Update Quantity</h3>
-                <button class="btn btn-success" onclick="updateQuantities()">Update Selected Quantities</button>
-            </div>
+    
         </div>
 
 

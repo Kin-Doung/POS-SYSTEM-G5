@@ -4,7 +4,7 @@ require_once './views/layouts/side.php';
 <main class="main-content create-content position-relative max-height-vh-100 h-100">
     <h2 class="text-center head-add" style="padding-top: 20px;">Add Stock Products</h2>
     <div class="col-md-12 mt-5 mx-auto">
-        <div class="card p-3" style="box-shadow: none;">
+        <div class="card p-3" style="box-shadow: none;border:none">
             <form id="productForm" action="/inventory/store" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
                 <div id="productFields" class="table-responsive">
                     <!-- Initially, table header and one row -->
@@ -60,11 +60,11 @@ require_once './views/layouts/side.php';
                                 </td>
                                 <!-- Actions -->
                                 <td>
-                                <button type="button" class="btn removeRow" style="background: none; border: none; color: red; font-size: 20px;"><i class="fa-solid fa-trash"></i></button>
+                                    <button type="button" class="btn removeRow" style="background: none; border: none; color: red; box-shadow:none;text-decoration:underline;font-size:15px;"><i class="fa-solid fa-trash"></i>remove</button>
 
                                 </td>
 
-            
+
                             </tr>
                         </tbody>
                     </table>
@@ -72,15 +72,105 @@ require_once './views/layouts/side.php';
 
                 <!-- Submit and Add More Buttons -->
                 <div class="d-flex justify-content-end align-items-center">
-                    <button type="button" id="addMore" class="btn btn-primary">Add more</button>
-                    <button type="submit" class="btn btn-success">Submit</button>
+                    <button type="button" id="addMore" class="add-moree">Add more</button>
+                    <button type="submit" class="btn btn-submit">Submit</button>
                 </div>
             </form>
         </div>
     </div>
+
+
+    <!-- Add a Preview Button -->
+ <!-- Preview Invoice Button -->
+<button type="button" id="previewInvoice" class="btn btn-preview" data-bs-toggle="modal" data-bs-target="#invoiceModal">Preview Invoice</button>
+
+<!-- Modal for Invoice Preview -->
+<div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="invoiceModalLabel">Invoice Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Product Image</th>
+                            <th>Category</th>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Price ($)</th>
+                            <th>Expiration Date</th>
+                            <th>Total Price</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoiceTableBody">
+                        <!-- Dynamic Rows will be added here -->
+                    </tbody>
+                </table>
+                <!-- Total Price Display -->
+                <div class="d-flex justify-content-end">
+                    <p>Total Price: $<span id="totalPrice">0</span></p>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button type="button" id="exportPDF" class="btn btn-export">Export to PDF</button>
+                    <button type="button" id="exportExcel" class="btn btn-export">Export to Excel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 </main>
 
 <style>
+    /* Custom width for the modal */
+    #invoiceModal .modal-dialog {
+        max-width: 1200px;
+        /* Set your preferred width */
+        width: 90%;
+        /* You can adjust the width percentage if needed */
+    }
+
+    .add-moree {
+        padding: 7px 12px;
+        border-radius: 50px;
+        color: #fff;
+        font-weight: bold;
+        font-size: 18px;
+        text-decoration: none;
+        background: rgb(73, 73, 253);
+        transition: background-color 0.3s ease;
+        /* Smooth transition */
+        box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+        border: none;
+    }
+
+    .add-moree:hover {
+        color: #fff;
+        background: rgb(2, 2, 221);
+    }
+
+    .btn-submit {
+        padding: 7px 12px;
+        border-radius: 50px;
+        color: #fff;
+        font-weight: bold;
+        font-size: 18px;
+        text-decoration: none;
+        background: rgb(0, 151, 0);
+        transition: background-color 0.3s ease;
+        box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+        border: none;
+    }
+
+    .btn-submit:hover {
+        color: #fff;
+        background: rgb(0, 131, 0);
+
+    }
+
     /* Default style for inputs without data */
     .empty-input {
         background-color: #fff;
@@ -115,10 +205,22 @@ require_once './views/layouts/side.php';
         font-size: 14px;
         height: 40px;
         text-align: center;
-        /* Center-align the text in the cells */
         vertical-align: middle;
-        /* Vertically center-align the content */
     }
+
+    /* Style for the table headers */
+    table.table-bordered th {
+        background-color: rgb(124, 187, 255);
+        /* Change to any color you prefer */
+        color: #ffffff;
+        /* White text for contrast */
+        padding: 10px;
+        font-size: 14px;
+        height: 40px;
+        text-align: center;
+        border: 1px solid #dee2e6;
+    }
+
 
     /* Style for the input fields and selects */
     input.form-control,
@@ -308,4 +410,68 @@ require_once './views/layouts/side.php';
             });
         });
     }
+
+    // Function to capture the data from the input table
+    document.getElementById('previewInvoice').addEventListener('click', function() {
+    const products = JSON.parse(localStorage.getItem('savedProducts') || '[]');
+    const invoiceTableBody = document.getElementById('invoiceTableBody');
+    const totalPriceElement = document.getElementById('totalPrice');
+    let totalPrice = 0;
+
+    invoiceTableBody.innerHTML = ''; // Clear previous content
+
+    products.forEach(product => {
+        const row = document.createElement('tr');
+
+        // Create and append each column
+        row.innerHTML = `
+            <td><img src="" alt="Product Image" class="img-preview" style="width: 50px; height: 50px;"></td>
+            <td>${product.category}</td>
+            <td>${product.name}</td>
+            <td>${product.quantity}</td>
+            <td>${product.price}</td>
+            <td>${product.expiration}</td>
+            <td>${(product.quantity * product.price).toFixed(2)}</td>
+        `;
+        invoiceTableBody.appendChild(row);
+
+        // Update total price
+        totalPrice += product.quantity * product.price;
+    });
+
+    // Display total price
+    totalPriceElement.textContent = totalPrice.toFixed(2);
+});
+
+
+// Export to PDF functionality
+document.getElementById('exportPDF').addEventListener('click', function() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.text('Invoice Preview', 10, 10);
+
+    // Use jsPDF AutoTable to generate the table
+    doc.autoTable({
+        head: [['Product Image', 'Category', 'Product Name', 'Quantity', 'Price ($)', 'Expiration Date', 'Total Price']],
+        body: Array.from(document.getElementById('invoiceTableBody').getElementsByTagName('tr')).map(row => {
+            const cells = row.getElementsByTagName('td');
+            return Array.from(cells).map(cell => cell.innerText); // Collecting text from each cell
+        })
+    });
+
+    // Save the PDF
+    doc.save('invoice.pdf');
+});
+
+// Export to Excel functionality
+document.getElementById('exportExcel').addEventListener('click', function() {
+    const ws = XLSX.utils.table_to_sheet(document.querySelector("#invoiceTableBody"));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Invoice');
+
+    // Save the Excel file
+    XLSX.writeFile(wb, 'invoice.xlsx');
+});
+
 </script>

@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="profile">
-            <img src="../../images/image.png" alt="User">
+            <img src="../../views/assets/images/image.png" alt="User">
             <div class="profile-info">
                 <span>Eng Ly</span>
                 <span class="store-name">Owner Store</span>
@@ -24,9 +24,9 @@
     </nav>
     <!-- End Navbar -->
     <!-- /// alert fuction// -->
-    <div class="content mt-4 mb-3">
+    <!-- <div class="content mt-3 mb-3">
         <div class="row justify-content-center">
-            <!-- In Stock Card -->
+          
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                 <div class="card shadow-sm border-0 rounded-lg" style="height: 120px;">
                     <div class="card-body text-center mt-n4">
@@ -39,7 +39,7 @@
                 </div>
             </div>
 
-            <!-- Out of Stock Card -->
+          
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                 <div class="card shadow-sm border-0 rounded-lg" style="height: 120px;">
                     <div class="card-body text-center mt-n4">
@@ -52,7 +52,7 @@
                 </div>
             </div>
 
-            <!-- Full Stock Card -->
+           
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                 <div class="card shadow-sm border-0 rounded-lg" style="height: 120px;">
                     <div class="card-body text-center mt-n4">
@@ -67,15 +67,15 @@
 
 
         </div>
-    </div>
+    </div> -->
 
     <div class="container  table-inventory">
         <div class="orders">
 
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2>Purchasing Orders</h2>
+                <h2 style="font-weight: bold;">Purchasing Orders</h2>
                 <div>
-                    <a href="/inventory/create" class="btn btn-secondary">
+                    <a href="/inventory/create" class=" btn-new-product">
                         <i class="bi-plus-lg"></i> + New Products
                     </a>
 

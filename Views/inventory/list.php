@@ -162,7 +162,7 @@
                                 <!-- this is show view ------------------------------------------------ -->
                                 <div class="modal fade" id="viewModal<?= $item['id']; ?>" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
-                                        <div class="modal-content">
+                                        <div class="modal-content rounded-4 shadow-lg">
                                             <div class="modal-header">
                                                 <h2 class="modal-title">View Inventory Item</h2>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

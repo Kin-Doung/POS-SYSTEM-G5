@@ -11,7 +11,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #bf94f8;
   padding: 30px;
 }
 .container {
@@ -81,7 +80,6 @@ body {
   height: 100%;
   width: 100%;
   opacity: 0.5;
-  background: #7d2ae8;
 }
 .cover .text .text-1,
 .cover .text .text-2 {
@@ -111,19 +109,20 @@ body {
 }
 .forms .form-content .title {
   position: relative;
-  font-size: 24px;
-  font-weight: 500;
+  font-size: 28px;
+  font-weight: bold;
   color: #333;
+  text-align: center;
 }
-.forms .form-content .title:before {
+/* .forms .form-content .title:before {
   content: '';
   position: absolute;
-  left: 0;
+  left: 10;
   bottom: 0;
   height: 3px;
   width: 25px;
-  background: #7d2ae8;
-}
+  background: rgb(73, 73, 253);
+} */
 .forms .signup-form .title:before {
   width: 20px;
 }
@@ -149,13 +148,14 @@ body {
   border-bottom: 2px solid rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
 }
+
 .form-content .input-box input:focus,
 .form-content .input-box input:valid {
-  border-color: #7d2ae8;
+  border-color: rgb(73, 73, 253);
 }
 .form-content .input-box i {
   position: absolute;
-  color: #7d2ae8;
+  color: rgb(73, 73, 253);
   font-size: 17px;
 }
 .forms .form-content .text {
@@ -175,17 +175,18 @@ body {
 }
 .forms .form-content .button input {
   color: #fff;
-  background: #7d2ae8;
   border-radius: 6px;
   padding: 0;
   cursor: pointer;
   transition: all 0.4s ease;
 }
-.forms .form-content .button input:hover {
-  background: #5b13b9;
+.forms .form-content .button input:hover{
+  background: darkblue !important;
+  border-bottom: none;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 }
 .forms .form-content label {
-  color: #5b13b9;
+  color: rgb(73, 73, 253);
   cursor: pointer;
 }
 .forms .form-content label:hover {

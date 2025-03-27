@@ -1,9 +1,19 @@
 <?php
 require_once './views/layouts/side.php';
 ?>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
 <main class="main-content create-content position-relative max-height-vh-100 h-100">
-    <h2 class="text-center head-add" style="padding-top: 20px;">Add Stock Products</h2>
-    <div class="col-md-12 mt-5 mx-auto">
+    <h2 class="text-center head-add" style="padding-top: 20px;  ">Add Stock Products</h2>
+    <div class="d-flex justify-content-end align-item-center me-3">
+        <button type="button" id="previewInvoice" class="btn btn-preview" data-bs-toggle="modal" data-bs-target="#invoiceModal" >Preview Invoice</button>
+    </div>
+    <div class="col-md-12 mt-n3 mx-auto">
         <div class="card p-3" style="box-shadow: none;border:none">
             <form id="productForm" action="/inventory/store" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
                 <div id="productFields" class="table-responsive">
@@ -81,50 +91,53 @@ require_once './views/layouts/side.php';
 
 
     <!-- Add a Preview Button -->
- <!-- Preview Invoice Button -->
-<button type="button" id="previewInvoice" class="btn btn-preview" data-bs-toggle="modal" data-bs-target="#invoiceModal">Preview Invoice</button>
+    <!-- Preview Invoice Button -->
 
-<!-- Modal for Invoice Preview -->
-<div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="invoiceModalLabel">Invoice Preview</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Product Image</th>
-                            <th>Category</th>
-                            <th>Product Name</th>
-                            <th>Quantity</th>
-                            <th>Price ($)</th>
-                            <th>Expiration Date</th>
-                            <th>Total Price</th>
-                        </tr>
-                    </thead>
-                    <tbody id="invoiceTableBody">
-                        <!-- Dynamic Rows will be added here -->
-                    </tbody>
-                </table>
-                <!-- Total Price Display -->
-                <div class="d-flex justify-content-end">
-                    <p>Total Price: $<span id="totalPrice">0</span></p>
+    <!-- Modal for Invoice Preview -->
+    <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="invoiceModalLabel">Invoice Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="d-flex justify-content-end">
-                    <button type="button" id="exportPDF" class="btn btn-export">Export to PDF</button>
-                    <button type="button" id="exportExcel" class="btn btn-export">Export to Excel</button>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Product Image</th>
+                                <th>Category</th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Price ($)</th>
+                                <th>Expiration Date</th>
+                                <th>Total Price</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoiceTableBody">
+                            <!-- Dynamic Rows will be added here -->
+                        </tbody>
+                    </table>
+                    <!-- Total Price Display -->
+                    <div class="d-flex justify-content-end">
+                        <p>Total Price: $<span id="totalPrice">0</span></p>
+                    </div>
+                    <div >
+    <button type="button" id="exportPDF" class=" btn-export">Export to PDF</button>
+    <button type="button" id="exportExcel" class=" btn-export-excel">Export to Excel</button>
+</div>
+
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 </main>
 
 <style>
+    .head-add{
+        font-family: "Poppins", sans-serif;
+    }
     /* Custom width for the modal */
     #invoiceModal .modal-dialog {
         max-width: 1200px;
@@ -132,6 +145,33 @@ require_once './views/layouts/side.php';
         width: 90%;
         /* You can adjust the width percentage if needed */
     }
+    .btn-preview{
+        background: orange !important;
+    
+    }
+    .btn-export{
+        background: orange;
+        color: #fff;
+        padding: 8px;
+        border-radius: 5px;
+        border: none;
+    }
+    .btn-export:hover{
+        background: darkorange;
+    }
+    .btn-export-excel{
+        background: green;
+        color: #fff;
+        padding: 8px;
+        border: none;
+        border-radius: 5px;
+    }
+    .btn-export-excel:hover{
+        background-color: darkgreen;
+        box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    }
+
+
 
     .add-moree {
         padding: 7px 12px;
@@ -210,7 +250,8 @@ require_once './views/layouts/side.php';
 
     /* Style for the table headers */
     table.table-bordered th {
-        background-color: rgb(124, 187, 255);
+        background: rgb(73, 73, 253);
+
         /* Change to any color you prefer */
         color: #ffffff;
         /* White text for contrast */
@@ -328,23 +369,23 @@ require_once './views/layouts/side.php';
         localStorage.removeItem('savedProducts'); // Clear local storage on submit
     });
 
-    function saveProductsToLocalStorage() {
-        const rows = document.querySelectorAll('.product-row');
-        const products = [];
+    // function saveProductsToLocalStorage() {
+    //     const rows = document.querySelectorAll('.product-row');
+    //     const products = [];
 
-        rows.forEach(row => {
-            const product = {
-                category: row.querySelector('[name="category_id[]"]').value,
-                name: row.querySelector('[name="product_name[]"]').value,
-                quantity: row.querySelector('[name="quantity[]"]').value,
-                price: row.querySelector('[name="amount[]"]').value,
-                expiration: row.querySelector('[name="expiration_date[]"]').value
-            };
-            products.push(product);
-        });
+    //     rows.forEach(row => {
+    //         const product = {
+    //             category: row.querySelector('[name="category_id[]"]').value,
+    //             name: row.querySelector('[name="product_name[]"]').value,
+    //             quantity: row.querySelector('[name="quantity[]"]').value,
+    //             price: row.querySelector('[name="amount[]"]').value,
+    //             expiration: row.querySelector('[name="expiration_date[]"]').value
+    //         };
+    //         products.push(product);
+    //     });
 
-        localStorage.setItem('savedProducts', JSON.stringify(products));
-    }
+    //     localStorage.setItem('savedProducts', JSON.stringify(products));
+    // }
 
     function loadSavedProducts() {
         const savedProducts = localStorage.getItem('savedProducts');
@@ -410,22 +451,64 @@ require_once './views/layouts/side.php';
             });
         });
     }
+    // function loadSavedProducts() {
+    //     const savedProducts = localStorage.getItem('savedProducts');
+    //     if (!savedProducts) return;
+
+    //     const products = JSON.parse(savedProducts);
+    //     const productTableBody = document.getElementById('productTableBody');
+
+    //     productTableBody.innerHTML = ''; // Clear table before adding saved products
+
+    //     products.forEach(product => {
+    //         const newRow = document.createElement('tr');
+    //         newRow.classList.add('product-row');
+    //         newRow.innerHTML = `
+    //         <td>
+    //             <input type="file" class="form-control image-add" name="image[]" accept="image/*" required>
+    //             <img src="${product.image}" alt="Product Image" class="img-preview" style="display: inline; width: 50px; height: 50px;">
+    //         </td>
+    //         <td>
+    //             <select name="category_id[]" class="form-control" required>
+    //                 <option value="">Select Category</option>
+    //                 ${product.category}
+    //             </select>
+    //         </td>
+    //         <td>
+    //             <input type="text" class="form-control" name="product_name[]" value="${product.name}" required>
+    //         </td>
+    //         <td>
+    //             <input type="number" class="form-control" name="quantity[]" min="1" value="${product.quantity}" required>
+    //         </td>
+    //         <td>
+    //             <input type="number" class="form-control" name="amount[]" min="0" step="0.01" value="${product.price}" required>
+    //         </td>
+    //         <td>
+    //             <input type="date" class="form-control w-100" name="expiration_date[]" value="${product.expiration}" required>
+    //         </td>
+    //         <td>
+    //             <button type="button" class="removeRow" style="background: none; border: none; color: red; font-size: 20px;">
+    //                 <i class="fa-solid fa-trash"></i>
+    //             </button>
+    //         </td>
+    //     `;
+    //         productTableBody.appendChild(newRow);
+    //     });
+    // }
 
     // Function to capture the data from the input table
-    document.getElementById('previewInvoice').addEventListener('click', function() {
-    const products = JSON.parse(localStorage.getItem('savedProducts') || '[]');
+document.getElementById('previewInvoice').addEventListener('click', function() {
+    const savedProducts = JSON.parse(localStorage.getItem('savedProducts')) || [];
     const invoiceTableBody = document.getElementById('invoiceTableBody');
-    const totalPriceElement = document.getElementById('totalPrice');
+    invoiceTableBody.innerHTML = ''; // Clear existing rows before adding new ones
+
     let totalPrice = 0;
-
-    invoiceTableBody.innerHTML = ''; // Clear previous content
-
-    products.forEach(product => {
-        const row = document.createElement('tr');
-
-        // Create and append each column
-        row.innerHTML = `
-            <td><img src="" alt="Product Image" class="img-preview" style="width: 50px; height: 50px;"></td>
+    savedProducts.forEach(product => {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>
+                <img src="${product.image || ''}" class="img-preview" style="width: 50px; height: 50px;">
+            </td>
             <td>${product.category}</td>
             <td>${product.name}</td>
             <td>${product.quantity}</td>
@@ -433,45 +516,129 @@ require_once './views/layouts/side.php';
             <td>${product.expiration}</td>
             <td>${(product.quantity * product.price).toFixed(2)}</td>
         `;
-        invoiceTableBody.appendChild(row);
-
-        // Update total price
+        invoiceTableBody.appendChild(newRow);
         totalPrice += product.quantity * product.price;
     });
 
-    // Display total price
-    totalPriceElement.textContent = totalPrice.toFixed(2);
+    document.getElementById('totalPrice').textContent = totalPrice.toFixed(2);
 });
 
+// Update save function to store image base64 data
+function saveProductsToLocalStorage() {
+    const rows = document.querySelectorAll('.product-row');
+    const products = [];
 
-// Export to PDF functionality
-document.getElementById('exportPDF').addEventListener('click', function() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    doc.text('Invoice Preview', 10, 10);
-
-    // Use jsPDF AutoTable to generate the table
-    doc.autoTable({
-        head: [['Product Image', 'Category', 'Product Name', 'Quantity', 'Price ($)', 'Expiration Date', 'Total Price']],
-        body: Array.from(document.getElementById('invoiceTableBody').getElementsByTagName('tr')).map(row => {
-            const cells = row.getElementsByTagName('td');
-            return Array.from(cells).map(cell => cell.innerText); // Collecting text from each cell
-        })
+    rows.forEach(row => {
+        const product = {
+            category: row.querySelector('[name="category_id[]"]').value,
+            name: row.querySelector('[name="product_name[]"]').value,
+            quantity: row.querySelector('[name="quantity[]"]').value,
+            price: row.querySelector('[name="amount[]"]').value,
+            expiration: row.querySelector('[name="expiration_date[]"]').value,
+            image: row.querySelector('.img-preview').src // Save the image source (base64 data)
+        };
+        products.push(product);
     });
 
-    // Save the PDF
-    doc.save('invoice.pdf');
-});
+    localStorage.setItem('savedProducts', JSON.stringify(products));
+}
 
-// Export to Excel functionality
-document.getElementById('exportExcel').addEventListener('click', function() {
-    const ws = XLSX.utils.table_to_sheet(document.querySelector("#invoiceTableBody"));
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Invoice');
+// Updated loadSavedProducts function to properly display the image
+function loadSavedProducts() {
+    const savedProducts = localStorage.getItem('savedProducts');
+    if (!savedProducts) return;
 
-    // Save the Excel file
-    XLSX.writeFile(wb, 'invoice.xlsx');
-});
+    const products = JSON.parse(savedProducts);
+    const productTableBody = document.getElementById('productTableBody');
 
+    productTableBody.innerHTML = ''; // Clear table before adding saved products
+
+    products.forEach(product => {
+        const newRow = document.createElement('tr');
+        newRow.classList.add('product-row');
+        newRow.innerHTML = `
+            <td>
+                <input type="file" class="form-control image-add" name="image[]" accept="image/*">
+                <img src="${product.image || ''}" alt="Product Image" class="img-preview" style="display: inline; width: 50px; height: 50px;">
+            </td>
+            <td>
+                <select name="category_id[]" class="form-control" required>
+                    <option value="">Select Category</option>
+                    ${product.category}
+                </select>
+            </td>
+            <td>
+                <input type="text" class="form-control" name="product_name[]" value="${product.name}" required>
+            </td>
+            <td>
+                <input type="number" class="form-control" name="quantity[]" min="1" value="${product.quantity}" required>
+            </td>
+            <td>
+                <input type="number" class="form-control" name="amount[]" min="0" step="0.01" value="${product.price}" required>
+            </td>
+            <td>
+                <input type="date" class="form-control w-100" name="expiration_date[]" value="${product.expiration}" required>
+            </td>
+            <td>
+                <button type="button" class="removeRow" style="background: none; border: none; color: red; font-size: 20px;">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </td>
+        `;
+        productTableBody.appendChild(newRow);
+    });
+}
+
+
+    // Function to capture the data from the input table
+    // document.getElementById('previewInvoice').addEventListener('click', function() {
+    //     const savedProducts = JSON.parse(localStorage.getItem('savedProducts')) || [];
+    //     const invoiceTableBody = document.getElementById('invoiceTableBody');
+    //     invoiceTableBody.innerHTML = ''; // Clear existing rows before adding new ones
+
+    //     let totalPrice = 0;
+    //     savedProducts.forEach(product => {
+    //         const newRow = document.createElement('tr');
+    //         newRow.innerHTML = `
+    //         <td><img src="${product.image}" class="img-preview" style="width: 50px; height: 50px;"></td>
+    //         <td>${product.category}</td>
+    //         <td>${product.name}</td>
+    //         <td>${product.quantity}</td>
+    //         <td>${product.price}</td>
+    //         <td>${product.expiration}</td>
+    //         <td>${(product.quantity * product.price).toFixed(2)}</td>
+    //     `;
+    //         invoiceTableBody.appendChild(newRow);
+    //         totalPrice += product.quantity * product.price;
+    //     });
+
+    //     document.getElementById('totalPrice').textContent = totalPrice.toFixed(2);
+    // });
+
+
+
+
+    document.getElementById('exportPDF').addEventListener('click', function() {
+        const doc = new jsPDF();
+        const table = document.getElementById('invoiceTableBody');
+        const rows = table.querySelectorAll('tr');
+
+        rows.forEach((row, index) => {
+            const cols = row.querySelectorAll('td');
+            const rowData = Array.from(cols).map(col => col.textContent.trim());
+            doc.text(rowData.join(' | '), 10, 10 + (index * 10));
+        });
+
+        doc.save('invoice.pdf');
+    });
+
+    // Export to Excel functionality
+    document.getElementById('exportExcel').addEventListener('click', function() {
+        const ws = XLSX.utils.table_to_sheet(document.querySelector("#invoiceTableBody"));
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Invoice');
+
+        // Save the Excel file
+        XLSX.writeFile(wb, 'invoice.xlsx');
+    });
 </script>

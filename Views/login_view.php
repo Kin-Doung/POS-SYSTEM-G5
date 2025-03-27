@@ -59,7 +59,7 @@ unset($_SESSION['error']); // Remove error after showing
                             <?php endif; ?> <br>
                             <div class="text"><a href="#">Forgot password?</a></div>
                             <div class="button input-box">
-                                <input type="submit" value="Login" style="background-color:rgb(111, 199, 250);">
+                                <input type="submit" value="Login" style=" background: rgb(73, 73, 253);">
                             </div>
                             <div class="text sign-up-text">Don't have an account? <label for="flip">Sign up now</label></div>
                         </div>
@@ -84,7 +84,7 @@ unset($_SESSION['error']); // Remove error after showing
                                 <input type="password" name="password" placeholder="Enter your password" required>
                             </div>
                             <div class="button input-box">
-                                <input type="submit" value="Submit">
+                                <input type="submit" value="Submit" style="background-color: rgb(73, 73, 253);">
                             </div>
                             <div class="text sign-up-text">Already have an account? <label for="flip">Login now</label></div>
                         </div>

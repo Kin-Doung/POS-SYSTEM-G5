@@ -37,7 +37,7 @@ body {
     position: relative;
     display: inline-block;
 }
-.dropbtn {
+/* .dropbtn {
     background-color: #007bff;
     color: white;
     border: none;
@@ -47,7 +47,7 @@ body {
 }
 .dropbtn:hover {
     background-color: #0056b3;
-}
+} */
 .dropdown-content {
     display: none;
     position: absolute;
@@ -175,23 +175,41 @@ body {
 
 /* Table Cells - Remove border */
 .table th, .table td {
-  border: none; /* No borders for both table headings and data cells */
+  border: none; 
   padding: 10px;
-  text-align: left;
+  text-align: center;
   cursor: pointer;
   position: relative;
   /* font-weight: bold; */
   transition: background-color 0.3s;
-  text-align: center;
 }
 .table td:nth-child(3) {
-  text-align: left; /* Align text in the Product Name column to the left */
+  text-align: center; /* Align text in the Product Name column to the left */
 }
 
 /* Hover Effect on Table Heading */
 .table th:hover {
-  background-color: #444; /* Slightly lighter hover effect */
+  background-color: #9b9b9b;
+  color: #fff; /* Slightly lighter hover effect */
 }
+
+/* Ensure the dropdown stays on top */
+.dropdown-menu {
+  z-index: 1050 !important; /* Dropdown base z-index */
+  position: absolute !important; /* Ensures it doesn't get hidden */
+  top: 50px; /* Adjusted top margin to 50px */
+}
+
+
+/* Make the focused or hovered item appear on top */
+.dropdown-menu .dropdown-item:focus, 
+.dropdown-menu .dropdown-item:hover {
+  background-color: #ccc !important;
+  color: black !important; /* Ensures text remains visible */
+  z-index: 9999 !important; /* Ensure it's higher than all other elements */
+  position: relative !important; /* Keeps focused item above other elements */
+}
+
 
 /* Sorting Icon */
 .table th.active::after {
@@ -199,14 +217,13 @@ body {
   position: absolute;
   right: 10px;
   top: 10px;
-  font-family: 'Font Awesome 5 Free';
   font-weight: 900;
   transition: transform 0.3s ease;
 }
 
 /* Ascending Icon */
 .table th.asc::after {
-  content: "\f0de"; 
+  /* content: "\f0de";  */
   transform: rotate(180deg);
 }
 
@@ -328,6 +345,7 @@ body {
     font-weight: bold;
   
   }
+  
   /* Remove background color from the dropdown button */
   .btn-seemore{
     border: none;

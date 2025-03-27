@@ -48,6 +48,9 @@ function updateDetails() {
   
 }
 
+<<<<<<< HEAD
+
+=======
 function generateQRCode(total) {
     const qr = new QRious({
         element: document.getElementById('qrCode'),
@@ -57,6 +60,7 @@ function generateQRCode(total) {
         foreground: 'black',
     });
 }
+>>>>>>> main
 
 
 

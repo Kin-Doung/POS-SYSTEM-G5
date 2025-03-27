@@ -16,7 +16,6 @@ class InventoryModel
         $inventory = $this->pdo->query("SELECT * FROM inventory ORDER BY id DESC");
         return $inventory->fetchAll();
     }
-
     function getCategory()
     {
         $inventory = $this->pdo->query("SELECT * FROM categories ORDER BY id DESC");
@@ -26,12 +25,11 @@ class InventoryModel
     function getInventoryWithCategory()
     {
         $inventory = $this->pdo->query("
-            SELECT inventory.*, categories.name AS category_name
-            FROM inventory
-            LEFT JOIN categories ON inventory.category_id = categories.id
+            SELECT inventory.*, categories.category_name 
+            FROM inventory 
+            LEFT JOIN categories ON inventory.category_id = categories.id 
             ORDER BY inventory.id DESC
         ");
-    
         return $inventory->fetchAll();
     }
     

@@ -17,12 +17,19 @@
                 <span class="notification-badge" id="notification-count">8</span>
             </div>
         </div>
-        <div class="profile">
+        <div class="profile" id="profile">
             <img src="../../views/assets/images/image.png" alt="User">
             <div class="profile-info">
-                <span>Eng Ly</span>
-                <span class="store-name">Owner Store</span>
+                <span id="profile-name">Eng Ly</span>
+                <span class="store-name" id="store-name">Owner Store</span>
             </div>
+            <ul class="menu" id="menu">
+                <li><a href="/settings" class="item">Account</a></li>
+                <li><a href="/settings" class="item">Setting</a></li>
+                <li><a href="/logout" class="item">Logout</a></li>
+            </ul>
+            <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
+            <script src="../../views/assets/js/setting.js"></script>
         </div>
     </nav>
 
@@ -63,10 +70,9 @@
                 <div class="card"
                     data-id="<?= htmlspecialchars($purchase['id']) ?>"
                     data-name="<?= htmlspecialchars($purchase['product_name']) ?>"
-                    data-category="<?= htmlspecialchars($purchase['category_id']) ?>"
+                    data-category="<?= htmlspecialchars($purchase['category_id'] ?? '') ?>"
                     data-price="<?= htmlspecialchars($purchase['price']) ?>">
                     <img src="<?= '/uploads/' . htmlspecialchars($purchase['image']) ?>" alt="Product Image">
-
                     <div class="product-name"><?= htmlspecialchars($purchase['product_name']) ?></div>
 
                     <input type="number" class="quantity" id="quantity<?= $purchase['id'] ?>" value="0" min="0" />
@@ -254,8 +260,8 @@
 
 <script>
     // Function to toggle the visibility of the order summary card
-    let isDragging = false;
-    let startX, startY;
+let isDragging = false;
+let startX, startY;
 
     function toggleOrderSummary() {
         const orderSummary = document.getElementById("orderSummary");
@@ -321,13 +327,13 @@
             orderSummary.style.top = `${y}px`;
         });
 
-        document.addEventListener('mouseup', function() {
-            isDragging = false;
-            orderSummary.style.cursor = 'default';
+    document.addEventListener('mouseup', function () {
+        isDragging = false;
+        orderSummary.style.cursor = 'default';
 
-            setTimeout(() => {
-                orderSummary.style.transition = 'top 0.2s ease, left 0.2s ease';
-            }, 100);
-        });
-    }
+        setTimeout(() => {
+            orderSummary.style.transition = 'top 0.2s ease, left 0.2s ease';
+        }, 100);
+    });
+}
 </script>

@@ -17,9 +17,16 @@
         <div class="profile">
             <img src="../../images/image.png" alt="User">
             <div class="profile-info">
-                <span>Eng Ly</span>
-                <span class="store-name">Owner Store</span>
+                <span id="profile-name">Eng Ly</span>
+                <span class="store-name" id="store-name">Owner Store</span>
             </div>
+            <ul class="menu" id="menu">
+                <li><a href="/settings" class="item">Account</a></li>
+                <li><a href="/settings" class="item">Setting</a></li>
+                <li><a href="/logout" class="item">Logout</a></li>
+            </ul>
+            <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
+            <script src="../../views/assets/js/setting.js"></script>
         </div>
     </nav>
     <!-- End Navbar -->
@@ -127,6 +134,7 @@
                             <td><span class="quantity-text"><?= htmlspecialchars($item['quantity']) ?></span></td>
                             <td><?= htmlspecialchars($item['amount']) ?></td>
                             <td><?= htmlspecialchars($item['total_price']) ?></td>
+                            
 
                             <td>
                                 <div class="dropdown">

@@ -61,8 +61,40 @@ document.addEventListener("DOMContentLoaded", function () {
     checkboxes.forEach((chk) => {
       const quantityInput = chk.closest("tr").querySelector(".quantity-input");
       quantityInput.disabled = !chk.checked; // Enable if checked, disable if not
+<<<<<<< HEAD
+  });
+}
+<<<<<<< HEAD
+
+function updateQuantities() {
+  const checkboxes = document.querySelectorAll('.select-checkbox:checked');
+  checkboxes.forEach(checkbox => {
+      const row = checkbox.closest('tr');
+      const quantityInput = row.querySelector('.quantity-input');
+      quantityInput.disabled = false; // Enable input for editing
+  });
+
+  // Uncheck all checkboxes after updating
+  checkboxes.forEach(checkbox => {
+      checkbox.checked = false;
+      const row = checkbox.closest('tr');
+      const quantityInput = row.querySelector('.quantity-input');
+      quantityInput.disabled = true; // Disable input after update
+  });
+
+  // Disable batch action button and hide update section
+  document.getElementById('batchActionBtn').disabled = true;
+  document.getElementById('updateQuantitySection').style.display = 'none';
+}
+
+  searchInput.addEventListener("input", filterTable);
+  categorySelect.addEventListener("change", filterTable);
+});
+=======
+=======
     });
   }
+>>>>>>> e4c15c689ffc64607bd755dc9ce42bfe44c8ca63
 
   function updateQuantities() {
     const checkboxes = document.querySelectorAll(".select-checkbox:checked");
@@ -206,6 +238,9 @@ inventoryRows.forEach((row) => {
   }
 });
 
+<<<<<<< HEAD
+>>>>>>> main
+=======
 document.addEventListener("DOMContentLoaded", function() {
   const quantityInput = document.getElementById("quantity");
   const priceInput = document.getElementById("amount");
@@ -225,6 +260,7 @@ document.addEventListener("DOMContentLoaded", function() {
   quantityInput.addEventListener("input", calculateTotalPrice);
   priceInput.addEventListener("input", calculateTotalPrice);
 });
+<<<<<<< HEAD
 
 
 
@@ -251,3 +287,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Call filterTable on page load to ensure correct filtering if a category is pre-selected
   window.onload = filterTable;
+=======
+>>>>>>> e4c15c689ffc64607bd755dc9ce42bfe44c8ca63
+>>>>>>> feature/purchase-order

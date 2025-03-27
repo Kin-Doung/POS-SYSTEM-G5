@@ -218,31 +218,10 @@
 
                                     <div class="total" id="totalPrice">Cart Total: $0.00</div>
 
-<<<<<<< HEAD
-                                   
-                                </form>
-        
-                            </div>
-                            <div class="modal-footer">
-                                <form action="/purchase/destroy" method="POST" style="margin-top: 10px;">
-                                    <input type="hidden" name="id" value="<?= htmlspecialchars($purchase['id']) ?>">
-                                    <button type="submit" class="btn btn-danger delete-card" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
-                                </form>
-                            </div>
-                           
-                        </div>
-                    </div>
-                </div>
-        </div>
-        <button class="btn btn-primary show" data-bs-toggle="modal" data-bs-target="#orderDetailsModal">
-            <i class="fas fa-eye"></i> Show Details
-        </button>
-=======
                                     <div class="buys">
                                         <button class="buy-button" onclick="saveToPDF()">Save as PDF</button>
                                         <button class="buy-button" onclick="processPurchase()">Restock</button>
                                     </div>
->>>>>>> e4c15c689ffc64607bd755dc9ce42bfe44c8ca63
 
                                 </div>
 

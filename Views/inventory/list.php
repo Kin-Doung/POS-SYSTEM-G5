@@ -134,6 +134,7 @@
                             <td><span class="quantity-text"><?= htmlspecialchars($item['quantity']) ?></span></td>
                             <td><?= htmlspecialchars($item['amount']) ?></td>
                             <td><?= htmlspecialchars($item['total_price']) ?></td>
+                            
 
                             <td>
                                 <div class="dropdown">

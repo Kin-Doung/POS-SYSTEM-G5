@@ -88,7 +88,7 @@ require_once './views/layouts/side.php';
             </table>
             <h5>Total: <span id="grandTotal">0</span> $</h5>
             <div class="text-center mt-3">
-                <button class="btn btn-success" onclick="replaceCartInDatabase()">Replace Cart</button>
+                <button class="btn btn-success" onclick="replaceCartInDatabase()">submit</button>
             </div>
 
         </div>

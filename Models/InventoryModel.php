@@ -1,6 +1,5 @@
 <?php
 require_once './Databases/database.php';
-
 class InventoryModel
 {
     private $pdo;
@@ -31,11 +30,9 @@ class InventoryModel
             LEFT JOIN categories ON inventory.category_id = categories.id
             ORDER BY inventory.id DESC
         ");
-    
+
         return $inventory->fetchAll();
     }
-    
-    
     // Create a new inventory item
     function createInventory($data)
     {
@@ -58,6 +55,8 @@ class InventoryModel
             'total_price' => $data['total_price'],
         ]);
     }
+
+
 
     // Function to insert multiple inventory items at once
     public function createMultipleInventory($items)
@@ -90,6 +89,40 @@ class InventoryModel
         }
     }
 
+
+    
+
+    private function executeQuery($query, $params)
+    {
+        try {
+            $stmt = $this->pdo->query($query);
+            $stmt->execute($params);
+            return $stmt;
+        } catch (Exception $e) {
+            echo "Error executing query: " . $e->getMessage(); // 👈 Add this
+            echo "<br>Query: " . $query; // 👈 Add this
+            return null;
+        }
+    }
+
+
+    public function insertProductsFromInventory()
+    {
+        $query = "
+        INSERT INTO products (name, category_id, price, quantity, image)
+        SELECT 
+            i.product_name, 
+            c.id AS category_id, 
+            i.amount AS price, 
+            i.quantity, 
+            i.image
+        FROM inventory i
+        JOIN categories c ON i.category_name = c.name;
+    ";
+
+        $stmt = $this->executeQuery($query, []);
+        return $stmt ? $stmt->rowCount() : 0;
+    }
 
     // Edit a category name
     public function updateCategory($categoryId, $newCategoryName)
@@ -137,7 +170,7 @@ class InventoryModel
                 expiration_date = :expiration_date,
                 image = :image
                 WHERE id = :id";
-    
+
         $params = [
             ':category_id' => $data['category_id'],  // Update category_id
             ':product_name' => $data['product_name'],
@@ -149,10 +182,10 @@ class InventoryModel
             ':image' => $data['image'],
             ':id' => $id
         ];
-    
+
         $this->pdo->query($sql, $params);
     }
-    
+
 
     // Get a category by its ID
     public function getCategoryById($categoryId)

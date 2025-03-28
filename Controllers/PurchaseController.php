@@ -1,136 +1,114 @@
 <?php
-require_once './Models/PurchaseModel.php';
-require_once './Models/ProductModel.php'; // Include the ProductModel
+require_once 'Models/PurchaseModel.php';
+require_once 'BaseController.php';
 
 class PurchaseController extends BaseController
 {
     private $model;
-    private $productModel; // Add reference to ProductModel
-
+    
     function __construct()
     {
         $this->model = new PurchaseModel();
-        $this->productModel = new ProductModel(); // Instantiate the ProductModel
     }
 
-
-
-    public function index()
+    function index()
     {
-        $purchases = $this->model->getPurchase();
-        $categories = $this->model->getCategory(); // ✅ Fetch categories
-        $this->views('purchase/list', ['purchases' => $purchases, 'categories' => $categories]);
+        $purchase = $this->model->getPurchases();
+        $this->views('purchase/list', ['purchase' => $purchase]);
     }
 
-
-
-    public function create()
+    function create()
     {
-        $purchaseModel = new PurchaseModel();
-        $categories = $purchaseModel->getCategory();
+        // Fetch categories to display in the form
+        $categories = $this->model->getCategories();  // Ensure this function exists to fetch categories
         $this->views('purchase/create', ['categories' => $categories]);
     }
 
-
-    public function store()
+    function store()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Retrieve form data
-            $productName = $_POST['product_name'];
-            $productPrice = $_POST['price'];
-            $quantity = 0; // Default quantity
-            $categoryId = $_POST['category_id']; // Get the category ID from the form
-            $imageName = null;
-            $purchaseDate = date('Y-m-d H:i:s'); // Current date and time
+            // Validate category_id
+            if (!isset($_POST['category_id']) || empty($_POST['category_id']) || !is_numeric($_POST['category_id'])) {
+                echo "Invalid category selected.";
+                return; // Stop further processing
+            }
+            $category_id = $_POST['category_id']; // Store validated category_id
 
-            // Handle Image Upload
-            if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-                $imageName = time() . "_" . $_FILES['image']['name']; // Unique file name
-                $targetDir = "./uploads/";
-
-                if (!is_dir($targetDir)) {
-                    mkdir($targetDir, 0777, true);
+            // Handle image upload
+            $imagePath = null;
+            if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+                $uploadDir = __DIR__ . '/../public/uploads/';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
                 }
+                $imageName = time() . '_' . basename($_FILES['image']['name']);
+                $imagePath = $uploadDir . $imageName;
 
-                $targetFile = $targetDir . $imageName;
-                move_uploaded_file($_FILES['image']['tmp_name'], $targetFile);
+                if (!move_uploaded_file($_FILES['image']['tmp_name'], $imagePath)) {
+                    $imagePath = null;
+                }
             }
 
-            // Insert the product into the 'products' table
-            $productData = [
-                'product_name' => $_POST['product_name'],
-                'name' => $productName,
-                'category_id' => $categoryId,
-                'price' => $productPrice,
-                'image' => $imageName,
-                'quantity' => $quantity,
-
+            // Prepare data for purchase creation
+            $data = [
+                'product_name'  => htmlspecialchars($_POST['product_name']),
+                'category_name'  => htmlspecialchars($_POST['category_name']),
+                'category_id'  => intval($category_id),  // Ensure category_id is an integer
+                'price'  => floatval($_POST['price']),
+                'purchase_date'  => $_POST['purchase_date'],
+                'image' => $imagePath,
             ];
 
-            // Insert product data and get the product ID
-            $productId = $this->productModel->createProduct($productData); // Use ProductModel to insert product
-
-            // Insert purchase data
-            $purchaseData = [
-                'product_name' => $_POST['product_name'],
-                'product_id' => $productId, // Product ID from the product table
-                'category_id' => $categoryId,
-                'price' => $productPrice,
-                'quantity' => $quantity,
-                'purchase_date' => $purchaseDate,
-                'image' => $imageName
-            ];
-
-            // Save purchase data
-            $this->model->createPurchase($purchaseData); // Call the model to insert the data
+            // Create the purchase
+            $this->model->createPurchase($data);
             $this->redirect('/purchase');
         }
     }
 
-    public function edit($id)
+    function edit($id)
     {
-        $purchaseModel = new PurchaseModel();  // Fetch categories from the database
-        $purchase = $purchaseModel->getPurchases($id);
-        $this->views('purchase/edit', ['purchase' => $purchase]);
+        $purchase = $this->model->getPurchase($id);
+        $categories = $this->model->getCategories();  // Fetch categories for the form
+        $this->views('purchase/edit', ['purchase' => $purchase, 'categories' => $categories]);
     }
 
-
-
-
-    // Update Purchase Controller's update method
-    public function update($id)
+    function update($id)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Get current purchase data
-            $purchase = $this->model->getPurchases($id);
-            if (!$purchase) {
-                $this->redirect('/purchase'); // Redirect if not found
-            }
+            $purchase = $this->model->getPurchase($id);
+            $imagePath = $purchase['image'];
 
-            $imagePath = $purchase['image']; // Keep existing image by default
-
-            // Check if user uploaded a new image
-            if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-                $imagePath = time() . "_" . $_FILES['image']['name']; // Unique file name
-                $targetDir = "./uploads/";
-
-                if (!is_dir($targetDir)) {
-                    mkdir($targetDir, 0777, true);
+            if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+                $uploadDir = __DIR__ . '/../public/uploads/';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
                 }
+                $imageName = time() . '_' . basename($_FILES['image']['name']);
+                $newImagePath = $uploadDir . $imageName;
 
-                $targetFile = $targetDir . $imagePath;
-                move_uploaded_file($_FILES['image']['tmp_name'], $targetFile);
-            } else {
-                // Keep existing image if no new one uploaded
-                $imagePath = $_POST['existing_image'];
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $newImagePath)) {
+                    if ($imagePath && file_exists($imagePath)) {
+                        unlink($imagePath);
+                    }
+                    $imagePath = $newImagePath;
+                }
             }
 
-            // ✅ Ensure `category_id` is included
+            // Validate category_id
+            if (!isset($_POST['category_id']) || empty($_POST['category_id']) || !is_numeric($_POST['category_id'])) {
+                echo "Invalid category selected.";
+                return; // Stop further processing
+            }
+            $category_id = $_POST['category_id']; // Store validated category_id
+
+            // Prepare data for purchase update
             $data = [
-                'product_name' => $_POST['product_name'],
+                'product_name'  => htmlspecialchars($_POST['product_name']),
+                'category_name'  => htmlspecialchars($_POST['category_name']),
+                'category_id'  => intval($category_id),
+                'price'  => floatval($_POST['price']),
+                'purchase_date'  => $_POST['purchase_date'],
                 'image' => $imagePath,
-                'price' => $_POST['price'],
-                'category_id' => $_POST['category_id'], // Fix: Ensure category is updated
             ];
 
             // Update the purchase
@@ -139,48 +117,15 @@ class PurchaseController extends BaseController
         }
     }
 
-
-    public function destroy()
+    function destroy($id)
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $id = $_POST['id'] ?? null; // Get the ID from POST request
-
-            if ($id) {
-                $this->model->deletePurchase($id);
-            }
+        $purchase = $this->model->getPurchase($id);
+        
+        if ($purchase['image'] && file_exists($purchase['image'])) {
+            unlink($purchase['image']);
         }
-        $this->redirect('/purchase'); // Redirect after deletion
-    }
 
-
-    public function restock()
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['products'])) {
-            // Loop through each selected product and update its quantity
-            foreach ($_POST['products'] as $product) {
-                if (isset($product['id']) && isset($product['quantity']) && $product['quantity'] > 0) {
-                    $purchaseId = $product['id']; // Product ID
-                    $restockQuantity = $product['quantity']; // Quantity to restock
-    
-                    // Fetch the current purchase to get the current quantity
-                    $purchase = $this->model->getPurchases($purchaseId);
-    
-                    if ($purchase) {
-                        // Calculate the new quantity (current quantity + restock quantity)
-                        $newQuantity = $purchase['quantity'] + $restockQuantity;
-    
-                        // Update the quantity in the database
-                        $this->model->updateQuantity($purchaseId, $newQuantity);
-                    } else {
-                        echo "Purchase with ID $purchaseId not found.";
-                    }
-                }
-            }
-            // Redirect after processing all products
-            $this->redirect('/purchase');
-        } else {
-            echo "No products selected for restocking.";
-        }
+        $this->model->deletePurchase($id);
+        $this->redirect('/purchase');
     }
-    
 }

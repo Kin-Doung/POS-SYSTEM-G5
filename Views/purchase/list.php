@@ -1,15 +1,13 @@
-<?php 
-    require_once './views/layouts/side.php';  
- ?>
-<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-    <!-- Navbar -->
+<?php require_once './views/layouts/side.php' ?>
+<main class="main-content position-relative max-height-vh-10 h-10 border-radius-lg ">
     <!-- Navbar -->
     <nav class="navbar">
         <!-- Search Bar -->
         <div class="search-container">
             <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search..." class="search-bar">
+            <input type="text" placeholder="Search...">
         </div>
+        <!-- Icons -->
         <div class="icons">
             <i class="fas fa-globe icon-btn"></i>
             <div class="icon-btn" id="notification-icon">
@@ -17,7 +15,12 @@
                 <span class="notification-badge" id="notification-count">8</span>
             </div>
         </div>
+<<<<<<< HEAD
         <div class="profile" id="profile">
+=======
+        <!-- Profile -->
+        <div class="profile">
+>>>>>>> 7a7190213c2d10e73f3045b2398271c3c62c5782
             <img src="../../views/assets/images/image.png" alt="User">
             <div class="profile-info">
                 <span id="profile-name">Eng Ly</span>
@@ -31,38 +34,50 @@
             <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
             <script src="../../views/assets/js/setting.js"></script>
         </div>
+        <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+            <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                <div class="sidenav-toggler-inner">
+                    <i class="sidenav-toggler-line"></i>
+                    <i class="sidenav-toggler-line"></i>
+                    <i class="sidenav-toggler-line"></i>
+                </div>
+            </a>
+        </li>
     </nav>
 
-    <!-- End Navbar -->
-
-    <!-- Search Section -->
-    <div class="search-section">
-        <form action="" method="POST">
-            <input type="text" class="search-input" id="searchInput" name="searchInput" placeholder="Search for products..." onkeyup="filterProducts()" />
-
-            <select class="category-select" id="categorySelect" name="categorySelect" onchange="filterProducts()">
-                <option value="">Select Category</option>
-                <option value="all">All</option>
+    <div class="input-group">
+        <input type="text" id="searchInput" class="form-controlls input-group-search" placeholder="Search...">
+        <select id="categorySelect" class="ms-2 selected">
+            <option value="">Select Category</option>
+            <?php if (!empty($categories)): ?>
                 <?php foreach ($categories as $category): ?>
-                    <option value="<?= htmlspecialchars($category['name']) ?>">
+                    <option value="<?= htmlspecialchars($category['id']) ?>">
                         <?= htmlspecialchars($category['name']) ?>
                     </option>
                 <?php endforeach; ?>
-            </select>
-
-            <select class="price-select" id="priceSelect" name="priceSelect" onchange="filterProducts()">
-                <option value="">Select Price Range</option>
-                <option value="0">Up to $10</option>
-                <option value="15">Up to $15</option>
-                <option value="20">Up to $20</option>
-                <option value="25">Up to $25</option>
-                <option value="30">Up to $30</option>
-            </select>
-            <a href="/purchase/create" class="btn bg-info text-light" style="margin-top: -10px;">Add New</a>
-        </form>
+            <?php else: ?>
+                <option disabled>No Categories Found</option>
+            <?php endif; ?>
+        </select>
     </div>
+    <!-- End Navbar -->
+    <div class="container">
+        <div class="mt-5">
+            <a href="/purchase/create" class=" create-ct" style="margin-top: 30px; width : 100px;">
+                <i class="bi-plus-lg"></i> Add New Cateogries
+            </a>
+        </div>
 
+        <div class="table-responsive">
+            <table class="table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>image</th>
+                        <th>Name</th>
+                        <th>price</th>
 
+<<<<<<< HEAD
     <!-- Modal structure -->
     <div class="container-purchase">
         <div class="product-grid" id="productGrid">
@@ -196,13 +211,37 @@
                                 </div>
                                 <button class="btn btn-primary show" data-bs-toggle="modal" data-bs-target="#orderDetailsModal">
                                     <i class="fas fa-eye"></i> Show Details
+=======
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($purchase as $index => $purchase): ?>
+                        <tr>
+                            <td><?= $index + 1 ?></td>
+                            <td><?= $purchase['image'] ?></td>
+                            <td><?= $purchase['product_name'] ?></td>
+                            <td><?= $purchase['price'] ?></td>
+                            <td class="text-center text-nowrap">
+                                <a href="/purchase/edit?id=<?= $purchase['id'] ?>" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#purchase<?= $purchase['id'] ?>">
+                                    <i class="bi bi-trash"></i> Delete
+>>>>>>> 7a7190213c2d10e73f3045b2398271c3c62c5782
                                 </button>
 
-                                <!-- Order Summary Section -->
-                                <div class="detail-section" id="orderSummary">
-                                    <!-- Close button (X) -->
-                                    <button class="close-button" onclick="closeOrderSummary()">X</button>
+                                <!-- Modal -->
+                                <?php require_once './views/purchase/delete.php'; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
+<<<<<<< HEAD
                                     <div class="detail-title">Order Summary</div>
                                     <table class="order-table">
                                         <thead>
@@ -337,3 +376,6 @@ let startX, startY;
     });
 }
 </script>
+=======
+</main>
+>>>>>>> 7a7190213c2d10e73f3045b2398271c3c62c5782

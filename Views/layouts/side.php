@@ -6,6 +6,10 @@
       <!-- <span id="profile-namee"><?= $admin['store_name'] ?></span> -->
       <span id="profile-namee">Ly Store</span>
     </a>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7a7190213c2d10e73f3045b2398271c3c62c5782
   </div>
   <link rel="stylesheet" href="../../views/assets/css/settings/aside.css">
   <hr class="horizontal light mt-0 mb-2">
@@ -20,6 +24,17 @@
           <span class="nav-link-text ms-1">Dashboard</span>
         </a>
       </li>
+
+      <!-- nav product -->
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="/purchase">
+          <div class="text-dark text-centere-">
+            <i class="material-icons opacity-10">receipt_long</i>
+          </div>
+          <span class="nav-link-text ms-1">Products</span>
+        </a>
+      </li>
+
       <!-- nav inventory -->
       <li class="nav-item">
         <a class="nav-link text-white" href="/inventory">
@@ -29,6 +44,7 @@
           <span class="nav-link-text ms-1">Inventory</span>
         </a>
       </li>
+<<<<<<< HEAD
       <!-- nav product -->
       <li class="nav-item">
         <a class="nav-link text-white" href="/products">
@@ -40,11 +56,15 @@
       </li>
       <!-- nav Suppliers -->
       <!-- <li class="nav-item">
+=======
+
+      <li class="nav-item">
+>>>>>>> 7a7190213c2d10e73f3045b2398271c3c62c5782
         <a class="nav-link text-dark " href="/products">
           <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
             <i class="material-icons opacity-10">view_in_ar</i>
           </div>
-          <span class="nav-link-text ms-1">Product</span>
+          <span class="nav-link-text ms-1">Orders</span>
         </a>
       </li> -->
       <!-- nav Categories -->
@@ -75,4 +95,9 @@
       </li>
     </ul>
   </div>
+<<<<<<< HEAD
+=======
+  <div class="sidenav-footer position-absolute w-100 bottom-0 ">
+  </div>
+>>>>>>> 7a7190213c2d10e73f3045b2398271c3c62c5782
 </aside>

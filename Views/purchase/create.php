@@ -1,58 +1,78 @@
-<?php 
-    require_once './views/layouts/side.php'; 
-    require_once './views/layouts/header.php';
-?>
-<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+<?php require_once './views/layouts/side.php' ?>
 
-    <div class="modal-content" style="max-width: 800px; margin: 20px auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-        <h2 style="text-align: center; font-size: 20px; color: #333; margin-bottom: 20px;">Add New Product</h2>
-        
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <!-- Search Bar -->
+        <div class="search-container">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search...">
+        </div>
+
+        <!-- Icons -->
+        <div class="icons">
+            <i class="fas fa-globe icon-btn"></i>
+            <div class="icon-btn" id="notification-icon">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge" id="notification-count">8</span>
+            </div>
+        </div>
+
+        <!-- Profile -->
+        <div class="profile">
+            <img src="../../assets/images/image.png" alt="User">
+            <div class="profile-info">
+                <span>Jimmy Sullivan</span>
+                <span class="store-name">Odama Store</span>
+            </div>
+        </div>
+        <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+            <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                <div class="sidenav-toggler-inner">
+                    <i class="sidenav-toggler-line"></i>
+                    <i class="sidenav-toggler-line"></i>
+                    <i class="sidenav-toggler-line"></i>
+                </div>
+            </a>
+        </li>
+    </nav>
+    <!-- End Navbar -->
+
+    <div class="input-group">
+        <input type="text" id="searchInput" class="form-controlls input-group-search" placeholder="Search...">
+        <select id="categorySelect" class="ms-2 selected">
+            <option value="">Select Category</option>
+            <?php if (!empty($categories)): ?>
+                <?php foreach ($categories as $category): ?>
+                    <option value="<?= htmlspecialchars($category['id']) ?>">
+                        <?= htmlspecialchars($category['name']) ?>
+                    </option>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <option disabled>No Categories Found</option>
+            <?php endif; ?>
+        </select>
+    </div>
+
+    <div class="container">
+        <!-- Form to submit product details -->
         <form action="/purchase/store" method="POST" enctype="multipart/form-data">
-            
-            <!-- Product Name -->
-            <div class="mb-3">
-                <label for="productName" class="form-label" style="font-size: 14px; color: #555;">Product Name:</label>
-                <input type="text" id="productName" name="product_name" class="form-control" style="font-size: 14px; padding: 8px; border-radius: 4px; border: 1px solid #ddd; width: 100%; margin-bottom: 10px;" required />
+            <div class="form-group">
+                <label for="image" class="form-label">Image:</label>
+                <input type="file" name="image" class="form-controll" id="image" accept="image/*">
+            </div>
+            <div class="form-group">
+                <label for="name" class="form-label">Name:</label>
+                <input type="text" name="name" class="form-controll" id="name">
+            </div>
+            <div class="form-group">
+                <label for="price" class="form-label">Price:</label>
+                <input type="number" name="price" class="form-controll" id="price">
             </div>
 
-            <!-- Category -->
-            <div class="mb-3">
-                <label for="productCategory" class="form-label" style="font-size: 14px; color: #555;">Category:</label>
-                <select id="productCategory" name="category_id" class="form-select" style="font-size: 14px; padding: 8px; border-radius: 4px; border: 1px solid #ddd; width: 100%; margin-bottom: 10px;" required>
-                    <option value="">Select Category</option>
-                    <?php if (!empty($categories)): ?>
-                        <?php foreach ($categories as $category): ?>
-                            <option value="<?= htmlspecialchars($category['id']); ?>">
-                                <?= htmlspecialchars($category['name']); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <option value="">No categories available</option>
-                    <?php endif; ?>
-                </select>
-            </div>
-
-            <!-- Product Image -->
-            <div class="mb-3">
-                <label for="productImage" class="form-label" style="font-size: 14px; color: #555;">Upload Image:</label>
-                <input type="file" id="productImage" name="image" accept="image/*" class="form-control" style="font-size: 14px; padding: 8px; border-radius: 4px; border: 1px solid #ddd; width: 100%; margin-bottom: 10px;" onchange="previewImage(event)" required />
-                <img id="imagePreview" class="preview-image" src="" alt="Image Preview" style="display: none; max-width: 180px; height: auto; margin-top: 10px;" />
-            </div>
-
-            <!-- Product Price -->
-            <div class="mb-3">
-                <label for="productPrice" class="form-label" style="font-size: 14px; color: #555;">Price:</label>
-                <input type="number" id="productPrice" name="price" min="0" class="form-control" style="font-size: 14px; padding: 8px; border-radius: 4px; border: 1px solid #ddd; width: 100%; margin-bottom: 20px;" required />
-            </div>
-
-            <!-- Submit Button -->
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary" style="padding: 10px 18px; font-size: 14px; border-radius: 5px; background-color: #007bff; color: white; border: none; width: 60%; cursor: pointer;">
-                    Submit
-                </button>
-            </div>
+            <button type="submit" class="btn btn-success mt-3">Submit</button>
         </form>
     </div>
 
+    <?php require_once './views/layouts/footer.php'; ?>
 </main>
-<?php require_once './views/layouts/footer.php'; ?>

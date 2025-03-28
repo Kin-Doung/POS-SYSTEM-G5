@@ -1,103 +1,76 @@
 <?php
-require_once 'Databases/database.php';
+require_once './Databases/database.php';
 
 class PurchaseModel
 {
     private $pdo;
-
+    
     function __construct()
     {
         $this->pdo = new Database();
     }
 
-    // Function to fetch all purchases
-    function getPurchase()
+    // Get all categories
+    function getCategories()
+    {
+        $stmt = $this->pdo->query("SELECT * FROM categories ORDER BY name ASC");
+        return $stmt->fetchAll();
+    }
+
+    function getPurchases()
     {
         $purchase = $this->pdo->query("SELECT * FROM purchase ORDER BY id DESC");
         return $purchase->fetchAll();
     }
-    function getInventory()
-    {
-        $purchase = $this->pdo->query("SELECT * FROM inventory ORDER BY id DESC");
-        return $purchase->fetchAll();
-    }
 
-    // Function to fetch all categories
-    function getCategory()
-    {
-        // Query to get categories from the categories table
-        $stmt = $this->pdo->query("SELECT * FROM categories ORDER BY id DESC");
-        $categories = $stmt->fetchAll();  // Fetch all categories as an associative array
-        return $categories;
-    }
-
-    // Function to create a new purchase
     function createPurchase($data)
     {
-        // Insert the purchase data into the purchase table
-        $this->pdo->query("INSERT INTO purchase (product_id, image, quantity, price, purchase_date, category_id) 
-            VALUES (:product_id, :image, :quantity, :price, :purchase_date, :category_id)", [
-            'product_id' => $data['product_id'],  // Use product_id from the Product model
-            'image' => $data['image'],
-            'quantity' => $data['quantity'],
-            'price' => $data['price'],
+        // Ensure image is provided or set to null if not
+        $imagePath = isset($data['image']) ? $data['image'] : null;
+        
+        $this->pdo->query("INSERT INTO purchase (image, product_name, category_name, category_id, price, purchase_date) 
+                            VALUES (:image, :product_name, :category_name, :category_id, :price, :purchase_date)", [
+            'image' => $imagePath,
+            'product_name' => htmlspecialchars($data['product_name']),
+            'category_name' => htmlspecialchars($data['category_name']),
+            'category_id' => intval($data['category_id']),
+            'price' => floatval($data['price']),
             'purchase_date' => $data['purchase_date'],
-            'category_id' => $data['category_id'],  // Add category_id
         ]);
     }
 
-    // Function to fetch a specific purchase by ID
-    function getPurchases($id)
+    function getPurchase($id)
     {
         $stmt = $this->pdo->query("SELECT * FROM purchase WHERE id = :id", ['id' => $id]);
-        $purchase = $stmt->fetch();
-        return $purchase;
+        return $stmt->fetch();
     }
 
-
-    // Function to update a purchase
-    public function updatePurchase($id, $data)
+    function updatePurchase($id, $data)
     {
-        // Get the existing purchase data to find the correct `product_id`
-        $purchase = $this->getPurchases($id);
-        if (!$purchase) {
-            return; // Exit if no purchase is found
+        // Ensure image is provided or keep the old image
+        $imagePath = isset($data['image']) ? $data['image'] : $data['current_image'];  // use current image if not updated
+        
+        $this->pdo->query("UPDATE purchase SET image = :image, product_name = :product_name, category_name = :category_name, 
+                            category_id = :category_id, price = :price, purchase_date = :purchase_date WHERE id = :id", [
+            'image' => $imagePath,
+            'product_name' => htmlspecialchars($data['product_name']),
+            'category_name' => htmlspecialchars($data['category_name']),
+            'category_id' => intval($data['category_id']),
+            'price' => floatval($data['price']),
+            'purchase_date' => $data['purchase_date'],
+            'id' => $id
+        ]);
+    }
+
+    function deletePurchase($id)
+    {
+        // First, get the current image path to delete the file if it exists
+        $purchase = $this->getPurchase($id);
+        if ($purchase && $purchase['image'] && file_exists($purchase['image'])) {
+            unlink($purchase['image']);  // Delete the image if it exists
         }
 
-        $productId = $purchase['product_id']; // Get the linked product ID
-
-        // ✅ Update `purchase` table
-        $this->pdo->query("UPDATE purchase SET product_name = :product_name, image = :image, price = :price, category_id = :category_id WHERE id = :id", [
-            'product_name' => $data['product_name'],
-            'image' => $data['image'],
-            'price' => $data['price'],
-            'category_id' => $data['category_id'],
-            'id' => $id
-        ]);
-
-        // ✅ Update `products` table as well
-        $this->pdo->query("UPDATE products SET name = :name, price = :price, category_id = :category_id WHERE id = :id", [
-            'name' => $data['product_name'],
-            'price' => $data['price'],
-            'category_id' => $data['category_id'],
-            'id' => $productId // Ensure correct product ID is used
-        ]);
-    }
-
-
-    // Function to delete a purchase
-    public function deletePurchase($id)
-    {
+        // Then delete the purchase record from the database
         $this->pdo->query("DELETE FROM purchase WHERE id = :id", ['id' => $id]);
     }
-
-    public function updateQuantity($id, $newQuantity)
-    {
-        $this->pdo->query("UPDATE purchase SET quantity = :quantity WHERE id = :id", [
-            'quantity' => $newQuantity,
-            'id' => $id
-        ]);
-    }    
-
-
 }

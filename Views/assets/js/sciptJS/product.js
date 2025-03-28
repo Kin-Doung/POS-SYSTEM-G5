@@ -232,3 +232,5 @@ document.querySelectorAll(".buy").forEach(button => {
         addToCart(productId, productName, productPrice);
     });
 });
+
+

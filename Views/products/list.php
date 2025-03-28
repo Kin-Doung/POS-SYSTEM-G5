@@ -1,5 +1,5 @@
-<?php 
-require_once './views/layouts/header.php'; 
+<?php
+require_once './views/layouts/header.php';
 require_once './views/layouts/side.php';
 ?>
 
@@ -59,107 +59,28 @@ require_once './views/layouts/side.php';
             </select>
         </form>
     </div>
-
-    <div class="container mt-5">
-        <h2 class="mb-4">Item List</h2>
-        <table class="table-bordered table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th scope="col">Image</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Quantity</th>
-                    <th scope="col" class="text-center">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($purchase as $item): ?>
-                    <tr>
-                        <td>
-                            <img src="<?= '/uploads/' . htmlspecialchars($item['product_image']) ?>" alt="Product Image" class="img" width="50">
-                        </td>
-                        <td><?= htmlspecialchars($item['product_name']) ?></td>
-                        <td class="price">
-                            <?= $item['product_price'] == 0 ? 'Free' : '$' . number_format($item['product_price'], 2) ?>
-                        </td>
-                        <td>
-                            <input type="number" min="0" value="0" class="form-control quantity">
-                        </td>
-                        <td class="text-center">
-                            <button type="submit" class="btn btn-success btn-sm buy-btn">Edit</button>
-                        </td>
-                    </tr>
+    <?php if (isset($inventory) && is_array($inventory) && !empty($inventory)): ?>
+        <div class="container mt-5">
+            <div class="row">
+                <?php foreach ($inventory as $key => $product): ?>
+                    <div class="col-6 col-sm-4 col-md-3 mb-4">
+                        <div class="card square-card">
+                            <img src="watch-image-url.jpg" class="card-img-top" alt="Elegant Watch">
+                            <div class="card-body">
+                                <h6 class="card-title text-center"><?= htmlspecialchars($product['name']) ?></h6>
+                                <p class="card-text text-center price"><?= htmlspecialchars($product['amount']) ?></p>
+                                <p class="card-text text-center rating">★★★★☆</p>
+                                <a href="#" class="btn btn-sm btn-primary d-block mx-auto">Buy Now</a>
+                            </div>
+                        </div>
+                    </div>
                 <?php endforeach; ?>
-            </tbody>
-        </table>
-
-        <!-- Purchase Modal -->
-        <div id="purchase-modal" class="purchase-card" style="display: none;">
-            <div class="card" style="width: 70%; margin: auto;">
-                <div class="card-body">
-                    <h5 class="card-title">Purchase Summary</h5>
-                    <!-- Product Details Table -->
-                    <table class="table table-bordered">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Product</th>
-                                <th>Quantity</th>
-                                <th>Price</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody id="product-details-list">
-                            <!-- Product details will be populated here -->
-                        </tbody>
-                    </table>
-                    <hr>
-                    <p id="overall-total" class="text-right"><strong>Total Amount: $0.00</strong></p>
-                    <div class="text-right">
-                        <button class="btn btn-primary" id="confirm-purchase">Confirm Purchase</button>
-                        <button class="btn btn-secondary" id="close-modal">Close</button>
-                    </div>
-                </div>
             </div>
         </div>
+    <?php else: ?>
+        <p class="text-center mt-5">No products found.</p>
+    <?php endif; ?>
 
-        <div class="text-right mt-4">
-            <!-- Show Details Button -->
-            <button class="btn btn-info" id="show-details-btn">Show Details</button>
-        </div>
-    </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="detailModal" tabindex="" role="" aria-labelledby="detailModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="detailModalLabel">Item Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span>&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <table class="table table-bordered table-striped">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">Image</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody id="modalBodyContent">
-                            <!-- Dynamic content will be injected here -->
-                        </tbody>
-                    </table>
-                    <div class="text-right">
-                        <button class="btn btn-primary" id="savePdfBtn">Save PDF</button>
-                        <button class="btn btn-warning" id="restockBtn">Restock</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <?php require_once 'views/layouts/footer.php'; ?>
 </main>

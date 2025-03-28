@@ -5,6 +5,7 @@ require_once 'BaseController.php';
 class SettingController extends BaseController
 {
     private $model;
+    private $admins;
 
     public function __construct()
     {
@@ -19,10 +20,10 @@ class SettingController extends BaseController
     }
 
     // Show form to create a new admin (create)
-    public function create()
-    {
-        require_once 'views/settings/create.php';
-    }
+    // public function create()
+    // {
+    //     require_once 'views/settings/create.php';
+    // }
 
     // Store new admin data (store)
     public function store()

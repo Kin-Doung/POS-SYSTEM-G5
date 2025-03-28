@@ -39,14 +39,14 @@
         </a>
       </li>
       <!-- nav Suppliers -->
-      <li class="nav-item">
-        <a class="nav-link text-white " href="/purchase">
-          <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+      <!-- <li class="nav-item">
+        <a class="nav-link text-dark " href="/products">
+          <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
             <i class="material-icons opacity-10">view_in_ar</i>
           </div>
           <span class="nav-link-text ms-1">Product</span>
         </a>
-      </li>
+      </li> -->
       <!-- nav Categories -->
       <li class="nav-item">
         <a class="nav-link text-white " href="/category">

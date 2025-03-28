@@ -22,7 +22,7 @@
                 <span class="store-name" id="store-name">Owner Store</span>
             </div>
             <ul class="menu" id="menu">
-                <li><a href="/account" class="item">Account</a></li>
+                <li><a href="/Views/settings/account.php" class="item">Account</a></li>
                 <li><a href="/settings" class="item">Setting</a></li>
                 <li><a href="/logout" class="item">Logout</a></li>
             </ul>

@@ -37,47 +37,74 @@ class InventoryController extends BaseController
 
     // Store a new inventory item
     // In your controller store method
-    function store()
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Handle image upload
-            $imagePath = null;
-            if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
-                $uploadDir = 'uploads/';
-                $imageName = time() . '_' . basename($_FILES['image']['name']);
-                $imagePath = $uploadDir . $imageName;
+    // Store a new inventory item
+    // Store a new inventory item
+    // Store a new inventory item
+// Store multiple inventory items
+function store()
+{
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Handle multiple product entries
+        $imagePaths = []; // Array to hold the paths for all images
+        $categoryIds = $_POST['category_id']; // Assuming this is an array for multiple products
+        $productNames = $_POST['product_name'];
+        $quantities = $_POST['quantity'];
+        $prices = $_POST['amount'];
+        $expirationDates = $_POST['expiration_date'];
 
-                if (!move_uploaded_file($_FILES['image']['tmp_name'], $imagePath)) {
-                    $imagePath = null;
+        // Loop through all the products in the form
+        foreach ($productNames as $index => $productName) {
+            // Handle image upload for each product
+            $imagePath = null;
+            if (isset($_FILES['image']) && $_FILES['image']['error'][$index] == 0) {
+                $targetDir = "uploads/"; // Directory for storing images
+                $imageName = uniqid() . '-' . basename($_FILES['image']['name'][$index]); // Unique image name to avoid collisions
+                $imagePath = $targetDir . $imageName;
+
+                // Check if the uploaded file is a valid image type
+                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                if (in_array($_FILES['image']['type'][$index], $allowedTypes) && $_FILES['image']['size'][$index] <= 2 * 1024 * 1024) { // 2MB max
+                    // Move the uploaded image to the uploads directory
+                    if (move_uploaded_file($_FILES['image']['tmp_name'][$index], $imagePath)) {
+                        // Image uploaded successfully
+                    } else {
+                        echo "Error uploading image.";
+                        return; // Stop the process if image upload fails
+                    }
+                } else {
+                    echo "Invalid file type or file is too large.";
+                    return; // Stop the process if validation fails
                 }
             }
 
-            // Get category_id from the form
-            $category_id = $_POST['category_id'];
-            $category_name = $_POST['category_name'];  // Optional if you're also saving the category name
+            // Verify that category_id exists in the database
+            $categoryId = $categoryIds[$index]; // Get category for this product
+            $category = $this->categories->getCategoryById($categoryId); // Check if category exists
+            if (!$category) {
+                echo "Invalid category selected.";  // Show error if category doesn't exist
+                return;
+            }
 
-            // Calculate total_price
-            $total_price = $this->calculateTotalPrice($_POST['quantity'], $_POST['amount']);
-
-            // Prepare data for creating the inventory item
+            // Proceed with storing the inventory item
             $data = [
-                'product_name' => $_POST['product_name'],
-                'category_id' => $category_id,
-                'category_name' => $category_name,
-                'quantity' => $_POST['quantity'],
-                'amount' => $_POST['amount'],
-                'total_price' => $total_price,
-                'expiration_date' => $_POST['expiration_date'],
-                'image' => $imagePath
+                'product_name' => $productNames[$index],
+                'category_id' => $categoryId, // Store the selected category_id
+                'category_name' => $category['name'], // Store the category name for reference
+                'quantity' => $quantities[$index],
+                'amount' => $prices[$index],
+                'total_price' => $quantities[$index] * $prices[$index],
+                'expiration_date' => $expirationDates[$index],
+                'image' => $imagePath ?? null, // Store the image path if available
             ];
 
-            // Insert new inventory item into the database
+            // Store the inventory item in the database
             $this->model->createInventory($data);
-
-            // Redirect to inventory list
-            $this->redirect('/inventory');
         }
+
+        // Redirect to inventory list after storing
+        $this->redirect('/inventory');
     }
+}
 
 
     // Show the form to edit an existing inventory item
@@ -93,7 +120,9 @@ class InventoryController extends BaseController
         ]);
     }
 
-    // Update an inventory item
+
+
+
     function update($id)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -104,36 +133,49 @@ class InventoryController extends BaseController
             // Handle new image upload
             if (!empty($_FILES['image']['name'])) {
                 $targetDir = "uploads/"; // Ensure this folder exists
-                $imagePath = $targetDir . basename($_FILES['image']['name']);
+                $imagePath = $targetDir . uniqid() . '-' . basename($_FILES['image']['name']); // Unique name for the image
 
-                // Move uploaded file to target directory
-                if (move_uploaded_file($_FILES['image']['tmp_name'], $imagePath)) {
-                    // Successfully uploaded new image
+                // Validate the image type and size
+                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                if (in_array($_FILES['image']['type'], $allowedTypes) && $_FILES['image']['size'] <= 2 * 1024 * 1024) {
+                    // Move uploaded file to target directory
+                    if (move_uploaded_file($_FILES['image']['tmp_name'], $imagePath)) {
+                        // Successfully uploaded new image
+                    } else {
+                        echo "Failed to upload image.";
+                        return;
+                    }
                 } else {
-                    echo "Failed to upload image.";
-                    return;
+                    echo "Invalid file type or file is too large.";
+                    return; // Stop the process if validation fails
                 }
             }
 
-            // Calculate total_price if not set
-            $total_price = isset($_POST['total_price']) ? $_POST['total_price'] : $this->calculateTotalPrice($_POST['quantity'], $_POST['amount']);
+            // Get the category_name from category_id
+            $categoryId = $_POST['category_id'];
+            $category = $this->categories->getCategoryById($categoryId); // Fetch category by ID
+            $categoryName = $category['name']; // Get category name
 
+            // Prepare the data array to update the inventory item
             $data = [
-                'category_id' => $_POST['category_id'],
+                'category_id' => $categoryId, // Update category_id
+                'category_name' => $categoryName, // Update category_name
                 'product_name' => $_POST['product_name'],
                 'quantity' => $_POST['quantity'],
                 'amount' => $_POST['amount'],
-                'total_price' => $total_price,  // Ensure total_price is being passed
+                'total_price' => $_POST['quantity'] * $_POST['amount'],
                 'expiration_date' => $_POST['expiration_date'],
-                'image' => $imagePath
+                'image' => $imagePath // Save new or old image path
             ];
 
-            $this->model->updateInventory($id, $data); // Pass the $data array with total_price
+            // Update the inventory item in the database
+            $this->model->updateInventory($id, $data);
 
             // Redirect to the inventory list page
             $this->redirect('/inventory');
         }
     }
+
 
 
     // Destroy an inventory item

@@ -61,10 +61,9 @@ document.addEventListener("DOMContentLoaded", function () {
     checkboxes.forEach((chk) => {
       const quantityInput = chk.closest("tr").querySelector(".quantity-input");
       quantityInput.disabled = !chk.checked; // Enable if checked, disable if not
-<<<<<<< HEAD
   });
 }
-<<<<<<< HEAD
+
 
 function updateQuantities() {
   const checkboxes = document.querySelectorAll('.select-checkbox:checked');
@@ -90,11 +89,7 @@ function updateQuantities() {
   searchInput.addEventListener("input", filterTable);
   categorySelect.addEventListener("change", filterTable);
 });
-=======
-=======
-    });
-  }
->>>>>>> e4c15c689ffc64607bd755dc9ce42bfe44c8ca63
+
 
   function updateQuantities() {
     const checkboxes = document.querySelectorAll(".select-checkbox:checked");
@@ -119,7 +114,7 @@ function updateQuantities() {
 
   searchInput.addEventListener("input", filterTable);
   categorySelect.addEventListener("change", filterTable);
-});
+
 
 // nav bar active js
 
@@ -238,9 +233,6 @@ inventoryRows.forEach((row) => {
   }
 });
 
-<<<<<<< HEAD
->>>>>>> main
-=======
 document.addEventListener("DOMContentLoaded", function() {
   const quantityInput = document.getElementById("quantity");
   const priceInput = document.getElementById("amount");
@@ -260,7 +252,6 @@ document.addEventListener("DOMContentLoaded", function() {
   quantityInput.addEventListener("input", calculateTotalPrice);
   priceInput.addEventListener("input", calculateTotalPrice);
 });
-<<<<<<< HEAD
 
 
 
@@ -287,6 +278,3 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Call filterTable on page load to ensure correct filtering if a category is pre-selected
   window.onload = filterTable;
-=======
->>>>>>> e4c15c689ffc64607bd755dc9ce42bfe44c8ca63
->>>>>>> feature/purchase-order

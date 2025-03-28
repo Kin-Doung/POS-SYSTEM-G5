@@ -189,7 +189,7 @@ body {
 
 /* Hover Effect on Table Heading */
 .table th:hover {
-  background-color: #9b9b9b;
+  background-color: #464545;
   color: #fff; /* Slightly lighter hover effect */
 }
 
@@ -259,7 +259,7 @@ body {
   }
   .selected{
     margin-top: 5px;
-
+    border-radius: 0 !important;
     width: 30%;
   }
   .input-group input {
@@ -270,6 +270,9 @@ body {
     margin-top: 5px;
     box-sizing: border-box;
     transition: background-color 0.3s ease;
+  }
+  .purchase-head{
+    font-family: 'Poppins', sans-serif;
   }
   
   .input-group input:focus {

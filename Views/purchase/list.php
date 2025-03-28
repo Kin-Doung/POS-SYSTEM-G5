@@ -75,61 +75,7 @@ require_once './views/layouts/side.php';
         </div>
     </div>
 
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2 id="modal-product-name"></h2>
-            <img id="modal-product-image" src="" alt="Product Image" style="width:100%; height:auto;">
-            <div>
-                <label for="quantity">Quantity:</label>
-                <input type="number" id="quantity" value="1" min="1" onchange="updateTotal()">
-            </div>
-            <div>Total Price: $<span id="total-price-usd">0.80</span></div>
-            <button onclick="orderAndUpdateTotal()">Order</button>
-            <button onclick="saveAsPDF()">Save as PDF</button>
-        </div>
-    </div>
-
-    <script>
-        function openModal(productName, productPrice, productImage) {
-            document.getElementById('modal-product-name').innerText = productName;
-            document.getElementById('modal-product-image').src = productImage;
-            updateTotal(productPrice);
-            document.getElementById('modal').style.display = 'block';
-        }
-
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-        }
-
-        function updateTotal(price) {
-            const quantity = document.getElementById('quantity').value;
-            const totalUSD = (quantity * price).toFixed(2);
-            document.getElementById('total-price-usd').innerText = totalUSD;
-        }
-
-        function orderAndUpdateTotal() {
-            const quantity = document.getElementById('quantity').value;
-            const totalPrice = document.getElementById('total-price-usd').innerText;
-            alert(`Order placed for ${quantity} items. Total Price: $${totalPrice}`);
-            closeModal();
-        }
-
-        function saveAsPDF() {
-            const {
-                jsPDF
-            } = window.jspdf;
-            const doc = new jsPDF();
-
-            const productName = document.getElementById('modal-product-name').innerText;
-            const totalUSD = document.getElementById('total-price-usd').innerText;
-
-            doc.text(`Product: ${productName}`, 10, 10);
-            doc.text(`Total Price (USD): $${totalUSD}`, 10, 20);
-
-            doc.save('product-details.pdf');
-        }
-    </script>
+   
     
 
 

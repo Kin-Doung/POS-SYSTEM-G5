@@ -59,24 +59,28 @@ require_once './views/layouts/side.php';
             </select>
         </form>
     </div>
-    <?php foreach ($inventory as $key => $product): ?>
+    <?php if (isset($inventory) && is_array($inventory) && !empty($inventory)): ?>
         <div class="container mt-5">
             <div class="row">
-                <div class="col-6 col-sm-4 col-md-3 mb-4">
-                    <div class="card square-card">
-                        <img src="watch-image-url.jpg" class="card-img-top" alt="Elegant Watch">
-                        <div class="card-body">
-                            <h6 class="card-title text-center"> <?=$product['name']?></h6>
-                            <p class="card-text text-center price"><?=$product['amount'] ?></p>
-                            <p class="card-text text-center rating">★★★★☆</p>
-                            <!-- <p class="card-text text-center small">Lorem ipsum dolor sit amet.</p> -->
-                            <a href="#" class="btn btn-sm btn-primary d-block mx-auto">Buy Now</a>
+                <?php foreach ($inventory as $key => $product): ?>
+                    <div class="col-6 col-sm-4 col-md-3 mb-4">
+                        <div class="card square-card">
+                            <img src="watch-image-url.jpg" class="card-img-top" alt="Elegant Watch">
+                            <div class="card-body">
+                                <h6 class="card-title text-center"><?= htmlspecialchars($product['name']) ?></h6>
+                                <p class="card-text text-center price"><?= htmlspecialchars($product['amount']) ?></p>
+                                <p class="card-text text-center rating">★★★★☆</p>
+                                <a href="#" class="btn btn-sm btn-primary d-block mx-auto">Buy Now</a>
+                            </div>
                         </div>
                     </div>
-                </div>
+                <?php endforeach; ?>
             </div>
         </div>
-    <?php endforeach ?>
+    <?php else: ?>
+        <p class="text-center mt-5">No products found.</p>
+    <?php endif; ?>
+
 
     <?php require_once 'views/layouts/footer.php'; ?>
 </main>

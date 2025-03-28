@@ -59,8 +59,8 @@ $routes->get('/notifications', [NotificationController::class, 'index']);
 // products
 $routes->get('/products', [ProductController::class, 'index']);
 $routes->post('/products/store', [ProductController::class, 'store']);
-$routes->get('/products/edit/(:num)', [ProductController::class, 'edit']);  // Edit product with ID
-$routes->post('/products/updatePrice/(:num)', [ProductController::class, 'updatePrice']); // Update price for a specific product
+$routes->get('/products/edit', [ProductController::class, 'edit']);  // Edit product with ID
+$routes->post('/products/updatePrice', [ProductController::class, 'updatePrice']); // Update price for a specific product
 
 // categories
 $routes->get('/category', [CategoryController::class, 'index']);

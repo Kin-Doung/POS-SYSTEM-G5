@@ -112,3 +112,123 @@ document.addEventListener("DOMContentLoaded", function() {
         purchaseModal.style.display = "none";
     });
 });
+
+
+let cart = [];
+
+function addToCart(productId, name, price) {
+    let existingProduct = cart.find(item => item.id === productId);
+
+    if (existingProduct) {
+        existingProduct.quantity += 1;
+    } else {
+        cart.push({
+            id: productId,
+            name: name,
+            price: parseFloat(price),
+            quantity: 1
+        });
+    }
+
+    document.getElementById("cartSection").style.display = "block"; // Show cart
+    updateCartTable();
+}
+
+function updateCartTable() {
+    let cartTableBody = document.querySelector("#cartTable tbody");
+    cartTableBody.innerHTML = "";
+
+    let grandTotal = 0;
+
+    cart.forEach((item, index) => {
+        let totalPrice = item.price * item.quantity;
+        grandTotal += totalPrice;
+
+        let row = `
+            <tr>
+                <td>${item.name}</td>
+                <td><input type="number" value="${item.quantity}" min="1" data-index="${index}" class="cart-quantity" /></td>
+                <td>${totalPrice.toFixed(2)} $</td>
+            </tr>
+        `;
+        cartTableBody.innerHTML += row;
+    });
+
+    document.getElementById("grandTotal").textContent = grandTotal.toFixed(2);
+
+    document.querySelectorAll(".cart-quantity").forEach(input => {
+        input.addEventListener("change", updateQuantity);
+    });
+}
+
+function updateQuantity(event) {
+    let index = event.target.getAttribute("data-index");
+    let newQuantity = parseInt(event.target.value);
+    let productId = cart[index].id;
+
+    if (newQuantity > 0) {
+        cart[index].quantity = newQuantity;
+        updateCartTable();
+
+        // Send the updated quantity to the server via AJAX
+        updateQuantityInDatabase(productId, newQuantity);
+    }
+}
+
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    updateCartTable();
+
+    if (cart.length === 0) {
+        document.getElementById("cartSection").style.display = "none"; // Hide cart when empty
+    }
+}
+
+function updateQuantityInDatabase(productId, newQuantity) {
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "update_quantity.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            // Handle response (optional)
+            console.log(xhr.responseText);
+        }
+    };
+
+    // Send the data
+    xhr.send("product_id=" + productId + "&quantity=" + newQuantity);
+}
+
+function replaceCartInDatabase() {
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "replace_cart.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            // Handle response (optional)
+            alert(xhr.responseText); // Show success message or error
+        }
+    };
+
+    // Prepare cart data for replacement
+    let cartData = cart.map(item => ({
+        product_id: item.id,
+        quantity: item.quantity
+    }));
+
+    // Send cart data to backend
+    xhr.send("cart=" + JSON.stringify(cartData));
+}
+
+document.querySelectorAll(".buy").forEach(button => {
+    button.addEventListener("click", function() {
+        let productCard = this.closest(".card");
+        let productId = productCard.querySelector("input[name='product_id']").value;
+        let productName = productCard.querySelector(".card-title").textContent;
+        let productPrice = productCard.querySelector(".card-text.price").textContent;
+
+        addToCart(productId, productName, productPrice);
+    });
+});

@@ -37,7 +37,7 @@ body {
     position: relative;
     display: inline-block;
 }
-.dropbtn {
+/* .dropbtn {
     background-color: #007bff;
     color: white;
     border: none;
@@ -47,7 +47,7 @@ body {
 }
 .dropbtn:hover {
     background-color: #0056b3;
-}
+} */
 .dropdown-content {
     display: none;
     position: absolute;
@@ -76,13 +76,35 @@ body {
     margin: 0 auto;
 }
 .orders{
-    padding: 20px;
+    padding: 10px;
+    margin-top: 40px;
+    margin-left: -50px;
+    margin-right: -25px;
 }
 
 .edit-inventory h3 {
     text-align: center;
     color: #333;
     font-size: 1.5rem;
+}
+.btn-new-product{
+  background: rgb(73, 73, 253);
+  padding: 10px 15px;
+  border-radius: 50px;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  transition: background-color 0.3s ease; /* Smooth transition */
+  text-decoration: none;
+
+}
+.btn-new-product, a{
+  color: #f1f1f1;
+  font-weight: bold;
+  font-size: 18px;
+}
+.btn-new-product:hover{
+  color: #f1f1f1;
+  background: rgb(2, 2, 221);
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 .form-label {
     font-weight: bold;
@@ -153,45 +175,59 @@ body {
 
 /* Table Cells - Remove border */
 .table th, .table td {
-  border: none; /* No borders for both table headings and data cells */
+  border: none; 
   padding: 10px;
-  text-align: left;
+  text-align: center;
   cursor: pointer;
   position: relative;
   /* font-weight: bold; */
   transition: background-color 0.3s;
-  text-align: center;
 }
 .table td:nth-child(3) {
-  text-align: left; /* Align text in the Product Name column to the left */
+  text-align: center; /* Align text in the Product Name column to the left */
 }
 
 /* Hover Effect on Table Heading */
 .table th:hover {
-  background-color: #444; /* Slightly lighter hover effect */
+  background-color: #464545;
+  color: #fff; /* Slightly lighter hover effect */
 }
+
+/* Ensure the dropdown stays on top */
+.dropdown-menu {
+  z-index: 1050 !important; /* Dropdown base z-index */
+  position: absolute !important; /* Ensures it doesn't get hidden */
+  top: 50px; /* Adjusted top margin to 50px */
+}
+
+
+/* Make the focused or hovered item appear on top */
+.dropdown-menu .dropdown-item:focus, 
+.dropdown-menu .dropdown-item:hover {
+  background-color: #ccc !important;
+  color: black !important; /* Ensures text remains visible */
+  z-index: 9999 !important; /* Ensure it's higher than all other elements */
+  position: relative !important; /* Keeps focused item above other elements */
+}
+
 
 /* Sorting Icon */
 .table th.active::after {
-  content: '';
+  content: '\f0de';
+  font-family: 'Font Awesome 5 Free';
   position: absolute;
   right: 10px;
   top: 10px;
-  font-family: 'Font Awesome 5 Free';
   font-weight: 900;
   transition: transform 0.3s ease;
 }
 
 /* Ascending Icon */
 .table th.asc::after {
-  content: "\f0de"; /* Font Awesome sort-up icon */
+  /* content: "\f0de";  */
   transform: rotate(180deg);
 }
 
-/* Descending Icon */
-.table th:not(.asc)::after {
-  content: "\f0de"; /* Font Awesome sort-down icon */
-}
 
 /* Table Rows */
 .table tbody tr {
@@ -225,6 +261,8 @@ body {
     margin-top: 5px;
     padding: 5px !important;
     width: 50%;
+    border-radius: 0 !important;
+    width: 30%;
   }
   .input-group input {
     padding: 10px;
@@ -234,6 +272,9 @@ body {
     margin-top: 5px;
     box-sizing: border-box;
     transition: background-color 0.3s ease;
+  }
+  .purchase-head{
+    font-family: 'Poppins', sans-serif;
   }
   
   .input-group input:focus {
@@ -378,11 +419,6 @@ body, .sidenav {
   .detail p{
     margin-bottom: 15px;
   }
-  
-  
-  
-  
-  
   
   @media (max-width: 768px) {
       .edit-inventory {

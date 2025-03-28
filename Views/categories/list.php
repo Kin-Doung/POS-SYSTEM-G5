@@ -33,9 +33,9 @@
     </nav>
     <!-- End Navbar -->
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <a href="/category/create" class="bg-info create-ct" style="margin-top: 30px; width : 100px;">
-                <i class="bi-plus-lg"></i> Add New
+        <div class="mt-5">
+            <a href="/category/create" class=" create-ct" style="margin-top: 30px; width : 100px;">
+                <i class="bi-plus-lg"></i> Add New Cateogries
             </a>
         </div>
 

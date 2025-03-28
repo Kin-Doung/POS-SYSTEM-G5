@@ -1,5 +1,8 @@
-<?php require_once './views/layouts/side.php' ?>
-<?php require_once './views/layouts/header.php' ?>
+<?php 
+    require_once './views/layouts/header.php';
+    require_once './views/layouts/side.php';
+    
+?>
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
     <nav class="navbar">

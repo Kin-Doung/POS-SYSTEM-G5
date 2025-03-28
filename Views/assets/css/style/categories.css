@@ -137,6 +137,20 @@
     border-radius: 15px;
     outline-color: rebeccapurple;
 }
-.create-ct:hover{
-    color:#fff !important;
+.create-ct {
+    padding: 10px 20px;
+    border-radius: 50px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 18px;
+    text-decoration: none;
+    background: rgb(73, 73, 253);
+    transition: background-color 0.3s ease; /* Smooth transition */
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
+.create-ct:hover{
+    color: #fff ;
+    background: rgb(2, 2, 221);
+}
+
+

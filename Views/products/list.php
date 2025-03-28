@@ -25,8 +25,6 @@ require_once './views/layouts/side.php';
             </div>
         </div>
     </nav>
-    <!-- End Navbar -->
-
     <!-- Search and Category Filter -->
     <div class="input-group">
         <input type="text" id="searchInput" class="form-controlls input-group-search" placeholder="Search...">
@@ -43,9 +41,6 @@ require_once './views/layouts/side.php';
             <?php endif; ?>
         </select>
     </div>
-
-    <!-- Inventory Display -->
-
 
     <!-- Product Card Section -->
     <div class="container mt-5 d-flex">
@@ -93,11 +88,6 @@ require_once './views/layouts/side.php';
 
         </div>
     </div>
-
-
-
-
-
     <?php require_once 'views/layouts/footer.php'; ?>
 </main>
 

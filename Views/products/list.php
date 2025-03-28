@@ -50,59 +50,27 @@ require_once './views/layouts/side.php';
             <?php endif; ?>
         </select>
     </div>
-
-    <!-- Inventory Display -->
-
-
-    <!-- Product Card Section -->
-    <div class="container mt-5 d-flex">
-        <div class="product-list flex-grow-1">
+    <?php if (isset($inventory) && is_array($inventory) && !empty($inventory)): ?>
+        <div class="container mt-5">
             <div class="row">
-                <?php foreach ($products as $product): ?>
+                <?php foreach ($inventory as $key => $product): ?>
                     <div class="col-6 col-sm-4 col-md-3 mb-4">
                         <div class="card square-card">
-                            <div class="image-wrapper">
-                                <img src="<?= htmlspecialchars($product['image']) ?>" class="card-img-top" alt="<?= htmlspecialchars($product['name']) ?>">
-                            </div>
+                            <img src="watch-image-url.jpg" class="card-img-top" alt="Elegant Watch">
                             <div class="card-body">
                                 <h6 class="card-title text-center"><?= htmlspecialchars($product['name']) ?></h6>
-                                <p class="card-text text-center price"><?= htmlspecialchars($product['price']) ?> $</p>
-
-                                <!-- Quantity and Buy Button -->
-                                <div class="text-center mt-2">
-                                    <input type="hidden" name="product_id" value="<?= htmlspecialchars($product['id']) ?>" />
-                                    <button class="buy">Buy</button>
-                                </div>
+                                <p class="card-text text-center price"><?= htmlspecialchars($product['amount']) ?></p>
+                                <p class="card-text text-center rating">★★★★☆</p>
+                                <a href="#" class="btn btn-sm btn-primary d-block mx-auto">Buy Now</a>
                             </div>
                         </div>
                     </div>
                 <?php endforeach; ?>
             </div>
         </div>
-
-        <!-- Cart Section -->
-        <div class="cart-section ms-4 p-3 border rounded shadow bg-white" id="cartSection" style="width: 500px; display: none;">
-            <h4>Cart</h4>
-            <table class="table table-bordered text-center" id="cartTable">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Product</th>
-                        <th>Qty</th>
-                        <th>Total ($)</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-            <h5>Total: <span id="grandTotal">0</span> $</h5>
-            <div class="text-center mt-3">
-                <button class="btn btn-success" onclick="replaceCartInDatabase()">submit</button>
-            </div>
-
-        </div>
-    </div>
-
-
-
+    <?php else: ?>
+        <p class="text-center mt-5">No products found.</p>
+    <?php endif; ?>
 
 
     <?php require_once 'views/layouts/footer.php'; ?>

@@ -215,18 +215,6 @@ body {
   
   /* Input Group for Search */
   .input-group {
-<<<<<<< HEAD
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-left: 3px;
-  }
-  .selected{
-    margin-top: 5px;
-
-    width: 30%;
-=======
     width: 300px;
     display: flex;
     justify-content: space-between;
@@ -237,7 +225,6 @@ body {
     margin-top: 5px;
     padding: 5px !important;
     width: 50%;
->>>>>>> feature/purchase-order
   }
   .input-group input {
     padding: 10px;
@@ -451,30 +438,3 @@ body, .sidenav {
     padding: 0 !important;
   }
   
-<<<<<<< HEAD
-
-
-  /* General Table Styles */
-.table {
-  border-collapse: collapse;
-  width: 100%;
-  background: #fff;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.table th {
-  background: #007bff;
-  color: white;
-  padding: 10px;
-  text-align: center;
-}
-
-.table td {
-  padding: 8px;
-  vertical-align: middle;
-  text-align: center;
-}
-
-=======
->>>>>>> feature/purchase-order

@@ -73,7 +73,7 @@
         <div class="orders">
 
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 style="font-weight: bold;">Purchasing Orders</h2>
+                <h2 style="font-weight: bold;" class="purchase-head">Purchasing Orders</h2>
                 <div>
                     <a href="/inventory/create" class=" btn-new-product">
                         <i class="bi-plus-lg"></i> + New Products

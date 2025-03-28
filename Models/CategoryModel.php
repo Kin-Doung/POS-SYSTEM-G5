@@ -37,6 +37,14 @@ class CategoryModel
         return $category;
     }
 
+    public function getCategoryByName($name)
+{
+    $query = "SELECT * FROM categories WHERE name = :name LIMIT 1";
+    $stmt = $this->pdo->query($query);
+    $stmt->execute(['name' => $name]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
 
     function updateCategory($id, $data)
     {
@@ -49,13 +57,13 @@ class CategoryModel
     {
         $stmt = $this->pdo->query("DELETE FROM categories WHERE id = :id");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-
+        
         if ($stmt->execute()) {
             return true;  // Success
         } else {
-            // If there was an issue, output the error for debugging
             echo "Error: " . implode(", ", $stmt->errorInfo());
             return false;  // Failure
         }
     }
+    
 }

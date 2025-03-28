@@ -8,11 +8,12 @@
             <div class="modal-body">
                 Are you sure to delete this user ?
             </div>
-            <form action="/category/delete" method="POST">
-                <input type="hidden" name="id" value="<?= $category['id'] ?>">
+            <form method="POST" action="/category/destroy">
+                <input type="hidden" name="id" value="<?= $category['id']; ?>" />
                 <button type="submit" class="btn btn-danger">Delete</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Discard</button>
             </form>
+
+
 
         </div>
     </div>

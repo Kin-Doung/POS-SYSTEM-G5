@@ -3,13 +3,12 @@ require_once './views/layouts/header.php';
 require_once './views/layouts/side.php';
 ?>
 
-
-<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <!-- Navbar -->
     <nav class="navbar">
         <div class="search-container">
             <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search...">
+            <input type="text" id="searchInput" placeholder="Search..." />
         </div>
         <div class="icons">
             <i class="fas fa-globe icon-btn"></i>
@@ -27,49 +26,78 @@ require_once './views/layouts/side.php';
         </div>
     </nav>
     <!-- End Navbar -->
-    <?php require_once 'views/layouts/header.php'; ?>
 
-
-    <div class="search-section">
-        <form action="" method="POST">
-            <input type="text" class="search-input" id="searchInput" name="searchInput" placeholder="Search for products..." onkeyup="filterProducts()" />
-            <select class="category-select" id="categorySelect" name="categorySelect" onchange="filterProducts()">
-                <option value="">Select Category</option>
-                <option value="all">All</option>
+    <!-- Search and Category Filter -->
+    <div class="input-group">
+        <input type="text" id="searchInput" class="form-controlls input-group-search" placeholder="Search...">
+        <select id="categorySelect" class="ms-2 selected">
+            <option value="">Select Category</option>
+            <?php if (!empty($categories)): ?>
                 <?php foreach ($categories as $category): ?>
-                    <option value="<?= htmlspecialchars($category['name']) ?>">
+                    <option value="<?= htmlspecialchars($category['id']) ?>">
                         <?= htmlspecialchars($category['name']) ?>
                     </option>
                 <?php endforeach; ?>
-            </select>
-            <select class="price-select" id="priceSelect" name="priceSelect" onchange="filterProducts()">
-                <option value="">Select Price Range</option>
-                <option value="0">Up to $10</option>
-                <option value="15">Up to $15</option>
-                <option value="20">Up to $20</option>
-                <option value="25">Up to $25</option>
-                <option value="30">Up to $30</option>
-            </select>
-        </form>
+            <?php else: ?>
+                <option disabled>No Categories Found</option>
+            <?php endif; ?>
+        </select>
     </div>
-    <?php foreach ($inventory as $key => $product): ?>
-        <div class="container mt-5">
+
+    <!-- Inventory Display -->
+
+
+    <!-- Product Card Section -->
+    <div class="container mt-5 d-flex">
+        <div class="product-list flex-grow-1">
             <div class="row">
-                <div class="col-6 col-sm-4 col-md-3 mb-4">
-                    <div class="card square-card">
-                        <img src="watch-image-url.jpg" class="card-img-top" alt="Elegant Watch">
-                        <div class="card-body">
-                            <h6 class="card-title text-center"> <?=$product['name']?></h6>
-                            <p class="card-text text-center price"><?=$product['amount'] ?></p>
-                            <p class="card-text text-center rating">★★★★☆</p>
-                            <!-- <p class="card-text text-center small">Lorem ipsum dolor sit amet.</p> -->
-                            <a href="#" class="btn btn-sm btn-primary d-block mx-auto">Buy Now</a>
+                <?php foreach ($products as $product): ?>
+                    <div class="col-6 col-sm-4 col-md-3 mb-4">
+                        <div class="card square-card">
+                            <div class="image-wrapper">
+                                <img src="<?= htmlspecialchars($product['image']) ?>" class="card-img-top" alt="<?= htmlspecialchars($product['name']) ?>">
+                            </div>
+                            <div class="card-body">
+                                <h6 class="card-title text-center"><?= htmlspecialchars($product['name']) ?></h6>
+                                <p class="card-text text-center price"><?= htmlspecialchars($product['price']) ?> $</p>
+
+                                <!-- Quantity and Buy Button -->
+                                <div class="text-center mt-2">
+                                    <input type="hidden" name="product_id" value="<?= htmlspecialchars($product['id']) ?>" />
+                                    <button class="buy">Buy</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                <?php endforeach; ?>
             </div>
         </div>
-    <?php endforeach ?>
+
+        <!-- Cart Section -->
+        <div class="cart-section ms-4 p-3 border rounded shadow bg-white" id="cartSection" style="width: 500px; display: none;">
+            <h4>Cart</h4>
+            <table class="table table-bordered text-center" id="cartTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Product</th>
+                        <th>Qty</th>
+                        <th>Total ($)</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <h5>Total: <span id="grandTotal">0</span> $</h5>
+            <div class="text-center mt-3">
+                <button class="btn btn-success" onclick="replaceCartInDatabase()">Replace Cart</button>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
 
     <?php require_once 'views/layouts/footer.php'; ?>
 </main>
+

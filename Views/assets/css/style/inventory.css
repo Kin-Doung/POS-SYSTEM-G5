@@ -214,6 +214,7 @@ body {
 /* Sorting Icon */
 .table th.active::after {
   content: '\f0de';
+  font-family: 'Font Awesome 5 Free';
   position: absolute;
   right: 10px;
   top: 10px;

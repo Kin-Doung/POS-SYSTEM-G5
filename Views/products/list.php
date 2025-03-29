@@ -20,7 +20,7 @@ require_once './views/layouts/side.php';
         <div class="profile" id="profile">
             <img src="../../views/assets/images/image.png" alt="User">
             <div class="profile-info">
-                <span id="profile-name">Eng Ly</span>
+                <span id="profile-name" style="color: darkslategray;">Eng Ly</span>
                 <span class="store-name" id="store-name">Owner Store</span>
             </div>
             <ul class="menu" id="menu">
@@ -32,6 +32,8 @@ require_once './views/layouts/side.php';
             <script src="../../views/assets/js/setting.js"></script>
         </div>
     </nav>
+    <!-- End Navbar -->
+
     <!-- Search and Category Filter -->
     <div class="input-group">
         <input type="text" id="searchInput" class="form-controlls input-group-search" placeholder="Search...">
@@ -48,15 +50,8 @@ require_once './views/layouts/side.php';
             <?php endif; ?>
         </select>
     </div>
-<<<<<<< HEAD
     <?php if (isset($inventory) && is_array($inventory) && !empty($inventory)): ?>
         <div class="container mt-5">
-=======
-
-    <!-- Product Card Section -->
-    <div class="container mt-5 d-flex">
-        <div class="product-list flex-grow-1">
->>>>>>> 7a7190213c2d10e73f3045b2398271c3c62c5782
             <div class="row">
                 <?php foreach ($inventory as $key => $product): ?>
                     <div class="col-6 col-sm-4 col-md-3 mb-4">
@@ -73,35 +68,10 @@ require_once './views/layouts/side.php';
                 <?php endforeach; ?>
             </div>
         </div>
-<<<<<<< HEAD
     <?php else: ?>
         <p class="text-center mt-5">No products found.</p>
     <?php endif; ?>
 
 
-=======
-
-        <!-- Cart Section -->
-        <div class="cart-section ms-4 p-3 border rounded shadow bg-white" id="cartSection" style="width: 500px; display: none;">
-            <h4>Cart</h4>
-            <table class="table table-bordered text-center" id="cartTable">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Product</th>
-                        <th>Qty</th>
-                        <th>Total ($)</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-            <h5>Total: <span id="grandTotal">0</span> $</h5>
-            <div class="text-center mt-3">
-                <button class="btn btn-success" onclick="replaceCartInDatabase()">submit</button>
-            </div>
-
-        </div>
-    </div>
->>>>>>> 7a7190213c2d10e73f3045b2398271c3c62c5782
     <?php require_once 'views/layouts/footer.php'; ?>
 </main>
-

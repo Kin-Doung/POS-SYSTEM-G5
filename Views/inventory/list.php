@@ -17,7 +17,7 @@
         <div class="profile">
             <img src="../../views/assets/images/image.png" alt="User">
             <div class="profile-info">
-                <span id="profile-name">Eng Ly</span>
+                <span id="profile-name" style="color: darkslategray;">Eng Ly</span>
                 <span class="store-name" id="store-name">Owner Store</span>
             </div>
             <ul class="menu" id="menu">
@@ -134,7 +134,7 @@
                             <td><span class="quantity-text"><?= htmlspecialchars($item['quantity']) ?></span></td>
                             <td><?= htmlspecialchars($item['amount']) ?></td>
                             <td><?= htmlspecialchars($item['total_price']) ?></td>
-                            
+
 
                             <td>
                                 <div class="dropdown">
@@ -198,7 +198,7 @@
                                 </div>
                                 <!-- end of the show view ------------------------------- -->
 
-                        <!-- ----------------------------------- ----------------------------------------------------------------------------------------------------------------------------------------------------------------->
+                                <!-- ----------------------------------- ----------------------------------------------------------------------------------------------------------------------------------------------------------------->
 
                                 <!-- this is the eidt ----------------- -->
                                 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
@@ -268,78 +268,76 @@
                                     </div>
                                 </div>
 
-                                    </ul>
-                                </div>
-                                <div class="modal fade" id="viewModal<?= $item['id']; ?>" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h2 class="modal-title">View Inventory Item</h2>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body d-flex justify-content-between align-items-center"> <!-- Flexbox layout -->
-                                                <!-- Text on the Left -->
-                                                <div class="text-start d-inline-block detail "> <!-- Keeps text aligned left -->
-                                                    <p><strong>Product Name:</strong> <?= htmlspecialchars($item['product_name']); ?></p>
-                                                    <p><strong>Category:</strong> <?= !empty($item['category_name']) ? htmlspecialchars($item['category_name']) : '-'; ?></p>
-                                                    <p><strong>Quantity:</strong> <?= htmlspecialchars($item['quantity']); ?></p>
-                                                    <p><strong>Price:</strong> $<?= htmlspecialchars(number_format($item['amount'], 2)); ?></p>
-                                                    <p><strong>Total Price:</strong> $<?= htmlspecialchars(number_format($item['total_price'], 2)); ?></p>
-                                                    <p><strong>Expiration Date:</strong> <?= htmlspecialchars($item['expiration_date']); ?></p>
-                                                </div>
+                                </ul>
+        </div>
+        <div class="modal fade" id="viewModal<?= $item['id']; ?>" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title">View Inventory Item</h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex justify-content-between align-items-center"> <!-- Flexbox layout -->
+                        <!-- Text on the Left -->
+                        <div class="text-start d-inline-block detail "> <!-- Keeps text aligned left -->
+                            <p><strong>Product Name:</strong> <?= htmlspecialchars($item['product_name']); ?></p>
+                            <p><strong>Category:</strong> <?= !empty($item['category_name']) ? htmlspecialchars($item['category_name']) : '-'; ?></p>
+                            <p><strong>Quantity:</strong> <?= htmlspecialchars($item['quantity']); ?></p>
+                            <p><strong>Price:</strong> $<?= htmlspecialchars(number_format($item['amount'], 2)); ?></p>
+                            <p><strong>Total Price:</strong> $<?= htmlspecialchars(number_format($item['total_price'], 2)); ?></p>
+                            <p><strong>Expiration Date:</strong> <?= htmlspecialchars($item['expiration_date']); ?></p>
+                        </div>
 
-                                                <!-- Image on the Right -->
-                                                <?php if (!empty($item['image'])): ?>
-                                                    <div class="mb-3">
-                                                        <img src="<?= htmlspecialchars($item['image']); ?>" alt="Product Image" width="150" class="img-fluid">
-                                                    </div>
-                                                <?php endif; ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- JavaScript to populate the modal -->
-                                <script>
-                                    document.querySelectorAll('.dropdown-item').forEach(link => {
-                                        link.addEventListener('click', function(event) {
-                                            const productName = event.target.getAttribute('data-product_name');
-                                            const categoryId = event.target.getAttribute('data-category_id');
-                                            const quantity = event.target.getAttribute('data-quantity');
-                                            const amount = event.target.getAttribute('data-amount');
-                                            const expirationDate = event.target.getAttribute('data-expiration_date');
-                                            const image = event.target.getAttribute('data-image');
-                                            const id = event.target.getAttribute('data-id');
-
-                                            // Set modal fields
-                                            document.getElementById('product_name').value = productName;
-                                            document.getElementById('category_id').value = categoryId;
-                                            document.getElementById('quantity').value = quantity;
-                                            document.getElementById('amount').value = amount;
-                                            document.getElementById('expiration_date').value = expirationDate;
-                                            document.getElementById('imagePreview').src = image ? image : ''; // Image preview
-
-                                            // Update form action
-                                            document.querySelector('form').action = '/inventory/update?id=' + id;
-                                        });
-                                    });
-                                </script>
-
-                                <!-- end of the edit ---------------------- -->
-
-
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-            <div class="update-quantity" id="updateQuantitySection" style="display: none;">
-                <h3>Update Quantity</h3>
-                <button class="btn btn-success" onclick="updateQuantities()">Update Selected Quantities</button>
+                        <!-- Image on the Right -->
+                        <?php if (!empty($item['image'])): ?>
+                            <div class="mb-3">
+                                <img src="<?= htmlspecialchars($item['image']); ?>" alt="Product Image" width="150" class="img-fluid">
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
             </div>
         </div>
+        <!-- JavaScript to populate the modal -->
+        <script>
+            document.querySelectorAll('.dropdown-item').forEach(link => {
+                link.addEventListener('click', function(event) {
+                    const productName = event.target.getAttribute('data-product_name');
+                    const categoryId = event.target.getAttribute('data-category_id');
+                    const quantity = event.target.getAttribute('data-quantity');
+                    const amount = event.target.getAttribute('data-amount');
+                    const expirationDate = event.target.getAttribute('data-expiration_date');
+                    const image = event.target.getAttribute('data-image');
+                    const id = event.target.getAttribute('data-id');
+
+                    // Set modal fields
+                    document.getElementById('product_name').value = productName;
+                    document.getElementById('category_id').value = categoryId;
+                    document.getElementById('quantity').value = quantity;
+                    document.getElementById('amount').value = amount;
+                    document.getElementById('expiration_date').value = expirationDate;
+                    document.getElementById('imagePreview').src = image ? image : ''; // Image preview
+
+                    // Update form action
+                    document.querySelector('form').action = '/inventory/update?id=' + id;
+                });
+            });
+        </script>
+
+        <!-- end of the edit ---------------------- -->
+
+
+        </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+    </table>
+    <div class="update-quantity" id="updateQuantitySection" style="display: none;">
+        <h3>Update Quantity</h3>
+        <button class="btn btn-success" onclick="updateQuantities()">Update Selected Quantities</button>
+    </div>
+    </div>
 
 
     </div>
 </main>
-
-

@@ -13,21 +13,21 @@
         <span class="notification-badge" id="notification-count">8</span>
       </div>
     </div>
-    
+
     <div class="profile" id="profile">
-            <img src="../../views/assets/images/image.png" alt="User">
-            <div class="profile-info">
-                <span id="profile-name">Eng Ly</span>
-                <span class="store-name" id="store-name">Owner Store</span>
-            </div>
-            <ul class="menu" id="menu">
-                <li><a href="/account" class="item">Account</a></li>
-                <li><a href="/settings" class="item">Setting</a></li>
-                <li><a href="/logout" class="item">Logout</a></li>
-            </ul>
-            <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
-            <script src="../../views/assets/js/setting.js"></script>
-        </div>
+      <img src="../../views/assets/images/image.png" alt="User">
+      <div class="profile-info">
+        <span id="profile-name" style="color: darkslategray;">Eng Ly</span>
+        <span class="store-name" id="store-name">Owner Store</span>
+      </div>
+      <ul class="menu" id="menu">
+        <li><a href="/account" class="item">Account</a></li>
+        <li><a href="/settings" class="item">Setting</a></li>
+        <li><a href="/logout" class="item">Logout</a></li>
+      </ul>
+      <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
+      <script src="../../views/assets/js/setting.js"></script>
+    </div>
 
 
 

@@ -17,6 +17,7 @@ class SettingController extends BaseController
     {
         $admins = $this->model->getAdminUsers();
         require_once 'views/settings/list.php';
+        // require_once 'views/settings/account.php';
     }
 
     // Show form to create a new admin (create)

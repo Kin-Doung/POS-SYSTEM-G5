@@ -18,7 +18,7 @@
         <div class="profile" id="profile">
             <img src="../../views/assets/images/image.png" alt="User">
             <div class="profile-info">
-                <span id="profile-name">Eng Ly</span>
+                <span id="profile-name" style="color: darkslategray;">Eng Ly</span>
                 <span class="store-name" id="store-name">Owner Store</span>
             </div>
             <ul class="menu" id="menu">

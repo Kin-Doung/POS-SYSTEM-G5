@@ -1,6 +1,8 @@
 <?php require_once './views/layouts/header.php' ?>
 <?php require_once './views/layouts/side.php' ?>
 <?php require_once './Databases/database.php' ?>
+
+
 <main class="main-content position-relative max-height-vh-50 h-50 border-radius-lg ">
     <!-- Navbar -->
     <nav class="navbar">
@@ -23,7 +25,7 @@
                 <span class="store-name" id="store-name">Owner Store</span>
             </div>
             <ul class="menu" id="menu">
-                <li><a href="/account" class="item">Account</a></li>
+                <li><a href="/Views/settings/account.php" class="item">Account</a></li>
                 <li><a href="/settings" class="item">Setting</a></li>
                 <li><a href="/logout" class="item">Logout</a></li>
             </ul>
@@ -39,7 +41,7 @@
     <div class="container" style="max-width: 1000px;">
 
         <div class="card shadow-sm p-5">
-            <div class="card-header  text-white text-center">
+            <div class="card-header  text-dark text-center">
                 <h4 class="mb-0">Edit Admin Settings</h4>
             </div>
             <div class="container mt-3">

@@ -17,6 +17,18 @@
                 <option disabled>No Categories Found</option>
             <?php endif; ?>
         </select>
+            </select>
+
+            <select class="price-select" id="priceSelect" name="priceSelect" onchange="filterProducts()">
+                <option value="">Select Price Range</option>
+                <option value="0">Up to $10</option>
+                <option value="15">Up to $15</option>
+                <option value="20">Up to $20</option>
+                <option value="25">Up to $25</option>
+                <option value="30">Up to $30</option>
+            </select>
+            <!-- <a href="/purchase/create" class="btn bg-info text-light" style="margin-top: -10px;">Add New</a> -->
+        </form>
     </div>
     <!-- End Navbar -->
     <div class="container">

@@ -5,26 +5,7 @@ require_once './views/layouts/side.php';
 
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <!-- Navbar -->
-    <nav class="navbar">
-        <div class="search-container">
-            <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" placeholder="Search..." />
-        </div>
-        <div class="icons">
-            <i class="fas fa-globe icon-btn"></i>
-            <div class="icon-btn" id="notification-icon">
-                <i class="fas fa-bell"></i>
-                <span class="notification-badge" id="notification-count">8</span>
-            </div>
-        </div>
-        <div class="profile">
-            <img src="../../views/assets/images/image.png" alt="User">
-            <div class="profile-info">
-                <span>Eng Ly</span>
-                <span class="store-name">Owner Store</span>
-            </div>
-        </div>
-    </nav>
+    <?php require_once './views/layouts/nav.php' ?>
 
     <!-- Search and Category Filter -->
     <div class="input-group">

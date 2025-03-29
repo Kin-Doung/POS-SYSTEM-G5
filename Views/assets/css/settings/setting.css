@@ -1,0 +1,18 @@
+.menu {
+    box-shadow: none;
+    width: 160px;
+    display: flex;
+    flex-direction: column;
+    .item {
+        color: gray;
+        font-weight: normal;
+        font-size: 16px;
+        gap: 8px;
+    }
+    .item:hover {
+       color: rgb(206, 82, 16);
+       background: none;
+    }
+}
+
+

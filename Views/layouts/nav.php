@@ -1,86 +1,32 @@
-<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-0 my-0 fixed-start ms-0 bg-white" id="sidenav-main">
-  <div class="sidenav-header ms-0 my-0">
-    <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-    <a class="navbar-brand m-0" href="/" target="_blank">
-      <img src="../../views/assets/img/logos/logo.png" class="navbar-brand-img h-100" alt="main_logo">
-    </a>
-  </div>
-  <hr class="horizontal dark mt-0 mb-2">
-  <div>
-    <ul class="navbar-nav">
-      <!-- nav dashboard -->
-      <li class="nav-item">
-        <a class="nav-link text-dark" href="/dashboard">
-          <div class="text-dark  text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">dashboard</i>
-          </div>
-          <span class="nav-link-text ms-1">Dashboard</span>
-        </a>
-      </li>
-      <!-- nav inventory -->
-      <li class="nav-item">
-        <a class="nav-link text-dark" href="/inventory">
-          <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">table_view</i>
-          </div>
-          <span class="nav-link-text ms-1">Inventory</span>
-        </a>
-      </li>
-      <!-- nav Order -->
-      <li class="nav-item">
-        <a class="nav-link text-dark " href="/products">
-          <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">view_in_ar</i>
-          </div>
-          <span class="nav-link-text ms-1">Order</span>
-        </a>
-      </li>
-      <!-- nav Categories -->
-      <li class="nav-item">
-        <a class="nav-link text-dark " href="/category">
-          <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">format_textdirection_r_to_l</i>
-          </div>
-          <span class="nav-link-text ms-1">Categories</span>
-        </a>
-      </li>
-      <!-- nav Notifications -->
-      <li class="nav-item">
-        <a class="nav-link text-dark" href="/notifications">
-          <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">notifications</i>
-          </div>
-          <span class="nav-link-text ms-1">Notifications</span>
-        </a>
-      </li>
-      <!-- nav setting -->
-      <li class="nav-item">
-        <a class="nav-link text-dark" href="/settings">
-          <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">person</i>
-          </div>
-          <span class="nav-link-text ms-1">Account</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-dark" href="/language">
-          <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">language</i>
-          </div>
-          <span class="nav-link-text ms-1">Language</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-dark" href="/logout">
-          <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">logout</i>
-          </div>
-          <span class="nav-link-text ms-1">Log Out</span>
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div class="sidenav-footer position-absolute w-100 bottom-0 ">
-    <!-- footer content if needed -->
-  </div>
-</aside>
+<nav class="navbar">
+    <div class="search-container">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search...">
+    </div>
+    <div class="icons">
+        <i class="fas fa-globe icon-btn"></i>
+        <div class="icon-btn" id="notification-icon">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" id="notification-count">8</span>
+        </div>
+    </div>
+    <div class="profile" id="profile">
+        <img src="../../views/assets/images/image.png" alt="User">
+        <!-- <img id="profile-logo" src="data:image/jpeg;base64,<?= base64_encode($admin['store_logo']) ?>" alt="Store Logo" width="100"> -->
+        <div class="profile-info">
+            <!-- <span id="profile-name"><?= $admin['username'] ?></span> -->
+            <span id="profile-name" style="color: darkslategray;">Eng Ly</span>
+            <span class="store-name" id="store-name">Owner Store</span>
+        </div>
+        <ul class="menu" id="menu">
+            <li><a href="/settings" class="item"><i class="fas fa-user"></i>  Account</a></li>
+            <li><a href="/language" class="item"><i class="fas fa-language"></i>  Language</a></li>
+            <li><a href="/logout" class="item"><i class="fas fa-sign-out-alt"></i>  Logout</a></li>
+        </ul>
+
+        <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
+        <link rel="stylesheet" href="../../views/assets/css/settings/setting.css">
+        <script src="../../views/assets/js/setting.js"></script>
+    </div>
+
+</nav>

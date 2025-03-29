@@ -5,35 +5,7 @@
 
 <main class="main-content position-relative max-height-vh-50 h-50 border-radius-lg ">
     <!-- Navbar -->
-    <nav class="navbar">
-        <div class="search-container">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search...">
-        </div>
-        <div class="icons">
-            <i class="fas fa-globe icon-btn"></i>
-            <div class="icon-btn" id="notification-icon">
-                <i class="fas fa-bell"></i>
-                <span class="notification-badge" id="notification-count">8</span>
-            </div>
-        </div>
-        <div class="profile" id="profile">
-            <img src="../../views/assets/images/image.png" alt="User">
-            <!-- <img id="profile-logo" src="data:image/jpeg;base64,<?= base64_encode($admin['store_logo']) ?>" alt="Store Logo" width="100"> -->
-            <div class="profile-info">
-                <span id="profile-name"><?= $admin['username'] ?></span>
-                <span class="store-name" id="store-name">Owner Store</span>
-            </div>
-            <ul class="menu" id="menu">
-                <li><a href="/Views/settings/account.php" class="item">Account</a></li>
-                <li><a href="/settings" class="item">Setting</a></li>
-                <li><a href="/logout" class="item">Logout</a></li>
-            </ul>
-            <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
-            <script src="../../views/assets/js/setting.js"></script>
-        </div>
-
-    </nav>
+    <?php require_once './views/layouts/nav.php' ?>
 
     <a href="/settings" class="btn-customm" style="width: 150px;">
         <i class="fas fa-arrow-left mt-4 "></i> Back
@@ -77,10 +49,21 @@
                     </div>
                     <div class="form-groupp mt-3">
                         <form action="upload.php" method="POST" enctype="multipart/form-data">
-                            <label for="profile">Profile:</label>
+                            <label for="profile">Profile:
+                                <?php if (!empty($admin['store_logo'])) : ?>
+                                    <img src="data:image/jpeg;base64,<?= base64_encode($admin['store_logo']) ?>"
+                                        alt="Profile Image"
+                                        class="rounded-circle shadow-sm"
+                                        style="width: 50px; height: 50px; object-fit: cover;">
+                                <?php else: ?>
+                                    No Logo
+                                <?php endif; ?>
+                            </label>
+
                             <input type="file" name="profile" id="profile" accept="image/*" required>
                         </form>
                     </div>
+
 
 
 

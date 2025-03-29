@@ -12,6 +12,8 @@
   <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 
   <!-- CSS Files -->
   <link id="pagestyle" href="../../views/assets/css/material-dashboard.css?v=3.0.0" rel="stylesheet" />
@@ -23,6 +25,7 @@
   <link rel="stylesheet" href="../../views/assets/css/style/categories.css">
   <link rel="stylesheet" href="../../views/assets/css/style/create.css">
   <link rel="stylesheet" href="../../views/assets/css/style/active.css">
+  <link rel="stylesheet" href="../../views/assets/css/settings/nav.css">
   <link rel="icon" type="image/png" href="../../views/assets/images/logoapp.png">
 
   <!-- JavaScript Files -->

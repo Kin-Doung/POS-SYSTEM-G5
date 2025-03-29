@@ -25,7 +25,7 @@ require_once './views/layouts/side.php';
             </div>
         </div>
     </nav>
-
+    
     <!-- Search and Category Filter -->
     <div class="input-group">
         <input type="text" id="searchInput" class="form-control input-group-search" placeholder="Search...">
@@ -57,13 +57,6 @@ require_once './views/layouts/side.php';
                                 <h6 class="card-title text-center"><?= htmlspecialchars($product['name']) ?></h6>
                                 <p class="card-text text-center price"><?= htmlspecialchars($product['price']) ?> $</p>
 
-                                <!-- Edit Price Icon -->
-                                <div class="text-center">
-                                    <button class="edit-price-btn edit-price" data-product-id="<?= htmlspecialchars($product['id']) ?>">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                </div>
-
                                 <!-- Quantity and Buy Button -->
                                 <div class="text-center mt-2">
                                     <input type="hidden" name="product_id" value="<?= htmlspecialchars($product['id']) ?>" />
@@ -91,30 +84,12 @@ require_once './views/layouts/side.php';
             </table>
             <h5>Total: <span id="grandTotal">0</span> $</h5>
             <div class="text-center mt-3">
-                <button class="btn btn-success" onclick="submitCart()">Submit</button>
+                <button class="btn btn-success" onclick="replaceCartInDatabase()">submit</button>
             </div>
+
         </div>
     </div>
 
     <?php require_once 'views/layouts/footer.php'; ?>
 </main>
 
-<!-- Edit Price Modal -->
-<div class="modal" id="editPriceModal" tabindex="-1" aria-labelledby="editPriceModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editPriceModalLabel">Edit Product Price</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editPriceForm">
-                    <input type="hidden" name="product_id" value="">
-                    <label for="price">New Price:</label>
-                    <input type="number" step="0.01" name="price" required>
-                    <button type="submit">Update Price</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>

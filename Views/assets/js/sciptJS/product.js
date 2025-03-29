@@ -1,53 +1,27 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const buyButtons = document.querySelectorAll(".buy-btn");
-    const purchaseModal = document.getElementById("purchase-modal");
-    const productNameSpan = document.getElementById("product-name");
-    const totalPriceSpan = document.getElementById("total-price");
-    const quantitySpan = document.getElementById("purchase-quantity");
-    const confirmPurchaseButton = document.getElementById("confirm-purchase");
-    const closeModalButton = document.getElementById("close-modal");
-    let currentRow = null; // Store the current row for quantity reset
+    const categorySelect = document.getElementById("categorySelect");
+    const productItems = document.querySelectorAll(".product-item");
+    const searchInput = document.getElementById("searchInput");
 
-    buyButtons.forEach(button => {
-        button.addEventListener("click", function() {
-            const row = this.closest("tr");
-            const priceText = row.querySelector(".price").textContent.trim();
-            const price = priceText === 'Free' ? 0 : parseFloat(priceText.replace("$", ""));
-            const quantityInput = row.querySelector(".quantity");
-            let quantity = parseInt(quantityInput.value);
+    // Function to filter products by category
+    categorySelect.addEventListener("change", function() {
+        const selectedCategoryId = this.value;
 
-            const total = price * quantity;
-            const productName = row.querySelector("td:nth-child(2)").textContent.trim();
+        productItems.forEach(item => {
+            const productCategoryId = item.getAttribute("data-category-id");
 
-            // Store the current row to reset its quantity later
-            currentRow = row;
-
-            // Update the modal with details
-            productNameSpan.textContent = productName;
-            totalPriceSpan.textContent = total.toFixed(2);
-            quantitySpan.textContent = quantity;
-
-            // Show the modal with the purchase details
-            purchaseModal.style.display = "block";
+            // Show all products if no category is selected, otherwise filter by selected category
+            if (selectedCategoryId === "" || productCategoryId === selectedCategoryId) {
+                item.style.display = "";
+            } else {
+                item.style.display = "none";
+            }
         });
     });
 
-    // Close the modal without confirming purchase
-    closeModalButton.addEventListener("click", function() {
-        purchaseModal.style.display = "none";
-    });
+    // Function for search functionality
 
-    // Confirm the purchase (reset quantity to 0 and show only one alert)
-    confirmPurchaseButton.addEventListener("click", function() {
-        if (currentRow) {
-            const quantityInput = currentRow.querySelector(".quantity");
-            quantityInput.value = 0; // Reset quantity to 0 after confirming purchase
-        }
-       
-        purchaseModal.style.display = "none"; // Close modal after confirmation
-    });
 });
-
 
 document.addEventListener("DOMContentLoaded", function() {
     const showDetailsButton = document.getElementById("show-details-btn");
@@ -232,5 +206,40 @@ document.querySelectorAll(".buy").forEach(button => {
         addToCart(productId, productName, productPrice);
     });
 });
+
+
+
+    // Handle the price edit modal
+    document.querySelectorAll('.edit-price-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const productId = this.dataset.productId;
+            document.querySelector('#editPriceForm input[name="product_id"]').value = productId;
+            new bootstrap.Modal(document.getElementById('editPriceModal')).show();
+        });
+    });
+
+    // Handle form submission for updating price
+    document.getElementById('editPriceForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        let formData = new FormData(this);
+
+        fetch('/products/updatePrice', { // Use the correct route
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                if (data.message === 'Price updated successfully') {
+                    // Optionally, update the price on the page dynamically
+                    const productId = formData.get('product_id');
+                    const newPrice = formData.get('price');
+                    const priceElement = document.querySelector(`.product-item[data-product-id="${productId}"] .price`);
+                    priceElement.textContent = `${newPrice} $`; // Update the price on the page
+                }
+            })
+        .catch(error => console.error('Error:', error));
+    });
 
 

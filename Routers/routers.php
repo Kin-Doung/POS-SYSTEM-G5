@@ -79,6 +79,8 @@ $routes->put('/purchase/update', [PurchaseController::class, 'update']);
 $routes->delete('/purchase/destroy', [PurchaseController::class, 'destroy']);
 $routes->post('/purchase/restock', [PurchaseController::class, 'restock']);
 
+// Order
+// $routes->get('/orders', [OrderController::class, 'index']);
 
 
 

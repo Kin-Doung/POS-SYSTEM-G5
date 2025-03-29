@@ -9,105 +9,149 @@ class ProductController extends BaseController
 
     public function __construct()
     {
-        // Initialize the model
         $this->model = new ProductModel();
     }
 
-    // Display all products
     public function index()
     {
-        // Fetch data from models
         $inventory = $this->model->getInventoryWithProductDetails();
-        $categories = $this->model->getCategories(); // Fetch categories here
-        $products = $this->model->getProducts(); // Fetch products as well
+        $categories = $this->model->getCategories();
+        $products = $this->model->getProducts();
 
-        // Pass the fetched data to the view
         $this->views('products/list', [
             'inventory' => $inventory,
-            'categories' => $categories, // Pass categories data
-            'products' => $products // Pass products data
+            'categories' => $categories,
+            'products' => $products
         ]);
     }
 
+    public function updatePrice()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $productId = $_POST['product_id'];
+            $newPrice = $_POST['price'];
 
+            if (!is_numeric($newPrice) || $newPrice <= 0) {
+                echo json_encode(['success' => false, 'message' => 'Invalid price']);
+                return;
+            }
 
-    // Store category data into the products table
-    // public function storeCategoryDataToProducts()
-    // {
-    //     // Step 1: Retrieve all categories
-    //     $categories = $this->model->getCategories();
+            $updated = $this->model->updatePrice($productId, $newPrice);
 
-    //     // Step 2: Loop through categories and insert products
-    //     foreach ($categories as $category) {
-    //         // Step 3: Define the product data
-    //         $productData = [
-    //             'category_id' => $category['id'],  // Link product to category
-    //             'name' => "Product for " . $category['name'],  // Example product name
-    //             'barcode' => "barcode-" . $category['id'],  // Example barcode
-    //             'price' => 100,  // Example price
-    //             'purchase_id' => null,  // You can set a purchase ID if needed
-    //             'quantity' => 10,  // Example quantity
-    //             'image' => null,  // Image can be set later if available
-    //         ];
+            echo json_encode([
+                'success' => $updated,
+                'message' => $updated ? 'Price updated successfully' : 'Failed to update price'
+            ]);
+        }
+    }
 
-    //         // Step 4: Insert product data into the products table
-    //         $this->model->createProduct($productData);
-    //     }
-
-    //     // Redirect or show success message after storing data
-    //     header("Location: /products");
-    // }
-
-    // Store product data from inventory to products table
     public function storeInventoryToProducts()
     {
-        // Step 1: Retrieve inventory data (which includes category_name)
-        $inventoryItems = $this->model->getInventoryWithCategory();
-
-        // Step 2: Retrieve categories to map category names to IDs
+        $inventoryItems = $this->model->getInventoryWithProductDetails();
         $categories = $this->model->getCategories();
         $categoryMap = [];
 
-        // Create a map of category names to IDs for faster lookup
         foreach ($categories as $category) {
             $categoryMap[$category['name']] = $category['id'];
         }
 
-        // Step 3: Loop through inventory items and insert products into products table
+        $processedCount = 0;
+        $failedCount = 0;
+        $errors = [];
+
         foreach ($inventoryItems as $item) {
             if (empty($item['inventory_product_name']) || empty($item['category_name'])) {
-                continue;  // Skip if product name or category name is missing
+                $errors[] = "Skipping item due to missing name or category: " . json_encode($item);
+                $failedCount++;
+                continue;
             }
 
-            // Step 4: Check if product already exists
-            $existingProduct = $this->model->getProductByNameAndCategory($item['inventory_product_name'], $item['category_name']);
+            if (!isset($categoryMap[$item['category_name']])) {
+                $errors[] = "Category '{$item['category_name']}' not found in database.";
+                $failedCount++;
+                continue;
+            }
 
-            if ($existingProduct) {
-                // Update the product if it exists
-                $this->model->updateProductFromInventory($existingProduct['id'], [
-                    'category_id' => $categoryMap[$item['category_name']],
-                    'price' => $item['amount'],
-                    'quantity' => $item['quantity'],
-                    'image' => $item['image'],
-                ]);
-            } else {
-                // If the product doesn't exist, insert it
-                if (isset($categoryMap[$item['category_name']])) {
-                    $categoryId = $categoryMap[$item['category_name']];
+            $categoryId = $categoryMap[$item['category_name']];
+
+            try {
+                $existingProduct = $this->model->getProductByNameAndCategory($item['inventory_product_name'], $item['category_name']);
+                if ($existingProduct) {
+                    $this->model->updateProductFromInventory($existingProduct['id'], [
+                        'category_id' => $categoryId,
+                        'price' => $item['amount'],
+                        'quantity' => $item['quantity'],
+                        'image' => $item['image'],
+                    ]);
+                } else {
                     $this->model->createProduct([
                         'category_id' => $categoryId,
                         'name' => $item['inventory_product_name'],
                         'barcode' => $item['barcode'] ?? null,
                         'price' => $item['amount'],
-                        'purchase_id' => $item['purchase_id'] ?? null,
                         'quantity' => $item['quantity'],
                         'image' => $item['image'],
                     ]);
                 }
+                $processedCount++;
+            } catch (Exception $e) {
+                $errors[] = "Error processing product '{$item['inventory_product_name']}': " . $e->getMessage();
+                $failedCount++;
             }
         }
 
-        // Redirect or show success message after storing data
+        $_SESSION['message'] = "Processed {$processedCount} products. Failed: {$failedCount}.";
+        $_SESSION['errors'] = $errors;
         header("Location: /products");
+        exit;
+    }
+
+    public function priceHistory($productId = null)
+    {
+        if (!$productId || !is_numeric($productId)) {
+            $_SESSION['error'] = "Invalid product ID.";
+            header("Location: /products");
+            exit;
+        }
+
+        $history = $this->model->getPriceHistory($productId);
+        $this->views('products/price_history', ['history' => $history]);
+    }
+
+    public function updateProductPrice()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Invalid request method. Only POST requests are allowed.']);
+            exit;
+        }
+
+        $productId = isset($_POST['product_id']) ? (int)$_POST['product_id'] : 0;
+        $newPrice = isset($_POST['price']) ? floatval($_POST['price']) : 0.0;
+
+        if ($productId <= 0 || $newPrice <= 0) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Invalid product ID or price value.']);
+            exit;
+        }
+
+        try {
+            $updated = $this->model->updateProductPrice($productId, $newPrice);
+
+            if ($updated) {
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Price updated successfully.',
+                    'product_id' => $productId,
+                    'new_price' => $newPrice
+                ]);
+            } else {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => 'Failed to update the price. Try again later.']);
+            }
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Error occurred while updating the price: ' . $e->getMessage()]);
+        }
     }
 }

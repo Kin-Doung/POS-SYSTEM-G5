@@ -1,6 +1,7 @@
-<?php require_once(__DIR__ . '/../layouts/side.php') ?>
-<?php require_once(__DIR__ . '/../layouts/nav.php') ?>
-<?php require_once(__DIR__ . '/../../Databases/database.php'); ?>
+<?php 
+require_once './views/layouts/header.php';
+require_once(__DIR__ . '/../layouts/side.php') ?>
+
 <main class="main-content position-relative max-height-vh-50 h-50 border-radius-lg ">
     <!-- Navbar -->
     <nav class="navbar">

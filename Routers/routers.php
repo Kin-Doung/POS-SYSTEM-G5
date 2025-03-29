@@ -68,7 +68,9 @@ $routes->get('/category/create', [CategoryController::class, 'create']);
 $routes->post('/category/store', [CategoryController::class, 'store']);
 $routes->get('/category/edit', [CategoryController::class, 'edit']);
 $routes->put('/category/update', [CategoryController::class, 'update']);
-$routes->delete('/category/destroy', [CategoryController::class, 'destroy']);
+$routes->get('/category/delete', [CategoryController::class, 'delete']);  // Change from POST to GET
+
+
 
 // purchase order
 $routes->get('/purchase', [PurchaseController::class, 'index']);

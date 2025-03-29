@@ -49,16 +49,27 @@ class CategoryController extends BaseController
     }
     
 
-    function destroy()
+    public function delete()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id'])) {
-            $id = $_POST['id'];
-            $this->model->deleteCategory($id);
-            $this->redirect('/category');
+        if (isset($_GET['id'])) {
+            $categoryId = $_GET['id'];
+            $categoryModel = new CategoryModel();
+            
+            if ($categoryModel->deleteCategory($categoryId)) {
+                // After deletion, redirect to the category list page
+                header('Location: /category');  // Adjust the URL if needed
+                exit();
+            } else {
+                // Handle failure if category deletion fails
+                echo "Error: Unable to delete category.";
+            }
         } else {
-            echo "Invalid request.";
+            // Handle invalid ID
+            echo "Error: Invalid category ID.";
         }
     }
+    
+    
     
     
 }

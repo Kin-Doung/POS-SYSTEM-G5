@@ -8,7 +8,7 @@
                 <h2 style="font-weight: bold;" class="purchase-head">Purchasing Orders</h2>
                 <div>
                     <a href="/purchase/create" class="btn-new-product">
-                        <i class="bi-plus-lg"></i> + New Products
+                        <i class="bi-plus-lg"></i> + Add Products
                     </a>
                 </div>
             </div>

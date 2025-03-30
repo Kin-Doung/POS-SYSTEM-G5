@@ -9,6 +9,10 @@ class PurchaseModel
     {
         $this->pdo = new Database();
     }
+    public function getConnection()
+    {
+        return $this->pdo->getConnection(); // Assuming Database has getConnection()
+    }
 
     // Get all categories
     function getCategories()
@@ -30,18 +34,24 @@ class PurchaseModel
     public function insertProduct($product_name, $category_id, $quantity, $amount, $type_of_product, $imageData = null)
     {
         try {
+            // Fetch category_name from categories table
+            $stmt = $this->pdo->getConnection()->prepare("SELECT name FROM categories WHERE id = :id");
+            $stmt->execute([':id' => $category_id]);
+            $category_name = $stmt->fetchColumn() ?: '';
+    
             $stmt = $this->pdo->getConnection()->prepare("
-                INSERT INTO purchase (product_name, category_id, quantity, price, type_of_product, image) 
-                VALUES (:product_name, :category_id, :quantity, :price, :type_of_product, :image)
+                INSERT INTO purchase (product_name, category_id, category_name, quantity, price, type_of_product, image) 
+                VALUES (:product_name, :category_id, :category_name, :quantity, :price, :type_of_product, :image)
             ");
-
+    
             $stmt->bindParam(':product_name', $product_name);
             $stmt->bindParam(':category_id', $category_id, PDO::PARAM_INT);
+            $stmt->bindParam(':category_name', $category_name);
             $stmt->bindParam(':quantity', $quantity, PDO::PARAM_INT);
             $stmt->bindParam(':price', $amount);
             $stmt->bindParam(':type_of_product', $type_of_product);
             $stmt->bindParam(':image', $imageData, PDO::PARAM_LOB);
-
+    
             $stmt->execute();
             return $this->pdo->getConnection()->lastInsertId();
         } catch (PDOException $e) {
@@ -58,18 +68,18 @@ class PurchaseModel
     }
 
     // Update deletePurchase to remove image handling since it's in DB now
-// Single delete
-function deletePurchase($id)
-{
-    try {
-        $stmt = $this->pdo->getConnection()->prepare("DELETE FROM purchase WHERE id = :id");
-        $stmt->execute([':id' => $id]);
-        return true;
-    } catch (PDOException $e) {
-        error_log("Error deleting purchase: " . $e->getMessage());
-        throw new Exception("Error deleting purchase: " . $e->getMessage());
+    // Single delete
+    function deletePurchase($id)
+    {
+        try {
+            $stmt = $this->pdo->getConnection()->prepare("DELETE FROM purchase WHERE id = :id");
+            $stmt->execute([':id' => $id]);
+            return true;
+        } catch (PDOException $e) {
+            error_log("Error deleting purchase: " . $e->getMessage());
+            throw new Exception("Error deleting purchase: " . $e->getMessage());
+        }
     }
-}
 
     public function createPurchase($data)
     {
@@ -166,7 +176,7 @@ function deletePurchase($id)
             if (!in_array($field, $allowedFields)) {
                 throw new Exception("Invalid field: $field");
             }
-    
+
             $stmt = $this->pdo->getConnection()->prepare(
                 "UPDATE purchase SET $field = :value WHERE id = :id"
             );
@@ -199,7 +209,16 @@ function deletePurchase($id)
     }
 
     // Transaction management
-    public function startTransaction() { $this->pdo->getConnection()->beginTransaction(); }
-    public function commitTransaction() { $this->pdo->getConnection()->commit(); }
-    public function rollBackTransaction() { $this->pdo->getConnection()->rollBack(); }
+    public function startTransaction()
+    {
+        $this->pdo->getConnection()->beginTransaction();
+    }
+    public function commitTransaction()
+    {
+        $this->pdo->getConnection()->commit();
+    }
+    public function rollBackTransaction()
+    {
+        $this->pdo->getConnection()->rollBack();
+    }
 }

@@ -4,6 +4,7 @@
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
@@ -31,7 +32,7 @@
                         <tbody id="productTableBody">
                             <tr class="product-row">
                                 <td>
-                                    <input type="file" class="form-control image-add" name="image[]" accept="image/*" required>
+                                    <input type="file" class="form-control image-add" name="image[]" accept="image/*">
                                     <img src="" alt="Product Image" class="img-preview" style="display: none; width: 50px; height: 50px;">
                                 </td>
                                 <td>
@@ -63,8 +64,6 @@
                                         <option value="New">New</option>
                                         <option value="Old">Old</option>
                                     </select>
-
-
                                 </td>
                                 <td>
                                     <button type="button" class="btn removeRow" style="background: none; border: none; color: red; box-shadow:none;text-decoration:underline;font-size:15px;">
@@ -75,14 +74,12 @@
                         </tbody>
                     </table>
                 </div>
-
                 <div class="d-flex justify-content-end align-items-center">
                     <button type="button" id="addMore" class="add-moree">Add more</button>
                     <button type="submit" class="btn btn-submit">Submit</button>
                 </div>
             </form>
         </div>
-        
     </div>
 
     <!-- Modal for Invoice Preview -->
@@ -123,14 +120,14 @@
 </main>
 
 <script>
-    // Add New Product Row Function
+    // Add New Product Row
     document.getElementById('addMore').addEventListener('click', function() {
         const tableBody = document.getElementById('productTableBody');
         const newRow = document.createElement('tr');
         newRow.classList.add('product-row');
         newRow.innerHTML = `
         <td>
-            <input type="file" class="form-control image-add" name="image[]" accept="image/*" required>
+            <input type="file" class="form-control image-add" name="image[]" accept="image/*">
             <img src="" alt="Product Image" class="img-preview" style="display: none; width: 50px; height: 50px;">
         </td>
         <td>
@@ -153,9 +150,8 @@
         <td>
             <select name="typeOfproducts[]" class="form-control" required>
                 <option value="">Select Type</option>
-                <option value="Electronic">New</option>
-                <option value="Clothing">Old</option>
-
+                <option value="New">New</option>
+                <option value="Old">Old</option>
             </select>
         </td>
         <td>
@@ -165,42 +161,51 @@
         </td>
     `;
         tableBody.appendChild(newRow);
+        handleProductTypeChange(newRow);
+        initImagePreview(newRow.querySelector('.image-add'));
     });
 
-    // Remove Product Row Function
+    // Remove Product Row
     document.getElementById('productTableBody').addEventListener('click', function(e) {
         if (e.target && e.target.classList.contains('removeRow')) {
-            e.target.closest('tr').remove();
+            const tbody = e.target.closest('tbody');
+            if (tbody.querySelectorAll('tr').length > 1) {
+                e.target.closest('tr').remove();
+            } else {
+                alert('At least one product is required.');
+            }
         }
     });
 
-    // Preview Invoice Function
+    // Preview Invoice
     document.getElementById('previewInvoice').addEventListener('click', function() {
         const productTableBody = document.getElementById('productTableBody');
         const invoiceTableBody = document.getElementById('invoiceTableBody');
         const totalPriceElement = document.getElementById('totalPrice');
         let totalPrice = 0;
 
-        invoiceTableBody.innerHTML = ''; // Clear previous table rows
-
+        invoiceTableBody.innerHTML = '';
         const rows = productTableBody.querySelectorAll('tr');
         rows.forEach(row => {
             const cells = row.querySelectorAll('td');
-            const productImage = cells[0].querySelector('input[type="file"]').files[0];
-            const category = cells[1].querySelector('select').value;
-            const name = cells[2].querySelector('input').value;
-            const quantity = parseInt(cells[3].querySelector('input').value);
-            const price = parseFloat(cells[4].querySelector('input').value);
-            const expiration = cells[5].querySelector('select').value;
+            const productImage = cells[0].querySelector('input[type="file"]')?.files[0] || null;
+            const categorySelect = cells[1].querySelector('select');
+            const category = categorySelect.options[categorySelect.selectedIndex].text;
+            const productNameInput = cells[2].querySelector('input') || cells[2].querySelector('select');
+            const name = productNameInput.value;
+            const quantity = parseInt(cells[3].querySelector('input').value) || 0;
+            const price = parseFloat(cells[4].querySelector('input').value) || 0;
+            const typeSelect = cells[5].querySelector('select');
+            const type = typeSelect.options[typeSelect.selectedIndex].text;
 
             const newRow = document.createElement('tr');
             newRow.innerHTML = `
-            <td><img src="${URL.createObjectURL(productImage)}" alt="Product Image" style="width: 50px; height: 50px;"></td>
+            <td>${productImage ? `<img src="${URL.createObjectURL(productImage)}" alt="Product Image" style="width: 50px; height: 50px;">` : (cells[0].querySelector('.img-preview[src]') ? `<img src="${cells[0].querySelector('.img-preview').src}" style="width: 50px; height: 50px;">` : 'No Image')}</td>
             <td>${category}</td>
             <td>${name}</td>
             <td>${quantity}</td>
-            <td>${price}</td>
-            <td>${expiration}</td>
+            <td>${price.toFixed(2)}</td>
+            <td>${type}</td>
         `;
             invoiceTableBody.appendChild(newRow);
             totalPrice += price * quantity;
@@ -209,177 +214,136 @@
         totalPriceElement.textContent = totalPrice.toFixed(2);
     });
 
-
-
-    document.querySelectorAll('.image-add').forEach(function(input) {
-        input.addEventListener('change', function(event) {
+    // Image Preview
+    function initImagePreview(fileInput) {
+        fileInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
             const preview = event.target.closest('td').querySelector('.img-preview');
-            const reader = new FileReader();
-
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                preview.style.display = 'block';  // Show image preview
-            };
-
-            if (file) {
-                reader.readAsDataURL(file);
-            }
-        });
-    });
-
-
-    $(document).ready(function() {
-    // Function to handle type of product selection
-    function handleProductTypeChange(row) {
-        const typeSelect = $(row).find('select[name="typeOfproducts[]"]');
-        const productNameCell = $(row).find('td:nth-child(3)'); // Product Name cell
-        const imageCell = $(row).find('td:nth-child(1)'); // Image cell
-        const priceInput = $(row).find('input[name="amount[]"]');
-        const quantityInput = $(row).find('input[name="quantity[]"]');
-        
-        typeSelect.on('change', function() {
-            const selectedType = $(this).val();
-            
-            if (selectedType === 'Old') {
-                // Replace text input with select dropdown for existing products
-                const currentValue = productNameCell.find('input[type="text"]').val();
-                productNameCell.html(`
-                    <select class="form-control existing-product-select" name="product_name[]" required>
-                        <option value="">Select Existing Product</option>
-                        <!-- Options will be loaded via AJAX -->
-                    </select>
-                `);
-                
-                // Show loading indicator
-                productNameCell.append('<div class="loading-products">Loading products...</div>');
-                
-                // Fetch existing products via AJAX
-                $.ajax({
-                    url: '/purchase/get-existing-products', // Create this endpoint in your backend
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function(data) {
-                        const select = productNameCell.find('.existing-product-select');
-                        productNameCell.find('.loading-products').remove();
-                        
-                        if (data.length > 0) {
-                            $.each(data, function(index, product) {
-                                select.append(`
-                                    <option value="${product.id}" 
-                                            data-image="${product.image_url}"
-                                            data-price="${product.price}"
-                                            data-quantity="${product.quantity}">
-                                        ${product.name}
-                                    </option>
-                                `);
-                            });
-                        } else {
-                            select.append('<option disabled>No products found in inventory</option>');
-                        }
-                    },
-                    error: function() {
-                        productNameCell.find('.loading-products').html('Failed to load products');
-                    }
-                });
-                
-                // Handle selection of existing product
-                productNameCell.on('change', '.existing-product-select', function() {
-                    const selectedOption = $(this).find('option:selected');
-                    const imageUrl = selectedOption.data('image');
-                    const price = selectedOption.data('price');
-                    const availableQty = selectedOption.data('quantity');
-                    
-                    // Set the price from inventory
-                    priceInput.val(price);
-                    
-                    // Update the image preview
-                    imageCell.html(`
-                        <input type="hidden" name="image[]" value="${imageUrl}">
-                        <input type="hidden" name="existing_product_id[]" value="${$(this).val()}">
-                        <img src="${imageUrl}" alt="Product Image" class="img-preview" style="display: block; width: 50px; height: 50px;">
-                        <small>Available: ${availableQty}</small>
-                    `);
-                    
-                    // Set max quantity to available quantity
-                    quantityInput.attr('max', availableQty);
-                });
-                
-            } else if (selectedType === 'New' || selectedType === '') {
-                // Restore original text input and file upload
-                productNameCell.html(`<input type="text" class="form-control" name="product_name[]" required>`);
-                
-                // Restore original image upload
-                imageCell.html(`
-                    <input type="file" class="form-control image-add" name="image[]" accept="image/*" required>
-                    <img src="" alt="Product Image" class="img-preview" style="display: none; width: 50px; height: 50px;">
-                `);
-                
-                // Clear price and remove max quantity restriction
-                priceInput.val('');
-                quantityInput.removeAttr('max');
-                
-                // Reinitialize the image preview functionality
-                initImagePreview(imageCell.find('.image-add'));
-            }
-        });
-    }
-    
-    // Function to initialize image preview
-    function initImagePreview(fileInput) {
-        fileInput.on('change', function() {
-            const file = this.files[0];
-            const imgPreview = $(this).siblings('.img-preview');
-            
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    imgPreview.attr('src', e.target.result);
-                    imgPreview.show();
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
                 };
                 reader.readAsDataURL(file);
-            } else {
-                imgPreview.hide();
             }
         });
     }
-    
-    // Initialize for existing rows
-    $('.product-row').each(function() {
-        handleProductTypeChange(this);
-        initImagePreview($(this).find('.image-add'));
-    });
-    
-    // Handle adding new rows
-    $('#addMore').on('click', function() {
-        const newRow = $('#productTableBody tr:first').clone();
-        
-        // Reset input values
-        newRow.find('input[type="text"], input[type="number"]').val('');
-        newRow.find('select').val('');
-        
-        // Reset image preview
-        newRow.find('.img-preview').hide().attr('src', '');
-        newRow.find('.image-add').val('');
-        
-        // Add to table
-        $('#productTableBody').append(newRow);
-        
-        // Initialize handlers for new row
-        handleProductTypeChange(newRow);
-        initImagePreview(newRow.find('.image-add'));
-    });
-    
-    // Handle row removal (delegated event)
-    $('#productTableBody').on('click', '.removeRow', function() {
-        // Don't remove if it's the only row
-        if ($('#productTableBody tr').length > 1) {
-            $(this).closest('tr').remove();
-        } else {
-            alert('At least one product is required.');
-        }
-    });
-});
 
+    // Handle Type of Product Change
+    function handleProductTypeChange(row) {
+        const typeSelect = $(row).find('select[name="typeOfproducts[]"]');
+        const productNameCell = $(row).find('td:nth-child(3)');
+        const imageCell = $(row).find('td:nth-child(1)');
+        const priceInput = $(row).find('input[name="amount[]"]');
+        const quantityInput = $(row).find('input[name="quantity[]"]');
+        const categorySelect = $(row).find('select[name="category_id[]"]');
 
+        typeSelect.on('change', function() {
+            const selectedType = $(this).val();
+
+            if (selectedType === 'Old') {
+                productNameCell.html(`
+                <select class="form-control existing-product-select" name="product_name[]" required>
+                    <option value="">Select Existing Product</option>
+                </select>
+                <input type="hidden" name="inventory_id[]" value="">
+            `);
+                productNameCell.append('<div class="loading-products">Loading products...</div>');
+
+                const categoryId = categorySelect.val();
+                console.log('Category selected:', categoryId); // Debug: Check category ID
+
+                $.ajax({
+                    url: '/purchase/get-existing-products',
+                    type: 'GET',
+                    data: {
+                        category_id: categoryId || ''
+                    }, // Send empty if no category selected
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log('Retrieved products:', data); // Debug: Log the response
+                        const select = productNameCell.find('.existing-product-select');
+                        productNameCell.find('.loading-products').remove();
+
+                        if (data && data.length > 0) {
+                            $.each(data, function(index, product) {
+                                select.append(`
+                                <option value="${product.product_name}" 
+                                        data-id="${product.id}"
+                                        data-image="${product.image}"
+                                        data-price="${product.amount}"
+                                        data-quantity="${product.quantity}"
+                                        data-category-id="${product.category_id}">
+                                    ${product.product_name}
+                                </option>
+                            `);
+                            });
+                        } else {
+                            select.append('<option disabled>No products found in inventory</option>');
+                            console.log('No products available for category:', categoryId);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error:', xhr.status, xhr.responseText); // Debug: Log error details
+                        productNameCell.find('.loading-products').html('Failed to load products: ' + error);
+                    }
+                });
+
+                // In create.php, within handleProductTypeChange
+                productNameCell.on('change', '.existing-product-select', function() {
+                    const selectedOption = $(this).find('option:selected');
+                    const inventoryId = selectedOption.data('id');
+                    const imageUrl = selectedOption.data('image');
+                    const price = selectedOption.data('price');
+                    const availableQty = selectedOption.data('quantity');
+                    const categoryId = selectedOption.data('category-id');
+
+                    productNameCell.find('input[name="inventory_id[]"]').val(inventoryId);
+                    imageCell.html(`
+        <input type="hidden" name="image[]" value="${imageUrl}">
+        <img src="${imageUrl}" alt="Product Image" class="img-preview" style="display: block; width: 50px; height: 50px;">
+        <small>Current Stock: ${availableQty}</small>
+    `);
+                    categorySelect.val(categoryId);
+                    priceInput.val(price);
+                    quantityInput.val('').attr('max', null); // Clear quantity and remove max, user enters how much to add
+                });
+            } else if (selectedType === 'New' || selectedType === '') {
+                productNameCell.html(`<input type="text" class="form-control" name="product_name[]" required>`);
+                imageCell.html(`
+                <input type="file" class="form-control image-add" name="image[]" accept="image/*">
+                <img src="" alt="Product Image" class="img-preview" style="display: none; width: 50px; height: 50px;">
+            `);
+                categorySelect.val('');
+                priceInput.val('');
+                quantityInput.val('').removeAttr('max');
+                productNameCell.find('input[name="inventory_id[]"]').remove();
+                initImagePreview(imageCell.find('.image-add'));
+            }
+        });
+
+        // Trigger change if category changes after "Old" is selected
+        categorySelect.on('change', function() {
+            if (typeSelect.val() === 'Old') {
+                typeSelect.trigger('change'); // Re-fetch products when category changes
+            }
+        });
+    }
+
+    // Initialize existing rows
+    $(document).ready(function() {
+        $('.product-row').each(function() {
+            handleProductTypeChange(this);
+            initImagePreview($(this).find('.image-add'));
+        });
+
+        $('#productForm').on('submit', function(e) {
+            console.log('Form submitted');
+            const formData = new FormData(this);
+            for (let [key, value] of formData.entries()) {
+                console.log(`${key}: ${value}`);
+            }
+        });
+    });
 </script>

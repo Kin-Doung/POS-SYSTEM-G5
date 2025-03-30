@@ -21,10 +21,10 @@ class CategoryModel
         ]);
     }
 
-    function getCategoryById($id)
+    public function getCategoryById($categoryId)
     {
-        $db = new Database(); // Create Database instance
-        $stmt = $db->query("SELECT name FROM categories WHERE id = :id", ['id' => $id]);
+        $stmt = $this->pdo->getConnection()->prepare("SELECT * FROM categories WHERE id = :id");
+        $stmt->execute([':id' => $categoryId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     

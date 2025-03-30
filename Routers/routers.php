@@ -19,12 +19,12 @@ $routes->post('/login', [LoginController::class, 'processLogin']); // Handle log
 $routes->get('/dashboard', [DashboardController::class, 'index']); // Redirect to dashboard after successful login
 
 // setting
-$routes->get('/settings', [SettingController::class, 'index']);
-$routes->get('/settings/create', [SettingController::class, 'create']);
-$routes->post('/settings/store', [SettingController::class, 'store']);
-$routes->get('/settings/edit', [SettingController::class, 'edit']);
-$routes->put('/settings/update/(:num)', [SettingController::class, 'update']);
-$routes->delete('/settings/destroy', [SettingController::class, 'destroy']);
+// $routes->get('/settings', [SettingController::class, 'index']);
+// $routes->get('/settings/create', [SettingController::class, 'create']);
+// $routes->post('/settings/store', [SettingController::class, 'store']);
+// $routes->get('/settings/edit', [SettingController::class, 'edit']);
+// $routes->put('/settings/update/(:num)', [SettingController::class, 'update']);
+// $routes->delete('/settings/destroy', [SettingController::class, 'destroy']);
 
 
 //inventory
@@ -78,7 +78,9 @@ $routes->get('/purchase/edit/(:num)', [PurchaseController::class, 'edit']);
 $routes->post('/purchase/update/(:num)', [PurchaseController::class, 'update']);
 $routes->post('/purchase/destroy/(:num)', [PurchaseController::class, 'destroy']);
 $routes->post('/purchase/bulk-destroy', [PurchaseController::class, 'bulkDestroy']);
-// Order
+$routes->get('/purchase/get-existing-products', [PurchaseController::class, 'getExistingProducts']);
+
+
 // $routes->get('/orders', [OrderController::class, 'index']);
 
 

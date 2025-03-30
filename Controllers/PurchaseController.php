@@ -18,23 +18,48 @@ class PurchaseController extends BaseController
         $this->views('purchase/list', ['purchases' => $purchases]);
     }
 
+    // In PurchaseController.php
+    public function getExistingProducts()
+    {
+        $inventoryModel = new InventoryModel();
+        $categoryId = $_GET['category_id'] ?? null;
 
-    
+        $products = $inventoryModel->getInventoryWithCategory();
+        if ($categoryId) {
+            $products = array_filter($products, function ($item) use ($categoryId) {
+                return $item['category_id'] == $categoryId;
+            });
+        }
+
+        $response = array_map(function ($product) {
+            return [
+                'id' => $product['id'],
+                'product_name' => $product['product_name'],
+                'image' => $product['image'], // File path or adjust if binary
+                'amount' => $product['amount'],
+                'quantity' => $product['quantity'],
+                'category_id' => $product['category_id']
+            ];
+        }, $products);
+
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit();
+    }
     // Show the form to create a new purchase
-// In PurchaseController.php
-function create()
-{
-    $categories = $this->model->getCategories();
-    
-    // Get inventory items for selection
-    $inventoryModel = new InventoryModel();
-    $inventoryItems = $inventoryModel->getInventoryWithCategory();
-    
-    $this->views('purchase/create', [
-        'categories' => $categories,
-        'inventoryItems' => $inventoryItems
-    ]);
-}
+    // In PurchaseController.php
+    function create()
+    {
+        $categories = $this->model->getCategories();
+        $inventoryModel = new InventoryModel();
+        $inventoryItems = $inventoryModel->getInventoryWithCategory(); // Fetch all inventory items with category info
+
+        $this->views('purchase/create', [
+            'categories' => $categories,
+            'inventoryItems' => $inventoryItems
+        ]);
+    }
+
 
 
     public function updateInline()
@@ -43,16 +68,16 @@ function create()
             echo json_encode(['success' => false, 'message' => 'Invalid request method']);
             return;
         }
-    
+
         $id = $_POST['id'] ?? null;
         $field = $_POST['field'] ?? null;
         $value = $_POST['value'] ?? null;
-    
+
         if (!$id || !$field || $value === null) {
             echo json_encode(['success' => false, 'message' => 'Missing parameters']);
             return;
         }
-    
+
         try {
             $this->model->updateField($id, $field, $value);
             echo json_encode(['success' => true]);
@@ -154,24 +179,24 @@ function create()
             $this->redirect('/purchase', 'Purchase not found.');
             return;
         }
-    
+
         $categories = $this->model->getCategories();
         $this->views('purchase/edit', ['purchase' => $purchase, 'categories' => $categories]);
     }
-    
+
     function update($id)
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect("/purchase/edit/$id", 'Invalid request method.');
             return;
         }
-    
+
         $purchase = $this->model->getPurchase($id);
         if (!$purchase) {
             $this->redirect('/purchase', 'Purchase not found.');
             return;
         }
-    
+
         $imageData = $purchase['image'];
         if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
             $imageData = file_get_contents($_FILES['image']['tmp_name']);
@@ -180,7 +205,7 @@ function create()
                 return;
             }
         }
-    
+
         $data = [
             'product_name' => htmlspecialchars($_POST['product_name']),
             'category_id' => intval($_POST['category_id']),
@@ -189,7 +214,7 @@ function create()
             'type_of_product' => htmlspecialchars($_POST['type_of_product']),
             'image' => $imageData
         ];
-    
+
         try {
             $this->model->updatePurchase($id, $data);
             $this->redirect('/purchase', 'Purchase updated successfully!');
@@ -197,8 +222,6 @@ function create()
             $this->redirect("/purchase/edit/$id", 'Error: ' . $e->getMessage());
         }
     }
-    // Update purchase
-
     public function store()
     {
         if (!isset($_POST['product_name'], $_POST['category_id'], $_POST['quantity'], $_POST['amount'], $_POST['typeOfproducts'])) {
@@ -207,6 +230,8 @@ function create()
         }
 
         $this->model->startTransaction();
+        $inventoryModel = new InventoryModel();
+        $categoryModel = new CategoryModel();
 
         try {
             $product_names = $_POST['product_name'];
@@ -214,57 +239,69 @@ function create()
             $quantities = $_POST['quantity'];
             $amounts = $_POST['amount'];
             $type_of_products = $_POST['typeOfproducts'];
-
-            foreach ($category_ids as $category_id) {
-                if (!$this->model->categoryExists($category_id)) {
-                    $this->model->rollBackTransaction();
-                    $this->redirect('/purchase/create', 'Invalid category!');
-                    return;
-                }
-            }
+            $inventory_ids = $_POST['inventory_id'] ?? [];
 
             foreach ($product_names as $index => $product_name) {
-                if (
-                    empty($product_name) || !is_numeric($category_ids[$index]) ||
-                    !is_numeric($quantities[$index]) || !is_numeric($amounts[$index])
-                ) {
+                $category_id = $category_ids[$index];
+                $quantity = (int)$quantities[$index];
+                $amount = (float)$amounts[$index];
+                $type = $type_of_products[$index];
+                $inventory_id = $inventory_ids[$index] ?? null;
+
+                if (!$this->model->categoryExists($category_id) || empty($product_name) || $quantity <= 0 || $amount < 0) {
                     $this->model->rollBackTransaction();
                     $this->redirect('/purchase/create', "Invalid input at index $index!");
                     return;
                 }
 
                 $imageData = null;
-                if (
-                    isset($_FILES['image']['tmp_name'][$index]) &&
-                    is_uploaded_file($_FILES['image']['tmp_name'][$index])
-                ) {
+                if ($type === 'New' && isset($_FILES['image']['tmp_name'][$index]) && is_uploaded_file($_FILES['image']['tmp_name'][$index])) {
                     $imageData = file_get_contents($_FILES['image']['tmp_name'][$index]);
-                    if ($imageData === false) {
-                        $this->model->rollBackTransaction();
-                        $this->redirect('/purchase/create', "Failed to read image at index $index!");
-                        return;
+                } elseif ($type === 'Old' && $inventory_id) {
+                    $currentItem = $inventoryModel->getInventorys($inventory_id);
+                    if ($currentItem) {
+                        $imageData = $currentItem['image'];
                     }
                 }
 
-                $this->model->insertProduct(
-                    $product_name,
-                    $category_ids[$index],
-                    $quantities[$index],
-                    $amounts[$index],
-                    $type_of_products[$index],
-                    $imageData
-                );
+                $category = $categoryModel->getCategoryById($category_id);
+                $category_name = $category['name'] ?? '';
+
+                if ($type === 'New') {
+                    // For "New" products: Insert into purchase table and inventory
+                    $purchaseId = $this->model->insertProduct($product_name, $category_id, $quantity, $amount, $type, $imageData);
+                    $inventoryModel->insertInventory([
+                        'product_name' => $product_name,
+                        'category_id' => $category_id,
+                        'quantity' => $quantity,
+                        'amount' => $amount,
+                        'image' => $imageData,
+                        'category_name' => $category_name,
+                        'expiration_date' => null,
+                        'total_price' => $quantity * $amount
+                    ]);
+                } elseif ($type === 'Old' && $inventory_id) {
+                    // For "Old" products: Only update inventory, skip purchase table
+                    $currentItem = $inventoryModel->getInventorys($inventory_id);
+                    if ($currentItem) {
+                        $newQuantity = (int)$currentItem['quantity'] + (int)$quantity;
+                        $inventoryModel->updateInventoryQuantity($inventory_id, $newQuantity, $amount);
+                        error_log("Updated inventory ID $inventory_id with quantity $newQuantity");
+                    } else {
+                        $this->model->rollBackTransaction();
+                        $this->redirect('/purchase/create', "Inventory item not found for ID: $inventory_id!");
+                        return;
+                    }
+                }
             }
 
             $this->model->commitTransaction();
-            $this->redirect('/purchase', 'Purchase added successfully!');
+            $this->redirect('/purchase', 'Purchase added and inventory updated successfully!');
         } catch (Exception $e) {
             $this->model->rollBackTransaction();
             $this->redirect('/purchase/create', 'Error: ' . $e->getMessage());
         }
     }
-
-
     // Delete purchase
     // In PurchaseController.php
     function destroy($id)

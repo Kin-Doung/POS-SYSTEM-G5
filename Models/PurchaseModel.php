@@ -31,28 +31,30 @@ class PurchaseModel
     }
 
     // Insert Product
-    public function insertProduct($product_name, $category_id, $quantity, $amount, $type_of_product, $imageData = null)
+    public function insertProduct($product_name, $category_id, $quantity, $amount, $type_of_product, $expiration_date, $imageData = null)
     {
         try {
             // Fetch category_name from categories table
             $stmt = $this->pdo->getConnection()->prepare("SELECT name FROM categories WHERE id = :id");
             $stmt->execute([':id' => $category_id]);
             $category_name = $stmt->fetchColumn() ?: '';
-    
+
             $stmt = $this->pdo->getConnection()->prepare("
-                INSERT INTO purchase (product_name, category_id, category_name, quantity, price, type_of_product, image) 
-                VALUES (:product_name, :category_id, :category_name, :quantity, :price, :type_of_product, :image)
+                INSERT INTO purchase (product_name, category_id, category_name, quantity, price, type_of_product, expiration_date, image) 
+                VALUES (:product_name, :category_id, :category_name, :quantity, :price, :type_of_product, :expiration_date, :image)
             ");
-    
+
             $stmt->bindParam(':product_name', $product_name);
             $stmt->bindParam(':category_id', $category_id, PDO::PARAM_INT);
             $stmt->bindParam(':category_name', $category_name);
             $stmt->bindParam(':quantity', $quantity, PDO::PARAM_INT);
             $stmt->bindParam(':price', $amount);
             $stmt->bindParam(':type_of_product', $type_of_product);
+            $stmt->bindParam(':expiration_date', $expiration_date); // New line
             $stmt->bindParam(':image', $imageData, PDO::PARAM_LOB);
-    
+
             $stmt->execute();
+
             return $this->pdo->getConnection()->lastInsertId();
         } catch (PDOException $e) {
             error_log("Error inserting product: " . $e->getMessage());
@@ -93,9 +95,9 @@ class PurchaseModel
 
             // Insert into database
             $stmt = $this->pdo->getConnection()->prepare("
-            INSERT INTO purchase (image, product_name, category_name, category_id, price, purchase_date) 
-            VALUES (:image, :product_name, :category_name, :category_id, :price, :purchase_date)
-        ");
+                INSERT INTO purchase (image, product_name, category_name, category_id, price, purchase_date, expiration_date) 
+                VALUES (:image, :product_name, :category_name, :category_id, :price, :purchase_date, :expiration_date)
+            ");
 
             $stmt->bindParam(':image', $imageData, PDO::PARAM_LOB); // Store binary image
             $stmt->bindParam(':product_name', $data['product_name']);
@@ -103,6 +105,7 @@ class PurchaseModel
             $stmt->bindParam(':category_id', $data['category_id'], PDO::PARAM_INT);
             $stmt->bindParam(':price', $data['price']);
             $stmt->bindParam(':purchase_date', $data['purchase_date']);
+            $stmt->bindParam(':expiration_date', $data['expiration_date']); // New line
 
             $stmt->execute();
         } catch (PDOException $e) {
@@ -123,6 +126,7 @@ class PurchaseModel
             return false;
         }
     }
+    
 
 
 

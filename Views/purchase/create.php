@@ -25,6 +25,7 @@
                                 <th>Product Name</th>
                                 <th>Quantity</th>
                                 <th>Price ($)</th>
+                                <th>Expiration date</th>
                                 <th>Type of Products</th>
                                 <th>Actions</th>
                             </tr>
@@ -57,6 +58,9 @@
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" name="amount[]" min="0" step="0.01" required>
+                                </td>
+                                <td>
+                                    <input type="date" class="form-control w-100" name="expiration_date[]" value="${product.expiration}" required>
                                 </td>
                                 <td>
                                     <select name="typeOfproducts[]" class="form-control" required>
@@ -109,14 +113,115 @@
                     <div class="d-flex justify-content-end">
                         <p>Total Price: $<span id="totalPrice">0</span></p>
                     </div>
-                    <div>
-                        <button type="button" id="exportPDF" class="btn-export">Export to PDF</button>
-                        <button type="button" id="exportExcel" class="btn-export-excel">Export to Excel</button>
+                    <div class="button-container">
+                        <button type="button" id="exportPDF" class="btn-system btn-export-pdf">Export to PDF</button>
+                        <button type="button" id="exportExcel" class="btn-system btn-export-excel">Export to Excel</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <style>
+        .modal-dialog {
+            max-width: 80%;
+            margin: 1.75rem auto;
+        }
+
+        .modal-content {
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .modal-title {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .table {
+            margin-bottom: 20px;
+        }
+
+        .table th {
+            background-color: #005670;
+            color: white;
+            font-weight: 500;
+            padding: 12px;
+        }
+
+        .table td {
+            padding: 10px;
+            vertical-align: middle;
+        }
+
+        .d-flex.justify-content-end {
+            padding: 10px 0;
+            margin-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .d-flex p {
+            margin: 0;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        #totalPrice {
+            color: #007a5e;
+        }
+
+        .button-container {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .btn-system {
+            padding: 10px 24px;
+            margin-left: 10px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-export-pdf {
+            background-color: #d32f2f;
+            color: white;
+        }
+
+        .btn-export-pdf:hover {
+            background-color: #b71c1c;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .btn-export-excel {
+            background-color: #007a5e;
+            color: white;
+        }
+
+        .btn-export-excel:hover {
+            background-color: #005670;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .btn-system:active {
+            transform: translateY(1px);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </main>
 
 <script>
@@ -147,6 +252,10 @@
         <td>
             <input type="number" class="form-control" name="amount[]" min="0" step="0.01" required>
         </td>
+            <td>
+                <input type="date" class="form-control w-100" name="expiration_date[]" value="${product.expiration}" required>
+            </td>
+
         <td>
             <select name="typeOfproducts[]" class="form-control" required>
                 <option value="">Select Type</option>

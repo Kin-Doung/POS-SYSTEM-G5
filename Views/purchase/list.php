@@ -2,29 +2,6 @@
 <?php require_once './views/layouts/side.php'; ?>
 
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="search-container">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search...">
-        </div>
-        <div class="icons">
-            <i class="fas fa-globe icon-btn"></i>
-            <div class="icon-btn" id="notification-icon">
-                <i class="fas fa-bell"></i>
-                <span class="notification-badge" id="notification-count">8</span>
-            </div>
-        </div>
-        <div class="profile">
-            <img src="../../views/assets/images/image.png" alt="User">
-            <div class="profile-info">
-                <span>Eng Ly</span>
-                <span class="store-name">Owner Store</span>
-            </div>
-        </div>
-    </nav>
-    <!-- End Navbar -->
-
     <div class="container table-inventory">
         <div class="orders">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -35,186 +12,195 @@
                     </a>
                 </div>
             </div>
-            <div class="input-group">
-                <input type="text" id="searchInput" class="form-control input-group-search" placeholder="Search...">
-                <select id="categorySelect" class="ms-2 selected" onchange="filterTable()">
-                    <option value="">Select Category</option>
-                    <?php if (!empty($categories)): ?>
-                        <?php foreach ($categories as $category): ?>
-                            <option value="<?= htmlspecialchars($category['id']); ?>">
-                                <?= htmlspecialchars($category['name']); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <option disabled>No Categories Found</option>
-                    <?php endif; ?>
-                </select>
-            </div>
 
             <table class="table">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th><input type="checkbox" id="selectAll"></th>
                         <th>Image</th>
                         <th>Product Name</th>
                         <th>Quantity</th>
                         <th>Price</th>
                         <th>Type of Products</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <?php foreach ($purchase as $index => $item): ?>
-                        <tr data-category-id="<?= htmlspecialchars($item['category_id']); ?>">
-                            <td><?= $index + 1 ?></td>
-                            <td>
-                                <img src="<?= htmlspecialchars($item['image']); ?>" alt="Image of <?= htmlspecialchars($item['product_name']); ?>" style="width: 40px; height: 40px; border-radius: 100%;">
-                            </td>
-                            <td><?= htmlspecialchars($item['product_name']); ?></td>
-                            <td><span class="quantity-text"><?= htmlspecialchars($item['quantity']); ?></span></td>
-                            <td><?= htmlspecialchars($item['amount']); ?>$</td>
-                            <td><?= htmlspecialchars($item['typeOfproducts']); ?></td>
-                            <td>
-                                <div class="dropdown">
-                                    <button class="btn-seemore dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                        See more...
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item text-dark" href="#" data-bs-toggle="modal" data-bs-target="#viewModal<?= $item['id']; ?>"><i class="fa-solid fa-eye"></i> View</a></li>
-                                        <li><a class="dropdown-item text-dark" href="#" data-bs-toggle="modal" data-bs-target="#editModal" data-id="<?= $item['id']; ?>" data-product_name="<?= $item['product_name']; ?>" data-category_id="<?= $item['category_id']; ?>" data-quantity="<?= $item['quantity']; ?>" data-amount="<?= $item['amount']; ?>" data-image="<?= $item['image']; ?>" data-typeOfproducts="<?= $item['typeOfproducts']; ?>"><i class="fa-solid fa-pen-to-square"></i> Edit</a></li>
-                                        <li><a class="dropdown-item text-dark" href="/purchase/delete?id=<?= $item['id']; ?>" onclick="return confirm('Are you sure you want to delete this item?');"><i class="fa-solid fa-trash"></i> Delete</a></li>
-                                    </ul>
-                                </div>
+                <tbody id="purchasesTableBody">
+                    <?php if (!empty($purchases)): ?>
+                        <?php foreach ($purchases as $index => $item): ?>
+                            <tr data-category-id="<?= htmlspecialchars($item['category_id']); ?>">
+                                <td><input type="checkbox" class="selectItem" value="<?= htmlspecialchars($item['id']); ?>"></td>
+                                <td>
+                                    <?php if (!empty($item['image'])): ?>
+                                        <img src="data:image/jpeg;base64,<?= base64_encode($item['image']); ?>"
+                                            alt="Image of <?= htmlspecialchars($item['product_name']); ?>"
+                                            style="width: 40px; height: 40px; border-radius: 100%;">
+                                    <?php else: ?>
+                                        <span>No image</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <span class="editable" data-field="product_name" data-id="<?= htmlspecialchars($item['id']); ?>">
+                                        <?= htmlspecialchars($item['product_name']); ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="editable" data-field="quantity" data-id="<?= htmlspecialchars($item['id']); ?>">
+                                        <?= htmlspecialchars($item['quantity']); ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="editable" data-field="price" data-id="<?= htmlspecialchars($item['id']); ?>">
+                                        <?= htmlspecialchars($item['price']); ?>$
+                                    </span>
+                                </td>
+                                <td><?= htmlspecialchars($item['type_of_product']); ?></td>
 
-                                <!-- View Modal -->
-                                <div class="modal fade" id="viewModal<?= $item['id']; ?>" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content rounded-4 shadow-lg">
-                                            <div class="modal-header">
-                                                <h2 class="modal-title">View Inventory Item</h2>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body d-flex justify-content-between align-items-center">
-                                                <div class="text-start d-inline-block detail">
-                                                    <p><strong>Product Name:</strong> <?= htmlspecialchars($item['product_name']); ?></p>
-                                                    <p><strong>Category:</strong> <?= !empty($item['category_name']) ? htmlspecialchars($item['category_name']) : '-'; ?></p>
-                                                    <p><strong>Quantity:</strong> <?= htmlspecialchars($item['quantity']); ?></p>
-                                                    <p><strong>Price:</strong> $<?= htmlspecialchars(number_format($item['amount'], 2)); ?></p>
-                                                    <p><strong>Type of Products:</strong> <?= htmlspecialchars($item['typeOfproducts']); ?></p>
-                                                </div>
-                                                <?php if (!empty($item['image'])): ?>
-                                                    <div class="mb-3">
-                                                        <img src="<?= htmlspecialchars($item['image']); ?>" alt="Product Image" width="150" class="img-fluid">
-                                                    </div>
-                                                <?php endif; ?>
-                                            </div>
+                            </tr>
+
+                            <!-- Single Delete Modal -->
+                            <div class="modal fade" id="deleteModal<?= htmlspecialchars($item['id']); ?>" tabindex="-1" aria-labelledby="deleteModalLabel<?= htmlspecialchars($item['id']); ?>" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel<?= htmlspecialchars($item['id']); ?>">Delete Purchase</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete "<?= htmlspecialchars($item['product_name']); ?>"?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <form method="POST" action="/purchase/destroy/<?= htmlspecialchars($item['id']); ?>" style="display: inline;">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- Edit Modal -->
-                                <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title mt-n4" id="editModalLabel">Edit Product</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form id="editForm" action="/purchase/update" method="POST" enctype="multipart/form-data">
-                                                    <input type="hidden" id="editProductId" name="id">
-                                                    
-                                                    <!-- Product Name -->
-                                                    <div class="mt-n2">
-                                                        <label class="form-label">Product Name</label>
-                                                        <input type="text" class="form-control" name="product_name" id="product_name" required>
-                                                    </div>
-
-                                                    <!-- Category and Quantity in One Row -->
-                                                    <div class="row mt-n2">
-                                                        <div class="col-md-6">
-                                                            <div class="mb-3">
-                                                                <label class="form-label">Category</label>
-                                                                <select class="form-control" name="category_id" id="category_id" required>
-                                                                    <option value="">Select</option>
-                                                                    <?php foreach ($categories ?? [] as $category): ?>
-                                                                        <option value="<?= $category['id']; ?>"><?= htmlspecialchars($category['name']); ?></option>
-                                                                    <?php endforeach; ?>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="mb-3">
-                                                                <label class="form-label">Quantity</label>
-                                                                <input type="number" class="form-control" name="quantity" id="quantity" required min="1">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Amount and Expiration Date in One Row -->
-                                                    <div class="row mt-n2">
-                                                        <div class="col-md-6">
-                                                            <div class="mb-3">
-                                                                <label class="form-label">Amount</label>
-                                                                <input type="number" class="form-control" name="amount" id="amount" required step="0.01" min="0">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="mb-3">
-                                                                <label class="form-label">Type of Products</label>
-                                                                <input type="text" class="form-control" name="typeOfproducts" id="typeOfproducts" required>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Image Upload -->
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Image</label>
-                                                        <input type="file" class="form-control" id="imageInput" name="image" accept="image/*">
-                                                        <img id="imagePreview" src="" alt="Product Image" width="50" height="50" class="rounded-circle mt-2">
-                                                    </div>
-
-                                                    <!-- Update Button -->
-                                                    <button type="submit" class="btn btn-primary">Update</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </td>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="8">No purchases found.</td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
+
+        <!-- Bulk Delete Modal -->
+        <div class="modal fade" id="bulkDeleteModal" tabindex="-1" aria-labelledby="bulkDeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="bulkDeleteModalLabel">Delete Selected Purchases</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete the selected purchases?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" id="confirmBulkDelete" class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    <button type="button" id="bulkDeleteBtn" class="btn btn-danger" style="display: none;">Delete Selected</button>
+
 </main>
 
 <script>
-    document.querySelectorAll('.dropdown-item').forEach(link => {
-        link.addEventListener('click', function(event) {
-            const productName = event.target.getAttribute('data-product_name');
-            const categoryId = event.target.getAttribute('data-category_id');
-            const quantity = event.target.getAttribute('data-quantity');
-            const amount = event.target.getAttribute('data-amount');
-            const typeOfproducts = event.target.getAttribute('data-typeOfproducts');
-            const image = event.target.getAttribute('data-image');
-            const productId = event.target.getAttribute('data-id');
+    // Inline Editing
+    document.querySelectorAll('.editable').forEach(function(element) {
+        element.addEventListener('click', function() {
+            const originalValue = this.textContent.trim().replace('$', '');
+            const field = this.dataset.field;
+            const id = this.dataset.id;
 
-            // Set modal fields
-            document.getElementById('product_name').value = productName;
-            document.getElementById('category_id').value = categoryId;
-            document.getElementById('quantity').value = quantity;
-            document.getElementById('amount').value = amount;
-            document.getElementById('typeOfproducts').value = typeOfproducts;
-            document.getElementById('imagePreview').src = image ? image : '';
+            const input = document.createElement('input');
+            input.type = field === 'quantity' || field === 'price' ? 'number' : 'text';
+            input.value = originalValue;
+            input.className = 'form-control';
+            if (field === 'quantity') input.min = '1';
+            if (field === 'price') input.step = '0.01';
 
-            // Set product id in hidden field
-            document.getElementById('editProductId').value = productId;
+            this.innerHTML = '';
+            this.appendChild(input);
+            input.focus();
 
-            // Update form action
-            document.getElementById('editForm').action = '/purchase/update?id=' + productId;
+            input.addEventListener('blur', function() {
+                const newValue = this.value;
+                const parent = this.parentElement;
+                parent.textContent = field === 'price' ? newValue + '$' : newValue;
+
+                fetch('/purchase/update-inline', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: `id=${id}&field=${field}&value=${encodeURIComponent(newValue)}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.success) {
+                            alert('Update failed: ' + data.message);
+                            parent.textContent = field === 'price' ? originalValue + '$' : originalValue;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        parent.textContent = field === 'price' ? originalValue + '$' : originalValue;
+                    });
+            });
         });
     });
+
+    // Bulk Delete
+    document.getElementById('selectAll').addEventListener('change', function() {
+        document.querySelectorAll('.selectItem').forEach(checkbox => {
+            checkbox.checked = this.checked;
+            toggleBulkDeleteButton();
+        });
+    });
+
+    document.querySelectorAll('.selectItem').forEach(checkbox => {
+        checkbox.addEventListener('change', toggleBulkDeleteButton);
+    });
+
+    function toggleBulkDeleteButton() {
+        const checkedBoxes = document.querySelectorAll('.selectItem:checked');
+        document.getElementById('bulkDeleteBtn').style.display = checkedBoxes.length > 0 ? 'inline-block' : 'none';
+    }
+
+    document.getElementById('bulkDeleteBtn').addEventListener('click', function() {
+        const modal = new bootstrap.Modal(document.getElementById('bulkDeleteModal'));
+        modal.show();
+    });
+
+    document.getElementById('confirmBulkDelete').addEventListener('click', function() {
+        const selectedIds = Array.from(document.querySelectorAll('.selectItem:checked'))
+            .map(checkbox => checkbox.value);
+
+        fetch('/purchase/bulk-destroy', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    ids: selectedIds
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Bulk delete failed: ' + data.message);
+                }
+            })
+
+    });
 </script>
+
+<?php require_once './views/layouts/footer.php'; ?>

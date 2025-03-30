@@ -90,7 +90,35 @@ class InventoryModel
     }
 
 
-    
+
+    // Get product by name and category from the inventory table
+    public function getProductByName($productName, $categoryId)
+    {
+        $stmt = $this->pdo->query("SELECT * FROM inventory WHERE product_name = :product_name AND category_id = :category_id");
+        $stmt->execute([':product_name' => $productName, ':category_id' => $categoryId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Update the inventory quantity (after a purchase is made)
+    public function updateInventoryQuantity($productId, $quantity)
+    {
+        $stmt = $this->pdo->query("UPDATE inventory SET quantity = :quantity WHERE id = :id");
+        $stmt->execute([':quantity' => $quantity, ':id' => $productId]);
+    }
+
+    // Insert a new product into the inventory table if it's not already there
+    public function addNewProductToInventory($productName, $categoryId, $quantity, $amount, $type)
+    {
+        $stmt = $this->pdo->query("INSERT INTO inventory (product_name, category_id, quantity, amount, type) VALUES (:product_name, :category_id, :quantity, :amount, :type)");
+        $stmt->execute([
+            ':product_name' => $productName,
+            ':category_id' => $categoryId,
+            ':quantity' => $quantity,
+            ':amount' => $amount,
+            ':type' => $type
+        ]);
+    }
+
 
     private function executeQuery($query, $params)
     {
@@ -200,7 +228,7 @@ class InventoryModel
         try {
             // Ensure that the ID is numeric
             if (is_numeric($id)) {
-                // Use query() method directly without prepare
+                // Use query() method directly without query
                 $sql = "DELETE FROM inventory WHERE id = $id"; // Use the ID directly in the SQL
                 $this->pdo->query($sql);  // Execute the query
             } else {

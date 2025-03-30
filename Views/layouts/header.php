@@ -49,6 +49,17 @@
   <!-- HTML to PDF Converter -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
 
+
+
+
+  <!-- new cahrt -->
+
+  <link rel="stylesheet" href="../../views/assets/css/chart.css">
+  <script src="../../views/assets/js/vendors/js/vendor.bundle.base.js"></script>
+  <script src="../../views/assets/js/vendors/chart.js/chart.umd.js"></script>
+  <script src="../../views/assets/js/dashboard.js"></script>
+
+
 </head>
 
 <body class="g-sidenav-show bg-gray-200">

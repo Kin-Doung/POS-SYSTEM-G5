@@ -12,9 +12,6 @@
                 <input type="hidden" name="id" value="<?= $category['id']; ?>" />
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
-
-
-
         </div>
     </div>
 </div>

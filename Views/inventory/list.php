@@ -29,61 +29,16 @@
             <script src="../../views/assets/js/setting.js"></script>
         </div>
     </nav>
-    <!-- End Navbar -->
-    <!-- /// alert fuction// -->
-    <!-- <div class="content mt-3 mb-3">
-        <div class="row justify-content-center">
-          
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                <div class="card shadow-sm border-0 rounded-lg" style="height: 120px;">
-                    <div class="card-body text-center mt-n4">
-                        <div class="position-relative">
-                            <i class="fas fa-warehouse text-success" style="font-size: 2.5rem;"></i>
-                            <p class="card-text position-absolute top-0 end-0 m-2" style="font-size: 1.2rem;">20</p>
-                        </div>
-                        <h5 class="card-title mt-4">In Stock</h5>
-                    </div>
-                </div>
-            </div>
-
-          
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                <div class="card shadow-sm border-0 rounded-lg" style="height: 120px;">
-                    <div class="card-body text-center mt-n4">
-                        <div class="position-relative">
-                            <i class="fas fa-times-circle text-danger" style="font-size: 2.5rem;"></i>
-                            <p class="card-text position-absolute top-0 end-0 m-2" style="font-size: 1.2rem;">30</p>
-                        </div>
-                        <h5 class="card-title mt-4">Out of Stock</h5>
-                    </div>
-                </div>
-            </div>
-
-           
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                <div class="card shadow-sm border-0 rounded-lg" style="height: 120px;">
-                    <div class="card-body text-center mt-n4">
-                        <div class="position-relative">
-                            <i class="fas fa-check-circle text-warning" style="font-size: 2.5rem;"></i>
-                            <p class="card-text position-absolute top-0 end-0 m-2" style="font-size: 1.2rem;">50</p>
-                        </div>
-                        <h5 class="card-title mt-4">Full Stock</h5>
-                    </div>
-                </div>
-            </div>
-
-
-        </div>
-    </div> -->
+  
 
     <div class="container  table-inventory">
         <div class="orders">
 
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 style="font-weight: bold;" class="purchase-head">Purchasing Orders</h2>
+                <h2 style="font-weight: bold;" class="purchase-head">Restock Products</h2>
                 <div>
                     <a href="/inventory/create" class=" btn-new-product">
-                        <i class="bi-plus-lg"></i> + New Products
+                        <i class="bi-plus-lg"></i> + Add stocks
                     </a>
 
                     <!-- <a href="/inventory/create">class="btn btn-primary">+ New Products</a> -->

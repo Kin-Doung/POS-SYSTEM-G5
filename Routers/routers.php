@@ -19,12 +19,12 @@ $routes->post('/login', [LoginController::class, 'processLogin']); // Handle log
 $routes->get('/dashboard', [DashboardController::class, 'index']); // Redirect to dashboard after successful login
 
 // setting
-$routes->get('/settings', [SettingController::class, 'index']);
-$routes->get('/settings/create', [SettingController::class, 'create']);
-$routes->post('/settings/store', [SettingController::class, 'store']);
-$routes->get('/settings/edit', [SettingController::class, 'edit']);
-$routes->put('/settings/update/(:num)', [SettingController::class, 'update']);
-$routes->delete('/settings/destroy', [SettingController::class, 'destroy']);
+// $routes->get('/settings', [SettingController::class, 'index']);
+// $routes->get('/settings/create', [SettingController::class, 'create']);
+// $routes->post('/settings/store', [SettingController::class, 'store']);
+// $routes->get('/settings/edit', [SettingController::class, 'edit']);
+// $routes->put('/settings/update/(:num)', [SettingController::class, 'update']);
+// $routes->delete('/settings/destroy', [SettingController::class, 'destroy']);
 
 
 //inventory
@@ -74,12 +74,13 @@ $routes->delete('/category/destroy', [CategoryController::class, 'destroy']);
 $routes->get('/purchase', [PurchaseController::class, 'index']);
 $routes->get('/purchase/create', [PurchaseController::class, 'create']);
 $routes->post('/purchase/store', [PurchaseController::class, 'store']);
-$routes->get('/purchase/edit', [PurchaseController::class, 'edit']);
-$routes->put('/purchase/update', [PurchaseController::class, 'update']);
-$routes->delete('/purchase/destroy', [PurchaseController::class, 'destroy']);
-$routes->post('/purchase/restock', [PurchaseController::class, 'restock']);
+$routes->get('/purchase/edit/(:num)', [PurchaseController::class, 'edit']);
+$routes->post('/purchase/update/(:num)', [PurchaseController::class, 'update']);
+$routes->post('/purchase/destroy/(:num)', [PurchaseController::class, 'destroy']);
+$routes->post('/purchase/bulk-destroy', [PurchaseController::class, 'bulkDestroy']);
+$routes->get('/purchase/get-existing-products', [PurchaseController::class, 'getExistingProducts']);
 
-// Order
+
 // $routes->get('/orders', [OrderController::class, 'index']);
 
 

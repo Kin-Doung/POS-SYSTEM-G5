@@ -1,210 +1,206 @@
-<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark" id="sidenav-main">
-    <div class="sidenav-header">
-        <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-        <a class="navbar-brand m-0" href="/" target="_blank">
-            <img src="../assets/img/logos/logo.png" class="navbar-brand-img h-100" alt="main_logo">
-        </a>
-    </div>
-    <hr class="horizontal light mt-0 mb-2">
-    <div id="sidenav-collapse-main">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link text-white" href="/">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">dashboard</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Dashboard</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/tables.html">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">table_view</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Tables</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white " href="/products">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">receipt_long</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Products</span>
-                </a>
-            </li>
-            <!-- Nav Purchase Orders -->
-            <li class="nav-item">
-                <a class="nav-link text-white active bg-gradient-primary" href="/purchase">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">receipt_long</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Purchase Orders</span>
-                </a>
-            </li>
-            <!-- Nav Purchase Orders -->
-            <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/rtl.html">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">format_textdirection_r_to_l</i>
-                    </div>
-                    <span class="nav-link-text ms-1">RTL</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/notifications.html">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">notifications</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Notifications</span>
-                </a>
-            </li>
-            <li class="nav-item mt-3">
-                <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Account pages</h6>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/profile.html">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">person</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Profile</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/sign-in.html">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">login</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Sign In</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white " href="../pages/sign-up.html">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">assignment</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Sign Up</span>
-                </a>
-            </li>
-        </ul>
-    </div>
+<?php require_once './views/layouts/header.php'; ?>
+<?php require_once './views/layouts/side.php'; ?>
 
-</aside>
-<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-    <!-- Navbar -->
-    <nav class="navbar">
-        <!-- Search Bar -->
-        <div class="search-container">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search...">
-        </div>
-
-        <!-- Icons -->
-        <div class="icons">
-            <i class="fas fa-globe icon-btn"></i>
-            <div class="icon-btn" id="notification-icon">
-                <i class="fas fa-bell"></i>
-                <span class="notification-badge" id="notification-count">8</span>
-            </div>
-        </div>
-
-        <!-- Profile -->
-        <div class="profile">
-            <img src="../../assets/images/image.png" alt="User">
-            <div class="profile-info">
-                <span>Jimmy Sullivan</span>
-                <span class="store-name">Odama Store</span>
-            </div>
-        </div>
-        <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
-            <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
-                <div class="sidenav-toggler-inner">
-                    <i class="sidenav-toggler-line"></i>
-                    <i class="sidenav-toggler-line"></i>
-                    <i class="sidenav-toggler-line"></i>
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    <div class="container table-inventory">
+        <div class="orders">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 style="font-weight: bold;" class="purchase-head">Purchasing Orders</h2>
+                <div>
+                    <a href="/purchase/create" class="btn-new-product">
+                        <i class="bi-plus-lg"></i> + New Products
+                    </a>
                 </div>
-            </a>
-        </li>
-    </nav>
-    <!-- End Navbar -->
-    <?php require_once 'Views/layouts/header.php'; ?>
-    <div class="search-section">
-        <form action="" method="POST">
-            <input type="text" class="search-input" id="searchInput" name="searchInput" placeholder="Search for products..." onkeyup="filterProducts()" />
-            <select class="product-select" id="productSelect" name="productSelect" onchange="filterProducts()">
-                <option value="">Select Product</option>
-                <option value="Adapter">Adapter</option>
-                <option value="Cake Mixer">Cake Mixer</option>
-                <option value="Cocktail Machine">Cocktail Machine</option>
-                <option value="Electric Cooking Pot">Electric Cooking Pot</option>
-            </select>
-            <select class="category-select" id="categorySelect" name="categorySelect" onchange="filterProducts()">
-                <option value="">Select Category</option>
-                <option value="all">All</option>
-                <option value="kitchen">Kitchen</option>
-                <option value="appliances">Appliances</option>
-            </select>
-            <select class="price-select" id="priceSelect" name="priceSelect" onchange="filterProducts()">
-                <option value="">Select Price Range</option>
-                <option value="0">Up to $10</option>
-                <option value="15">Up to $15</option>
-                <option value="20">Up to $20</option>
-                <option value="25">Up to $25</option>
-                <option value="30">Up to $30</option>
-            </select>
-            <a href="/purchase/create" class="btn bg-info text-light ">Add New</a>
+            </div>
 
-        </form>
-    </div>
-    <!-- Modal structure -->
-    <div class="container">
-        <div class="product-grid" id="productGrid">
-            <?php
-            foreach ($purchase as $purchase): ?>
-                <div class="card" data-name="<?= $purchase['product_name'] ?>" data-category="<?= $purchase['product_name'] ?>" data-price="<?= $purchase['price'] ?>">
-                    <div class="delete_edit">
-                        <a href="/purchase/edit?id=<?= $purchase['id'] ?>" class="btn btn-warning">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                        </a>
-                        <!-- Direct delete link with confirmation -->
-                        <form action="/purchase/destroy" method="POST" style="display:inline;">
-                            <input type="hidden" name="id" value="<?= $purchase['id'] ?>">
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this product?');">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </form>
-                    </div>
-
-
-                    <img src="uploads/<?= $purchase['image'] ?>" alt="<?= $purchase['product_name'] ?>" />
-                    <div class="product-name"><?= $purchase['product_name'] ?></div>
-                    <input type="number" class="quantity" id="quantity<?= $purchase['product_name'] ?>" value="0" min="0" />
-                    <div class="price">Price: $<?= number_format($purchase['price'], 2) ?></div>
-                    <button class="buy-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['product_name'] ?>', true)">Add to Cart</button>
-                    <button class="subtract-button" onclick="updateCart(<?= $purchase['price'] ?>, 'quantity<?= $purchase['product_name'] ?>', false)">Remove</button>
-                </div>
-            <?php endforeach; ?>
-        </div>
-        <div class="detail-section">
-            <div class="detail-title">Order Summary</div>
-            <table class="order-table">
+            <table class="table">
                 <thead>
                     <tr>
-                        <th>Product</th>
-                        <th>Qty</th>
+                        <th><input type="checkbox" id="selectAll"></th>
+                        <th>Image</th>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
                         <th>Price</th>
-                        <th>Total</th>
+                        <th>Type of Products</th>
                     </tr>
                 </thead>
-                <tbody id="details"></tbody>
+                <tbody id="purchasesTableBody">
+                    <?php if (!empty($purchases)): ?>
+                        <?php foreach ($purchases as $index => $item): ?>
+                            <tr data-category-id="<?= htmlspecialchars($item['category_id']); ?>">
+                                <td><input type="checkbox" class="selectItem" value="<?= htmlspecialchars($item['id']); ?>"></td>
+                                <td>
+                                    <?php if (!empty($item['image'])): ?>
+                                        <img src="data:image/jpeg;base64,<?= base64_encode($item['image']); ?>"
+                                            alt="Image of <?= htmlspecialchars($item['product_name']); ?>"
+                                            style="width: 40px; height: 40px; border-radius: 100%;">
+                                    <?php else: ?>
+                                        <span>No image</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <span class="editable" data-field="product_name" data-id="<?= htmlspecialchars($item['id']); ?>">
+                                        <?= htmlspecialchars($item['product_name']); ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="editable" data-field="quantity" data-id="<?= htmlspecialchars($item['id']); ?>">
+                                        <?= htmlspecialchars($item['quantity']); ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="editable" data-field="price" data-id="<?= htmlspecialchars($item['id']); ?>">
+                                        <?= htmlspecialchars($item['price']); ?>$
+                                    </span>
+                                </td>
+                                <td><?= htmlspecialchars($item['type_of_product']); ?></td>
+
+                            </tr>
+
+                            <!-- Single Delete Modal -->
+                            <div class="modal fade" id="deleteModal<?= htmlspecialchars($item['id']); ?>" tabindex="-1" aria-labelledby="deleteModalLabel<?= htmlspecialchars($item['id']); ?>" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel<?= htmlspecialchars($item['id']); ?>">Delete Purchase</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete "<?= htmlspecialchars($item['product_name']); ?>"?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <form method="POST" action="/purchase/destroy/<?= htmlspecialchars($item['id']); ?>" style="display: inline;">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="8">No purchases found.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
             </table>
-            <div class="total" id="totalPrice">Cart Total: $0.00</div>
-            <canvas id="qrCode" style="margin-top: 20px;"></canvas>
-            <button class="buy-button" style="margin-top: 20px; width: 100%;" onclick="saveToPDF()">Save as PDF</button>
-            <button class="buy-button" style="margin-top: 15px; width: 100%; background-color: #27ae60;" onclick="processPurchase()">Place Order</button>
+        </div>
+
+        <!-- Bulk Delete Modal -->
+        <div class="modal fade" id="bulkDeleteModal" tabindex="-1" aria-labelledby="bulkDeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="bulkDeleteModalLabel">Delete Selected Purchases</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete the selected purchases?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" id="confirmBulkDelete" class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <button type="button" id="bulkDeleteBtn" class="btn btn-danger" style="display: none;">Delete Selected</button>
 
-
-
-    <?php require_once 'Views/layouts/footer.php'; ?>
 </main>
+
+<script>
+    // Inline Editing
+    document.querySelectorAll('.editable').forEach(function(element) {
+        element.addEventListener('click', function() {
+            const originalValue = this.textContent.trim().replace('$', '');
+            const field = this.dataset.field;
+            const id = this.dataset.id;
+
+            const input = document.createElement('input');
+            input.type = field === 'quantity' || field === 'price' ? 'number' : 'text';
+            input.value = originalValue;
+            input.className = 'form-control';
+            if (field === 'quantity') input.min = '1';
+            if (field === 'price') input.step = '0.01';
+
+            this.innerHTML = '';
+            this.appendChild(input);
+            input.focus();
+
+            input.addEventListener('blur', function() {
+                const newValue = this.value;
+                const parent = this.parentElement;
+                parent.textContent = field === 'price' ? newValue + '$' : newValue;
+
+                fetch('/purchase/update-inline', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: `id=${id}&field=${field}&value=${encodeURIComponent(newValue)}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.success) {
+                            alert('Update failed: ' + data.message);
+                            parent.textContent = field === 'price' ? originalValue + '$' : originalValue;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        parent.textContent = field === 'price' ? originalValue + '$' : originalValue;
+                    });
+            });
+        });
+    });
+
+    // Bulk Delete
+    document.getElementById('selectAll').addEventListener('change', function() {
+        document.querySelectorAll('.selectItem').forEach(checkbox => {
+            checkbox.checked = this.checked;
+            toggleBulkDeleteButton();
+        });
+    });
+
+    document.querySelectorAll('.selectItem').forEach(checkbox => {
+        checkbox.addEventListener('change', toggleBulkDeleteButton);
+    });
+
+    function toggleBulkDeleteButton() {
+        const checkedBoxes = document.querySelectorAll('.selectItem:checked');
+        document.getElementById('bulkDeleteBtn').style.display = checkedBoxes.length > 0 ? 'inline-block' : 'none';
+    }
+
+    document.getElementById('bulkDeleteBtn').addEventListener('click', function() {
+        const modal = new bootstrap.Modal(document.getElementById('bulkDeleteModal'));
+        modal.show();
+    });
+
+    document.getElementById('confirmBulkDelete').addEventListener('click', function() {
+        const selectedIds = Array.from(document.querySelectorAll('.selectItem:checked'))
+            .map(checkbox => checkbox.value);
+
+        fetch('/purchase/bulk-destroy', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    ids: selectedIds
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Bulk delete failed: ' + data.message);
+                }
+            })
+
+    });
+</script>
+
+<?php require_once './views/layouts/footer.php'; ?>

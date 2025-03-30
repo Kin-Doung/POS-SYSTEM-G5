@@ -28,10 +28,9 @@
                             <input type="text" value=" <?= $admin['password'] ?>" name="password" class="form-control">
                         </div>
                     </div>
-
                     <div class="group">
                         <label for="" class="form-label">Email:</label>
-                        <input type="text" value=" <?= $admin['email'] ?>" name="email" class="form-control">
+                        <input type="text" value=" <?= $admin['email'] ?>" name="email" class="form-controls">
                     </div>
                     <div class="form-group">
                         <div class="group">

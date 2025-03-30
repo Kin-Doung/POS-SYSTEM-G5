@@ -17,7 +17,7 @@
         margin-bottom: 5px;
     }
 
-    .form-control {
+    .form-control, .form-controls {
         width: 100%;
         padding: 8px;
         border: 1px solid #ccc;
@@ -40,4 +40,11 @@
 
     #profile-name {
         color: gray;
+    }
+    
+    .form-control, .form-select {
+        width: 400px;
+    }
+    .form-controls {
+        width: 900px;
     }

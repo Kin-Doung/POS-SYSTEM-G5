@@ -251,16 +251,16 @@ body {
   
   /* Input Group for Search */
   .input-group {
-
+    width: 300px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-left: 3px;
+    
   }
   .selected{
     margin-top: 5px;
-    border-radius: 0 !important;
-    width: 30%;
+    padding: 5px !important;
+    width: 50%;
   }
   .input-group input {
     padding: 10px;
@@ -296,10 +296,66 @@ body {
     from {
         opacity: 0;
     }
+
+    submit-btn {
+        font-size: 0.9rem;
+    }
+}
+.added-item button {
+  margin-top: 10px;
+  width: 100%;
+}
+
+/* Remove any extra sidebar or background */
+#second-sidebar, .sidenav-bg, .second-sidebar-bg {
+  display: none !important;
+}
+
+/* Force no border-radius on the sidebar */
+.container{
+  border-radius: 0 !important;
+}
+.navbar {
+  box-shadow: none !important;
+}
+.add-input{
+  width: 100%;
+}
+.add-card{
+  width: 800px;
+} 
+
+.see-more-btn{
+  border: none;
+  padding: 10px;
+  background-color: none !important;
+}
+/* Ensure the sidebar is white */
+#sidenav-main {
+  background-color: white !important; /* White background */
+  z-index: 1050 !important; /* Keep the sidebar on top */
+  position: fixed; /* Fix the sidebar */
+  border-radius: 0 !important;
+
+}
+
+
+/* Optional: Make sure there are no unexpected margins/paddings */
+body, .sidenav {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+
+
+
+
+
+
     to {
         opacity: 1;
     }
-  }
+  
   
   .table tbody tr:not(.hide) {
     animation: fadeIn 0.5s ease-in-out;
@@ -416,27 +472,3 @@ body {
     padding: 0 !important;
   }
   
-
-
-  /* General Table Styles */
-.table {
-  border-collapse: collapse;
-  width: 100%;
-  background: #fff;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.table th {
-  background: #007bff;
-  color: white;
-  padding: 10px;
-  text-align: center;
-}
-
-.table td {
-  padding: 8px;
-  vertical-align: middle;
-  text-align: center;
-}
-

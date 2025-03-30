@@ -5,6 +5,7 @@ require_once 'BaseController.php';
 class SettingController extends BaseController
 {
     private $model;
+    private $admins;
 
     public function __construct()
     {
@@ -19,10 +20,10 @@ class SettingController extends BaseController
     }
 
     // Show form to create a new admin (create)
-    public function create()
-    {
-        require_once 'views/settings/create.php';
-    }
+    // public function create()
+    // {
+    //     require_once 'views/settings/create.php';
+    // }
 
     // Store new admin data (store)
     public function store()
@@ -57,21 +58,26 @@ class SettingController extends BaseController
     }
 
     // Edit admin info (edit)
+
     public function edit($id)
     {
         $admin = $this->model->getAdmin($id);
-        require_once 'views/settings/edit.php';  // Make sure this path is correct
+
+        if (!$admin) {
+            die("Admin not found!"); // Debugging message
+        }
+
+        require_once 'views/settings/edit.php';
     }
 
 
-    // Update admin info (update)
     public function update($id)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $admin = $this->model->getAdmin($id);
             $imageData = $admin['store_logo'];
 
-            if (isset($_FILES['store_logo']) && $_FILES['store_logo']['error'] === UPLOAD_ERR_OK) {
+            if (!empty($_FILES['store_logo']['tmp_name'])) {
                 $imageData = file_get_contents($_FILES['store_logo']['tmp_name']);
             }
 
@@ -80,6 +86,7 @@ class SettingController extends BaseController
                 : $admin['password'];
 
             $data = [
+                'id' => $id,
                 'username' => $_POST['username'],
                 'email' => $_POST['email'],
                 'password' => $password,
@@ -88,12 +95,12 @@ class SettingController extends BaseController
                 'language' => $_POST['language']
             ];
 
-            $this->model->updateAdmin($id, $data);
-
+            $this->model->updateAdmin($data);
             header("Location: /settings");
             exit();
         }
     }
+
 
     // Delete admin (destroy)
     public function destroy($id)

@@ -64,6 +64,7 @@ require_once './views/layouts/side.php';
                                 <td>
                                     <input type="number" class="form-control" name="amount[]" min="0" step="0.01" required>
                                 </td>
+
                                 <!-- Expiration Date -->
                                 <td>
                                     <input type="date" class="form-control w-100" name="expiration_date[]" required>
@@ -170,7 +171,6 @@ require_once './views/layouts/side.php';
         background-color: darkgreen;
         box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
     }
-
 
 
     .add-moree {
@@ -315,6 +315,7 @@ require_once './views/layouts/side.php';
         newImagePreview.style.display = 'none';
         newImageInput.value = '';
 
+
         // Apply empty input style to all inputs
         const newInputs = newRow.querySelectorAll('input, select');
         newInputs.forEach(input => {
@@ -369,23 +370,7 @@ require_once './views/layouts/side.php';
         localStorage.removeItem('savedProducts'); // Clear local storage on submit
     });
 
-    // function saveProductsToLocalStorage() {
-    //     const rows = document.querySelectorAll('.product-row');
-    //     const products = [];
-
-    //     rows.forEach(row => {
-    //         const product = {
-    //             category: row.querySelector('[name="category_id[]"]').value,
-    //             name: row.querySelector('[name="product_name[]"]').value,
-    //             quantity: row.querySelector('[name="quantity[]"]').value,
-    //             price: row.querySelector('[name="amount[]"]').value,
-    //             expiration: row.querySelector('[name="expiration_date[]"]').value
-    //         };
-    //         products.push(product);
-    //     });
-
-    //     localStorage.setItem('savedProducts', JSON.stringify(products));
-    // }
+   
 
     function loadSavedProducts() {
         const savedProducts = localStorage.getItem('savedProducts');
@@ -395,6 +380,7 @@ require_once './views/layouts/side.php';
         const productTableBody = document.getElementById('productTableBody');
 
         productTableBody.innerHTML = ''; // Clear table before adding saved products
+
 
         products.forEach(product => {
             const newRow = document.createElement('tr');
@@ -451,50 +437,7 @@ require_once './views/layouts/side.php';
             });
         });
     }
-    // function loadSavedProducts() {
-    //     const savedProducts = localStorage.getItem('savedProducts');
-    //     if (!savedProducts) return;
-
-    //     const products = JSON.parse(savedProducts);
-    //     const productTableBody = document.getElementById('productTableBody');
-
-    //     productTableBody.innerHTML = ''; // Clear table before adding saved products
-
-    //     products.forEach(product => {
-    //         const newRow = document.createElement('tr');
-    //         newRow.classList.add('product-row');
-    //         newRow.innerHTML = `
-    //         <td>
-    //             <input type="file" class="form-control image-add" name="image[]" accept="image/*" required>
-    //             <img src="${product.image}" alt="Product Image" class="img-preview" style="display: inline; width: 50px; height: 50px;">
-    //         </td>
-    //         <td>
-    //             <select name="category_id[]" class="form-control" required>
-    //                 <option value="">Select Category</option>
-    //                 ${product.category}
-    //             </select>
-    //         </td>
-    //         <td>
-    //             <input type="text" class="form-control" name="product_name[]" value="${product.name}" required>
-    //         </td>
-    //         <td>
-    //             <input type="number" class="form-control" name="quantity[]" min="1" value="${product.quantity}" required>
-    //         </td>
-    //         <td>
-    //             <input type="number" class="form-control" name="amount[]" min="0" step="0.01" value="${product.price}" required>
-    //         </td>
-    //         <td>
-    //             <input type="date" class="form-control w-100" name="expiration_date[]" value="${product.expiration}" required>
-    //         </td>
-    //         <td>
-    //             <button type="button" class="removeRow" style="background: none; border: none; color: red; font-size: 20px;">
-    //                 <i class="fa-solid fa-trash"></i>
-    //             </button>
-    //         </td>
-    //     `;
-    //         productTableBody.appendChild(newRow);
-    //     });
-    // }
+   
 
     // Function to capture the data from the input table
 document.getElementById('previewInvoice').addEventListener('click', function() {
@@ -527,6 +470,7 @@ document.getElementById('previewInvoice').addEventListener('click', function() {
 function saveProductsToLocalStorage() {
     const rows = document.querySelectorAll('.product-row');
     const products = [];
+
 
     rows.forEach(row => {
         const product = {
@@ -588,33 +532,6 @@ function loadSavedProducts() {
         productTableBody.appendChild(newRow);
     });
 }
-
-
-    // Function to capture the data from the input table
-    // document.getElementById('previewInvoice').addEventListener('click', function() {
-    //     const savedProducts = JSON.parse(localStorage.getItem('savedProducts')) || [];
-    //     const invoiceTableBody = document.getElementById('invoiceTableBody');
-    //     invoiceTableBody.innerHTML = ''; // Clear existing rows before adding new ones
-
-    //     let totalPrice = 0;
-    //     savedProducts.forEach(product => {
-    //         const newRow = document.createElement('tr');
-    //         newRow.innerHTML = `
-    //         <td><img src="${product.image}" class="img-preview" style="width: 50px; height: 50px;"></td>
-    //         <td>${product.category}</td>
-    //         <td>${product.name}</td>
-    //         <td>${product.quantity}</td>
-    //         <td>${product.price}</td>
-    //         <td>${product.expiration}</td>
-    //         <td>${(product.quantity * product.price).toFixed(2)}</td>
-    //     `;
-    //         invoiceTableBody.appendChild(newRow);
-    //         totalPrice += product.quantity * product.price;
-    //     });
-
-    //     document.getElementById('totalPrice').textContent = totalPrice.toFixed(2);
-    // });
-
 
 
 

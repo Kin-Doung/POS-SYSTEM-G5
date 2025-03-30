@@ -25,10 +25,9 @@ require_once './views/layouts/side.php';
             </div>
         </div>
     </nav>
-
     <!-- Search and Category Filter -->
     <div class="input-group">
-        <input type="text" id="searchInput" class="form-control input-group-search" placeholder="Search...">
+        <input type="text" id="searchInput" class="form-controlls input-group-search" placeholder="Search...">
         <select id="categorySelect" class="ms-2 selected">
             <option value="">Select Category</option>
             <?php if (!empty($categories)): ?>
@@ -46,9 +45,9 @@ require_once './views/layouts/side.php';
     <!-- Product Card Section -->
     <div class="container mt-5 d-flex">
         <div class="product-list flex-grow-1">
-            <div class="row" id="product-list">
+            <div class="row">
                 <?php foreach ($products as $product): ?>
-                    <div class="col-6 col-sm-4 col-md-3 mb-4 product-item" data-category-id="<?= htmlspecialchars($product['category_id']) ?>">
+                    <div class="col-6 col-sm-4 col-md-3 mb-4">
                         <div class="card square-card">
                             <div class="image-wrapper">
                                 <img src="<?= htmlspecialchars($product['image']) ?>" class="card-img-top" alt="<?= htmlspecialchars($product['name']) ?>">
@@ -56,13 +55,6 @@ require_once './views/layouts/side.php';
                             <div class="card-body">
                                 <h6 class="card-title text-center"><?= htmlspecialchars($product['name']) ?></h6>
                                 <p class="card-text text-center price"><?= htmlspecialchars($product['price']) ?> $</p>
-
-                                <!-- Edit Price Icon -->
-                                <div class="text-center">
-                                    <button class="edit-price-btn edit-price" data-product-id="<?= htmlspecialchars($product['id']) ?>">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                </div>
 
                                 <!-- Quantity and Buy Button -->
                                 <div class="text-center mt-2">
@@ -75,7 +67,6 @@ require_once './views/layouts/side.php';
                 <?php endforeach; ?>
             </div>
         </div>
-
         <!-- Cart Section -->
         <div class="cart-section ms-4 p-3 border rounded shadow bg-white" id="cartSection" style="width: 500px; display: none;">
             <h4>Cart</h4>
@@ -91,30 +82,11 @@ require_once './views/layouts/side.php';
             </table>
             <h5>Total: <span id="grandTotal">0</span> $</h5>
             <div class="text-center mt-3">
-                <button class="btn btn-success" onclick="submitCart()">Submit</button>
+                <button class="btn btn-success" onclick="replaceCartInDatabase()">submit</button>
             </div>
+
         </div>
     </div>
-
     <?php require_once 'views/layouts/footer.php'; ?>
 </main>
 
-<!-- Edit Price Modal -->
-<div class="modal" id="editPriceModal" tabindex="-1" aria-labelledby="editPriceModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editPriceModalLabel">Edit Product Price</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editPriceForm">
-                    <input type="hidden" name="product_id" value="">
-                    <label for="price">New Price:</label>
-                    <input type="number" step="0.01" name="price" required>
-                    <button type="submit">Update Price</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>

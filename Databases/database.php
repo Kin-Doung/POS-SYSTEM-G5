@@ -26,18 +26,14 @@ class Database
     }
 
     // General query execution method
-    // Database.php
+    // In Databases/database.php
     public function query($sql, $params = [])
     {
-        // Prepare the SQL statement
-        $stmt = $this->pdo->prepare($sql);
-
-        // Execute the query with the provided parameters
+        $stmt = $this->pdo->prepare($sql); // Assuming $this->pdo is your PDO instance
         $stmt->execute($params);
-
         return $stmt;
     }
-    
+
 
 
 

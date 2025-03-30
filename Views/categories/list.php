@@ -16,22 +16,20 @@
             </div>
         </div>
         <!-- Profile -->
-        <div class="profile">
+        <div class="profile" id="profile">
             <img src="../../views/assets/images/image.png" alt="User">
             <div class="profile-info">
-                <span>Eng Ly</span>
-                <span class="store-name">Owner Store</span>
+                <span id="profile-name">Eng Ly</span>
+                <span class="store-name" id="store-name">Owner Store</span>
             </div>
+            <ul class="menu" id="menu">
+                <li><a href="/settings" class="item">Account</a></li>
+                <li><a href="/settings" class="item">Setting</a></li>
+                <li><a href="/logout" class="item">Logout</a></li>
+            </ul>
+            <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
+            <script src="../../views/assets/js/setting.js"></script>
         </div>
-        <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
-            <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
-                <div class="sidenav-toggler-inner">
-                    <i class="sidenav-toggler-line"></i>
-                    <i class="sidenav-toggler-line"></i>
-                    <i class="sidenav-toggler-line"></i>
-                </div>
-            </a>
-        </li>
     </nav>
     <!-- End Navbar -->
     <div class="container">
@@ -59,9 +57,11 @@
                                 <a href="/category/edit?id=<?= $category['id'] ?>" class="btn btn-sm btn-warning">
                                     <i class="bi bi-pencil-square"></i> Edit
                                 </a>
-                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#category<?= $category['id'] ?>">
+                                <button type="button" class="btn btn-sm btn-danger text-white fw-bold" style="background-color: #dc3545 !important; border-color: #dc3545 !important;" data-bs-toggle="modal" data-bs-target="#category<?= $category['id'] ?>">
                                     <i class="bi bi-trash"></i> Delete
                                 </button>
+
+
 
                                 <!-- Modal -->
                                 <?php require_once './views/categories/delete.php'; ?>

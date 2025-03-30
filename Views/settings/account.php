@@ -1,6 +1,7 @@
-<?php require_once './views/layouts/header.php'; ?>
-<?php require_once './views/layouts/side.php' ?>
-<?php require_once './Databases/database.php' ?>
+<?php 
+require_once './views/layouts/header.php';
+require_once(__DIR__ . '/../layouts/side.php') ?>
+
 <main class="main-content position-relative max-height-vh-50 h-50 border-radius-lg ">
     <!-- Navbar -->
     <nav class="navbar">
@@ -22,7 +23,7 @@
                 <span class="store-name" id="store-name">Owner Store</span>
             </div>
             <ul class="menu" id="menu">
-                <li><a href="/Views/settings/account.php" class="item">Account</a></li>
+                <li><a href="/" class="item">Account</a></li>
                 <li><a href="/settings" class="item">Setting</a></li>
                 <li><a href="/logout" class="item">Logout</a></li>
             </ul>
@@ -33,14 +34,14 @@
 
     </nav>
     <!-- End Navbar -->
-    <?php require_once 'views/layouts/header.php'; ?>
+    <?php require_once(__DIR__ . '/../layouts/header.php') ?>
 
     <!-- Modal structure -->
     <div class="container mt-5">
         <!-- <a href="/settings/create" class="btn btn-primary btn-lg mb-3 shadow-sm" style="width: 150px;">Add New</a> -->
         <div class="card shadow-lg ">
             <div class="card-header text-center">
-                <h3 class="mb-0">Personal Setting</h3>
+                <h3 class="mb-0">Personal Account</h3>
             </div>
             <div class="card-body p-4">
                 <div class="table-responsive">
@@ -99,5 +100,5 @@
 
 
 
-    <?php require_once 'views/layouts/footer.php'; ?>
+    <?php require_once(__DIR__ . '/../layouts/footer.php') ?>
 </main>

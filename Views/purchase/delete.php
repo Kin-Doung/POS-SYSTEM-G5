@@ -1,4 +1,4 @@
-<div class="modal fade" id="categories<?= $category['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="item<?= $item['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,13 +8,10 @@
             <div class="modal-body">
                 Are you sure to delete this user ?
             </div>
-            <form method="POST" action="/category/destroy">
-                <input type="hidden" name="id" value="<?= $category['id']; ?>" />
+            <form method="POST" action="/purchase/destroy">
+                <input type="hidden" name="id" value="<?= $item['id']; ?>" />
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
-
-
-
         </div>
     </div>
 </div>

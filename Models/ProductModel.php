@@ -1,159 +1,111 @@
-    <?php
-    require_once 'Databases/database.php';
+<?php
+require_once 'Databases/database.php';
 
-    class ProductModel
+class ProductModel
+{
+    private $pdo;
+
+    public function __construct()
     {
-        private $pdo;
+        $this->pdo = (new Database())->getConnection();
+    }
 
-        public function __construct()
-        {
-            $this->pdo = (new Database())->getConnection();
-        }
+    // Fetch all products
+    public function getProducts()
+    {
+        return $this->fetchAll("SELECT * FROM products ORDER BY id DESC");
+    }
 
+    // Fetch a product by ID
+    public function getProductById($id)
+    {
+        return $this->fetchOne("SELECT * FROM products WHERE id = :id LIMIT 1", ['id' => $id]);
+    }
 
-        
-        // Fetch all products
-        public function getProducts()
-        {
-            return $this->fetchAll("SELECT * FROM products ORDER BY id DESC");
-        }
-        public function getProductWithCategory($id)
-        {
-            $query = "
+    // Fetch all categories
+    public function getCategories()
+    {
+        return $this->fetchAll("SELECT * FROM categories ORDER BY id DESC");
+    }
+
+    public function updatePrice($productId, $newPrice)
+    {
+        // Create a database connection
+        $db = new Database();
+        $pdo = $db->getConnection();
+
+        // Prepare and execute the SQL query
+        $stmt = $pdo->prepare("UPDATE products SET price = :price WHERE id = :id");
+        $stmt->bindParam(':price', $newPrice);
+        $stmt->bindParam(':id', $productId);
+        return $stmt->execute();
+    }
+
+    // Fetch inventory details with product data
+    public function getInventoryWithProductDetails()
+    {
+        $query = "
             SELECT 
-            p.*, 
-            c.name AS category_name 
-            FROM products p
-            LEFT JOIN categories c ON p.category_id = c.id
-            WHERE p.id = :id
-            LIMIT 1
-            ";
-            return $this->fetchOne($query, ['id' => $id]);
-        }
+                i.id AS inventory_id,
+                i.product_name AS inventory_product_name,
+                i.quantity,
+                i.amount,
+                i.total_price,
+                i.expiration_date,
+                i.image,
+                c.name AS category_name
+            FROM inventory i
+            LEFT JOIN categories c ON i.category_id = c.id
+            LIMIT 25;
+        ";
+        return $this->fetchAll($query);
+    }
 
-        // Fetch a product by ID
-        public function getProductById($id)
-        {
-            $query = "SELECT * FROM products WHERE id = :id LIMIT 1";
-            return $this->fetchOne($query, ['id' => $id]);
-        }
+    // Create a new product
+    public function createProduct($data)
+    {
+        $query = "INSERT INTO products (category_id, name, category_name, barcode, price, purchase_id, created_at, quantity, image) 
+                  VALUES (:category_id, :name, :category_name, :barcode, :price, :purchase_id, NOW(), :quantity, :image)";
+        return $this->executeQuery($query, $data);
+    }
 
-        // Fetch all categories
-        public function getCategories()
-        {
-            return $this->fetchAll("SELECT * FROM categories ORDER BY id DESC");
-        }
-        // Fetch inventory details with product data
-        public function getInventoryWithProductDetails()
-        {
+    // Check if a product exists by name and category
+    public function getProductByNameAndCategory($productName, $categoryName)
+    {
+        $query = "
+            SELECT * FROM products 
+            WHERE name = :name AND category_id = 
+            (SELECT id FROM categories WHERE name = :category_name LIMIT 1) 
+            LIMIT 1";
+        return $this->fetchOne($query, ['name' => $productName, 'category_name' => $categoryName]);
+    }
+
+    // Update product information from inventory
+    public function updateProductFromInventory($id, $data)
+    {
+        $sql = "UPDATE products SET 
+                    category_id = :category_id, 
+                    category_name = :category_name, 
+                    price = :price, 
+                    quantity = :quantity, 
+                    image = :image 
+                WHERE id = :id";
+        return $this->executeQuery($sql, [
+            ':category_id' => $data['category_id'],
+            ':category_name' => $data['category_name'],
+            ':price' => $data['price'],
+            ':quantity' => $data['quantity'],
+            ':image' => $data['image'],
+            ':id' => $id
+        ]);
+    }
+
+    // Insert products from inventory into the products table
+    public function insertProductsFromInventory()
+    {
+        $this->pdo->beginTransaction();
+        try {
             $query = "
-                SELECT 
-                    inventory.id AS inventory_id,
-                    inventory.product_name AS inventory_product_name,
-                    inventory.quantity,
-                    inventory.amount,
-                    inventory.total_price,
-                    inventory.expiration_date,
-                    inventory.image,
-                    categories.name AS category_name,
-                    products.name AS product_name
-                FROM inventory
-                LEFT JOIN categories ON inventory.category_id = categories.id
-                LEFT JOIN products ON products.category_id = categories.id
-                LIMIT 25;
-            ";
-
-            return $this->fetchAll($query);
-        }
-
-        // Create a new product
-        public function createProduct($data)
-        {
-            // Fetch the category name using the category_id from categories table
-            $categoryNameQuery = "SELECT name FROM categories WHERE id = :category_id LIMIT 1";
-            $stmt = $this->pdo->prepare($categoryNameQuery);
-            $stmt->execute(['category_id' => $data['category_id']]);
-            $categoryNameResult = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($categoryNameResult) {
-                $categoryName = $categoryNameResult['name'];
-            } else {
-                // If category not found, set a default or return error
-                $categoryName = 'Unknown Category';
-            }
-
-            // Include category_name in the data array
-            $data['category_name'] = $categoryName;
-
-            // Insert product with category_name included
-            $query = "INSERT INTO products (category_id, name, category_name, barcode, price, purchase_id, created_at, quantity, image) 
-                      VALUES (:category_id, :name, :category_name, :barcode, :price, :purchase_id, NOW(), :quantity, :image)";
-
-            return $this->executeQuery($query, $data);
-        }
-
-
-        // Check if a product exists by name and category
-        public function getProductByNameAndCategory($productName, $categoryName)
-        {
-            $query = "
-                SELECT * FROM products 
-                WHERE name = :name AND category_id = 
-                (SELECT id FROM categories WHERE name = :category_name) 
-                LIMIT 1";
-
-            return $this->fetchOne($query, [
-                'name' => $productName,
-                'category_name' => $categoryName
-            ]);
-        }
-
-        public function updateProductFromInventory($id, $data)
-        {
-            // Fetch the category name using the category_id
-            $categoryNameQuery = "SELECT name FROM categories WHERE id = :category_id LIMIT 1";
-            $stmt = $this->pdo->prepare($categoryNameQuery);
-            $stmt->execute(['category_id' => $data['category_id']]);
-            $categoryNameResult = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            if ($categoryNameResult) {
-                $categoryName = $categoryNameResult['name'];
-            } else {
-                // If category not found, set a default or return error
-                $categoryName = 'Unknown Category';
-            }
-        
-            // Include category_name in the data array
-            $data['category_name'] = $categoryName;
-        
-            // Update product with the category_name
-            $query = "UPDATE products 
-                      SET name = :name, price = :price, quantity = :quantity, image = :image, category_name = :category_name 
-                      WHERE id = :id";
-        
-            return $this->executeQuery($query, array_merge($data, ['id' => $id]));
-        }
-        
-
-
-        // Helper function to fetch all rows
-        private function fetchAll($query)
-        {
-            $stmt = $this->pdo->query($query);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        }
-
-        // Helper function to fetch a single row
-        private function fetchOne($query, $params)
-        {
-            $stmt = $this->pdo->prepare($query);
-            $stmt->execute($params);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        }
-        public function insertProductsFromInventory()
-        {
-            $query = "
-                INSERT INTO products (name, category_id, category_name, price, quantity, image)
                 SELECT 
                     i.product_name, 
                     c.id AS category_id, 
@@ -164,42 +116,130 @@
                 FROM inventory i
                 JOIN categories c ON i.category_id = c.id;
             ";
-
-            $stmt = $this->executeQuery($query, []);
-            return $stmt ? $stmt->rowCount() : 0;
-        }
-
-
-        public function getInventoryWithCategory()
-        {
-            $query = "
-        SELECT 
-            inventory.id AS inventory_id,
-            inventory.product_name AS inventory_product_name,
-            inventory.quantity,
-            inventory.amount,
-            inventory.total_price,
-            inventory.expiration_date,
-            inventory.image,
-            categories.name AS category_name
-        FROM inventory
-        LEFT JOIN categories ON inventory.category_id = categories.id
-    ";
-
-            return $this->fetchAll($query);
-        }
-
-        // Helper function to execute a query (insert, update, delete)
-        private function executeQuery($query, $params)
-        {
-            try {
-                $stmt = $this->pdo->prepare($query);
-                $stmt->execute($params);
-                return $stmt;
-            } catch (Exception $e) {
-                error_log("Error executing query: " . $e->getMessage());
-                error_log("SQL Query: " . $query); // Log the query
-                return null;
+            $inventoryItems = $this->fetchAll($query);
+            foreach ($inventoryItems as $item) {
+                $existingProduct = $this->getProductByNameAndCategory($item['product_name'], $item['category_name']);
+                if ($existingProduct) {
+                    $this->updateProductFromInventory($existingProduct['id'], $item);
+                } else {
+                    $this->createProduct($item);
+                }
             }
+            $this->pdo->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            error_log("Error inserting products: " . $e->getMessage());
+            return false;
         }
     }
+
+    public function updateProductPrice($productId, $newPrice)
+    {
+        try {
+            // Fetch current price and quantity from the products table
+            $query = "SELECT price, quantity FROM products WHERE id = :id";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute([':id' => $productId]);
+            $product = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($product === false) {
+                return false; // Product not found
+            }
+    
+            // Get the old price and current quantity of the product
+            $oldPrice = $product['price'];
+            $quantity = $product['quantity'];
+    
+            // Update price history for tracking
+            $historyQuery = "INSERT INTO price_history (product_id, old_price, new_price, changed_at) VALUES (:product_id, :old_price, :new_price, NOW())";
+            $this->executeQuery($historyQuery, [
+                ':product_id' => $productId,
+                ':old_price' => $oldPrice,
+                ':new_price' => $newPrice
+            ]);
+    
+            // Update the product price in the products table
+            $updateQuery = "UPDATE products SET price = :price WHERE id = :id";
+            $this->executeQuery($updateQuery, [
+                ':price' => $newPrice,
+                ':id' => $productId
+            ]);
+    
+            // Now subtract the quantity in inventory (i.e., subtract product quantity from inventory)
+            // If the price change results in a product being moved to another state, this is where the logic comes in
+            $inventoryUpdateQuery = "UPDATE inventory SET quantity = quantity - :quantity WHERE product_id = :product_id";
+            $this->executeQuery($inventoryUpdateQuery, [
+                ':quantity' => $quantity,
+                ':product_id' => $productId
+            ]);
+    
+            return true;
+        } catch (Exception $e) {
+            error_log("Error updating product price and inventory: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+
+    public function getPriceHistory($productId)
+    {
+        return $this->fetchAll("SELECT * FROM price_history WHERE product_id = :product_id ORDER BY changed_at DESC", ['product_id' => $productId]);
+    }
+
+    // Helper function to fetch all rows with optional parameters
+    private function fetchAll($query, $params = [])
+    {
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Helper function to fetch a single row
+    private function fetchOne($query, $params)
+    {
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute($params);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Helper function to execute a query (insert, update, delete)
+    private function executeQuery($query, $params)
+    {
+        try {
+            $stmt = $this->pdo->prepare($query);
+            return $stmt->execute($params);
+        } catch (Exception $e) {
+            error_log("Error executing query: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function deductInventoryQuantity($productId, $quantitySold)
+{
+    try {
+        // Check if there is enough inventory
+        $query = "SELECT quantity FROM inventory WHERE product_id = :product_id";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([':product_id' => $productId]);
+        $inventory = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$inventory || $inventory['quantity'] < $quantitySold) {
+            return false; // Not enough stock
+        }
+
+        // Deduct the quantity
+        $updateQuery = "UPDATE inventory SET quantity = quantity - :quantity WHERE product_id = :product_id";
+        return $this->executeQuery($updateQuery, [
+            ':quantity' => $quantitySold,
+            ':product_id' => $productId
+        ]);
+    } catch (Exception $e) {
+        error_log("Error updating inventory: " . $e->getMessage());
+        return false;
+    }
+}
+
+}
+
+

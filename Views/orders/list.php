@@ -25,9 +25,10 @@ require_once './views/layouts/side.php';
             </div>
         </div>
     </nav>
+    
     <!-- Search and Category Filter -->
     <div class="input-group">
-        <input type="text" id="searchInput" class="form-controlls input-group-search" placeholder="Search...">
+        <input type="text" id="searchInput" class="form-control input-group-search" placeholder="Search...">
         <select id="categorySelect" class="ms-2 selected">
             <option value="">Select Category</option>
             <?php if (!empty($categories)): ?>
@@ -45,9 +46,9 @@ require_once './views/layouts/side.php';
     <!-- Product Card Section -->
     <div class="container mt-5 d-flex">
         <div class="product-list flex-grow-1">
-            <div class="row">
+            <div class="row" id="product-list">
                 <?php foreach ($products as $product): ?>
-                    <div class="col-6 col-sm-4 col-md-3 mb-4">
+                    <div class="col-6 col-sm-4 col-md-3 mb-4 product-item" data-category-id="<?= htmlspecialchars($product['category_id']) ?>">
                         <div class="card square-card">
                             <div class="image-wrapper">
                                 <img src="<?= htmlspecialchars($product['image']) ?>" class="card-img-top" alt="<?= htmlspecialchars($product['name']) ?>">
@@ -67,6 +68,7 @@ require_once './views/layouts/side.php';
                 <?php endforeach; ?>
             </div>
         </div>
+
         <!-- Cart Section -->
         <div class="cart-section ms-4 p-3 border rounded shadow bg-white" id="cartSection" style="width: 500px; display: none;">
             <h4>Cart</h4>
@@ -87,6 +89,7 @@ require_once './views/layouts/side.php';
 
         </div>
     </div>
+
     <?php require_once 'views/layouts/footer.php'; ?>
 </main>
 

@@ -1,80 +1,50 @@
-<?php
-require_once './views/layouts/header.php';
-require_once './views/layouts/side.php';
-?>
+<?php require_once './views/layouts/header.php'; ?>
+<?php require_once './views/layouts/side.php'; ?>
 
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-    <!-- Navbar -->
-    <nav class="navbar">
-        <!-- Search Bar -->
-        <div class="search-container">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search...">
-        </div>
-        <!-- Icons -->
-        <div class="icons">
-            <i class="fas fa-globe icon-btn"></i>
-            <div class="icon-btn" id="notification-icon">
-                <i class="fas fa-bell"></i>
-                <span class="notification-badge" id="notification-count">8</span>
-            </div>
-        </div>
-        <!-- Profile -->
-        <div class="profile">
-            <img src="../../assets/images/image.png" alt="User">
-            <div class="profile-info">
-                <span>Eng Ly</span>
-                <span class="store-name">Owner Store</span>
-            </div>
-        </div>
-        <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
-            <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
-                <div class="sidenav-toggler-inner">
-                    <i class="sidenav-toggler-line"></i>
-                    <i class="sidenav-toggler-line"></i>
-                    <i class="sidenav-toggler-line"></i>
-                </div>
-            </a>
-        </li>
-    </nav>
-    <!-- End Navbar -->
-
     <div class="container">
-        <form action="/purchase/update?id=<?= $purchase['id'] ?>" method="POST" enctype="multipart/form-data">
-            <div class="input-group">
-                <input type="text" id="searchInput" class="form-controlls input-group-search" placeholder="Search...">
-                <select id="categorySelect" class="ms-2 selected">
-                    <option value="">Select Category</option>
-                    <?php if (!empty($categories)): ?>
-                        <?php foreach ($categories as $category): ?>
-                            <option value="<?= htmlspecialchars($category['id']) ?>">
-                                <?= htmlspecialchars($category['name']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <option disabled>No Categories Found</option>
-                    <?php endif; ?>
+        <h2>Edit Purchase</h2>
+        <form method="POST" action="/purchase/update/<?= htmlspecialchars($purchase['id']); ?>" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="product_name" class="form-label">Product Name</label>
+                <input type="text" class="form-control" id="product_name" name="product_name" value="<?= htmlspecialchars($purchase['product_name']); ?>" required>
+            </div>
+
+            <!-- Profile Image Upload -->
+            <div class="mb-3">
+                <label for="category_id" class="form-label">Category</label>
+                <select class="form-control" id="category_id" name="category_id" required>
+                    <?php foreach ($categories as $category): ?>
+                        <option value="<?= htmlspecialchars($category['id']); ?>" <?= $category['id'] == $purchase['category_id'] ? 'selected' : ''; ?>>
+                            <?= htmlspecialchars($category['category_name']); ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
-            <div class="form-group">
-                <label for="image" class="form-label">Image:</label>
-                <input type="file" id="image" name="image" class="form-control">
-                <?php if ($purchase['image']): ?>
-                    <img src="<?= htmlspecialchars($purchase['image']) ?>" alt="Current Image" class="mt-2" style="max-width: 150px;">
+            <div class="mb-3">
+                <label for="quantity" class="form-label">Quantity</label>
+                <input type="number" class="form-control" id="quantity" name="quantity" value="<?= htmlspecialchars($purchase['quantity']); ?>" min="1" required>
+            </div>
+            <div class="mb-3">
+                <label for="price" class="form-label">Price</label>
+                <input type="number" class="form-control" id="price" name="price" value="<?= htmlspecialchars($purchase['price']); ?>" step="0.01" required>
+            </div>
+            <div class="mb-3">
+                <label for="type_of_product" class="form-label">Type of Product</label>
+                <input type="text" class="form-control" id="type_of_product" name="type_of_product" value="<?= htmlspecialchars($purchase['type_of_product']); ?>" required>
+            </div>
+            <div class="mb-3">
+                <label for="image" class="form-label">Image</label>
+                <input type="file" class="form-control" id="image" name="image">
+                <?php if (!empty($purchase['image'])): ?>
+                    <img src="data:image/jpeg;base64,<?= base64_encode($purchase['image']); ?>" alt="Current Image" style="width: 100px; margin-top: 10px;">
                 <?php endif; ?>
             </div>
-            <div class="form-group">
-                <label for="name" class="form-label">Name:</label>
-                <input type="text" id="name" name="name" value="<?= htmlspecialchars($purchase['product_name']) ?>" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="price" class="form-label">Price:</label>
-                <input type="text" id="price" name="price" value="<?= htmlspecialchars($purchase['price']) ?>" class="form-control">
-            </div>
-
-            <button type="submit" class="btn btn-success mt-3">Update</button>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a href="/purchase" class="btn btn-secondary">Cancel</a>
         </form>
-    </div>
 
-    <?php require_once 'views/layouts/footer.php'; ?>
+    </div>
 </main>
+
+<?php require_once './views/layouts/footer.php'; ?>

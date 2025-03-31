@@ -38,8 +38,8 @@
       <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
         <div class="cards card-money">
           <div class="card-header p-3 pt-2">
-            <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
-              <i class="material-icons opacity-10">weekend</i>
+            <div class="icon icon-lg icon-shape  text-center border-radius-xl mt-n4 position-absolute">
+            <i class="fa-solid fa-sack-dollar" style="color: red;"></i>
             </div>
             <div class="text-end pt-1">
               <p class="text-sm mb-0 text-capitalize">Today's Money</p>
@@ -56,8 +56,8 @@
       <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
         <div class="cards card-client">
           <div class="card-header p-3 pt-2">
-            <div class="icon icon-lg icon-shape bg-gradient-success shadow-success text-center border-radius-xl mt-n4 position-absolute">
-              <i class="material-icons opacity-10">person</i>
+            <div class="icon icon-lg icon-shape  text-center border-radius-xl mt-n4 position-absolute">
+             
             </div>
             <div class="text-end pt-1">
               <p class="text-sm mb-0 text-capitalize">New Clients</p>
@@ -73,8 +73,8 @@
       <div class="col-xl-3 col-sm-6">
         <div class="cards card-sale">
           <div class="card-header p-3 pt-2">
-            <div class="icon icon-lg icon-shape bg-gradient-info shadow-info text-center border-radius-xl mt-n4 position-absolute">
-              <i class="material-icons opacity-10">weekend</i>
+            <div class="icon icon-lg icon-shape  text-center border-radius-xl mt-n4 position-absolute">
+              
             </div>
             <div class="text-end pt-1">
               <p class="text-sm mb-0 text-capitalize">Sales</p>

@@ -17,12 +17,19 @@ class InventoryController extends BaseController
     function index()
     {
         $inventory = $this->model->getInventory();
-        $categories = $this->model->getCategory(); // Fetch categories
-
-        // Pass inventory and categories to the view
+        $categories = $this->model->getCategory();
+    
+        // Process images for display
+        foreach ($inventory as &$item) {
+            if ($item['image']) {
+                $item['image_base64'] = 'data:image/jpeg;base64,' . base64_encode($item['image']);
+            }
+        }
+        unset($item);
+    
         $this->views('inventory/list', [
             'inventory' => $inventory,
-            'categories' => $categories // Pass categories to the view
+            'categories' => $categories
         ]);
     }
 

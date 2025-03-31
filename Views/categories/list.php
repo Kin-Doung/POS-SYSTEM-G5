@@ -35,7 +35,7 @@
     <!-- End Navbar -->
     <div class="container">
         <div class="mt-5">
-            <a href="javascript:void(0);" class="create-ct" style="margin-top: 30px; width: 100px;" data-bs-toggle="modal" data-bs-target="#createCategoryModal">
+            <a href="/category/create" class="create-ct">
                 <i class="bi-plus-lg"></i> Add New Categories
             </a>
         </div>

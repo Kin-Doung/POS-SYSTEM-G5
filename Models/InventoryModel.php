@@ -72,26 +72,40 @@ class InventoryModel
 
         return $this->pdo->getConnection()->lastInsertId();
     }
-    function createInventory($data)
+    public function createInventory(array $data): int
     {
+        $defaults = [
+            'image' => null,
+            'product_name' => '',
+            'category_id' => null,
+            'quantity' => 0,
+            'amount' => 0,
+            'category_name' => '',
+            'expiration_date' => null,
+            'total_price' => 0
+        ];
+        $data = array_merge($defaults, $data);
 
-        $categoryId = $data['category_id'];
+        try {
+            $stmt = $this->pdo->getConnection()->prepare("
+                INSERT INTO inventory (image, product_name, category_id, quantity, amount, category_name, expiration_date, total_price)
+                VALUES (:image, :product_name, :category_id, :quantity, :amount, :category_name, :expiration_date, :total_price)
+            ");
+            $stmt->bindParam(':image', $data['image']); // String path
+            $stmt->bindParam(':product_name', $data['product_name']);
+            $stmt->bindParam(':category_id', $data['category_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':quantity', $data['quantity'], PDO::PARAM_INT);
+            $stmt->bindParam(':amount', $data['amount']);
+            $stmt->bindParam(':category_name', $data['category_name']);
+            $stmt->bindParam(':expiration_date', $data['expiration_date']);
+            $stmt->bindParam(':total_price', $data['total_price']);
 
-        // Now use the category_id directly from the form
-
-        $this->pdo->query("
-        INSERT INTO inventory (image, product_name, quantity, amount, category_name, category_id, expiration_date, total_price) 
-        VALUES (:image, :product_name, :quantity, :amount, :category_name, :category_id, :expiration_date, :total_price)
-    ", [
-            'image' => $data['image'],
-            'product_name' => $data['product_name'],
-            'quantity' => $data['quantity'],
-            'amount' => $data['amount'],
-            'category_name' => $data['category_name'], // Now include category_name in the query
-            'category_id' => $categoryId,
-            'expiration_date' => $data['expiration_date'],
-            'total_price' => $data['total_price'],
-        ]);
+            $stmt->execute();
+            return (int)$this->pdo->getConnection()->lastInsertId();
+        } catch (PDOException $e) {
+            error_log("Insert error: " . $e->getMessage());
+            throw new Exception("Failed to create inventory: " . $e->getMessage());
+        }
     }
 
 

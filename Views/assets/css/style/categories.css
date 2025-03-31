@@ -1,3 +1,14 @@
+<<<<<<< HEAD
+.container {
+    width: 100%;
+    margin-top: 20px;
+    background-color: #f5f6f5;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Add New Categories Button */
+=======
 .form-controll{
     width: 100%;
     border: none;
@@ -5,13 +16,84 @@
     border-radius: 15px;
     outline-color: rebeccapurple;
 }
+>>>>>>> 8fada9f6093c511ca903ecbf296c4ceb0d192c58
 .create-ct {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #1a3c34;
+    color: white;
     padding: 10px 20px;
-    border-radius: 50px;
-    color: #fff;
-    font-weight: bold;
-    font-size: 18px;
+    border-radius: 6px;
     text-decoration: none;
+<<<<<<< HEAD
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-top: 30px;
+}
+
+.create-ct:hover {
+    background-color: #152e2a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Table Responsive Wrapper */
+.table-responsive {
+    margin-top: 20px;
+    overflow-x: auto;
+}
+
+/* Table */
+.table-bordered {
+    background-color: #ffffff;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.table-dark {
+    background-color: #1a3c34;
+    color: white;
+}
+
+.table-dark th {
+    padding: 12px;
+    font-weight: 500;
+    border: none;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f3f5;
+}
+
+.table-bordered td {
+    padding: 12px;
+    vertical-align: middle;
+    border-color: #e9ecef;
+}
+
+/* Action Buttons */
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #333;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+=======
     background: rgb(73, 73, 253);
     transition: background-color 0.3s ease; /* Smooth transition */
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
@@ -90,5 +172,75 @@
     border: 1.3px solid rgb(150, 150, 150);
   }
   
+>>>>>>> 8fada9f6093c511ca903ecbf296c4ceb0d192c58
 
 
+
+.btn i {
+    margin-right: 5px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 15px;
+    }
+
+    .create-ct {
+        padding: 8px 15px;
+        font-size: 12px;
+    }
+
+    .table-dark th,
+    .table-bordered td {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    .btn-sm {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+
+    .text-nowrap {
+        white-space: normal !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .create-ct {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .table-bordered td {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    .table-bordered td::before {
+        content: attr(data-label);
+        display: block;
+        font-weight: bold;
+        color: #1a3c34;
+        margin-bottom: 5px;
+    }
+
+    .table-bordered td:nth-child(1)::before {
+        content: "ID";
+    }
+
+    .table-bordered td:nth-child(2)::before {
+        content: "Name";
+    }
+
+    .table-bordered td:nth-child(3)::before {
+        content: "Action";
+    }
+
+    .table-dark {
+        display: none;
+    }
+}

@@ -252,9 +252,9 @@
         <td>
             <input type="number" class="form-control" name="amount[]" min="0" step="0.01" required>
         </td>
-            <td>
-                <input type="date" class="form-control w-100" name="expiration_date[]" value="${product.expiration}" required>
-            </td>
+        <td>
+            <input type="date" class="form-control" name="expiration_date[]" required>
+        </td>
 
         <td>
             <select name="typeOfproducts[]" class="form-control" required>

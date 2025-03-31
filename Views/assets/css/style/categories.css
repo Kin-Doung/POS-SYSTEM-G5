@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .container {
     width: 100%;
     margin-top: 20px;
@@ -7,6 +8,15 @@
 }
 
 /* Add New Categories Button */
+=======
+.form-controll{
+    width: 100%;
+    border: none;
+    padding: 10px;
+    border-radius: 15px;
+    outline-color: rebeccapurple;
+}
+>>>>>>> 8fada9f6093c511ca903ecbf296c4ceb0d192c58
 .create-ct {
     display: inline-flex;
     align-items: center;
@@ -16,6 +26,7 @@
     padding: 10px 20px;
     border-radius: 6px;
     text-decoration: none;
+<<<<<<< HEAD
     font-weight: 500;
     transition: all 0.3s ease;
     margin-top: 30px;
@@ -82,6 +93,86 @@
     transform: translateY(-2px);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
+=======
+    background: rgb(73, 73, 253);
+    transition: background-color 0.3s ease; /* Smooth transition */
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  }
+  .create-ct:hover {
+    color: #fff;
+    background: rgb(2, 2, 221);
+  }
+  
+  /* Style for the icons */
+  .icon {
+    font-size: 20px;
+    /* Adjust the size of the icons */
+    color: #000;
+    /* Default color */
+    margin-right: 10px;
+    /* Space between icons */
+    cursor: pointer;
+    position: relative;
+    /* To position the tooltip */
+  }
+  
+  /* Edit Icon style */
+  .edit-icon {
+    color: blue !important;
+  }
+  
+  .edit-icon:hover {
+    color: #ffeb3b;
+  }
+  
+  /* Delete Icon style */
+  .delete-icon {
+    color: red;
+  }
+  
+  .delete-icon:hover {
+    color: #ffcdd2;
+  }
+  
+  /* Tooltip text */
+  .icon[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    /* Get the text from the data-tooltip attribute */
+    position: absolute;
+    top: -20px;
+    /* Position above the icon */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    /* Dark background */
+    color: #fff;
+    /* White text */
+    padding: 3px 5px;
+    border-radius: 5px;
+    font-size: 10px;
+    white-space: nowrap;
+    z-index: 10;
+  }
+  .add-categories, .update-categories {
+    padding: 10px 25px;
+    background: rgb(73, 73, 253);
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    transition: all 0.3s ease-in-out;
+    border-radius: 5px;
+    border: none;
+    color: #ffff;
+  }
+  .add-categories:hover, .update-categories:hover{
+    background: rgb(2, 2, 221);
+  }
+  .update-categories{
+    width: 170px;
+  }
+  .update-cate{
+    border: 1.3px solid rgb(150, 150, 150);
+  }
+  
+>>>>>>> 8fada9f6093c511ca903ecbf296c4ceb0d192c58
 
 
 

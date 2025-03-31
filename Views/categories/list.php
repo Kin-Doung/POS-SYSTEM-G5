@@ -1,5 +1,6 @@
-<?php require_once './views/layouts/side.php' ?>
-<main class="main-content position-relative max-height-vh-10 h-10 border-radius-lg ">
+<?php require_once './views/layouts/side.php'; ?>
+
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <!-- Navbar -->
     <nav class="navbar">
         <!-- Search Bar -->
@@ -39,12 +40,45 @@
             </a>
         </div>
 
+        <!-- Modal to Create New Category ---------------------------------------------------->
+        <div class="modal fade" id="createCategoryModal" tabindex="-1" aria-labelledby="createCategoryModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createCategoryModalLabel">Create New Category</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Form to create category -->
+                        <form action="/category/store" method="POST">
+                            <div class="form-group">
+                                <label for="categoryName" class="form-label">Category Name:</label>
+                                <input type="text" name="name" id="categoryName" class="form-control" required>
+                            </div>
+                            <button type="submit" class="add-categories mt-3">Add category</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end of create categories -------------------------------------------- -->
+
+
         <div class="table-responsive">
-            <table class="table-bordered table-hover">
-                <thead class="table-dark">
+            <!-- Success/Failure messages -->
+            <?php if (isset($_GET['deleted']) && $_GET['deleted'] == 'true'): ?>
+                <div class="alert alert-success">Category deleted successfully.</div>
+            <?php elseif (isset($_GET['deleted']) && $_GET['deleted'] == 'false'): ?>
+                <div class="alert alert-danger">Failed to delete the category.</div>
+            <?php elseif (isset($_GET['error'])): ?>
+                <div class="alert alert-warning">Invalid request. No category ID provided.</div>
+            <?php endif; ?>
+
+            <table class="table">
+                <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Name</th>
+                        <th>Category Names</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -52,23 +86,70 @@
                     <?php foreach ($categories as $index => $category): ?>
                         <tr>
                             <td><?= $index + 1 ?></td>
-                            <td><?= htmlspecialchars($category['name']) ?></td>
-                            <td class="text-center text-nowrap">
-                                <a href="/category/edit?id=<?= $category['id'] ?>" class="btn-sm btn-warning">
-                                    <i class="fa-solid fa-user-pen"></i>
-                                </a>
-                                <button type="button" class="btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#category<?= $category['id'] ?>">
+                            <td><?= $category['name'] ?></td>
+                            <td class="text-center">
+                                <!-- Edit Icon with Tooltip -->
+                                <a href="javascript:void(0);" class="icon edit-icon" data-tooltip="Edit" onclick="openEditModal(<?= $category['id'] ?>, '<?= $category['name'] ?>')">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                   </a>
+
+                                <!-- Delete Icon with Tooltip and Confirmation -->
+                                <a href="javascript:void(0);" class="icon delete-icon" data-tooltip="Delete" onclick="return confirmDelete(<?= $category['id'] ?>);">
                                     <i class="fa-solid fa-trash"></i>
-                                </button>
-                                <!-- Modal (Assuming delete.php contains the modal content) -->
-                                <?php require_once './views/categories/delete.php'; ?>
+                                </a>
                             </td>
                         </tr>
-                    <?php endforeach ?>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
     </div>
-
-
 </main>
+
+<!-- Edit Category Modal ------------------------------------------------------>
+<div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCategoryModalLabel">Edit Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/category/update" method="POST" id="editCategoryForm">
+                    <div class="form-group">
+                        <label for="categoryName" class="form-label">Categories Name:</label>
+                        <!-- <input type="text" value=" <?= $category['name'] ?>" name="name" class="form-controll update-cate"> -->
+                        <input type="text" id="categoryName<?= $category['id'] ?>" value="<?= $category['name'] ?>" name="name" class="form-control" required>
+
+                    </div>
+                    <button type="submit" class="update-categories mt-4">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end of edit categories --------------------------------------------------- -->
+
+
+
+<script>
+    // Function to open the modal and populate the form with category data
+    function openEditModal(categoryId, categoryName) {
+        // Set the category name in the input field
+        document.getElementById('categoryName').value = categoryName;
+
+        // Update the form's action URL to include the category ID for updating
+        document.getElementById('editCategoryForm').action = '/category/update?id=' + categoryId;
+
+        // Show the modal using Bootstrap
+        var myModal = new bootstrap.Modal(document.getElementById('editCategoryModal'));
+        myModal.show();
+    }
+
+    // Confirmation delete function
+    function confirmDelete(categoryId) {
+        if (confirm('Are you sure you want to delete this category?')) {
+            window.location.href = '/category/delete?id=' + categoryId;
+        }
+    }
+</script>

@@ -54,10 +54,12 @@
 
   <!-- new cahrt -->
 
-  <link rel="stylesheet" href="../../views/assets/css/chart.css">
-  <script src="../../views/assets/js/vendors/js/vendor.bundle.base.js"></script>
-  <script src="../../views/assets/js/vendors/chart.js/chart.umd.js"></script>
-  <script src="../../views/assets/js/dashboard.js"></script>
+  <link href="../../views/assets/css/sb-admin-2.css" rel="stylesheet">
+  <script src="../../views/assets/js/sciptJS/vendor/chart.js/Chart.min.js"></script>
+
+
+
+
 
 
 </head>

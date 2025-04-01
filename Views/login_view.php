@@ -20,9 +20,16 @@ unset($_SESSION['error']); // Remove error after showing
 <style>
     body{
         background:#ebf5fb;
+        display: block;
+    }
+    h1{
+        text-align: center;
+        margin-bottom: 20px;
     }
 </style>
 <body>
+
+<h1>Welcome to POS system</h1>
 
     <div class="container">
         <input type="checkbox" id="flip">
@@ -84,7 +91,7 @@ unset($_SESSION['error']); // Remove error after showing
                                 <input type="password" name="password" placeholder="Enter your password" required>
                             </div>
                             <div class="button input-box">
-                                <input type="submit" value="Submit" style="background-color: rgb(73, 73, 253);">
+                                <input type="submit" value="Sign up" style="background-color: rgb(73, 73, 253);">
                             </div>
                             <div class="text sign-up-text">Already have an account? <label for="flip">Login now</label></div>
                         </div>

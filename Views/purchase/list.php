@@ -82,6 +82,7 @@
                                     </span>
                                 </td>
                                 <td><?= htmlspecialchars($item['type_of_product']); ?></td>
+                                
                             </tr>
 
                             <!-- Single Delete Modal -->

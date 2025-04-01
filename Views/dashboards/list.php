@@ -1,114 +1,243 @@
 <?php require_once './views/layouts/side.php' ?>
-<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg bg-white ">
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="search-container">
-      <i class="fas fa-search"></i>
-      <input type="text" placeholder="Search...">
-    </div>
-    <div class="icons">
-      <i class="fas fa-globe icon-btn"></i>
-      <div class="icon-btn" id="notification-icon">
-        <i class="fas fa-bell"></i>
-        <span class="notification-badge" id="notification-count">8</span>
-      </div>
-    </div>
-    
-    <div class="profile" id="profile">
+
+
+<style>
+  .move-left {
+    margin-left: -10px;
+    /* Adjust as needed */
+  }
+</style>
+
+<body id="page-top">
+
+
+  <!-- Page Wrapper -->
+  <div id="wrapper" style="margin-left: 250px;">
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+
+        <nav class="navbar move-left">
+          <div class="search-container " style="background-color: #fff;">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search..." >
+          </div>
+          <div class="icons">
+            <i class="fas fa-globe icon-btn"></i>
+            <div class="icon-btn" id="notification-icon">
+              <i class="fas fa-bell"></i>
+              <span class="notification-badge" id="notification-count">8</span>
+            </div>
+          </div>
+          <div class="profile">
             <img src="../../views/assets/images/image.png" alt="User">
             <div class="profile-info">
-                <span id="profile-name">Eng Ly</span>
-                <span class="store-name" id="store-name">Owner Store</span>
+              <span id="profile-name">Eng Ly</span>
+              <span class="store-name" id="store-name">Owner Store</span>
             </div>
             <ul class="menu" id="menu">
-                <li><a href="/account" class="item">Account</a></li>
-                <li><a href="/settings" class="item">Setting</a></li>
-                <li><a href="/logout" class="item">Logout</a></li>
+              <li><a href="/settings" class="item">Account</a></li>
+              <li><a href="/settings" class="item">Setting</a></li>
+              <li><a href="/logout" class="item">Logout</a></li>
             </ul>
             <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
             <script src="../../views/assets/js/setting.js"></script>
-        </div>
+          </div>
+        </nav>
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
 
+          <!-- Content Row -->
+          <div class="row">
 
-
-  </nav>
-  <!-- End Navbar -->
-  <div class="container-fluid py-4"> 
-    <div class="row d-flex justify-content-center align-item-center mb-3">
-      <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-        <div class="cards card-money">
-          <div class="card-header p-3 pt-2">
-            <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
-              <i class="material-icons opacity-10">weekend</i>
-            </div>
-            <div class="text-end pt-1">
-              <p class="text-sm mb-0 text-capitalize">Today's Money</p>
-              <h4 class="mb-0">$53</h4>
-            </div>
-          </div>
-          <!-- <hr class="dark horizontal my-0"> -->
-          <div class="card-footer p-3 mt-n2">
-            <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+55% </span>than last week</p>
-          </div>
-        </div>
-      </div>
-  
-      <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-        <div class="cards card-client">
-          <div class="card-header p-3 pt-2">
-            <div class="icon icon-lg icon-shape bg-gradient-success shadow-success text-center border-radius-xl mt-n4 position-absolute">
-              <i class="material-icons opacity-10">person</i>
-            </div>
-            <div class="text-end pt-1">
-              <p class="text-sm mb-0 text-capitalize">New Clients</p>
-              <h4 class="mb-0">100</h4>
-            </div>
-          </div>
-          <!-- <hr class="dark horizontal my-0"> -->
-          <div class="card-footer p-3 mt-n2">
-            <p class="mb-0"><span class="text-danger text-sm font-weight-bolder">-2%</span> than yesterday</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-xl-3 col-sm-6">
-        <div class="cards card-sale">
-          <div class="card-header p-3 pt-2">
-            <div class="icon icon-lg icon-shape bg-gradient-info shadow-info text-center border-radius-xl mt-n4 position-absolute">
-              <i class="material-icons opacity-10">weekend</i>
-            </div>
-            <div class="text-end pt-1">
-              <p class="text-sm mb-0 text-capitalize">Sales</p>
-              <h4 class="mb-0">$103,430</h4>
-            </div>
-          </div>
-          <!-- <hr class="dark horizontal my-0"> -->
-          <div class="card-footer p-3 mt-n2 d-flex justify-content-center align-item-center">
-            <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+5% </span>than yesterday</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-
-    <div class="col-xl-12 grid-margin stretch-card flex-column">
-  
-    <div class="row h-100">
-      <div class="col-md-12 stretch-card">
-        <div class="card-chart" style="width: 75%; background: transparent; box-shadow: none; border: none;">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-start flex-wrap">
-              <div>
-                <p class="mb-3 ms-5">Monthly Increase</p>
-            
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                        Today's (Money)</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div id="income-chart-legend" class="d-flex flex-wrap mt-1 mt-md-0"></div>
             </div>
-            <canvas id="income-chart"></canvas>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                        New (Client)</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Incomming
+                      </div>
+                      <div class="row no-gutters align-items-center">
+                        <div class="col-auto">
+                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
+                        </div>
+                        <div class="col">
+                          <div class="progress progress-sm mr-2">
+                            <div class="progress-bar bg-info" role="progressbar"
+                              style="width: 50%" aria-valuenow="50" aria-valuemin="0"
+                              aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pending Requests Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                        Today's (Expense)</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-comments fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+
+          <!-- Content Row -->
+
+          <div class="row">
+
+            <!-- Area Chart -->
+            <div class="col-xl-8 col-lg-7">
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div
+                  class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                      aria-labelledby="dropdownMenuLink">
+                      <div class="dropdown-header">Dropdown Header:</div>
+                      <a class="dropdown-item" href="#">Action</a>
+                      <a class="dropdown-item" href="#">Another action</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                  </div>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                  <div class="chart-area">
+                    <canvas id="myAreaChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-xl-4 col-lg-5">
+              <div class="card shadow mb-4">
+                <!-- Project Card Example -->
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
+                </div>
+
+                <div class="card-body" style="height: 368px;">
+                  <h4 class="small text-left">Server Migration <span class="float-right">20%</span></h4>
+                  <div class="progress mb-4" style="height: 15px;">
+                    <div class="progress-bar" role="progressbar" style="width: 20%; height: 100%;   background-color: rgb(226, 160, 160);
+"
+                      aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <h4 class="small text-left">Sales Tracking <span class="float-right">40%</span></h4>
+                  <div class="progress mb-4" style="height: 15px;">
+                    <div class="progress-bar " role="progressbar" style="width: 40%; height: 100%;background-color: rgb(253, 215, 144);"
+                      aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <h4 class="small text-left">Customer Database <span class="float-right">60%</span></h4>
+                  <div class="progress mb-4" style="height: 15px;">
+                    <div class="progress-bar" role="progressbar" style="width: 60%; height: 100%; background-color: rgb(154, 154, 255); "
+                      aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <h4 class="small text-left">Payout Details <span class="float-right">80%</span></h4>
+                  <div class="progress mb-4" style="height: 15px;">
+                    <div class="progress-bar " role="progressbar" style="width: 80%; height: 100%; background-color: lightblue;"
+                      aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <h4 class="small text-left">Account Setup <span class="float-right">Complete!</span></h4>
+                  <div class="progress" style="height: 15px;">
+                    <div class="progress-bar " role="progressbar" style="width: 100%; height: 100%;   background-color: rgb(165, 253, 165);"
+                      aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+          <!-- /.container-fluid -->
+
         </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+          <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+              <span>created by G5 team & PNC student 2025</span>
+            </div>
+          </div>
+        </footer>
+        <!-- End of Footer -->
+
       </div>
+      <!-- End of Content Wrapper -->
+
     </div>
-  </div>
-  
-  </div>
-</main>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fas fa-angle-up"></i>
+    </a>
+
+    <script src="../../views/assets/js/demo/chart-area-demo.js"></script>

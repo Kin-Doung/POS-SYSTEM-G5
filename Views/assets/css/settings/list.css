@@ -121,15 +121,18 @@
         padding: 40px;
         .edit {
             display: flex;
+            background: none;
             justify-content: flex-end;
-            .edit-button {
+            a {
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 width: 100px;
                 height: 40px;
                 border-radius: 15px;
-                background: rgb(157, 99, 5);
+                margin: 20px;
+                color: white;
+                background: rgb(13, 99, 122);
                 font-style: normal;
                 
             }

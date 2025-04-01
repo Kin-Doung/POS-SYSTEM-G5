@@ -1,280 +1,162 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // Edit Modal Population
+  document.querySelectorAll('.dropdown-item[data-bs-target="#editModal"]').forEach((link) => {
+    link.addEventListener("click", function (event) {
+      const productName = event.target.getAttribute("data-product_name");
+      const categoryId = event.target.getAttribute("data-category_id");
+      const quantity = event.target.getAttribute("data-quantity");
+      const amount = event.target.getAttribute("data-amount");
+      const expirationDate = event.target.getAttribute("data-expiration_date");
+      const image = event.target.getAttribute("data-image");
+      const id = event.target.getAttribute("data-id");
+
+      document.getElementById("product_name").value = productName;
+      document.getElementById("category_id").value = categoryId;
+      document.getElementById("quantity").value = quantity;
+      document.getElementById("amount").value = amount;
+      document.getElementById("expiration_date").value = expirationDate;
+      document.getElementById("imagePreview").src = image ? image : "";
+      document.querySelector("#editModal form").action = "/inventory/update?id=" + id;
+    });
+  });
+
+  // Table Filtering and Sorting Setup
   const searchInput = document.getElementById("searchInput");
   const categorySelect = document.getElementById("categorySelect");
   const tableRows = document.querySelectorAll("tbody tr");
+  const tableHeadings = document.querySelectorAll("thead th");
 
+  // Filter Table Function
   function filterTable() {
     const searchValue = searchInput.value.toLowerCase();
     const selectedCategory = categorySelect.value;
 
     tableRows.forEach((row) => {
-      const productName = row.children[2].textContent.toLowerCase();
-      const categoryId = row.dataset.category; // Make sure category ID is stored in the row
+      const productName = row.children[2].textContent.toLowerCase(); // Assuming product name is 3rd column
+      const categoryId = row.getAttribute("data-category-id");
 
       const matchesSearch = productName.includes(searchValue);
-      const matchesCategory =
-        selectedCategory === "" || categoryId === selectedCategory;
+      const matchesCategory = selectedCategory === "" || categoryId === selectedCategory;
 
-      if (matchesSearch && matchesCategory) {
-        row.style.display = "";
-      } else {
-        row.style.display = "none";
-      }
+      row.style.display = matchesSearch && matchesCategory ? "" : "none";
     });
   }
 
-  function filterTable() {
-    const searchInput = document
-      .getElementById("searchInput")
-      .value.toLowerCase();
-    const categorySelect = document.getElementById("categorySelect").value;
-    const tableRows = document.querySelectorAll("#ordersTable tbody tr");
-
-    tableRows.forEach((row) => {
-      const customerName = row.cells[2].textContent.toLowerCase();
-      const categoryMatch =
-        categorySelect === "" ||
-        row.getAttribute("data-category") === categorySelect;
-      const searchMatch = customerName.includes(searchInput);
-
-      row.style.display = categoryMatch && searchMatch ? "" : "none";
-    });
-  }
-
-  // Add event listener for search input
-  document.getElementById("searchInput").addEventListener("input", filterTable);
-
-  function toggleBatchAction(checkbox) {
-    const batchActionBtn = document.getElementById("batchActionBtn");
-    const updateQuantitySection = document.getElementById(
-      "updateQuantitySection"
-    );
-
-    const checkboxes = document.querySelectorAll(".select-checkbox");
-    const anyChecked = Array.from(checkboxes).some((chk) => chk.checked);
-
-    // Enable or disable the batch action button
-    batchActionBtn.disabled = !anyChecked;
-    updateQuantitySection.style.display = anyChecked ? "block" : "none";
-
-    // Enable or disable quantity inputs based on checkbox selection
-    checkboxes.forEach((chk) => {
-      const quantityInput = chk.closest("tr").querySelector(".quantity-input");
-      quantityInput.disabled = !chk.checked; // Enable if checked, disable if not
-  });
-}
-
-
-function updateQuantities() {
-  const checkboxes = document.querySelectorAll('.select-checkbox:checked');
-  checkboxes.forEach(checkbox => {
-      const row = checkbox.closest('tr');
-      const quantityInput = row.querySelector('.quantity-input');
-      quantityInput.disabled = false; // Enable input for editing
-  });
-
-  // Uncheck all checkboxes after updating
-  checkboxes.forEach(checkbox => {
-      checkbox.checked = false;
-      const row = checkbox.closest('tr');
-      const quantityInput = row.querySelector('.quantity-input');
-      quantityInput.disabled = true; // Disable input after update
-  });
-
-  // Disable batch action button and hide update section
-  document.getElementById('batchActionBtn').disabled = true;
-  document.getElementById('updateQuantitySection').style.display = 'none';
-}
-
-  searchInput.addEventListener("input", filterTable);
-  categorySelect.addEventListener("change", filterTable);
-});
-
-
-  function updateQuantities() {
-    const checkboxes = document.querySelectorAll(".select-checkbox:checked");
-    checkboxes.forEach((checkbox) => {
-      const row = checkbox.closest("tr");
-      const quantityInput = row.querySelector(".quantity-input");
-      quantityInput.disabled = false; // Enable input for editing
-    });
-
-    // Uncheck all checkboxes after updating
-    checkboxes.forEach((checkbox) => {
-      checkbox.checked = false;
-      const row = checkbox.closest("tr");
-      const quantityInput = row.querySelector(".quantity-input");
-      quantityInput.disabled = true; // Disable input after update
-    });
-
-    // Disable batch action button and hide update section
-    document.getElementById("batchActionBtn").disabled = true;
-    document.getElementById("updateQuantitySection").style.display = "none";
-  }
-
+  // Search and Category Filter Event Listeners
   searchInput.addEventListener("input", filterTable);
   categorySelect.addEventListener("change", filterTable);
 
+  // Quantity Background Color Logic
+  tableRows.forEach((row) => {
+    const quantityCell = row.querySelector("td:nth-child(4)"); // Quantity is 4th column
+    const quantitySpan = quantityCell.querySelector(".quantity-text");
+    const quantity = parseInt(quantitySpan.textContent, 10);
 
-// nav bar active js
+    // Remove previous classes
+    quantitySpan.classList.remove("quantity-red", "quantity-orange", "quantity-green");
 
-document.addEventListener("DOMContentLoaded", function () {
-  let currentPath = window.location.pathname;
+    // Apply new background color based on quantity
+    if (quantity < 20) {
+      quantitySpan.classList.add("quantity-red");
+    } else if (quantity > 50) {
+      quantitySpan.classList.add("quantity-green");
+    } else {
+      quantitySpan.classList.add("quantity-orange");
+    }
+  });
 
+  // Total Price Calculation
+  const quantityInput = document.getElementById("quantity");
+  const priceInput = document.getElementById("amount");
+  const totalPriceInput = document.getElementById("total_price");
+
+  function calculateTotalPrice() {
+    const quantity = parseFloat(quantityInput.value) || 0;
+    const price = parseFloat(priceInput.value) || 0;
+    const totalPrice = quantity * price;
+    totalPriceInput.value = totalPrice.toFixed(2);
+  }
+
+  if (quantityInput && priceInput) {
+    quantityInput.addEventListener("input", calculateTotalPrice);
+    priceInput.addEventListener("input", calculateTotalPrice);
+  }
+
+  // Navbar Active Link
+  const currentPath = window.location.pathname;
   document.querySelectorAll(".nav-link").forEach((link) => {
-    let icon = link.querySelector("i"); // Get the icon inside the link
+    const icon = link.querySelector("i");
+    const span = link.querySelector(".nav-link-text");
 
     if (link.getAttribute("href") === currentPath) {
       link.classList.add("active");
       link.style.backgroundColor = "#6f42c1";
       link.style.color = "white";
-
-      let span = link.querySelector(".nav-link-text");
       if (span) span.style.color = "white";
-      if (icon) icon.style.color = "white"; // Change icon color
+      if (icon) icon.style.color = "white";
     } else {
       link.classList.remove("active");
       link.style.backgroundColor = "transparent";
       link.style.color = "black";
-
-      let span = link.querySelector(".nav-link-text");
       if (span) span.style.color = "black";
-      if (icon) icon.style.color = "black"; // Reset icon color
+      if (icon) icon.style.color = "black";
     }
   });
-});
 
-// 1. Searching for specific data of HTML table
-const search = document.querySelector(".input-group input"),
-  tableRows = document.querySelectorAll("tbody tr"),
-  tableHeadings = document.querySelectorAll("thead th");
+  // Table Sorting
+  tableHeadings.forEach((head, i) => {
+    let sortAsc = true;
+    head.onclick = () => {
+      tableHeadings.forEach((h) => h.classList.remove("active"));
+      head.classList.add("active");
 
-search.addEventListener("input", searchTable);
-
-function searchTable() {
-  tableRows.forEach((row, i) => {
-    let tableData = row.textContent.toLowerCase(),
-      searchData = search.value.toLowerCase();
-
-    row.classList.toggle("hide", tableData.indexOf(searchData) < 0);
-    row.style.setProperty("--delay", i / 25 + "s");
-  });
-
-  document.querySelectorAll("tbody tr:not(.hide)").forEach((visibleRow, i) => {
-    visibleRow.style.backgroundColor =
-      i % 2 === 0 ? "transparent" : "#0000000b";
-  });
-}
-
-// 2. Sorting the table data based on column header click
-tableHeadings.forEach((head, i) => {
-  let sortAsc = true;
-  head.onclick = () => {
-    tableHeadings.forEach((head) => head.classList.remove("active"));
-    head.classList.add("active");
-
-    document
-      .querySelectorAll("td")
-      .forEach((td) => td.classList.remove("active"));
-    tableRows.forEach((row) => {
-      row.querySelectorAll("td")[i].classList.add("active");
-    });
-
-    head.classList.toggle("asc", sortAsc);
-    sortAsc = head.classList.contains("asc") ? false : true;
-
-    sortTable(i, sortAsc);
-  };
-});
-
-function sortTable(column, sortAsc) {
-  [...tableRows]
-    .sort((a, b) => {
-      let firstRow = a.querySelectorAll("td")[column].textContent.toLowerCase(),
-        secondRow = b.querySelectorAll("td")[column].textContent.toLowerCase();
-
-      return sortAsc
-        ? firstRow < secondRow
-          ? 1
-          : -1
-        : firstRow < secondRow
-        ? -1
-        : 1;
-    })
-    .map((sortedRow) => document.querySelector("tbody").appendChild(sortedRow));
-}
-
-// JavaScript to apply quantity background color
-const inventoryRows = document.querySelectorAll("tbody tr");
-
-inventoryRows.forEach((row) => {
-  const quantityCell = row.querySelector("td:nth-child(4)"); // Assuming Quantity is the 4th column
-  const quantitySpan = quantityCell.querySelector(".quantity-text"); // Get the span containing the quantity
-
-  const quantity = parseInt(quantitySpan.textContent, 10); // Get the quantity as a number
-
-  // Remove any previously applied quantity background classes
-  quantitySpan.classList.remove(
-    "quantity-green",
-    "quantity-blue",
-    "quantity-orange",
-    "quantity-red"
-  );
-
-  // Add the appropriate class based on the quantity value
-  if (quantity >= 80) {
-    quantitySpan.classList.add("quantity-green");
-  } else if (quantity >= 60) {
-    quantitySpan.classList.add("quantity-blue");
-  } else if (quantity >= 40) {
-    quantitySpan.classList.add("quantity-orange");
-  } else {
-    quantitySpan.classList.add("quantity-red");
-  }
-});
-
-document.addEventListener("DOMContentLoaded", function() {
-  const quantityInput = document.getElementById("quantity");
-  const priceInput = document.getElementById("amount");
-  const totalPriceInput = document.getElementById("total_price");
-
-  // Function to calculate the total price
-  function calculateTotalPrice() {
-      const quantity = parseFloat(quantityInput.value) || 0; // Default to 0 if not a number
-      const price = parseFloat(priceInput.value) || 0; // Default to 0 if not a number
-      const totalPrice = quantity * price;
-
-      // Set the calculated total price in the hidden input
-      totalPriceInput.value = totalPrice.toFixed(2); // Set it with 2 decimal points
-  }
-
-  // Add event listeners to recalculate total price when quantity or price changes
-  quantityInput.addEventListener("input", calculateTotalPrice);
-  priceInput.addEventListener("input", calculateTotalPrice);
-});
-
-
-
-    // Filter the table when the category is selected
-    function filterTable() {
-      // Get the selected category ID
-      const categoryId = document.getElementById('categorySelect').value;
-      
-      // Get all table rows
-      const rows = document.querySelectorAll('table tbody tr');
-      
-      // Loop through all the rows and show/hide based on category match
-      rows.forEach(row => {
-          const rowCategoryId = row.getAttribute('data-category-id');
-          
-          // If no category is selected, show all rows
-          if (!categoryId || rowCategoryId === categoryId) {
-              row.style.display = ''; // Show the row
-          } else {
-              row.style.display = 'none'; // Hide the row
-          }
+      tableRows.forEach((row) => {
+        row.querySelectorAll("td").forEach((td) => td.classList.remove("active"));
+        row.querySelectorAll("td")[i].classList.add("active");
       });
-  }
 
-  // Call filterTable on page load to ensure correct filtering if a category is pre-selected
-  window.onload = filterTable;
+      head.classList.toggle("asc", sortAsc);
+      sortAsc = head.classList.contains("asc") ? false : true;
+
+      sortTable(i, sortAsc);
+    };
+  });
+
+  function sortTable(column, sortAsc) {
+    const sortedRows = Array.from(tableRows).sort((a, b) => {
+      const firstRow = a.querySelectorAll("td")[column].textContent.toLowerCase();
+      const secondRow = b.querySelectorAll("td")[column].textContent.toLowerCase();
+      return sortAsc
+        ? firstRow < secondRow ? 1 : -1
+        : firstRow < secondRow ? -1 : 1;
+    });
+    sortedRows.forEach((row) => document.querySelector("tbody").appendChild(row));
+  }
+});
+
+// CSS Styles for Quantity Background Colors (Add this to your existing CSS)
+const quantityStyles = `
+  .quantity-red {
+    background-color: #dc3545;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  .quantity-orange {
+    background-color: #fd7e14;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  .quantity-green {
+    background-color: #28a745;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+`;
+
+// Inject styles into the document (if not already in your CSS file)
+const styleSheet = document.createElement("style");
+styleSheet.textContent = quantityStyles;
+document.head.appendChild(styleSheet);

@@ -68,18 +68,21 @@ $routes->get('/category/create', [CategoryController::class, 'create']);
 $routes->post('/category/store', [CategoryController::class, 'store']);
 $routes->get('/category/edit', [CategoryController::class, 'edit']);
 $routes->put('/category/update', [CategoryController::class, 'update']);
-$routes->delete('/category/destroy', [CategoryController::class, 'destroy']);
+$routes->get('/category/delete', [CategoryController::class, 'delete']);  // Change from POST to GET
+
+
 
 // purchase order
 $routes->get('/purchase', [PurchaseController::class, 'index']);
 $routes->get('/purchase/create', [PurchaseController::class, 'create']);
 $routes->post('/purchase/store', [PurchaseController::class, 'store']);
-$routes->get('/purchase/edit', [PurchaseController::class, 'edit']);
-$routes->put('/purchase/update', [PurchaseController::class, 'update']);
-$routes->delete('/purchase/destroy', [PurchaseController::class, 'destroy']);
-$routes->post('/purchase/restock', [PurchaseController::class, 'restock']);
+$routes->get('/purchase/edit/(:num)', [PurchaseController::class, 'edit']);
+$routes->post('/purchase/update/(:num)', [PurchaseController::class, 'update']);
+$routes->post('/purchase/destroy/(:num)', [PurchaseController::class, 'destroy']);
+$routes->post('/purchase/bulk-destroy', [PurchaseController::class, 'bulkDestroy']);
+$routes->get('/purchase/get-existing-products', [PurchaseController::class, 'getExistingProducts']);
 
-// Order
+
 // $routes->get('/orders', [OrderController::class, 'index']);
 
 

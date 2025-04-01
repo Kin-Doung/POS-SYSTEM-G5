@@ -21,10 +21,10 @@ class CategoryModel
         ]);
     }
 
-    function getCategoryById($id)
+    public function getCategoryById($categoryId)
     {
-        $db = new Database(); // Create Database instance
-        $stmt = $db->query("SELECT name FROM categories WHERE id = :id", ['id' => $id]);
+        $stmt = $this->pdo->getConnection()->prepare("SELECT * FROM categories WHERE id = :id");
+        $stmt->execute([':id' => $categoryId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
@@ -53,17 +53,22 @@ class CategoryModel
             'id' => $id
         ]);
     }
-    function deleteCategory($id)
-    {
-        $stmt = $this->pdo->query("DELETE FROM categories WHERE id = :id");
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        
-        if ($stmt->execute()) {
-            return true;  // Success
-        } else {
-            echo "Error: " . implode(", ", $stmt->errorInfo());
-            return false;  // Failure
-        }
+    public function deleteCategory($id)
+{
+    // Sanitize the id to ensure it is an integer (this is important for security)
+    $id = (int)$id;
+
+    // Directly inject the id into the query string
+    $query = "DELETE FROM categories WHERE id = $id";
+
+    // Execute the query
+    if ($this->pdo->query($query)) {
+        return true;
+    } else {
+        return false;
     }
+}
+
+    
     
 }

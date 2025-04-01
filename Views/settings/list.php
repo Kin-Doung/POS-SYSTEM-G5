@@ -13,50 +13,66 @@
                 <?php if (!empty($admins)) : ?>
                     <?php foreach ($admins as $admin) : ?>
                         <div class="account-row">
-                            <div class="profile-image">
-                                <p><strong>Profile:</strong></p>
-                                <div class="image">
-                                    <?php if (!empty($admin['store_logo'])) : ?>
-                                        <img src="data:image/jpeg;base64,<?= base64_encode($admin['store_logo']) ?>"
-                                            style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;">
-                                    <?php else: ?>
-                                        <span class="no-logo">No Logo</span>
-                                    <?php endif; ?>
+                            <div class="left">
+                                <div class="aa">
+                                    <h6><strong>Profile:</strong></h6>
+                                    <div class="image">
+                                        <?php if (!empty($admin['store_logo'])) : ?>
+                                            <img src="data:image/jpeg;base64,<?= base64_encode($admin['store_logo']) ?>"
+                                                style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%;">
+                                        <?php else: ?>
+                                            <span class="no-logo">No Logo</span>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                                <div class="aa-1">
+                                    <h6><strong>Language:</strong></h6>
+                                    <div class="a-1">
+                                        <p><?= htmlspecialchars($admin['language']) ?></p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="account">
-                                <div class="a-1">
+                            <div class="right">
+                                <div class="bb">
                                     <h6><strong>Username:</strong></h6>
-                                    <div class="a"> <p><?= htmlspecialchars($admin['username']) ?></p></div>
+                                    <div class="bb-1">
+                                        <p><?= htmlspecialchars($admin['username']) ?></p>
+                                    </div>
                                 </div>
-                                <div class="a-1">
-                                    <h6><strong>Email:</strong></h6>
-                                    <div class="a"><p><?= htmlspecialchars($admin['email']) ?></p></div>
-                                </div>
-                                <div class="a-1">
-                                    <h6><strong>Password:</strong></h6>
-                                    <div class="a"> <p><?= substr($admin['password'], 0, 2) . '****' ?></p></div>
-                                </div>
-                                <div class="a-1">
+                                <div class="bb">
                                     <h6><strong>Store Name:</strong></h6>
-                                    <div class="a"><p><?= htmlspecialchars($admin['store_name']) ?></p></div>
+                                    <div class="bb-2">
+                                        <p><?= htmlspecialchars($admin['store_name']) ?></p>
+                                    </div>
                                 </div>
-                                <div class="a-1">
-                                    <h6><strong>Language:</strong></h6>
-                                    <div class="a"><p><?= htmlspecialchars($admin['language']) ?></p></div>
+
+                                <div class="bb">
+                                    <h6><strong>Password:</strong></h6>
+                                    <div class="bb-3">
+                                        <p><?= substr($admin['password'], 0, 2) . '****' ?></p>
+                                    </div>
                                 </div>
+
+                            </div>
+                        </div>
+                        <div class="buttom">
+                            <h6><strong>Email:</strong></h6>
+                            <div class="bt-1">
+                                <p><?= htmlspecialchars($admin['email']) ?></p>
                             </div>
                         </div>
 
-                        <a href="settings/edit?id=<?= $admin['id'] ?>" class="custom-btn">Edit</a>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    <div class="no-admin">
+                        <p class="text-muted">No admin users found.</p>
+                    </div>
+                <?php endif; ?>
             </div>
-        <?php endforeach; ?>
-    <?php else : ?>
-        <div class="no-admin">
-            <p class="text-muted">No admin users found.</p>
+            <div class="edit">
+                <a href="settings/edit?id=<?= $admin['id'] ?>" class="edit-button">Edit</a>
+            </div>
         </div>
-    <?php endif; ?>
     </div>
-
     <?php require_once 'views/layouts/footer.php'; ?>
 </main>

@@ -71,14 +71,109 @@
                 <p class="mb-3 ms-5">Monthly Increase</p>
             
               </div>
-              <div id="income-chart-legend" class="d-flex flex-wrap mt-1 mt-md-0"></div>
             </div>
-            <canvas id="income-chart"></canvas>
           </div>
+
+          <!-- Content Row -->
+
+          <div class="row">
+
+            <!-- Area Chart -->
+            <div class="col-xl-8 col-lg-7">
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div
+                  class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                      aria-labelledby="dropdownMenuLink">
+                      <div class="dropdown-header">Dropdown Header:</div>
+                      <a class="dropdown-item" href="#">Action</a>
+                      <a class="dropdown-item" href="#">Another action</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                  </div>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                  <div class="chart-area">
+                    <canvas id="myAreaChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-xl-4 col-lg-5">
+              <div class="card shadow mb-4">
+                <!-- Project Card Example -->
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
+                </div>
+
+                <div class="card-body" style="height: 368px;">
+                  <h4 class="small text-left">Server Migration <span class="float-right">20%</span></h4>
+                  <div class="progress mb-4" style="height: 15px;">
+                    <div class="progress-bar" role="progressbar" style="width: 20%; height: 100%;   background-color: rgb(226, 160, 160);
+"
+                      aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <h4 class="small text-left">Sales Tracking <span class="float-right">40%</span></h4>
+                  <div class="progress mb-4" style="height: 15px;">
+                    <div class="progress-bar " role="progressbar" style="width: 40%; height: 100%;background-color: rgb(253, 215, 144);"
+                      aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <h4 class="small text-left">Customer Database <span class="float-right">60%</span></h4>
+                  <div class="progress mb-4" style="height: 15px;">
+                    <div class="progress-bar" role="progressbar" style="width: 60%; height: 100%; background-color: rgb(154, 154, 255); "
+                      aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <h4 class="small text-left">Payout Details <span class="float-right">80%</span></h4>
+                  <div class="progress mb-4" style="height: 15px;">
+                    <div class="progress-bar " role="progressbar" style="width: 80%; height: 100%; background-color: lightblue;"
+                      aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <h4 class="small text-left">Account Setup <span class="float-right">Complete!</span></h4>
+                  <div class="progress" style="height: 15px;">
+                    <div class="progress-bar " role="progressbar" style="width: 100%; height: 100%;   background-color: rgb(165, 253, 165);"
+                      aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+          <!-- /.container-fluid -->
+
         </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+          <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+              <span>created by G5 team & PNC student 2025</span>
+            </div>
+          </div>
+        </footer>
+        <!-- End of Footer -->
+
       </div>
+      <!-- End of Content Wrapper -->
+
     </div>
-  </div>
-  
-  </div>
-</main>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fas fa-angle-up"></i>
+    </a>
+
+    <script src="../../views/assets/js/demo/chart-area-demo.js"></script>

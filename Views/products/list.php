@@ -27,11 +27,8 @@ require_once './views/layouts/side.php';
     </nav>
 
     <!-- Search and Category Filter -->
-    <input type="text" id="searchInput" class="form-controlls input-group-search" placeholder="Search...">
     <div class="input-group">
-
         <input type="text" id="searchInput" class="form-control input-group-search" placeholder="Search...">
-
         <select id="categorySelect" class="ms-2 selected">
             <option value="">Select Category</option>
             <?php if (!empty($categories)): ?>
@@ -51,10 +48,8 @@ require_once './views/layouts/side.php';
         <div class="product-list flex-grow-1">
             <div class="row">
                 <?php foreach ($products as $product): ?>
-                    
                     <div class="col-6 col-sm-4 col-md-3 mb-4">
                         <div class="card square-card">
-                            
                             <div class="image-wrapper">
                                 <img src="<?= htmlspecialchars($product['image']) ?>" class="card-img-top" alt="<?= htmlspecialchars($product['name']) ?>">
                             </div>
@@ -66,12 +61,12 @@ require_once './views/layouts/side.php';
                                     <button class="buy">Buy</button>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 <?php endforeach; ?>
             </div>
         </div>
+
         <!-- Cart Section -->
         <div class="cart-section ms-4 p-3 border rounded shadow bg-white" id="cartSection" style="width: 500px; display: none;">
             <h4>Cart</h4>
@@ -92,6 +87,7 @@ require_once './views/layouts/side.php';
         </div>
     </div>
 
+    <!-- Styles -->
     <style>
         .navbar {
             width: 100%;
@@ -198,7 +194,6 @@ require_once './views/layouts/side.php';
         }
 
         .image-wrapper {
-
             height: 150px;
             overflow: hidden;
             background-color: #f5f6f5;
@@ -351,5 +346,39 @@ require_once './views/layouts/side.php';
             }
         }
     </style>
+
+    <!-- JavaScript -->
+    <script>
+        function replaceCartInDatabase() {
+            const cartTable = document.getElementById('cartTable').querySelector('tbody');
+            const cartItems = [];
+            cartTable.querySelectorAll('tr').forEach(row => {
+                const productId = row.querySelector('input[name="product_id"]').value;
+                const quantity = parseInt(row.querySelector('td:nth-child(2)').textContent); // Qty column
+                cartItems.push({ product_id: productId, quantity: quantity });
+            });
+
+            fetch('/product/submitCart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(cartItems)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert('okay'); // Show "okay" on successful submission
+                } else {
+                    alert('Error: ' + data.message); // Show error message if it fails
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+
     <?php require_once 'views/layouts/footer.php'; ?>
 </main>

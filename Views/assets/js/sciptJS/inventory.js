@@ -99,22 +99,22 @@ document.addEventListener("DOMContentLoaded", function () {
 // CSS Styles for Quantity Background Colors (Add this to your existing CSS)
 const quantityStyles = `
   .quantity-red {
-    background-color: red;
-    color: white;
+    background-color: pink;
+    color: #000;
     padding: 4px 8px;
-    border-radius: 4px;
+    border-radius: 50px;
   }
   .quantity-orange {
-    background-color: #fd7e14;
-    color: white;
+    background-color:rgb(245, 209, 180);
+    color: #000;
     padding: 4px 8px;
-    border-radius: 4px;
+    border-radius: 60px;
   }
   .quantity-green {
-    background-color: #28a745;
-    color: white;
+    background-color:rgb(170, 238, 186);
+    color: #000;
     padding: 4px 8px;
-    border-radius: 4px;
+    border-radius: 50px;
   }
 `;
 

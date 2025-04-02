@@ -11,6 +11,8 @@ require_once './Controllers/SettingController.php';
 require_once './Controllers/LogoutController.php';
 require_once './Controllers/LanguageController.php';
 require_once './Controllers/LoginController.php';
+require_once './Controllers/HistoryController.php';
+
 
 
 $routes = new Router();
@@ -86,7 +88,11 @@ $routes->post('/purchase/bulk-destroy', [PurchaseController::class, 'bulkDestroy
 $routes->get('/purchase/get-existing-products', [PurchaseController::class, 'getExistingProducts']);
 
 
-// $routes->get('/orders', [OrderController::class, 'index']);
+// router of the history product
+// Router of the history product
+$routes->get('/history', [HistoryController::class, 'index']);              // List all history entries
+$routes->post('/history/store', [HistoryController::class, 'store']);       // Store a new history entry
+$routes->delete('/history/delete/(:num)', [HistoryController::class, 'delete']); // Delete a specific history entry
 
 
 

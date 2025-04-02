@@ -8,8 +8,7 @@ var_dump($_FILES); // Check if the file is being uploaded
 
 
 <main class="main-content position-relative max-height-vh-50 h-50 border-radius-lg ">
-    <!-- Navbar -->
-    <?php require_once './views/layouts/nav.php' ?>
+
 
     <a href="/settings" class="btn-customm" style="width: 150px;">
         <i class="fas fa-arrow-left mt-4 "></i> Back
@@ -37,7 +36,7 @@ var_dump($_FILES); // Check if the file is being uploaded
 
                         </div>
                     </div>
-                    <div class="group">
+                    <div class="group-1">
                         <label for="" class="form-label">Email:</label>
                         <input type="text" value=" <?= $admin['email'] ?>" name="email" class="form-controls">
                     </div>
@@ -75,12 +74,5 @@ var_dump($_FILES); // Check if the file is being uploaded
             </div>
         </div>
     </div>
-
-
-
-
-
     <link rel="stylesheet" href="../../views/assets/css/settings/edit.css">
-
-    <?php require_once 'views/layouts/footer.php' ?>
 </main>

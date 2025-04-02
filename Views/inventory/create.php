@@ -3,15 +3,16 @@ require_once './views/layouts/side.php';
 ?>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <main class="main-content create-content position-relative max-height-vh-100 h-100">
+    <?php require_once './views/layouts/nav.php' ?>
     <h2 class="text-center head-add" style="padding-top: 20px;  ">Add Stock Products</h2>
     <div class="d-flex justify-content-end align-item-center me-3">
-        <button type="button" id="previewInvoice" class="btn btn-preview" data-bs-toggle="modal" data-bs-target="#invoiceModal" >Preview Invoice</button>
+        <button type="button" id="previewInvoice" class="btn btn-preview" data-bs-toggle="modal" data-bs-target="#invoiceModal">Preview Invoice</button>
     </div>
     <div class="col-md-12 mt-n3 mx-auto">
         <div class="card p-3" style="box-shadow: none;border:none">
@@ -123,10 +124,10 @@ require_once './views/layouts/side.php';
                     <div class="d-flex justify-content-end">
                         <p>Total Price: $<span id="totalPrice">0</span></p>
                     </div>
-                    <div >
-    <button type="button" id="exportPDF" class=" btn-export">Export to PDF</button>
-    <button type="button" id="exportExcel" class=" btn-export-excel">Export to Excel</button>
-</div>
+                    <div>
+                        <button type="button" id="exportPDF" class=" btn-export">Export to PDF</button>
+                        <button type="button" id="exportExcel" class=" btn-export-excel">Export to Excel</button>
+                    </div>
 
                 </div>
             </div>
@@ -136,9 +137,10 @@ require_once './views/layouts/side.php';
 </main>
 
 <style>
-    .head-add{
+    .head-add {
         font-family: "Poppins", sans-serif;
     }
+
     /* Custom width for the modal */
     #invoiceModal .modal-dialog {
         max-width: 1200px;
@@ -146,28 +148,33 @@ require_once './views/layouts/side.php';
         width: 90%;
         /* You can adjust the width percentage if needed */
     }
-    .btn-preview{
+
+    .btn-preview {
         background: orange !important;
-    
+
     }
-    .btn-export{
+
+    .btn-export {
         background: orange;
         color: #fff;
         padding: 8px;
         border-radius: 5px;
         border: none;
     }
-    .btn-export:hover{
+
+    .btn-export:hover {
         background: darkorange;
     }
-    .btn-export-excel{
+
+    .btn-export-excel {
         background: green;
         color: #fff;
         padding: 8px;
         border: none;
         border-radius: 5px;
     }
-    .btn-export-excel:hover{
+
+    .btn-export-excel:hover {
         background-color: darkgreen;
         box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
     }
@@ -436,18 +443,18 @@ require_once './views/layouts/side.php';
             });
         });
     }
-   
+
 
     // Function to capture the data from the input table
-document.getElementById('previewInvoice').addEventListener('click', function() {
-    const savedProducts = JSON.parse(localStorage.getItem('savedProducts')) || [];
-    const invoiceTableBody = document.getElementById('invoiceTableBody');
-    invoiceTableBody.innerHTML = ''; // Clear existing rows before adding new ones
+    document.getElementById('previewInvoice').addEventListener('click', function() {
+        const savedProducts = JSON.parse(localStorage.getItem('savedProducts')) || [];
+        const invoiceTableBody = document.getElementById('invoiceTableBody');
+        invoiceTableBody.innerHTML = ''; // Clear existing rows before adding new ones
 
-    let totalPrice = 0;
-    savedProducts.forEach(product => {
-        const newRow = document.createElement('tr');
-        newRow.innerHTML = `
+        let totalPrice = 0;
+        savedProducts.forEach(product => {
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
             <td>
                 <img src="${product.image || ''}" class="img-preview" style="width: 50px; height: 50px;">
             </td>
@@ -458,48 +465,48 @@ document.getElementById('previewInvoice').addEventListener('click', function() {
             <td>${product.expiration}</td>
             <td>${(product.quantity * product.price).toFixed(2)}</td>
         `;
-        invoiceTableBody.appendChild(newRow);
-        totalPrice += product.quantity * product.price;
+            invoiceTableBody.appendChild(newRow);
+            totalPrice += product.quantity * product.price;
+        });
+
+        document.getElementById('totalPrice').textContent = totalPrice.toFixed(2);
     });
 
-    document.getElementById('totalPrice').textContent = totalPrice.toFixed(2);
-});
-
-// Update save function to store image base64 data
-function saveProductsToLocalStorage() {
-    const rows = document.querySelectorAll('.product-row');
-    const products = [];
+    // Update save function to store image base64 data
+    function saveProductsToLocalStorage() {
+        const rows = document.querySelectorAll('.product-row');
+        const products = [];
 
 
-    rows.forEach(row => {
-        const product = {
-            category: row.querySelector('[name="category_id[]"]').value,
-            name: row.querySelector('[name="product_name[]"]').value,
-            quantity: row.querySelector('[name="quantity[]"]').value,
-            price: row.querySelector('[name="amount[]"]').value,
-            expiration: row.querySelector('[name="expiration_date[]"]').value,
-            image: row.querySelector('.img-preview').src // Save the image source (base64 data)
-        };
-        products.push(product);
-    });
+        rows.forEach(row => {
+            const product = {
+                category: row.querySelector('[name="category_id[]"]').value,
+                name: row.querySelector('[name="product_name[]"]').value,
+                quantity: row.querySelector('[name="quantity[]"]').value,
+                price: row.querySelector('[name="amount[]"]').value,
+                expiration: row.querySelector('[name="expiration_date[]"]').value,
+                image: row.querySelector('.img-preview').src // Save the image source (base64 data)
+            };
+            products.push(product);
+        });
 
-    localStorage.setItem('savedProducts', JSON.stringify(products));
-}
+        localStorage.setItem('savedProducts', JSON.stringify(products));
+    }
 
-// Updated loadSavedProducts function to properly display the image
-function loadSavedProducts() {
-    const savedProducts = localStorage.getItem('savedProducts');
-    if (!savedProducts) return;
+    // Updated loadSavedProducts function to properly display the image
+    function loadSavedProducts() {
+        const savedProducts = localStorage.getItem('savedProducts');
+        if (!savedProducts) return;
 
-    const products = JSON.parse(savedProducts);
-    const productTableBody = document.getElementById('productTableBody');
+        const products = JSON.parse(savedProducts);
+        const productTableBody = document.getElementById('productTableBody');
 
-    productTableBody.innerHTML = ''; // Clear table before adding saved products
+        productTableBody.innerHTML = ''; // Clear table before adding saved products
 
-    products.forEach(product => {
-        const newRow = document.createElement('tr');
-        newRow.classList.add('product-row');
-        newRow.innerHTML = `
+        products.forEach(product => {
+            const newRow = document.createElement('tr');
+            newRow.classList.add('product-row');
+            newRow.innerHTML = `
             <td>
                 <input type="file" class="form-control image-add" name="image[]" accept="image/*">
                 <img src="${product.image || ''}" alt="Product Image" class="img-preview" style="display: inline; width: 50px; height: 50px;">
@@ -528,9 +535,9 @@ function loadSavedProducts() {
                 </button>
             </td>
         `;
-        productTableBody.appendChild(newRow);
-    });
-}
+            productTableBody.appendChild(newRow);
+        });
+    }
 
 
 

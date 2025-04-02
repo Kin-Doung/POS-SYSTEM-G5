@@ -1,6 +1,7 @@
 .navbar {
     display: flex;
     flex-direction: row;
+    width: 1200px;
     .search-container {
         width: 700px;
         margin-left: 30px;

@@ -4,7 +4,7 @@
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
 
     <nav class="navbar">
-        <div class="search-container">
+        <div class="search-container" style="background-color: #fff;">
             <i class="fas fa-search"></i>
             <input type="text" placeholder="Search...">
         </div>
@@ -43,12 +43,13 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th><input type="checkbox" id="selectAll"></th>
-                        <th>Image</th>
-                        <th>Product Name</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Type of Products</th>
+                    <th style="background-color:#fff; color: #212529;"><input type="checkbox" id="selectAll"></th>
+<th style="background-color:#fff; color: #212529;">Image</th>
+<th style="background-color:#fff; color: #212529;">Product Name</th>
+<th style="background-color:#fff; color: #212529;">Quantity</th>
+<th style="background-color:#fff; color: #212529;">Price</th>
+<th style="background-color:#fff; color: #212529;">Type of Products</th>
+
                     </tr>
                 </thead>
                 <tbody id="purchasesTableBody">

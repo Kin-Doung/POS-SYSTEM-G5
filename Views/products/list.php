@@ -6,7 +6,7 @@ require_once './views/layouts/side.php';
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <!-- Navbar -->
     <nav class="navbar">
-        <div class="search-container">
+        <div class="search-container" style="background-color: #fff;"> 
             <i class="fas fa-search"></i>
             <input type="text" id="searchInput" placeholder="Search..." />
         </div>

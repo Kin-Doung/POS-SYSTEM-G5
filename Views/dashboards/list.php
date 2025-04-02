@@ -1,6 +1,7 @@
 <?php require_once './views/layouts/side.php' ?>
 
 
+
 <style>
   .move-left {
     margin-left: -10px;

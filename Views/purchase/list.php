@@ -43,12 +43,12 @@
             <table class="table">
                 <thead>
                     <tr>
-                    <th style="background-color:#fff; color: #212529;"><input type="checkbox" id="selectAll"></th>
-<th style="background-color:#fff; color: #212529;">Image</th>
-<th style="background-color:#fff; color: #212529;">Product Name</th>
-<th style="background-color:#fff; color: #212529;">Quantity</th>
-<th style="background-color:#fff; color: #212529;">Price</th>
-<th style="background-color:#fff; color: #212529;">Type of Products</th>
+                        <th style="background-color:#fff; color: #212529;"><input type="checkbox" id="selectAll"></th>
+                        <th style="background-color:#fff; color: #212529;">Image</th>
+                        <th style="background-color:#fff; color: #212529;">Product Name</th>
+                        <th style="background-color:#fff; color: #212529;">Quantity</th>
+                        <th style="background-color:#fff; color: #212529;">Price</th>
+                        <th style="background-color:#fff; color: #212529;">Type of Products</th>
 
                     </tr>
                 </thead>
@@ -83,7 +83,7 @@
                                     </span>
                                 </td>
                                 <td><?= htmlspecialchars($item['type_of_product']); ?></td>
-                                
+
                             </tr>
 
                             <!-- Single Delete Modal -->
@@ -138,6 +138,10 @@
     <button type="button" id="bulkDeleteBtn" class="btn btn-danger pos-btn-danger" style="display: none;">Delete Selected</button>
 
     <style>
+        .container {
+            width: 100%;
+        }
+
         .purchase-head {
             color: #1a3c34;
             font-size: 24px;

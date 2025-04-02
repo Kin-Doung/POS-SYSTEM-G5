@@ -1,3 +1,5 @@
+
+
 <?php
 class Database
 {
@@ -34,6 +36,7 @@ class Database
         return $stmt;
     }
 
+    
 
 
 
@@ -55,3 +58,5 @@ class Database
         $this->pdo->rollBack();
     }
 }
+
+

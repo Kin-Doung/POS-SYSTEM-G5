@@ -3,7 +3,7 @@
 
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
 
-    < <?php require_once './views/layouts/nav.php' ?>
+    
 
     <div class="container table-inventory">
         <div class="orders">
@@ -19,12 +19,12 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th><input type="checkbox" id="selectAll"></th>
-                        <th>Image</th>
-                        <th>Product Name</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Type of Products</th>
+                        <th style="background-color:#fff; color: #212529;"><input type="checkbox" id="selectAll"></th>
+                        <th style="background-color:#fff; color: #212529;">Image</th>
+                        <th style="background-color:#fff; color: #212529;">Product Name</th>
+                        <th style="background-color:#fff; color: #212529;">Quantity</th>
+                        <th style="background-color:#fff; color: #212529;">Price</th>
+                        <th style="background-color:#fff; color: #212529;">Type of Products</th>
                     </tr>
                 </thead>
                 <tbody id="purchasesTableBody">
@@ -58,7 +58,7 @@
                                     </span>
                                 </td>
                                 <td><?= htmlspecialchars($item['type_of_product']); ?></td>
-                                
+
                             </tr>
 
                             <!-- Single Delete Modal -->

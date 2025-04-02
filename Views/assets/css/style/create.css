@@ -11,16 +11,22 @@
 .form-group{
     margin-left: 0px;
 }
-.btn-add-product{
+.btn-new-product{
     border: none;
     padding: 8px 20px;
-    border-radius: 5px;
-    background: darkblue;
+    border-radius: 20px;
+    background: rgb(37, 37, 255);
+    color: #fff;
+}
+.btn-new-product:hover{
+    background-color: darkblue;
+    text-decoration: none;
     color: #fff;
 }
 .image-add{
     height: 46px;
 }
+
 
 
 

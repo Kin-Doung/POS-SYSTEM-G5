@@ -12,6 +12,7 @@ require_once './Controllers/LogoutController.php';
 require_once './Controllers/LanguageController.php';
 require_once './Controllers/LoginController.php';
 
+
 $routes = new Router();
 // login
 $routes->get('/', [LoginController::class, 'showLogin']); // Corrected the function name

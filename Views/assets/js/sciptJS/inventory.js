@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // CSS Styles for Quantity Background Colors (Add this to your existing CSS)
 const quantityStyles = `
   .quantity-red {
-    background-color: #dc3545;
+    background-color: red;
     color: white;
     padding: 4px 8px;
     border-radius: 4px;

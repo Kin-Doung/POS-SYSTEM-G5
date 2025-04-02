@@ -1,9 +1,12 @@
 <?php require_once './views/layouts/header.php' ?>
 <?php require_once './views/layouts/side.php' ?>
+
+
+
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <!-- Navbar -->
     <nav class="navbar">
-        <div class="search-container">
+        <div class="search-container" style="background-color: #fff;">
             <i class="fas fa-search"></i>
             <input type="text" placeholder="Search...">
         </div>
@@ -37,18 +40,18 @@
                 <h2 style="font-weight: bold;" class="purchase-head">Restock Products</h2>
                 <div>
                     <a href="/inventory/create" class="btn-new-product">
-                        <i class="bi-plus-lg"></i> + Add Stocks
+                        + Add Stocks
                     </a>
                 </div>
             </div>
             <div class="input-group">
                 <input type="text" id="searchInput" class="form-control input-group-search" placeholder="Search...">
-                <select id="categorySelect" class="ms-2 selected" onchange="filterTable()">
+                <select id="categorySelect" class="ms-2 selected" onchange="filterTable()" style="border-radius: 0;">
                     <option value="">Select Category</option>
                     <?php if (!empty($categories)): ?>
                         <?php foreach ($categories as $category): ?>
                             <option value="<?= htmlspecialchars($category['id']) ?>">
-                                <?= htmlspecialchars($category['name']) ?>
+                                   <?= htmlspecialchars($category['name']) ?>
                             </option>
                         <?php endforeach; ?>
                     <?php else: ?>
@@ -198,9 +201,9 @@
     </div>
 
     <!-- JavaScript for Edit Modal Population -->
-    <script>
-
-    </script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

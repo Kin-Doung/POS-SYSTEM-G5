@@ -4,7 +4,7 @@
 <main class="main-content position-relative max-height-vh-50 h-50 border-radius-lg ">
     <!-- Navbar -->
     <nav class="navbar">
-        <div class="search-container">
+        <div class="search-container" style="background-color: #fff;">
             <i class="fas fa-search"></i>
             <input type="text" placeholder="Search...">
         </div>

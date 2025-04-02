@@ -62,6 +62,8 @@ $routes->get('/products', [ProductController::class, 'index']);
 $routes->post('/products/store', [ProductController::class, 'store']);
 $routes->get('/products/edit', [ProductController::class, 'edit']);  // Edit product with ID
 $routes->post('/products/updatePrice', [ProductController::class, 'updatePrice']); // Update price for a specific product
+$routes->post('/products/update-quantity', [ProductController::class, 'updateProductQuantity']);
+
 
 // categories
 $routes->get('/category', [CategoryController::class, 'index']);

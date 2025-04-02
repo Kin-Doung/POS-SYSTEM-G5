@@ -82,45 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
     priceInput.addEventListener("input", calculateTotalPrice);
   }
 
-  // Navbar Active Link
-  const currentPath = window.location.pathname;
-  document.querySelectorAll(".nav-link").forEach((link) => {
-    const icon = link.querySelector("i");
-    const span = link.querySelector(".nav-link-text");
-
-    if (link.getAttribute("href") === currentPath) {
-      link.classList.add("active");
-      link.style.backgroundColor = "#6f42c1";
-      link.style.color = "white";
-      if (span) span.style.color = "white";
-      if (icon) icon.style.color = "white";
-    } else {
-      link.classList.remove("active");
-      link.style.backgroundColor = "transparent";
-      link.style.color = "black";
-      if (span) span.style.color = "black";
-      if (icon) icon.style.color = "black";
-    }
-  });
-
-  // Table Sorting
-  tableHeadings.forEach((head, i) => {
-    let sortAsc = true;
-    head.onclick = () => {
-      tableHeadings.forEach((h) => h.classList.remove("active"));
-      head.classList.add("active");
-
-      tableRows.forEach((row) => {
-        row.querySelectorAll("td").forEach((td) => td.classList.remove("active"));
-        row.querySelectorAll("td")[i].classList.add("active");
-      });
-
-      head.classList.toggle("asc", sortAsc);
-      sortAsc = head.classList.contains("asc") ? false : true;
-
-      sortTable(i, sortAsc);
-    };
-  });
+ 
 
   function sortTable(column, sortAsc) {
     const sortedRows = Array.from(tableRows).sort((a, b) => {

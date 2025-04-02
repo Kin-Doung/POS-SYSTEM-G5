@@ -4,7 +4,7 @@
     <!-- Navbar -->
     <nav class="navbar">
         <!-- Search Bar -->
-        <div class="search-container">
+        <div class="search-container" style="background-color: #fff;">
             <i class="fas fa-search"></i>
             <input type="text" placeholder="Search...">
         </div>

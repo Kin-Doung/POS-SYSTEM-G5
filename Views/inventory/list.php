@@ -6,7 +6,7 @@
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <!-- Navbar -->
     <?php require_once './views/layouts/nav.php' ?>
-    <nav class="navbar">
+    <!-- <nav class="navbar">
         <div class="search-container" style="background-color: #fff;">
             <i class="fas fa-search"></i>
             <input type="text" placeholder="Search...">
@@ -32,7 +32,7 @@
             <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
             <script src="../../views/assets/js/setting.js"></script>
         </div>
-    </nav>
+    </nav> -->
 
 
     <div class="container table-inventory">

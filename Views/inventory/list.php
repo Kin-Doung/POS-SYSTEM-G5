@@ -1,12 +1,9 @@
 <?php require_once './views/layouts/header.php' ?>
 <?php require_once './views/layouts/side.php' ?>
-
-
-
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <!-- Navbar -->
     <nav class="navbar">
-        <div class="search-container" style="background-color: #fff;">
+        <div class="search-container">
             <i class="fas fa-search"></i>
             <input type="text" placeholder="Search...">
         </div>
@@ -40,18 +37,18 @@
                 <h2 style="font-weight: bold;" class="purchase-head">Restock Products</h2>
                 <div>
                     <a href="/inventory/create" class="btn-new-product">
-                        + Add Stocks
+                        <i class="bi-plus-lg"></i> + Add Stocks
                     </a>
                 </div>
             </div>
             <div class="input-group">
                 <input type="text" id="searchInput" class="form-control input-group-search" placeholder="Search...">
-                <select id="categorySelect" class="ms-2 selected" onchange="filterTable()" style="border-radius: 0;">
+                <select id="categorySelect" class="ms-2 selected" onchange="filterTable()">
                     <option value="">Select Category</option>
                     <?php if (!empty($categories)): ?>
                         <?php foreach ($categories as $category): ?>
                             <option value="<?= htmlspecialchars($category['id']) ?>">
-                                   <?= htmlspecialchars($category['name']) ?>
+                                <?= htmlspecialchars($category['name']) ?>
                             </option>
                         <?php endforeach; ?>
                     <?php else: ?>
@@ -203,7 +200,315 @@
     <!-- JavaScript for Edit Modal Population -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <style>
+        /* General Reset and Base Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+        }
+        .container{
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            background-color: #f1f3f5;
+            padding: 8px 15px;
+            border-radius: 20px;
+            width: 300px;
+        }
+
+        .search-container i {
+            margin-right: 10px;
+            color: #6c757d;
+        }
+
+        .search-container input {
+            border: none;
+            background: none;
+            outline: none;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .icons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .icon-btn {
+            position: relative;
+            cursor: pointer;
+            font-size: 18px;
+            color: #6c757d;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #dc3545;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+        }
+
+        .profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #profile-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .store-name {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .menu {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            list-style: none;
+            padding: 10px 0;
+        }
+
+        .menu li a {
+            display: block;
+            padding: 8px 20px;
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .menu li a:hover {
+            background-color: #f1f3f5;
+        }
+
+        .profile:hover .menu {
+            display: block;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 20px;
+        }
+
+        .table-inventory {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .purchase-head {
+            font-size: 24px;
+            color: #2c3e50;
+        }
+
+        .btn-new-product {
+            background-color: #28a745;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-new-product:hover {
+            background-color: #218838;
+            color: white;
+        }
+
+        .input-group {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-group-search {
+            border: 1px solid #ced4da;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+
+        .selected {
+            border: 1px solid #ced4da;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+            background-color: #ffffff;
+        }
+
+        /* Table Styling */
+
+
+        .table thead th {
+            background-color: #2c3e50;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .table tbody tr {
+            border-bottom: 1px solid #e9ecef;
+            transition: background-color 0.2s;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .table td {
+            padding: 12px;
+            vertical-align: middle;
+        }
+
+        .table img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .quantity-text {
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .btn-seemore {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .btn-seemore:hover {
+            background-color: #0056b3;
+        }
+
+        .dropdown-menu {
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            font-size: 14px;
+        }
+
+        .dropdown-item i {
+            margin-right: 8px;
+        }
+
+        /* Modal Styling */
+        .modal-content {
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .modal-header {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        /* Low Stock and Out of Stock Indicators */
+        .low-stock {
+            background-color: #fff3cd;
+            font-weight: bold;
+        }
+
+        .out-of-stock {
+            background-color: #f8d7da;
+            font-weight: bold;
+        }
+
+
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .search-container {
+                width: 100%;
+            }
+
+            .table {
+                font-size: 12px;
+            }
+
+            .btn-new-product {
+                width: 100%;
+                text-align: center;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+        }
+    </style>
 </main>
-
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

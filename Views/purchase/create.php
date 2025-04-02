@@ -40,64 +40,74 @@
         <button type="button" id="previewInvoice" class="btn btn-preview" data-bs-toggle="modal" data-bs-target="#invoiceModal">Preview Invoice</button>
     </div>
     <div class="col-md-12 mt-n3 mx-auto">
-        <div class="card p-3" style="box-shadow: none;border:none">
-            <form id="productForm" method="POST" action="/purchase/store" enctype="multipart/form-data">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Category</th>
-                            <th>Product Name</th>
-                            <th>Quantity</th>
-                            <th>Amount</th>
-                            <th>Expiration Date</th>
-                            <th>Type</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="productTableBody">
-                        <tr class="product-row">
-                            <td>
-                                <input type="file" class="form-control image-add" name="image[]" accept="image/*">
-                                <img src="" alt="Product Image" class="img-preview" style="display: none; width: 50px; height: 50px;">
-                            </td>
-                            <td>
-                                <select name="category_id[]" class="form-control" required>
-                                    <option value="">Select Category</option>
-                                    <?php foreach ($categories as $category): ?>
-                                        <option value="<?= htmlspecialchars($category['id']) ?>"><?= htmlspecialchars($category['name']) ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" name="product_name[]" required>
-                            </td>
-                            <td>
-                                <input type="number" class="form-control" name="quantity[]" min="1" required>
-                            </td>
-                            <td>
-                                <input type="number" class="form-control" name="amount[]" min="0" step="0.01" required>
-                            </td>
-                            <td>
-                                <input type="date" class="form-control" name="expiration_date[]" required>
-                            </td>
-                            <td>
-                                <select name="typeOfproducts[]" class="form-control" required>
-                                    <option value="">Select Type</option>
-                                    <option value="New">New</option>
-                                    <option value="Old">Old</option>
-                                </select>
-                            </td>
-                            <td>
-                                <button type="button" class="removeRow" style="background: none; border: none; color: red; font-size: 15px; text-decoration: underline;">
-                                    <i class="fa-solid fa-trash"></i> Remove
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <button type="button" id="addMore">Add More</button>
-                <button type="submit">Submit</button>
+        <div class="card p-3" style="box-shadow: none;border:none;">
+            <form id="productForm" action="/purchase/store" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                <div id="productFields" class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Product Image</th>
+                                <th>Category</th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Price ($)</th>
+                                <th>Expiration date</th>
+                                <th>Type of Products</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTableBody">
+                            <tr class="product-row">
+                                <td>
+                                    <input type="file" class="form-control image-add" name="image[]" accept="image/*">
+                                    <img src="" alt="Product Image" class="img-preview" style="display: none; width: 50px; height: 50px;">
+                                </td>
+                                <td>
+                                    <select name="category_id[]" class="form-control" required>
+                                        <option value="">Select Category</option>
+                                        <?php if (!empty($categories)): ?>
+                                            <?php foreach ($categories as $category): ?>
+                                                <option value="<?= htmlspecialchars($category['id']) ?>">
+                                                    <?= htmlspecialchars($category['name']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <option disabled>No Categories Found</option>
+                                        <?php endif; ?>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" name="product_name[]" required>
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" name="quantity[]" min="1" required>
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" name="amount[]" min="0" step="0.01" required>
+                                </td>
+                                <td>
+                                    <input type="date" class="form-control w-100" name="expiration_date[]" value="${product.expiration}" required>
+                                </td>
+                                <td>
+                                    <select name="typeOfproducts[]" class="form-control" required>
+                                        <option value="">Select Type</option>
+                                        <option value="New">New</option>
+                                        <option value="Old">Old</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn removeRow" style="background: none; border: none; color: red; box-shadow:none;text-decoration:underline;font-size:15px;">
+                                        <i class="fa-solid fa-trash"></i> Remove
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-end align-items-center">
+                    <button type="button" id="addMore" class="add-moree">Add more</button>
+                    <button type="submit" class="btn btn-submit">Submit</button>
+                </div>
             </form>
         </div>
     </div>

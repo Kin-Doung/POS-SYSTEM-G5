@@ -4,7 +4,7 @@
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
 
     <nav class="navbar">
-        <div class="search-container" style="background-color: #fff;">
+        <div class="search-container">
             <i class="fas fa-search"></i>
             <input type="text" placeholder="Search...">
         </div>
@@ -43,13 +43,12 @@
             <table class="table">
                 <thead>
                     <tr>
-                    <th style="background-color:#fff; color: #212529;"><input type="checkbox" id="selectAll"></th>
-<th style="background-color:#fff; color: #212529;">Image</th>
-<th style="background-color:#fff; color: #212529;">Product Name</th>
-<th style="background-color:#fff; color: #212529;">Quantity</th>
-<th style="background-color:#fff; color: #212529;">Price</th>
-<th style="background-color:#fff; color: #212529;">Type of Products</th>
-
+                        <th><input type="checkbox" id="selectAll"></th>
+                        <th>Image</th>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Type of Products</th>
                     </tr>
                 </thead>
                 <tbody id="purchasesTableBody">
@@ -83,7 +82,6 @@
                                     </span>
                                 </td>
                                 <td><?= htmlspecialchars($item['type_of_product']); ?></td>
-                                
                             </tr>
 
                             <!-- Single Delete Modal -->
@@ -138,6 +136,21 @@
     <button type="button" id="bulkDeleteBtn" class="btn btn-danger pos-btn-danger" style="display: none;">Delete Selected</button>
 
     <style>
+        .main-content{
+            width: 80%;
+            margin-left: 200px;
+        }
+
+        .orders {
+            width: 100%;
+        }
+
+        .container {
+
+            margin-top: 20px;
+            background: #000;
+        }
+
         .purchase-head {
             color: #1a3c34;
             font-size: 24px;
@@ -273,99 +286,98 @@
         }
     </style>
 
-</main>
+    <script>
+        // Inline Editing
+        document.querySelectorAll('.editable').forEach(function(element) {
+            element.addEventListener('click', function() {
+                const originalValue = this.textContent.trim().replace('$', '');
+                const field = this.dataset.field;
+                const id = this.dataset.id;
 
-<script>
-    // Inline Editing
-    document.querySelectorAll('.editable').forEach(function(element) {
-        element.addEventListener('click', function() {
-            const originalValue = this.textContent.trim().replace('$', '');
-            const field = this.dataset.field;
-            const id = this.dataset.id;
+                const input = document.createElement('input');
+                input.type = field === 'quantity' || field === 'price' ? 'number' : 'text';
+                input.value = originalValue;
+                input.className = 'form-control';
+                if (field === 'quantity') input.min = '1';
+                if (field === 'price') input.step = '0.01';
 
-            const input = document.createElement('input');
-            input.type = field === 'quantity' || field === 'price' ? 'number' : 'text';
-            input.value = originalValue;
-            input.className = 'form-control';
-            if (field === 'quantity') input.min = '1';
-            if (field === 'price') input.step = '0.01';
+                this.innerHTML = '';
+                this.appendChild(input);
+                input.focus();
 
-            this.innerHTML = '';
-            this.appendChild(input);
-            input.focus();
+                input.addEventListener('blur', function() {
+                    const newValue = this.value;
+                    const parent = this.parentElement;
+                    parent.textContent = field === 'price' ? newValue + '$' : newValue;
 
-            input.addEventListener('blur', function() {
-                const newValue = this.value;
-                const parent = this.parentElement;
-                parent.textContent = field === 'price' ? newValue + '$' : newValue;
-
-                fetch('/purchase/update-inline', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: `id=${id}&field=${field}&value=${encodeURIComponent(newValue)}`
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (!data.success) {
-                            alert('Update failed: ' + data.message);
+                    fetch('/purchase/update-inline', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: `id=${id}&field=${field}&value=${encodeURIComponent(newValue)}`
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (!data.success) {
+                                alert('Update failed: ' + data.message);
+                                parent.textContent = field === 'price' ? originalValue + '$' : originalValue;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
                             parent.textContent = field === 'price' ? originalValue + '$' : originalValue;
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        parent.textContent = field === 'price' ? originalValue + '$' : originalValue;
-                    });
+                        });
+                });
             });
         });
-    });
 
-    // Bulk Delete
-    document.getElementById('selectAll').addEventListener('change', function() {
-        document.querySelectorAll('.selectItem').forEach(checkbox => {
-            checkbox.checked = this.checked;
-            toggleBulkDeleteButton();
+        // Bulk Delete
+        document.getElementById('selectAll').addEventListener('change', function() {
+            document.querySelectorAll('.selectItem').forEach(checkbox => {
+                checkbox.checked = this.checked;
+                toggleBulkDeleteButton();
+            });
         });
-    });
 
-    document.querySelectorAll('.selectItem').forEach(checkbox => {
-        checkbox.addEventListener('change', toggleBulkDeleteButton);
-    });
+        document.querySelectorAll('.selectItem').forEach(checkbox => {
+            checkbox.addEventListener('change', toggleBulkDeleteButton);
+        });
 
-    function toggleBulkDeleteButton() {
-        const checkedBoxes = document.querySelectorAll('.selectItem:checked');
-        document.getElementById('bulkDeleteBtn').style.display = checkedBoxes.length > 0 ? 'inline-block' : 'none';
-    }
+        function toggleBulkDeleteButton() {
+            const checkedBoxes = document.querySelectorAll('.selectItem:checked');
+            document.getElementById('bulkDeleteBtn').style.display = checkedBoxes.length > 0 ? 'inline-block' : 'none';
+        }
 
-    document.getElementById('bulkDeleteBtn').addEventListener('click', function() {
-        const modal = new bootstrap.Modal(document.getElementById('bulkDeleteModal'));
-        modal.show();
-    });
+        document.getElementById('bulkDeleteBtn').addEventListener('click', function() {
+            const modal = new bootstrap.Modal(document.getElementById('bulkDeleteModal'));
+            modal.show();
+        });
 
-    document.getElementById('confirmBulkDelete').addEventListener('click', function() {
-        const selectedIds = Array.from(document.querySelectorAll('.selectItem:checked'))
-            .map(checkbox => checkbox.value);
+        document.getElementById('confirmBulkDelete').addEventListener('click', function() {
+            const selectedIds = Array.from(document.querySelectorAll('.selectItem:checked'))
+                .map(checkbox => checkbox.value);
 
-        fetch('/purchase/bulk-destroy', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    ids: selectedIds
+            fetch('/purchase/bulk-destroy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ids: selectedIds
+                    })
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    location.reload();
-                } else {
-                    alert('Bulk delete failed: ' + data.message);
-                }
-            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Bulk delete failed: ' + data.message);
+                    }
+                })
 
-    });
-</script>
+        });
+    </script>
 
-<?php require_once './views/layouts/footer.php'; ?>
+    <?php require_once './views/layouts/footer.php'; ?>
+</main>

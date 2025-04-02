@@ -224,7 +224,7 @@ class PurchaseController extends BaseController
     }
     public function store()
     {
-        if (!isset($_POST['product_name'], $_POST['category_id'], $_POST['quantity'], $_POST['amount'], $_POST['typeOfproducts'])) {
+        if (!isset($_POST['product_name'], $_POST['category_id'], $_POST['quantity'], $_POST['amount'], $_POST['typeOfproducts'], $_POST['expiration_date'])) {
             $this->redirect('/purchase/create', 'Missing data!');
             return;
         }
@@ -239,50 +239,61 @@ class PurchaseController extends BaseController
             $quantities = $_POST['quantity'];
             $amounts = $_POST['amount'];
             $type_of_products = $_POST['typeOfproducts'];
-            $inventory_ids = $_POST['inventory_id'] ?? [];
+            $expiration_dates = $_POST['expiration_date']; // Get expiration dates
+            $inventory_ids = $_POST['inventory_id'] ?? []; // Get inventory IDs
 
             foreach ($product_names as $index => $product_name) {
                 $category_id = $category_ids[$index];
                 $quantity = (int)$quantities[$index];
                 $amount = (float)$amounts[$index];
                 $type = $type_of_products[$index];
-                $inventory_id = $inventory_ids[$index] ?? null;
+                $expiration_date = $expiration_dates[$index]; // Add expiration date
 
+                // Initialize imageData to null
+                $imageData = null;
+
+                if ($type === 'New') {
+                    // Check if an image file was uploaded
+                    if (isset($_FILES['image']['tmp_name'][$index]) && is_uploaded_file($_FILES['image']['tmp_name'][$index])) {
+                        $imageData = file_get_contents($_FILES['image']['tmp_name'][$index]); // Get image data
+                    }
+                } elseif ($type === 'Old') {
+                    $inventory_id = $inventory_ids[$index] ?? null; // Get inventory ID for the current index
+                    if ($inventory_id) {
+                        $currentItem = $inventoryModel->getInventorys($inventory_id);
+                        if ($currentItem) {
+                            $imageData = $currentItem['image'];
+                        }
+                    }
+                }
+
+                // Validate inputs
                 if (!$this->model->categoryExists($category_id) || empty($product_name) || $quantity <= 0 || $amount < 0) {
                     $this->model->rollBackTransaction();
                     $this->redirect('/purchase/create', "Invalid input at index $index!");
                     return;
                 }
 
-                $imageData = null;
-                if ($type === 'New' && isset($_FILES['image']['tmp_name'][$index]) && is_uploaded_file($_FILES['image']['tmp_name'][$index])) {
-                    $imageData = file_get_contents($_FILES['image']['tmp_name'][$index]);
-                } elseif ($type === 'Old' && $inventory_id) {
-                    $currentItem = $inventoryModel->getInventorys($inventory_id);
-                    if ($currentItem) {
-                        $imageData = $currentItem['image'];
-                    }
-                }
-
                 $category = $categoryModel->getCategoryById($category_id);
                 $category_name = $category['name'] ?? '';
 
                 if ($type === 'New') {
-                    // For "New" products: Insert into purchase table and inventory
-                    $purchaseId = $this->model->insertProduct($product_name, $category_id, $quantity, $amount, $type, $imageData);
+                    // Insert into purchase table
+                    $purchaseId = $this->model->insertProduct($product_name, $category_id, $quantity, $amount, $type, $expiration_date, $imageData);
+
+                    // Insert into inventory
                     $inventoryModel->insertInventory([
                         'product_name' => $product_name,
                         'category_id' => $category_id,
                         'quantity' => $quantity,
                         'amount' => $amount,
-                        'image' => $imageData,
+                        'image' => $imageData, // Ensure image data is included
                         'category_name' => $category_name,
-                        'expiration_date' => null,
+                        'expiration_date' => $expiration_date,
                         'total_price' => $quantity * $amount
                     ]);
                 } elseif ($type === 'Old' && $inventory_id) {
                     // For "Old" products: Only update inventory, skip purchase table
-                    $currentItem = $inventoryModel->getInventorys($inventory_id);
                     if ($currentItem) {
                         $newQuantity = (int)$currentItem['quantity'] + (int)$quantity;
                         $inventoryModel->updateInventoryQuantity($inventory_id, $newQuantity, $amount);
@@ -324,7 +335,31 @@ class PurchaseController extends BaseController
             $this->redirect('/purchase', 'Error deleting purchase: ' . $e->getMessage());
         }
     }
+    private function uploadImage($file, $index): ?string
+    {
+        if (!isset($file['tmp_name'][$index]) || !is_uploaded_file($file['tmp_name'][$index])) {
+            return null;
+        }
 
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $mimeType = mime_content_type($file['tmp_name'][$index]);
+        if (!in_array($mimeType, $allowedTypes) || $file['size'][$index] > 2 * 1024 * 1024) {
+            throw new Exception("Invalid file type or size at index $index");
+        }
+
+        $targetDir = "uploads/";
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0777, true);
+        }
+
+        $imageName = uniqid() . '-' . basename($file['name'][$index]);
+        $targetPath = $targetDir . $imageName;
+
+        if (move_uploaded_file($file['tmp_name'][$index], $targetPath)) {
+            return $targetPath;
+        }
+        throw new Exception("Failed to upload image at index $index");
+    }
     // Handle image upload
     private function handleImageUpload()
     {

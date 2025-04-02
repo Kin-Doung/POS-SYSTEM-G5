@@ -33,7 +33,6 @@
 
     </nav>
     <!-- End Navbar -->
-    <?php require_once 'views/layouts/header.php'; ?>
 
     <!-- Modal structure -->
     <div class="container mt-5">
@@ -96,8 +95,4 @@
         </div>
     </div>
 
-
-
-
-    <?php require_once 'views/layouts/footer.php'; ?>
 </main>

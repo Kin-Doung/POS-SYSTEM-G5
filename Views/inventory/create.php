@@ -370,7 +370,6 @@ require_once './views/layouts/side.php';
         localStorage.removeItem('savedProducts'); // Clear local storage on submit
     });
 
-   
 
     function loadSavedProducts() {
         const savedProducts = localStorage.getItem('savedProducts');

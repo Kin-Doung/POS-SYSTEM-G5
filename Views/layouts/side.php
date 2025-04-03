@@ -50,7 +50,7 @@
           <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
             <i class="material-icons opacity-10">history</i>
           </div>
-          <span class="nav-link-text ms-1">history</span>
+          <span class="nav-link-text ms-1">Report</span>
         </a>
       </li>
       <!-- nav Categories -->

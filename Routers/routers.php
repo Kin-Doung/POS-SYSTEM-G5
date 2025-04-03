@@ -51,6 +51,8 @@ $routes->get('/inventory/view', [InventoryController::class, 'view']); // View a
 
 
 
+$routes->get('/inventory/getProductDetails', [InventoryController::class, 'getProductDetails']);
+
 
 
 // $routes->delete('/inventory/delete', [InventoryController::class, 'destroy']); // Delete a specific inventory item

@@ -20,12 +20,12 @@ $routes->post('/login', [LoginController::class, 'processLogin']); // Handle log
 $routes->get('/dashboard', [DashboardController::class, 'index']); // Redirect to dashboard after successful login
 
 // setting
-// $routes->get('/settings', [SettingController::class, 'index']);
-// $routes->get('/settings/create', [SettingController::class, 'create']);
-// $routes->post('/settings/store', [SettingController::class, 'store']);
-// $routes->get('/settings/edit', [SettingController::class, 'edit']);
-// $routes->put('/settings/update/(:num)', [SettingController::class, 'update']);
-// $routes->delete('/settings/destroy', [SettingController::class, 'destroy']);
+$routes->get('/settings', [SettingController::class, 'index']);
+$routes->get('/settings/create', [SettingController::class, 'create']);
+$routes->post('/settings/store', [SettingController::class, 'store']);
+$routes->get('/settings/edit', [SettingController::class, 'edit']);
+$routes->put('/settings/update/(:num)', [SettingController::class, 'update']);
+$routes->delete('/settings/destroy', [SettingController::class, 'destroy']);
 
 
 //inventory

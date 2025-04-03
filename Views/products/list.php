@@ -5,7 +5,7 @@ require_once './views/layouts/side.php';
 
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <!-- Navbar -->
-    <nav class="navbar">
+    <!-- <nav class="navbar">
         <div class="search-container" style="background-color: #fff;"> 
             <i class="fas fa-search"></i>
             <input type="text" id="searchInput" placeholder="Search..." />
@@ -24,12 +24,12 @@ require_once './views/layouts/side.php';
                 <span class="store-name">Owner Store</span>
             </div>
         </div>
-    </nav>
+    </nav> -->
 
     <!-- Search and Category Filter -->
-    <div class="input-group">
+    <div class="input-group" style="background:#eaecf4;box-shadow:none">
         <input type="text" id="searchInput" class="form-control input-group-search" placeholder="Search...">
-        <select id="categorySelect" class="ms-2 selected">
+        <select id="categorySelect" class="ms-2 selected" style="border-radius: 0;">
             <option value="">Select Category</option>
             <?php if (!empty($categories)): ?>
                 <?php foreach ($categories as $category): ?>

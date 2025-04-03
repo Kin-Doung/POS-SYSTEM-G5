@@ -77,7 +77,7 @@
                                 <!-- Display image for inventory item -->
                                 <img src="<?= htmlspecialchars($item['image']) ?>"
                                     alt="Image of <?= htmlspecialchars($item['product_name']) ?>"
-                                    style="width: 40px; height: 40px; border-radius: 100%;">
+                                    style="width: 40px; height:auto;">
                             </td>
                             <td><?= htmlspecialchars($item['product_name']) ?></td>
                             <td><span class="quantity-text"><?= htmlspecialchars($item['quantity']) ?></span></td>
@@ -89,7 +89,7 @@
                                         See more...
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item text-dark" href="#" data-bs-toggle="modal" data-bs-target="#viewModal<?= $item['id']; ?>"><i class="fa-solid fa-eye"></i> View</a></li>
+                                        <li><a class="dropdown-item text-daryk" href="#" data-bs-toggle="modal" data-bs-target="#viewModal<?= $item['id']; ?>"><i class="fa-solid fa-eye"></i> View</a></li>
                                         <li>
                                             <a class="dropdown-item text-dark" href="#"
                                                 data-bs-toggle="modal"
@@ -99,7 +99,6 @@
                                                 data-category_id="<?= $item['category_id'] ?>"
                                                 data-quantity="<?= $item['quantity'] ?>"
                                                 data-amount="<?= $item['amount'] ?>"
-                                                data-expiration_date="<?= $item['expiration_date'] ?>"
                                                 data-image="<?= htmlspecialchars($item['image']) ?>"> <!-- Ensure image data is properly escaped -->
                                                 <i class="fa-solid fa-pen-to-square"></i> Edit
                                             </a>
@@ -123,7 +122,6 @@
                                                     <p><strong>Quantity:</strong> <?= htmlspecialchars($item['quantity']); ?></p>
                                                     <p><strong>Price:</strong> $<?= htmlspecialchars(number_format($item['amount'], 2)); ?></p>
                                                     <p><strong>Total Price:</strong> $<?= htmlspecialchars(number_format($item['total_price'], 2)); ?></p>
-                                                    <p><strong>Expiration Date:</strong> <?= htmlspecialchars($item['expiration_date']); ?></p>
                                                 </div>
                                                 <?php if (!empty($item['image'])): ?>
                                                     <div class="mb-3">

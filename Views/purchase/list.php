@@ -46,9 +46,7 @@
                         <th><input type="checkbox" id="selectAll"></th>
                         <th>Image</th>
                         <th>Product Name</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Type of Products</th>
+                        <th>Categories Name</th>
                     </tr>
                 </thead>
                 <tbody id="purchasesTableBody">
@@ -58,13 +56,10 @@
 
                                 <td><input type="checkbox" class="selectItem" value="<?= htmlspecialchars($item['id']); ?>"></td>
                                 <td>
-                                    <?php if (!empty($item['image'])): ?>
-                                        <img src="data:image/jpeg;base64,<?= base64_encode($item['image']); ?>"
-                                            alt="Image of <?= htmlspecialchars($item['product_name']); ?>"
-                                            style="width: 40px; height: 40px; border-radius: 100%;">
-                                    <?php else: ?>
-                                        <span>No image</span>
-                                    <?php endif; ?>
+                                    <!-- Display image for inventory item -->
+                                    <img src="<?= htmlspecialchars($item['image']) ?>"
+                                        alt="Image of <?= htmlspecialchars($item['product_name']) ?>"
+                                        style="width: 40px; height:auto;">
                                 </td>
                                 <td>
                                     <span class="editable" data-field="product_name" data-id="<?= htmlspecialchars($item['id']); ?>">
@@ -72,16 +67,10 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <span class="editable" data-field="quantity" data-id="<?= htmlspecialchars($item['id']); ?>">
-                                        <?= htmlspecialchars($item['quantity']); ?>
+                                    <span class="editable" data-field="category_name" data-id="<?= htmlspecialchars($item['id']); ?>">
+                                        <?= htmlspecialchars($item['category_name']); ?>
                                     </span>
                                 </td>
-                                <td>
-                                    <span class="editable" data-field="price" data-id="<?= htmlspecialchars($item['id']); ?>">
-                                        <?= htmlspecialchars($item['price']); ?>$
-                                    </span>
-                                </td>
-                                <td><?= htmlspecialchars($item['type_of_product']); ?></td>
                             </tr>
 
                             <!-- Single Delete Modal -->
@@ -107,11 +96,12 @@
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="8">No purchases found.</td>
+                            <td colspan="3">No purchases found.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
+
         </div>
 
         <!-- Bulk Delete Modal -->
@@ -285,7 +275,8 @@
             input.type = field === 'quantity' || field === 'price' ? 'number' : 'text';
             input.value = originalValue;
             input.className = 'form-control';
-            if (field === 'quantity') input.min = '1';
+            if (field === 'quantity') input.min = '0';
+
             if (field === 'price') input.step = '0.01';
 
             this.innerHTML = '';

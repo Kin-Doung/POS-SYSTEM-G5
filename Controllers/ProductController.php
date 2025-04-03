@@ -154,4 +154,34 @@ class ProductController extends BaseController
             echo json_encode(['success' => false, 'message' => 'Error occurred while updating the price: ' . $e->getMessage()]);
         }
     }
+
+    public function buy()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = json_decode(file_get_contents('php://input'), true);
+            $productId = $data['product_id'] ?? null;
+            $quantityToBuy = $data['quantity'] ?? 1;
+    
+            if (!$productId || !is_numeric($productId) || $quantityToBuy <= 0) {
+                echo json_encode(['success' => false, 'message' => 'Invalid product ID or quantity']);
+                return;
+            }
+    
+            $success = $this->model->deductInventoryAndUpdateProduct($productId, $quantityToBuy);
+    
+            if ($success) {
+                $newQuantity = $this->model->getProductById($productId)['quantity'];
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Inventory and product updated successfully',
+                    'new_quantity' => $newQuantity
+                ]);
+            } else {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Failed to update inventory or product - check logs for details'
+                ]);
+            }
+        }
+    }
 }

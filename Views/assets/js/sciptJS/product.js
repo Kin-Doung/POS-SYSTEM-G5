@@ -243,3 +243,26 @@ document.querySelectorAll(".buy").forEach(button => {
     });
 
 
+    document.querySelectorAll('.buy').forEach(button => {
+        button.addEventListener('click', function() {
+            const productId = this.previousElementSibling.value;
+            console.log('Product ID:', productId); // Debug output
+            const quantityToBuy = 1;
+    
+            fetch('/products/buy', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ product_id: productId, quantity: quantityToBuy })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Response:', data); // Debug output
+                if (data.success) {
+                    alert('Purchase successful! Inventory updated.');
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });

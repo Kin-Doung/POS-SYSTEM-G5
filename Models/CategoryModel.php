@@ -27,8 +27,16 @@ class CategoryModel
         $stmt->execute([':id' => $categoryId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    public function getCategoryByName($name)
+{
+    $query = "SELECT * FROM categories WHERE name = :name LIMIT 1";
+    $stmt = $this->pdo->getConnection()->prepare($query);
+    $stmt->execute(['name' => $name]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
     
-    
+
 
     function getCategorys($id)
     {
@@ -37,13 +45,7 @@ class CategoryModel
         return $category;
     }
 
-    public function getCategoryByName($name)
-{
-    $query = "SELECT * FROM categories WHERE name = :name LIMIT 1";
-    $stmt = $this->pdo->query($query);
-    $stmt->execute(['name' => $name]);
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
+
 
 
     function updateCategory($id, $data)

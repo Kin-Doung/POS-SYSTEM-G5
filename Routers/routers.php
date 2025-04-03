@@ -46,6 +46,7 @@ $routes->put('/inventory/update', [InventoryController::class, 'update']); // Up
 $routes->get('/inventory/delete', [InventoryController::class, 'destroy']);
 
 $routes->get('/inventory/view', [InventoryController::class, 'view']); // View an inventory item
+$routes->get('/inventory/getProductDetails', [InventoryController::class, 'getProductDetails']); // Fetch product details by ID
 
 
 

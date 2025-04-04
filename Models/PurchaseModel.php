@@ -5,81 +5,154 @@ class PurchaseModel
 {
     private $pdo;
 
-    function __construct()
+    public function __construct()
     {
         $this->pdo = new Database();
     }
 
-    public function getConnection()
+    // Get database connection
+    private function getConnection()
     {
         return $this->pdo->getConnection();
     }
 
-    // Get all categories
-    function getCategories()
+
+    // Fetch all categories
+    public function getCategories()
     {
-        $stmt = $this->pdo->getConnection()->prepare("SELECT * FROM categories ORDER BY name ASC");
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $this->fetchAll("SELECT id, name FROM categories ORDER BY name ASC");
+    }
+
+    // Insert a product (single)
+    public function insertProduct($productName, $categoryId, $categoryName, $image = null)
+    {
+        return $this->executeQuery(
+            "INSERT INTO purchase (product_name, category_id, category_name, image) VALUES (:product_name, :category_id, :category_name, :image)",
+            [
+                ':product_name' => $productName,
+                ':category_id' => $categoryId,
+                ':category_name' => $categoryName,
+                ':image' => $image
+            ]
+        );
+    }
+
+    // Insert multiple products
+    public function insertProducts(array $products)
+    {
+        $sql = "INSERT INTO purchase (product_name, category_id, category_name, image) VALUES (:product_name, :category_id, :category_name, :image)";
+        $stmt = $this->getConnection()->prepare($sql);
+
+        foreach ($products as $product) {
+            $this->bindAndExecute($stmt, $product);
+        }
+
+        return true;
     }
 
     // Get all purchases
     public function getPurchases()
     {
-        $sql = "SELECT p.id, p.image_path, p.category_id, c.name AS category_name, p.product_name 
-                FROM purchase p
-                JOIN categories c ON p.category_id = c.id";
-        $stmt = $this->pdo->getConnection()->prepare($sql);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $this->fetchAll("SELECT * FROM purchase ORDER BY id DESC");
     }
 
-    // Insert a new product
-    public function insertProduct($imagePath, $category_id, $product_name = null)
+    // Create a new purchase
+    public function createPurchase($data)
+    {
+        return $this->executeQuery(
+            "INSERT INTO purchase (product_name, category_id, purchase_price, image) VALUES (:product_name, :category_id, :purchase_price, :image)",
+            [
+                ':product_name' => $data['product_name'],
+                ':category_id' => $data['category_id'],
+                ':purchase_price' => $data['purchase_price'],
+                ':image' => $data['image'] ?? null
+            ]
+        );
+    }
+
+
+    public function updatePurchase($id, $data)
+    {
+        $sql = "UPDATE purchase SET product_name = :product_name WHERE id = :id";
+        $params = [
+            ':product_name' => $data['product_name'],
+            ':id' => (int)$id
+        ];
+
+        $result = $this->executeQuery($sql, $params);
+        return $result; // Return true if query succeeds, false otherwise
+    }
+
+    private function executeQuery($sql, $params = [])
     {
         try {
-            $stmt = $this->pdo->getConnection()->prepare("
-                INSERT INTO purchase (image_path, category_id, product_name) 
-                VALUES (:image_path, :category_id, :product_name)
-            ");
-            $stmt->bindParam(':image_path', $imagePath);
-            $stmt->bindParam(':category_id', $category_id, PDO::PARAM_INT);
-            $stmt->bindParam(':product_name', $product_name);
-            $stmt->execute();
-            return $this->pdo->getConnection()->lastInsertId();
-        } catch (PDOException $e) {
-            error_log("Error inserting product: " . $e->getMessage());
-            throw new Exception("Error inserting product: " . $e->getMessage());
+            $stmt = $this->getConnection()->prepare($sql);
+            $success = $stmt->execute($params);
+            if (!$success) {
+                error_log("Query failed: " . json_encode($stmt->errorInfo()));
+            }
+            return $success;
+        } catch (Exception $e) {
+            error_log("Query Exception: " . $e->getMessage());
+            throw $e;
         }
     }
 
-    // Delete a purchase
-    function deletePurchase($id)
+
+
+    // Delete a purchase by ID
+    public function deletePurchase($id)
+    {
+        return $this->executeQuery("DELETE FROM purchase WHERE id = :id", [':id' => $id]);
+    }
+
+    // Bulk delete purchases
+    public function bulkDelete($ids)
+    {
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        return $this->executeQuery("DELETE FROM purchase WHERE id IN ($placeholders)", $ids);
+    }
+
+    // Helper method for fetching all results
+    private function fetchAll($sql, $params = [])
     {
         try {
-            $stmt = $this->pdo->getConnection()->prepare("DELETE FROM purchase WHERE id = :id");
-            $stmt->execute([':id' => $id]);
-            return true;
-        } catch (PDOException $e) {
-            error_log("Error deleting purchase: " . $e->getMessage());
-            throw new Exception("Error deleting purchase: " . $e->getMessage());
+            $stmt = $this->getConnection()->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetchAll();
+        } catch (Exception $e) {
+            throw new Exception('Error fetching data: ' . $e->getMessage());
         }
     }
 
-    // Transaction functions
+
+
+    // Helper method to bind parameters and execute a prepared statement
+    private function bindAndExecute($stmt, $product)
+    {
+        $stmt->bindParam(':product_name', $product['product_name']);
+        $stmt->bindParam(':category_id', $product['category_id']);
+        $stmt->bindParam(':category_name', $product['category_name']);
+        $stmt->bindParam(':image', $product['image'], PDO::PARAM_LOB);  // Bind image as BLOB
+        if (!$stmt->execute()) {
+            throw new Exception('Error inserting product: ' . $product['product_name']);
+        }
+    }
+
+    // Transaction management
     public function startTransaction()
     {
-        $this->pdo->getConnection()->beginTransaction();
+        $this->getConnection()->beginTransaction();
     }
 
     public function commitTransaction()
     {
-        $this->pdo->getConnection()->commit();
+        $this->getConnection()->commit();
     }
 
     public function rollBackTransaction()
     {
-        $this->pdo->getConnection()->rollBack();
+        $this->getConnection()->rollBack();
     }
 }
 ?>

@@ -23,37 +23,50 @@ class PurchaseModel
         return $this->fetchAll("SELECT id, name FROM categories ORDER BY name ASC");
     }
 
-    // Insert a product (single)
-    public function insertProduct($productName, $categoryId, $categoryName, $image = null)
+    // Fetch category name by ID
+    public function getCategoryNameById($categoryId)
     {
-        return $this->executeQuery(
-            "INSERT INTO purchase (product_name, category_id, category_name, image) VALUES (:product_name, :category_id, :category_name, :image)",
-            [
-                ':product_name' => $productName,
-                ':category_id' => $categoryId,
-                ':category_name' => $categoryName,
-                ':image' => $image
-            ]
-        );
+        $category = $this->fetchOne("SELECT name FROM categories WHERE id = :category_id", ['category_id' => $categoryId]);
+        return $category['name'] ?? null;
     }
 
-    // Insert multiple products
-    public function insertProducts(array $products)
-    {
-        $sql = "INSERT INTO purchase (product_name, category_id, category_name, image) VALUES (:product_name, :category_id, :category_name, :image)";
-        $stmt = $this->getConnection()->prepare($sql);
+  // Insert a product (single)
+public function insertProduct($productName, $categoryId, $categoryName, $image = null)
+{
+    return $this->executeQuery(
+        "INSERT INTO purchase (product_name, category_id, category_name, image) VALUES (:product_name, :category_id, :category_name, :image)",
+        [
+            ':product_name' => $productName,
+            ':category_id' => $categoryId,
+            ':category_name' => $categoryName,
+            ':image' => $image
+        ]
+    );
+}
 
-        foreach ($products as $product) {
-            $this->bindAndExecute($stmt, $product);
-        }
+// Insert multiple products
+public function insertProducts(array $products)
+{
+    $sql = "INSERT INTO purchase (product_name, category_id, category_name, image) VALUES (:product_name, :category_id, :category_name, :image)";
+    $stmt = $this->getConnection()->prepare($sql);
 
-        return true;
+    foreach ($products as $product) {
+        $this->bindAndExecute($stmt, $product);
     }
+
+    return true;
+}
 
     // Get all purchases
     public function getPurchases()
     {
         return $this->fetchAll("SELECT * FROM purchase ORDER BY id DESC");
+    }
+
+    // Get a single purchase by ID
+    public function getPurchase($id)
+    {
+        return $this->fetchOne("SELECT * FROM purchase WHERE id = :id", [':id' => $id]);
     }
 
     // Create a new purchase
@@ -70,35 +83,14 @@ class PurchaseModel
         );
     }
 
-
+    // Update an existing purchase
     public function updatePurchase($id, $data)
     {
-        $sql = "UPDATE purchase SET product_name = :product_name WHERE id = :id";
-        $params = [
-            ':product_name' => $data['product_name'],
-            ':id' => (int)$id
-        ];
-
-        $result = $this->executeQuery($sql, $params);
-        return $result; // Return true if query succeeds, false otherwise
+        return $this->executeQuery(
+            "UPDATE purchase SET product_name = :product_name, category_id = :category_id, purchase_price = :purchase_price, image = :image WHERE id = :id",
+            array_merge($data, [':id' => $id])
+        );
     }
-
-    private function executeQuery($sql, $params = [])
-    {
-        try {
-            $stmt = $this->getConnection()->prepare($sql);
-            $success = $stmt->execute($params);
-            if (!$success) {
-                error_log("Query failed: " . json_encode($stmt->errorInfo()));
-            }
-            return $success;
-        } catch (Exception $e) {
-            error_log("Query Exception: " . $e->getMessage());
-            throw $e;
-        }
-    }
-
-
 
     // Delete a purchase by ID
     public function deletePurchase($id)
@@ -125,7 +117,29 @@ class PurchaseModel
         }
     }
 
+    // Helper method for fetching a single result
+    private function fetchOne($sql, $params = [])
+    {
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetch();
+        } catch (Exception $e) {
+            throw new Exception('Error fetching data: ' . $e->getMessage());
+        }
+    }
 
+
+    // Helper method to execute insert/update/delete queries
+    private function executeQuery($sql, $params = [])
+    {
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+            return $stmt->execute($params);
+        } catch (Exception $e) {
+            throw new Exception('Error executing query: ' . $e->getMessage());
+        }
+    }
 
     // Helper method to bind parameters and execute a prepared statement
     private function bindAndExecute($stmt, $product)
@@ -155,4 +169,3 @@ class PurchaseModel
         $this->getConnection()->rollBack();
     }
 }
-?>

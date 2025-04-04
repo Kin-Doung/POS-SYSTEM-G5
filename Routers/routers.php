@@ -48,8 +48,17 @@ $routes->put('/inventory/update', [InventoryController::class, 'update']); // Up
 $routes->get('/inventory/delete', [InventoryController::class, 'destroy']);
 
 $routes->get('/inventory/view', [InventoryController::class, 'view']); // View an inventory item
-$routes->get('/inventory/getProductDetails', [InventoryController::class, 'getProductDetails']); // Fetch product details by ID
-// Add this to your existing routes
+
+
+
+$routes->get('/inventory/getProductDetails', [InventoryController::class, 'getProductDetails']);
+
+
+
+// $routes->delete('/inventory/delete', [InventoryController::class, 'destroy']); // Delete a specific inventory item
+
+
+//Notifications
 $routes->get('/notifications', [NotificationController::class, 'index']);
 $routes->post('/products/submitCart', [ProductController::class, 'submitCart']); // Process cart submission
 $routes->post('/products/syncQuantity', [ProductController::class, 'syncQuantity']); // Add this line for syncing quantity

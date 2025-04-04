@@ -1,71 +1,31 @@
-<?php require_once './views/layouts/header.php'; ?>
+<?php require_once './views/layouts/header.php' ?>
 <?php require_once './views/layouts/side.php'; ?>
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-    #addMore, #submit {
-        border: none;
-        padding: 8px 20px;
-        border-radius: 20px;
-        background: rgb(37, 37, 255);
-        color: #fff;
-        font-weight: bold;
-    }
-    #addMore:hover {
-        background-color: darkblue;
-        text-decoration: none;
-        color: #fff;
-    }
-    #submit {
-        background: rgb(10, 212, 10);
-        padding: 8px 25px;
-        transition: all 0.2s ease-in-out;
-    }
-    #submit:hover {
-        background-color: green;
-    }
-    .group-add-purchase {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-    table, th, td {
-        border: 1px solid #ddd;
-    }
-    th, td {
-        padding: 8px 12px;
-        text-align: left;
-    }
-    th {
-        background-color: #f4f4f4;
-    }
-    .removeRow {
-        color: red;
-        border: none;
-        background: none;
-        cursor: pointer;
-    }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <main class="main-content create-content position-relative max-height-vh-100 h-100">
     <h2 class="text-center head-add" style="padding-top: 20px;">Add Stock Products</h2>
-    <div class="col-md-12 mt-3 mx-auto">
-        <div class="card p-3" style="box-shadow: none; border: none;">
-            <form action="/purchase/store" method="POST" enctype="multipart/form-data">
-                <table id="productTableBody">
+    <div class="d-flex justify-content-end align-item-center me-3">
+        <button type="button" id="previewInvoice" class="btn btn-preview" data-bs-toggle="modal" data-bs-target="#invoiceModal">Preview Invoice</button>
+    </div>
+    <div class="col-md-12 mt-n3 mx-auto">
+        <div class="card p-3" style="box-shadow: none;border:none">
+            <form id="productForm" method="POST" action="/purchase/store" enctype="multipart/form-data">
+                <table class="table">
                     <thead>
                         <tr>
-                            <th>Product Image</th>
-                            <th>Select Category</th>
+                            <th>Image</th>
+                            <th>Category</th>
                             <th>Product Name</th>
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="productTableBody">
                         <tr class="product-row">
                             <td>
                                 <input type="file" class="form-control image-add" name="image[]" accept="image/*">
@@ -74,9 +34,7 @@
                                 <select name="category_id[]" class="form-control" required>
                                     <option value="">Select Category</option>
                                     <?php foreach ($categories as $category): ?>
-                                        <option value="<?= htmlspecialchars($category['id']); ?>">
-                                            <?= htmlspecialchars($category['name']); ?>
-                                        </option>
+                                        <option value="<?= htmlspecialchars($category['id']) ?>"><?= htmlspecialchars($category['name']) ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </td>
@@ -89,11 +47,8 @@
                         </tr>
                     </tbody>
                 </table>
-
-                <div class="group-add-purchase mt-3">
-                    <button type="button" id="addMore">Add More</button>
-                    <button type="submit" id="submit">Submit</button>
-                </div>
+                <button type="button" id="addMore">Add More</button>
+                <button type="submit">Submit</button>
             </form>
         </div>
     </div>

@@ -54,7 +54,7 @@ class InventoryController extends BaseController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $categoryIds = $_POST['category_id'];
-            $productIds = $_POST['product_name']; // Inventory ID from dropdown
+            $productIds = $_POST['product_name']; // Assuming this is the inventory ID from the dropdown
             $quantities = $_POST['quantity'];
             $prices = $_POST['amount'];
             $expirationDates = $_POST['expiration_date'] ?? [];
@@ -68,26 +68,28 @@ class InventoryController extends BaseController
                     die("Invalid category selected.");
                 }
     
+                // Check if the product already exists in the inventory by ID
                 $existingInventory = $this->model->getInventoryById($productId);
     
                 if ($existingInventory) {
-                    // Product exists, update it by summing the quantity
-                    $newQuantity = $existingInventory['quantity'] + (int)$quantities[$index]; // Sum with existing
+                    // Product exists, update it
                     $data = [
-                        'product_name' => $existingInventory['product_name'],
+                        'product_name' => $existingInventory['product_name'], // Keep existing name
                         'category_id' => $categoryId,
                         'category_name' => $category['name'],
-                        'quantity' => $newQuantity, // Updated quantity
-                        'amount' => $prices[$index], // Use new price
-                        'total_price' => $this->calculateTotalPrice($newQuantity, $prices[$index]),
+                        'quantity' => $quantities[$index], // Update quantity
+                        'amount' => $prices[$index],       // Update price
+                        'total_price' => $this->calculateTotalPrice($quantities[$index], $prices[$index]),
                         'expiration_date' => $expirationDates[$index] ?? $existingInventory['expiration_date'],
-                        'image' => $imagePath ?: $existingInventory['image'],
+                        'image' => $imagePath ?: $existingInventory['image'], // Use new image if uploaded, else keep old
                     ];
     
                     $this->model->updateInventory($productId, $data);
                 } else {
-                    // New product, create it as is
+                    // Product doesn’t exist, create a new one
+                    // Assuming a new product name is provided in a separate field (e.g., 'new_product_name')
                     $newProductName = $_POST['new_product_name'][$index] ?? 'Unknown Product';
+    
                     $data = [
                         'product_name' => $newProductName,
                         'category_id' => $categoryId,
@@ -95,6 +97,7 @@ class InventoryController extends BaseController
                         'quantity' => $quantities[$index],
                         'amount' => $prices[$index],
                         'total_price' => $this->calculateTotalPrice($quantities[$index], $prices[$index]),
+
                         'expiration_date' => $expirationDates[$index] ?? null,
                         'image' => $imagePath,
                     ];
@@ -129,7 +132,6 @@ class InventoryController extends BaseController
             $categoryId = $_POST['category_id'];
             $category = $this->categories->getCategoryById($categoryId);
             $categoryName = $category['name'];
-    
             $data = [
                 'category_id' => $categoryId,
                 'category_name' => $categoryName,
@@ -140,7 +142,6 @@ class InventoryController extends BaseController
                 'expiration_date' => $_POST['expiration_date'],
                 'image' => $imagePath,
             ];
-    
             $this->model->updateInventory($id, $data);
             $this->redirect('/inventory');
         }
@@ -201,21 +202,11 @@ class InventoryController extends BaseController
      */
     private function handleImageUpload($index = null, $existingImage = null)
     {
-        if (isset($_FILES['image'])) {
-            // Handle single image (edit case)
-            if ($index === null && $_FILES['image']['error'] === 0) {
-                $targetDir = "uploads/";
-                $imagePath = $targetDir . uniqid() . '-' . basename($_FILES['image']['name']);
-                move_uploaded_file($_FILES['image']['tmp_name'], $imagePath);
-                return $imagePath;
-            }
-            // Handle array of images (create case)
-            elseif (is_numeric($index) && $_FILES['image']['error'][$index] == 0) {
-                $targetDir = "uploads/";
-                $imagePath = $targetDir . uniqid() . '-' . basename($_FILES['image']['name'][$index]);
-                move_uploaded_file($_FILES['image']['tmp_name'][$index], $imagePath);
-                return $imagePath;
-            }
+        if (isset($_FILES['image']) && $_FILES['image']['error'][$index] == 0) {
+            $targetDir = "uploads/";
+            $imagePath = $targetDir . uniqid() . '-' . basename($_FILES['image']['name'][$index]);
+            move_uploaded_file($_FILES['image']['tmp_name'][$index], $imagePath);
+            return $imagePath;
         }
         return $existingImage;
     }

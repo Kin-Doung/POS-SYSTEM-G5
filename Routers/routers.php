@@ -94,7 +94,8 @@ $routes->get('/purchase/get-existing-products', [PurchaseController::class, 'get
 // Router of the history product
 $routes->get('/history', [HistoryController::class, 'index']);              // List all history entries
 $routes->post('/history/store', [HistoryController::class, 'store']);       // Store a new history entry
-$routes->delete('/history/delete/(:num)', [HistoryController::class, 'delete']); // Delete a specific history entry
+$routes->delete('/history/destroy', [HistoryController::class, 'destroy']); // Delete a specific history entry (renamed from 'delete' to 'destroy')
+$routes->post('/history/fetchFilteredHistories', [HistoryController::class, 'fetchFilteredHistories']); // Fetch filtered history entries
 
 
 

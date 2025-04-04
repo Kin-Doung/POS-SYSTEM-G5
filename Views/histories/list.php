@@ -6,7 +6,8 @@ require_once './views/layouts/side.php';
 <style>
     /* Main content wrapper to account for sidebar */
     .main-content {
-        margin-left: 250px; /* Adjust this based on your sidebar width */
+        margin-left: 250px;
+        /* Adjust this based on your sidebar width */
         padding: 20px;
         background-color: #f8f9fa;
         height: 100vh;
@@ -23,15 +24,18 @@ require_once './views/layouts/side.php';
         font-family: 'Segoe UI', Arial, sans-serif;
     }
 
-    th, td {
+    th,
+    td {
         padding: 15px;
         text-align: left;
-        border: none; /* Remove default borders */
+        border: none;
+        /* Remove default borders */
         transition: background-color 0.3s ease;
     }
 
     th {
-        background-color:#5cbacc; /* Simple solid color instead of gradient */
+        background-color: #5cbacc;
+        /* Simple solid color instead of gradient */
         color: white;
         font-weight: 600;
         text-transform: uppercase;
@@ -61,11 +65,13 @@ require_once './views/layouts/side.php';
     }
 
     tr:nth-child(even) td {
-        background-color: #f9fafb; /* Subtle zebra striping */
+        background-color: #f9fafb;
+        /* Subtle zebra striping */
     }
 
     tr:hover td {
-        background-color: #eef2ff; /* Light hover effect */
+        background-color: #eef2ff;
+        /* Light hover effect */
         cursor: pointer;
     }
 
@@ -75,11 +81,13 @@ require_once './views/layouts/side.php';
     }
 
     .remove-btn {
-        background: linear-gradient(45deg, #ff4d4d, #ff7878); /* Gradient button */
+        background: linear-gradient(45deg, #ff4d4d, #ff7878);
+        /* Gradient button */
         color: white;
         border: none;
         padding: 8px 15px;
-        border-radius: 25px; /* Rounded pill shape */
+        border-radius: 25px;
+        /* Rounded pill shape */
         cursor: pointer;
         font-size: 13px;
         font-weight: 500;
@@ -89,7 +97,8 @@ require_once './views/layouts/side.php';
 
     .remove-btn:hover {
         background: linear-gradient(45deg, #cc0000, #ff4d4d);
-        transform: translateY(-2px); /* Lift effect */
+        transform: translateY(-2px);
+        /* Lift effect */
         box-shadow: 0 4px 10px rgba(255, 77, 77, 0.4);
     }
 
@@ -104,7 +113,8 @@ require_once './views/layouts/side.php';
         font-weight: 500;
         box-shadow: 0 2px 5px rgba(255, 77, 77, 0.3);
         transition: all 0.3s ease;
-        display: none; /* Hidden by default */
+        display: none;
+        /* Hidden by default */
         margin-top: 10px;
     }
 
@@ -116,7 +126,8 @@ require_once './views/layouts/side.php';
 
     input[type="checkbox"] {
         cursor: pointer;
-        accent-color: #2575fc; /* Custom checkbox color */
+        accent-color: #2575fc;
+        /* Custom checkbox color */
         width: 16px;
         height: 16px;
         border-radius: 4px;
@@ -134,34 +145,41 @@ require_once './views/layouts/side.php';
     }
 
     .total-price span {
-        color: #16a34a; /* Green for the total value */
+        color: #16a34a;
+        /* Green for the total value */
         font-size: 18px;
     }
 
     /* Filter and Search Styles */
     .filter-search-container {
         display: flex;
-        flex-direction: column; /* Stack filter-date-wrapper and search vertically */
+        flex-direction: column;
+        /* Stack filter-date-wrapper and search vertically */
         gap: 15px;
         margin-bottom: 20px;
     }
 
     .filter-date-wrapper {
         display: flex;
-        flex-wrap: nowrap; /* Prevent wrapping to ensure one line */
+        flex-wrap: nowrap;
+        /* Prevent wrapping to ensure one line */
         align-items: center;
-        gap: 15px; /* Space between filter buttons and date filters */
-        overflow-x: auto; /* Allow horizontal scrolling if content overflows */
-        white-space: nowrap; /* Prevent text wrapping */
+        gap: 15px;
+        /* Space between filter buttons and date filters */
+        overflow-x: auto;
+        /* Allow horizontal scrolling if content overflows */
+        white-space: nowrap;
+        /* Prevent text wrapping */
     }
 
     .filter-buttons {
         display: flex;
-        gap: 10px; /* Space between buttons */
+        gap: 10px;
+        /* Space between buttons */
     }
 
     .filter-buttons button {
-        background:#5cbacc;
+        background: #5cbacc;
         color: white;
         border: none;
         padding: 8px 15px;
@@ -181,7 +199,8 @@ require_once './views/layouts/side.php';
     .date-filter {
         display: flex;
         gap: 25px;
-        align-items: center; /* Align date inputs vertically centered */
+        align-items: center;
+        /* Align date inputs vertically centered */
     }
 
     .date-filter label {
@@ -206,7 +225,8 @@ require_once './views/layouts/side.php';
     }
 
     .search-container {
-        width: 420px; /* Fixed width for consistency */
+        width: 420px;
+        /* Fixed width for consistency */
         background: none;
         margin-left: 660px;
         margin-top: -10px;
@@ -230,7 +250,7 @@ require_once './views/layouts/side.php';
     .search-container::after {
         position: absolute;
         right: 10px;
-        top: 50%;   
+        top: 50%;
         transform: translateY(-50%);
         font-size: 16px;
         color: #6a11cb;
@@ -241,7 +261,8 @@ require_once './views/layouts/side.php';
         position: fixed;
         top: 20px;
         right: 20px;
-        background-color: #16a34a; /* Green background for success */
+        background-color: #16a34a;
+        /* Green background for success */
         color: white;
         padding: 10px 20px;
         border-radius: 5px;
@@ -257,20 +278,23 @@ require_once './views/layouts/side.php';
 
     /* Custom Confirmation Modal Styles */
     .confirm-modal {
-        display: none; /* Hidden by default */
+        display: none;
+        /* Hidden by default */
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+        background-color: rgba(0, 0, 0, 0.5);
+        /* Semi-transparent overlay */
         z-index: 1000;
         justify-content: center;
         align-items: center;
     }
 
     .confirm-modal.show {
-        display: flex; /* Show when active */
+        display: flex;
+        /* Show when active */
     }
 
     .confirm-modal-content {
@@ -307,18 +331,21 @@ require_once './views/layouts/side.php';
     }
 
     .confirm-modal-buttons #confirm-yes {
-        background: #5cbacc; /* Match filter button color */
+        background: #5cbacc;
+        /* Match filter button color */
         color: white;
     }
 
     .confirm-modal-buttons #confirm-yes:hover {
-        background: #4a9bb0; /* Slightly darker shade on hover */
+        background: #4a9bb0;
+        /* Slightly darker shade on hover */
         transform: translateY(-2px);
         box-shadow: 0 2px 5px rgba(92, 186, 204, 0.3);
     }
 
     .confirm-modal-buttons #confirm-no {
-        background: linear-gradient(45deg, #ff4d4d, #ff7878); /* Match delete button gradient */
+        background: linear-gradient(45deg, #ff4d4d, #ff7878);
+        /* Match delete button gradient */
         color: white;
     }
 
@@ -331,56 +358,73 @@ require_once './views/layouts/side.php';
     /* Responsive adjustments */
     @media (max-width: 768px) {
         .main-content {
-            margin-left: 0; /* Collapse sidebar on small screens */
+            margin-left: 0;
+            /* Collapse sidebar on small screens */
         }
+
         .table-container {
             padding: 10px;
         }
-        th, td {
+
+        th,
+        td {
             padding: 10px;
             font-size: 12px;
         }
-        .remove-btn, .delete-btn {
+
+        .remove-btn,
+        .delete-btn {
             padding: 6px 10px;
             font-size: 12px;
         }
+
         .total-price {
             font-size: 14px;
             text-align: center;
         }
+
         .filter-date-wrapper {
-            flex-wrap: nowrap; /* Keep nowrap for horizontal scrolling */
+            flex-wrap: nowrap;
+            /* Keep nowrap for horizontal scrolling */
             gap: 10px;
         }
+
         .date-filter {
-            flex-direction: row; /* Keep date inputs in a row */
+            flex-direction: row;
+            /* Keep date inputs in a row */
             gap: 10px;
         }
+
         .search-container {
-            width: 100%; /* Full width on small screens */
-            margin-left: 0; /* Reset margin for small screens */
+            width: 100%;
+            /* Full width on small screens */
+            margin-left: 0;
+            /* Reset margin for small screens */
             margin-top: 10px;
         }
+
         .message {
             top: 10px;
             right: 10px;
             width: 80%;
             margin: 0 auto;
         }
+
         .confirm-modal-content {
             padding: 15px;
             width: 80%;
         }
+
         .confirm-modal-content p {
             font-size: 14px;
         }
+
         .confirm-modal-buttons button {
             padding: 6px 15px;
             font-size: 13px;
         }
     }
 </style>
-
 <div class="main-content">
     <!-- Filter Buttons, Date Range, and Search Bar -->
     <div class="filter-search-container">
@@ -418,38 +462,24 @@ require_once './views/layouts/side.php';
                     <th>Product Name</th>
                     <th>Quantity</th>
                     <th>Price</th>
+                    <th>Total Price</th>
                     <th>Date of Sale</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody id="purchase-table">
-                <tr data-date="2025-02-05">
-                    <td><input type="checkbox" class="select-item"></td>
-                    <td><img src="../../views/assets/images/Cake mixer.png" alt="Samsung Galaxy S23"></td>
-                    <td>Samsung Galaxy S23</td>
-                    <td>5</td>
-                    <td>$799.99</td>
-                    <td>2025-02-05</td>
-                    <td><button class="remove-btn" data-id="1">Remove</button></td>
-                </tr>
-                <tr data-date="2025-02-08">
-                    <td><input type="checkbox" class="select-item"></td>
-                    <td><img src="../../views/assets/images/Electric cooking pot.png" alt="Levi's 501 Jeans"></td>
-                    <td>Levi's 501 Jeans</td>
-                    <td>10</td>
-                    <td>$59.99</td>
-                    <td>2025-02-08</td>
-                    <td><button class="remove-btn" data-id="2">Remove</button></td>
-                </tr>
-                <tr data-date="2025-04-30">
-                    <td><input type="checkbox" class="select-item"></td>
-                    <td><img src="../../views/assets/images/Cocktail machine.png" alt="Organic Apples"></td>
-                    <td>Organic Apples</td>
-                    <td>20</td>
-                    <td>$2.49</td>
-                    <td>2025-04-30</td>
-                    <td><button class="remove-btn" data-id="3">Remove</button></td>
-                </tr>
+                <?php foreach ($reports as $report) : ?>
+                    <tr data-date="<?= $report['created_at'] ?>">
+                        <td><input type="checkbox" class="select-item" data-id="<?= $report['id'] ?>"></td>
+                        <td><img src="<?= $report['image'] ?>" alt="Product Image" width="50"></td>
+                        <td><?= $report['product_name'] ?></td>
+                        <td><?= $report['quantity'] ?></td>
+                        <td><?= $report['price'] ?>$</td>
+                        <td><?= $report['total_price'] ?>$</td>
+                        <td><?= $report['created_at'] ?></td>
+                        <td><button class="remove-btn" data-id="<?= $report['id'] ?>">Remove</button></td>
+                    </tr>
+                <?php endforeach ?>
             </tbody>
         </table>
     </div>
@@ -471,172 +501,189 @@ require_once './views/layouts/side.php';
         </div>
     </div>
 
-    <!-- Total Price Display (Static) -->
+    <!-- Total Price Display -->
     <div class="total-price">
-        Total Price: <span>$5,999.47</span>
+        Total Price: <span>$</span>
     </div>
 </div>
 
 <script>
-    // Select All Checkbox
+    // Select All Checkbox and UI Elements
     const selectAll = document.getElementById('select-all');
-    const checkboxes = document.querySelectorAll('.select-item');
     const deleteBtn = document.getElementById('delete-selected');
     const deleteMessage = document.getElementById('delete-message');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const startDateInput = document.getElementById('start-date');
+    const endDateInput = document.getElementById('end-date');
+    const searchInput = document.getElementById('search-input');
+    const tableBody = document.getElementById('purchase-table');
+    const totalPriceSpan = document.querySelector('.total-price span');
+    const modal = document.getElementById('confirm-modal');
+    const confirmYes = document.getElementById('confirm-yes');
+    const confirmNo = document.getElementById('confirm-no');
 
     // Function to Show Custom Message
     function showMessage() {
         deleteMessage.classList.add('show');
-        setTimeout(() => {
-            deleteMessage.classList.remove('show');
-        }, 3000); // Hide after 3 seconds
+        setTimeout(() => deleteMessage.classList.remove('show'), 3000);
     }
 
     // Show/Hide Delete Button Based on Checkbox Selection
     function updateDeleteButtonVisibility() {
+        const checkboxes = document.querySelectorAll('.select-item');
         const anyChecked = [...checkboxes].some(checkbox => checkbox.checked);
         deleteBtn.style.display = anyChecked ? 'block' : 'none';
     }
 
-    selectAll.addEventListener('change', function () {
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = this.checked;
-        });
-        updateDeleteButtonVisibility();
-    });
+    // Fetch and Update Table
+    function fetchAndUpdateTable(filter = 'all', startDate = null, endDate = null, search = '') {
+        const payload = {
+            filter: filter,
+            search: search
+        };
+        if (filter === 'all' && startDate && endDate) {
+            payload.start_date = startDate;
+            payload.end_date = endDate;
+        }
+        console.log('Sending payload:', payload);
 
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            selectAll.checked = [...checkboxes].every(cb => cb.checked);
-            updateDeleteButtonVisibility();
-        });
-    });
-
-    // Delete Selected Rows with Custom Modal
-    deleteBtn.addEventListener('click', function () {
-        const modal = document.getElementById('confirm-modal');
-        const confirmYes = document.getElementById('confirm-yes');
-        const confirmNo = document.getElementById('confirm-no');
-
-        // Show the modal
-        modal.classList.add('show');
-
-        // Handle "Yes" button click
-        confirmYes.addEventListener('click', function handleYes() {
-            checkboxes.forEach(checkbox => {
-                if (checkbox.checked) {
-                    const row = checkbox.closest('tr');
-                    row.remove();
-                }
-            });
-            showMessage(); // Show custom message
-            updateDeleteButtonVisibility(); // Hide button if no checkboxes are selected
-            selectAll.checked = false; // Uncheck "Select All"
-            modal.classList.remove('show'); // Hide the modal
-            confirmYes.removeEventListener('click', handleYes); // Clean up event listener
-        });
-
-        // Handle "No" button click
-        confirmNo.addEventListener('click', function handleNo() {
-            modal.classList.remove('show'); // Hide the modal
-            confirmNo.removeEventListener('click', handleNo); // Clean up event listener
-        });
-    });
-
-    // Remove Button (Static Behavior)
-    document.querySelectorAll('.remove-btn').forEach(button => {
-        button.addEventListener('click', function () {
-            const id = this.getAttribute('data-id');
-            if (confirm(`Are you sure you want to remove item with ID: ${id}?`)) {
-                this.closest('tr').remove();
-                console.log(`Removed item with ID: ${id}`);
-                showMessage(); // Show custom message
-                updateDeleteButtonVisibility(); // Update button visibility after removal
+        fetch('/history/fetchFilteredHistories', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams(payload)
+        })
+        .then(response => {
+            console.log('Fetch Status:', response.status);
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Received data:', data);
+            if (data.success) {
+                console.log('Reports count:', data.reports.length);
+                tableBody.innerHTML = data.reports.length > 0 ? data.reports.map(report => `
+                    <tr data-date="${report.created_at}">
+                        <td><input type="checkbox" class="select-item" data-id="${report.id}"></td>
+                        <td><img src="${report.image}" alt="Product Image" width="50"></td>
+                        <td>${report.product_name}</td>
+                        <td>${report.quantity}</td>
+                        <td>${report.price}$</td>
+                        <td>${report.total_price}$</td>
+                        <td>${report.created_at}</td>
+                        <td><button class="remove-btn" data-id="${report.id}">Remove</button></td>
+                    </tr>
+                `).join('') : '<tr><td colspan="8">No records found for this filter</td></tr>';
+                totalPriceSpan.textContent = `$${data.total_price}`;
+                attachRemoveListeners();
+                attachCheckboxListeners();
+            } else {
+                console.log('Server error:', data.error);
+                alert('Failed to fetch data: ' + (data.error || 'Unknown error'));
             }
-        });
-    });
-
-    // Filter Logic
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const startDateInput = document.getElementById('start-date');
-    const endDateInput = document.getElementById('end-date');
-    const rows = document.querySelectorAll('#purchase-table tr');
-    const today = new Date('2025-04-02'); // Static date for demo (your system's current date)
-
-    function updateDateInputs(start, end) {
-        startDateInput.value = start.toISOString().split('T')[0];
-        endDateInput.value = end.toISOString().split('T')[0];
-        filterRows();
-    }
-
-    function filterRows() {
-        const startDate = new Date(startDateInput.value);
-        const endDate = new Date(endDateInput.value);
-        endDate.setHours(23, 59, 59, 999); // Include full end day
-
-        rows.forEach(row => {
-            const rowDate = new Date(row.getAttribute('data-date'));
-            const inRange = rowDate >= startDate && rowDate <= endDate;
-            const productName = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
-            const searchTerm = searchInput.value.toLowerCase();
-            const matchesSearch = productName.includes(searchTerm);
-            row.style.display = (inRange && matchesSearch) ? '' : 'none';
+        })
+        .catch(error => {
+            console.error('Fetch Error:', error);
+            alert('Error fetching data: ' + error.message);
         });
     }
 
+    // Handle Remove Button Clicks
+    function attachRemoveListeners() {
+        document.querySelectorAll('.remove-btn').forEach(button => {
+            button.removeEventListener('click', handleRemoveClick);
+            button.addEventListener('click', handleRemoveClick);
+        });
+    }
+
+    function handleRemoveClick() {
+        const id = this.getAttribute('data-id');
+        const row = this.closest('tr');
+
+        modal.classList.add('show');
+        confirmYes.onclick = () => {
+            fetch(`/history/destroy/${id}`, { // Changed to match controller method name
+                method: 'POST', // Changed to POST to match controller
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({}) // No body needed for destroy
+            })
+            .then(response => {
+                console.log('Delete Status:', response.status);
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                return response.json();
+            })
+            .then(data => {
+                console.log('Delete Data:', data);
+                if (data.success) {
+                    row.remove(); // Remove the row from the table
+                    showMessage(); // Show success message
+                    modal.classList.remove('show'); // Hide modal
+                    fetchAndUpdateTable(); // Refresh table to update total price
+                } else {
+                    alert('Failed to delete: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Delete Error:', error);
+                alert('Error deleting item: ' + error.message);
+            });
+        };
+        confirmNo.onclick = () => modal.classList.remove('show');
+    }
+
+    // Handle Checkbox Listeners
+    function attachCheckboxListeners() {
+        const checkboxes = document.querySelectorAll('.select-item');
+        selectAll.removeEventListener('change', handleSelectAllChange);
+        selectAll.addEventListener('change', handleSelectAllChange);
+
+        checkboxes.forEach(checkbox => {
+            checkbox.removeEventListener('change', handleCheckboxChange);
+            checkbox.addEventListener('change', handleCheckboxChange);
+        });
+    }
+
+    function handleSelectAllChange() {
+        const checkboxes = document.querySelectorAll('.select-item');
+        checkboxes.forEach(cb => cb.checked = this.checked);
+        updateDeleteButtonVisibility();
+    }
+
+    function handleCheckboxChange() {
+        const checkboxes = document.querySelectorAll('.select-item');
+        selectAll.checked = [...checkboxes].every(cb => cb.checked);
+        updateDeleteButtonVisibility();
+    }
+
+    // Filter Button Clicks
     filterButtons.forEach(button => {
-        button.addEventListener('click', function () {
+        button.addEventListener('click', function() {
             filterButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
             const filter = this.getAttribute('data-filter');
-            let start, end;
-
-            switch (filter) {
-                case 'all':
-                    start = new Date('2000-01-01'); // Arbitrary past
-                    end = new Date('2099-12-31');   // Arbitrary future
-                    break;
-                case 'today':
-                    start = new Date(today);
-                    end = new Date(today);
-                    break;
-                case 'this-week':
-                    start = new Date(today);
-                    start.setDate(today.getDate() - today.getDate());
-                    end = new Date(start);
-                    end.setDate(start.getDate() + 6);
-                    break;
-                case 'last-week':
-                    start = new Date(today);
-                    start.setDate(today.getDate() - today.getDate() - 7);
-                    end = new Date(start);
-                    end.setDate(start.getDate() + 6);
-                    break;
-                case 'this-month':
-                    start = new Date(today.getFullYear(), today.getMonth(), 1);
-                    end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-                    break;
-                case 'last-month':
-                    start = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-                    end = new Date(today.getFullYear(), today.getMonth(), 0);
-                    break;
-            }
-
-            updateDateInputs(start, end);
+            console.log('Filter clicked:', filter);
+            fetchAndUpdateTable(filter, null, null, searchInput.value);
         });
     });
 
-    startDateInput.addEventListener('change', filterRows);
-    endDateInput.addEventListener('change', filterRows);
-
-    // Search Logic
-    const searchInput = document.getElementById('search-input');
-    searchInput.addEventListener('input', function () {
-        filterRows();
+    // Date Input Changes
+    startDateInput.addEventListener('change', () => {
+        fetchAndUpdateTable('all', startDateInput.value, endDateInput.value, searchInput.value);
+    });
+    endDateInput.addEventListener('change', () => {
+        fetchAndUpdateTable('all', startDateInput.value, endDateInput.value, searchInput.value);
     });
 
-    // Initial filter (set to "All" by default)
-    updateDateInputs(new Date('2000-01-01'), new Date('2099-12-31'));
+    // Search Input
+    searchInput.addEventListener('input', () => {
+        fetchAndUpdateTable('all', startDateInput.value, endDateInput.value, searchInput.value);
+    });
+
+    // Initial Load
+    fetchAndUpdateTable();
 </script>
 
 <?php

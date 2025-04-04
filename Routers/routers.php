@@ -19,6 +19,14 @@ $routes->get('/', [LoginController::class, 'showLogin']); // Corrected the funct
 $routes->post('/login', [LoginController::class, 'processLogin']); // Handle login processing
 $routes->get('/dashboard', [DashboardController::class, 'index']); // Redirect to dashboard after successful login
 
+// staff login
+$routes->get('/view', [UserController::class, 'index']);
+$routes->get('/view/create', [UserController::class, 'create']);
+$routes->post('/view/store', [UserController::class, 'store']);
+$routes->get('/view/edit', [UserController::class, 'edit']);
+$routes->put('/view/update', [UserController::class, 'update']);
+$routes->delete('/view/delete', [UserController::class, 'destroy']);
+
 // setting
 $routes->get('/settings', [SettingController::class, 'index']);
 $routes->get('/settings/create', [SettingController::class, 'create']);
@@ -30,28 +38,14 @@ $routes->delete('/settings/destroy', [SettingController::class, 'destroy']);
 
 //inventory
 $routes->get('/inventory', [InventoryController::class, 'index']); // Display all inventory
-
 $routes->get('/inventory/create', [InventoryController::class, 'create']); // Show create page
-
 $routes->post('/inventory/store', [InventoryController::class, 'store']); // Store new inventory item
-
-// Edit route should accept an 'id' parameter
 $routes->get('/inventory/edit', [InventoryController::class, 'edit']); // Show edit page for a specific inventory item
-
-// Update route should also accept an 'id' parameter
 $routes->put('/inventory/update', [InventoryController::class, 'update']); // Update a specific inventory item
-
-// Delete route should accept an 'id' parameter
-// Assuming you're using some kind of routing library
 $routes->get('/inventory/delete', [InventoryController::class, 'destroy']);
-
 $routes->get('/inventory/view', [InventoryController::class, 'view']); // View an inventory item
 
 
-
-
-
-// $routes->delete('/inventory/delete', [InventoryController::class, 'destroy']); // Delete a specific inventory item
 
 
 //Notifications
@@ -84,9 +78,6 @@ $routes->post('/purchase/update/(:num)', [PurchaseController::class, 'update']);
 $routes->post('/purchase/destroy/(:num)', [PurchaseController::class, 'destroy']);
 $routes->post('/purchase/bulk-destroy', [PurchaseController::class, 'bulkDestroy']);
 $routes->get('/purchase/get-existing-products', [PurchaseController::class, 'getExistingProducts']);
-
-
-// $routes->get('/orders', [OrderController::class, 'index']);
 
 
 

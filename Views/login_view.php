@@ -16,20 +16,23 @@ unset($_SESSION['error']); // Remove error after showing
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../views/assets/css/style/from.css">
+
 </head>
 <style>
-    body{
-        background:#ebf5fb;
+    body {
+        background: #ebf5fb;
         display: block;
     }
-    h1{
+
+    h1 {
         text-align: center;
         margin-bottom: 20px;
     }
 </style>
+
 <body>
 
-<h1>Welcome to POS system</h1>
+    <h1>Welcome to POS system</h1>
 
     <div class="container">
         <input type="checkbox" id="flip">
@@ -50,6 +53,21 @@ unset($_SESSION['error']); // Remove error after showing
             <div class="form-content">
                 <div class="login-form">
                     <div class="title">Login</div>
+
+                    <label for="role">Role:</label>
+                    <select name="role" id="role" required onchange="handleRoleChange(this)">
+                        <option value="admin">Admin</option>
+                        <option value="staff">Staff</option>
+                    </select>
+
+                    <script>
+                        function handleRoleChange(select) {
+                            if (select.value === "staff") {
+                                window.location.href = "staff/list.php"; // Redirect to staff login page
+                            }
+                        }
+                    </script>
+
 
                     <form action="/login" method="POST">
                         <div class="input-boxes">

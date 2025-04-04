@@ -21,7 +21,7 @@ require_once './views/layouts/side.php';
                         <thead>
                             <tr>
                                 <th>Product Image</th>
-                                <th>Category</th>
+                                <th style="display: none;">Category</th>
                                 <th>Product Name</th>
                                 <th>Quantity</th>
                                 <th>Price ($)</th>
@@ -31,35 +31,27 @@ require_once './views/layouts/side.php';
                         <tbody id="productTableBody">
                             <tr class="product-row">
                                 <td>
-                                    <input type="file" class="form-control image-add" name="image[]" accept="image/*" required>
-                                    <img src="" alt="Product Image" class="img-preview" style="display: none; width: 50px; height: 50px;">
+                                    <!-- <input type="file" class="form-control image-add" name="image[]" accept="image/*"> -->
+                                    <img src="" alt="Product Image" class="img-preview" style="display: none; width: 50px; height: 50px; margin: 0 auto;">
                                 </td>
-                                <td>
+                                <td style="display: none;">
                                     <select name="category_id[]" class="form-control category-select" required>
                                         <option value="">Select Category</option>
-                                        <?php if (!empty($categories)): ?>
-                                            <?php foreach ($categories as $category): ?>
-                                                <option value="<?= htmlspecialchars($category['id']) ?>">
-                                                    <?= htmlspecialchars($category['name']) ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <option disabled>No Categories Found</option>
-                                        <?php endif; ?>
+                                        <?php foreach ($categories as $category): ?>
+                                            <option value="<?= htmlspecialchars($category['id']) ?>">
+                                                <?= htmlspecialchars($category['name']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </td>
                                 <td>
                                     <select name="product_name[]" class="form-control product-select" required>
                                         <option value="">Select Product</option>
-                                        <?php if (!empty($inventory)): ?>
-                                            <?php foreach ($inventory as $product): ?>
-                                                <option value="<?= htmlspecialchars($product['id']) ?>">
-                                                    <?= htmlspecialchars($product['product_name']) ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <option disabled>No Products Found</option>
-                                        <?php endif; ?>
+                                        <?php foreach ($inventory as $product): ?>
+                                            <option value="<?= htmlspecialchars($product['id']) ?>">
+                                                <?= htmlspecialchars($product['product_name']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </td>
                                 <td>
@@ -85,127 +77,88 @@ require_once './views/layouts/side.php';
         </div>
     </div>
 </main>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Function to handle product selection
+    $(document).ready(function() {
+        $("#addMore").click(function() {
+            // Clone the first row
+            var newRow = $(".product-row:first").clone();
+
+            // Clear input values
+            newRow.find("select").val(""); // Clear dropdowns
+            newRow.find("input").val(""); // Clear input fields
+            newRow.find("img.img-preview").attr("src", "").hide(); // Hide image preview
+
+            // Remove previously set event listeners and attach new ones
+            newRow.find('.product-select').off('change').on('change', function() {
+                handleProductSelect(this);
+            });
+
+            newRow.find('.removeRow').off('click').on('click', function() {
+                if ($(".product-row").length > 1) {
+                    $(this).closest("tr").remove();
+                } else {
+                    alert("At least one product row is required!");
+                }
+            });
+
+            // Append the new row
+            $("#productTableBody").append(newRow);
+        });
+
+        // Remove row functionality
+        $(document).on("click", ".removeRow", function() {
+            if ($(".product-row").length > 1) {
+                $(this).closest("tr").remove();
+            } else {
+                alert("At least one product row is required!");
+            }
+        });
+
+        // Handle product selection
         function handleProductSelect(selectElement) {
-            const productId = selectElement.value; // Value is the inventory id
-            const row = selectElement.closest('tr'); // Get the current row
-            console.log('Selected productId:', productId); // Debug
+            const productId = selectElement.value;
+            const row = selectElement.closest('tr');
 
             if (productId) {
                 fetch('/inventory/getProductDetails?id=' + productId)
                     .then(response => response.json())
                     .then(data => {
-                        console.log('Server response:', data); // Debug
-                        if (!data.error) {
-                            // Update category dropdown
-                            const categorySelect = row.querySelector('.category-select');
-                            categorySelect.value = data.category_id || ''; // Use category_id instead of category_name
+                        if (!data.error && data) {
+                            row.querySelector('.category-select').value = data.category_id || '';
 
-                            // Update image preview
                             const imgPreview = row.querySelector('.img-preview');
                             if (data.image) {
-                                imgPreview.src = data.image; // Assuming image is a URL or base64
+                                imgPreview.src = '/' + data.image;
                                 imgPreview.style.display = 'block';
                             } else {
                                 imgPreview.src = '';
                                 imgPreview.style.display = 'none';
                             }
+
+                            row.querySelector('.quantity-input').value = data.quantity || 0;
+                            row.querySelector('.amount-input').value = data.amount || 0;
                         } else {
-                            alert('No existing data found for this product.');
                             row.querySelector('.category-select').value = '';
-                            const imgPreview = row.querySelector('.img-preview');
-                            imgPreview.src = '';
-                            imgPreview.style.display = 'none';
+                            row.querySelector('.img-preview').src = '';
+                            row.querySelector('.img-preview').style.display = 'none';
+                            row.querySelector('.quantity-input').value = '';
+                            row.querySelector('.amount-input').value = '';
                         }
                     })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Error fetching product data.');
-                    });
+                    .catch(error => console.log(error));
+            } else {
+                row.querySelector('.category-select').value = '';
+                row.querySelector('.img-preview').src = '';
+                row.querySelector('.img-preview').style.display = 'none';
+                row.querySelector('.quantity-input').value = '';
+                row.querySelector('.amount-input').value = '';
             }
         }
 
-        // Attach event listener to existing product selects
-        document.querySelectorAll('.product-select').forEach(select => {
-            select.addEventListener('change', function() {
-                handleProductSelect(this);
-            });
-        });
-
-        // Add more rows dynamically
-        document.getElementById('addMore').addEventListener('click', function() {
-            const tbody = document.getElementById('productTableBody');
-            const newRow = tbody.querySelector('tr').cloneNode(true);
-
-            // Clear values in the new row
-            newRow.querySelector('.product-select').value = '';
-            newRow.querySelector('.category-select').value = '';
-            newRow.querySelector('.quantity-input').value = '';
-            newRow.querySelector('.amount-input').value = '';
-            newRow.querySelector('.image-add').value = '';
-            const imgPreview = newRow.querySelector('.img-preview');
-            imgPreview.src = '';
-            imgPreview.style.display = 'none';
-
-            // Add event listener to the new product select
-            newRow.querySelector('.product-select').addEventListener('change', function() {
-                handleProductSelect(this);
-            });
-
-            // Add remove button functionality
-            newRow.querySelector('.removeRow').addEventListener('click', function() {
-                if (tbody.querySelectorAll('tr').length > 1) {
-                    tbody.removeChild(newRow);
-                }
-            });
-
-            tbody.appendChild(newRow);
-        });
-
-        // Remove row functionality
-        document.querySelectorAll('.removeRow').forEach(button => {
-            button.addEventListener('click', function() {
-                const row = this.closest('tr');
-                if (document.querySelectorAll('.product-row').length > 1) {
-                    row.parentNode.removeChild(row);
-                }
-            });
+        // Attach event listener for existing elements
+        $(document).on("change", ".product-select", function() {
+            handleProductSelect(this);
         });
     });
-
-
-    function getProductDetails() {
-    var productId = document.getElementById("product_name").value;
-
-    if (productId) {
-        // Send AJAX request to fetch product details
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/inventory/getProductDetails?id=" + productId, true);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                var response = JSON.parse(xhr.responseText);
-                
-                // Handle the response and display the product details
-                if (response.error) {
-                    document.getElementById("product_details").innerHTML = "Error: " + response.error;
-                } else {
-                    document.getElementById("product_details").innerHTML = `
-                        <p><strong>Product Name:</strong> ${response.product_name}</p>
-                        <p><strong>Category:</strong> ${response.category_name}</p>
-                        <p><strong>Price:</strong> $${response.amount}</p>
-                        <p><strong>Quantity:</strong> ${response.quantity}</p>
-                        <p><strong>Expiration Date:</strong> ${response.expiration_date}</p>
-                    `;
-                }
-            }
-        };
-        xhr.send();
-    } else {
-        document.getElementById("product_details").innerHTML = "";
-    }
-}
-
 </script>

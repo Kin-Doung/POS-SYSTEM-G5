@@ -146,69 +146,34 @@
             }
             return null; // Return null if no image uploaded
         }
-
-
-        // Edit purchase
-        public function edit($id)
-        {
-            $purchase = $this->model->getPurchase($id);
-            if (!$purchase) {
-                $this->redirect('/purchase', 'Purchase not found.');
-                return;
-            }
-
-            $categories = $this->categoryModel->getCategory();
-            $this->views('purchase/edit', ['purchase' => $purchase, 'categories' => $categories]);
-        }
-
-        // Update purchase
-        // Update purchase
-        // Update purchase with image
-        public function update($id)
+        public function update()
         {
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                $this->redirect("/purchase/edit/$id", 'Invalid request method.');
+                echo json_encode(['success' => false, 'message' => 'Invalid request method']);
                 return;
             }
-
-            $purchase = $this->model->getPurchase($id);
-            if (!$purchase) {
-                $this->redirect('/purchase', 'Purchase not found.');
-                return;
+        
+            try {
+                $id = $_POST['id'] ?? null;
+                $productName = $_POST['product_name'] ?? null;
+        
+                if (!$id || !$productName) {
+                    throw new Exception('Missing required fields: ID or Product Name');
+                }
+        
+                $result = $this->model->updatePurchase($id, [
+                    'product_name' => $productName
+                ]);
+        
+                if ($result === false) {
+                    throw new Exception('Failed to update purchase in database');
+                }
+        
+                echo json_encode(['success' => true, 'result' => $result]);
+            } catch (Exception $e) {
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
             }
-
-            $data = $this->preparePurchaseData();
-
-            // If a new image is uploaded, update the image
-            if (isset($data['image'])) {
-                // New image uploaded
-                $this->model->updatePurchase($id, $data);
-            } else {
-                // No image uploaded, retain the old image
-                unset($data['image']); // Don't update image if not provided
-                $this->model->updatePurchase($id, $data);
-            }
-
-            $this->redirect('/purchase', 'Purchase updated successfully!');
         }
-
-
-        // Prepare data for updating purchase (including image)
-        private function preparePurchaseData()
-        {
-            $data = [
-                'product_name' => htmlspecialchars($_POST['product_name']),
-                'category_id' => intval($_POST['category_id']),
-            ];
-
-            // Only set image if uploaded
-            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $data['image'] = file_get_contents($_FILES['image']['tmp_name']);
-            }
-
-            return $data;
-        }
-
 
         // Prepare data for updating purchase
 

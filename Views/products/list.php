@@ -9,9 +9,9 @@ require_once './views/layouts/side.php';
     <!-- End Navbar -->
 
     <!-- Search and Category Filter -->
-    <div class="input-group">
-        <input type="text" id="searchInput" class="form-control input-group-search" placeholder="Search...">
-        <select id="categorySelect" class="ms-2 selected">
+    <div class="input-group" style="max-width: 95%; margin: 10px auto; padding: 10px; display: flex; align-items: center;">
+        <input type="text" id="searchInput" class="form-control input-group-search" placeholder="Search..." style="flex: 1;">
+        <select id="categorySelect" class="ms-2 selected" style=" flex: 1;">
             <option value="">Select Category</option>
             <?php if (!empty($categories)): ?>
                 <?php foreach ($categories as $category): ?>
@@ -24,14 +24,15 @@ require_once './views/layouts/side.php';
             <?php endif; ?>
         </select>
     </div>
+    
 
     <!-- Product Card Section -->
-    <div class="container mt-5 d-flex">
+    <div class="Pcontainer mt-5 d-flex" style="width: 95%; margin: 0 auto;">
         <div class="product-list flex-grow-1">
-            <div class="row">
+            <div class="row g-3">
                 <?php foreach ($products as $product): ?>
-                    <div class="col-6 col-sm-4 col-md-3 mb-4">
-                        <div class="card square-card">
+                    <div class="col-6 col-sm-4 col-md-3 col-lg-3 mb-4">
+                        <div class="card square-card h-100">
                             <div class="image-wrapper">
                                 <img src="<?= htmlspecialchars($product['image']) ?>" class="card-img-top" alt="<?= htmlspecialchars($product['name']) ?>">
                             </div>
@@ -50,7 +51,7 @@ require_once './views/layouts/side.php';
         </div>
 
         <!-- Cart Section -->
-        <div class="cart-section ms-4 p-3 border rounded shadow bg-white" id="cartSection" style="width: 500px; display: none;">
+        <div class="cart-section ms-4 p-3 border rounded shadow bg-white" id="cartSection" style="width: 350px; display: none; height: fit-content;">
             <h4>Cart</h4>
             <table class="table table-bordered text-center" id="cartTable">
                 <thead class="table-dark">
@@ -69,8 +70,6 @@ require_once './views/layouts/side.php';
         </div>
     </div>
 
-    <!--  -->
-
     <!-- JavaScript -->
     <script>
         function replaceCartInDatabase() {
@@ -79,28 +78,33 @@ require_once './views/layouts/side.php';
             cartTable.querySelectorAll('tr').forEach(row => {
                 const productId = row.querySelector('input[name="product_id"]').value;
                 const quantity = parseInt(row.querySelector('td:nth-child(2)').textContent); // Qty column
-                cartItems.push({ product_id: productId, quantity: quantity });
+                cartItems.push({
+                    product_id: productId,
+                    quantity: quantity
+                });
             });
 
             fetch('/product/submitCart', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(cartItems)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    alert('okay'); // Show "okay" on successful submission
-                } else {
-                    alert('Error: ' + data.message); // Show error message if it fails
-                }
-            })
-            .catch(error => console.error('Error:', error));
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(cartItems)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert('okay'); // Show "okay" on successful submission
+                    } else {
+                        alert('Error: ' + data.message); // Show error message if it fails
+                    }
+                })
+                .catch(error => console.error('Error:', error));
         }
     </script>
 

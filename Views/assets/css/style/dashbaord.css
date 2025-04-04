@@ -304,3 +304,83 @@ th {
     gap: 5px;
   }
 }
+
+
+/* ///darkmode// */
+body {
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+}
+
+body.dark-mode {
+  background-color: #121212; /* Dark background */
+  color: white; /* Light text color */
+}
+
+/* Toggle styles */
+.toggle-container {
+  display: flex;
+  align-items: center;
+  margin: 10px;
+}
+
+.toggle {
+  display: none; /* Hide the default checkbox */
+}
+
+.toggle-label {
+  width: 60px; /* Width of the toggle */
+  height: 30px; /* Height of the toggle */
+  background-color: #ccc; /* Background color when off */
+  border-radius: 30px; /* Round the corners */
+  position: relative; /* Position for the ball */
+  cursor: pointer; /* Cursor on hover */
+  transition: background-color 0.3s; /* Transition effect */
+}
+
+.toggle-label .sun-icon,
+.toggle-label .moon-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px; /* Adjust icon size */
+  transition: opacity 0.3s; /* Smooth transition for opacity */
+}
+
+.toggle-label .sun-icon {
+  left: 10px; /* Position for the sun icon */
+  color: black; /* Sun icon color */
+}
+
+.toggle-label .moon-icon {
+  right: 6px; /* Position for the moon icon */
+  color: black; /* Moon icon color */
+  opacity: 0; /* Initially hide moon icon */
+}
+
+.toggle:checked + .toggle-label {
+  background-color: black; /* Background when checked */
+}
+
+.toggle:checked + .toggle-label .sun-icon {
+  opacity: 0; /* Hide sun icon */
+}
+
+.toggle:checked + .toggle-label .moon-icon {
+  opacity: 1; /* Show moon icon when checked */
+}
+
+.toggle-label:before {
+  content: ''; /* Create the ball */
+  width: 26px; /* Size of the ball */
+  height: 26px; /* Size of the ball */
+  background-color: white; /* Ball color */
+  border-radius: 50%; /* Make it round */
+  position: absolute; /* Positioning */
+  top: 2px; /* Positioning from the top */
+  left: 4px; /* Positioning from the left */
+  transition: transform 0.3s; /* Smooth transition for sliding */
+}
+
+.toggle:checked + .toggle-label:before {
+  transform: translateX(30px); /* Move the ball when checked */
+}

@@ -1,7 +1,4 @@
 <?php require_once './views/layouts/side.php' ?>
-
-
-
 <style>
   .move-left {
     margin-left: -10px;
@@ -25,14 +22,22 @@
         <nav class="navbar move-left">
           <div class="search-container " style="background-color: #fff;">
             <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search..." >
+            <input type="text" placeholder="Search...">
           </div>
           <div class="icons">
+            <div class="toggle-container">
+              <input type="checkbox" class="toggle" id="darkModeToggle">
+              <label for="darkModeToggle" class="toggle-label">
+                <i class="fas fa-sun sun-icon"></i>
+                <i class="fas fa-moon moon-icon"></i>
+              </label>
+            </div>
             <i class="fas fa-globe icon-btn"></i>
             <div class="icon-btn" id="notification-icon">
               <i class="fas fa-bell"></i>
               <span class="notification-badge" id="notification-count">8</span>
             </div>
+
           </div>
           <div class="profile">
             <img src="../../views/assets/images/image.png" alt="User">

@@ -76,3 +76,27 @@
     
   });
 })(jQuery);
+
+
+
+// Dark Mode Toggle JavaScript
+document.addEventListener("DOMContentLoaded", function () {
+  const darkModeToggle = document.getElementById("darkModeToggle");
+  const body = document.body;
+
+  // Check for dark mode preference in cookies
+  if (document.cookie.includes("theme=dark")) {
+      body.classList.add("dark-mode");
+      darkModeToggle.checked = true;
+  }
+
+  darkModeToggle.addEventListener("change", function () {
+      if (this.checked) {
+          body.classList.add("dark-mode");
+          document.cookie = "theme=dark; path=/; max-age=" + 60 * 60 * 24 * 30; // 30 days
+      } else {
+          body.classList.remove("dark-mode");
+          document.cookie = "theme=light; path=/; max-age=" + 60 * 60 * 24 * 30;
+      }
+  });
+});

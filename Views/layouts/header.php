@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,6 +13,7 @@
   <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <script src="../assets/js/dashboard.js"></script> <!-- Adjust the path as necessary -->
 
   <!-- CSS Files -->
   <link id="pagestyle" href="../../views/assets/css/material-dashboard.css?v=3.0.0" rel="stylesheet" />
@@ -23,7 +25,9 @@
   <link rel="stylesheet" href="../../views/assets/css/style/categories.css">
   <link rel="stylesheet" href="../../views/assets/css/style/create.css">
   <link rel="stylesheet" href="../../views/assets/css/style/active.css">
-  <link rel="stylesheet" href="../../views/assets/css/style/darkmood.css">
+  
+  
+
   <link rel="icon" type="image/png" href="../../views/assets/images/logoapp.png">
 
   <!-- JavaScript Files -->
@@ -35,9 +39,11 @@
   <script src="../../views/assets/js/sciptJS/search.js" defer></script>
   <script src="../../views/assets/js/sciptJS/product.js" defer></script>
   <script src="../../views/assets/js/sciptJS/inventory.js" defer></script>
-  <script src="../../views/assets/js/sciptJS/darkmood.js" defer></script>
   <script src="../../views/assets/js/sciptJS/categories.js" defer></script>
   <script src="../../views/assets/js/sciptJS/active.js" defer></script>
+  <script src="../assets/js/dashboard.js" defer></script>
+
+
 
   <!-- FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -67,7 +73,7 @@
 
 
 </head>
+<body class="<?= isset($_COOKIE['theme']) && $_COOKIE['theme'] === 'dark' ? 'dark-mode' : '' ?>">
 
-<body class="g-sidenav-show bg-gray-200">
 
 

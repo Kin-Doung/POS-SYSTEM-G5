@@ -322,18 +322,18 @@ class ProductModel
 
 
 
-    // In ProductModel.php
-    public function saveToReports($productId, $productName, $quantity, $price, $image)
+    public function saveToReports($productId, $productName, $quantity, $price, $totalPrice, $image)
     {
         try {
-            $query = "INSERT INTO reports (product_id, product_name, quantity, price, image, created_at) 
-                  VALUES (:product_id, :product_name, :quantity, :price, :image, NOW())";
+            $query = "INSERT INTO reports (product_id, product_name, quantity, price, total_price, image, created_at) 
+                      VALUES (:product_id, :product_name, :quantity, :price, :total_price, :image, NOW())";
             $stmt = $this->pdo->prepare($query);
             $stmt->execute([
                 ':product_id' => $productId,
                 ':product_name' => $productName,
                 ':quantity' => $quantity,
                 ':price' => $price,
+                ':total_price' => $totalPrice,
                 ':image' => $image
             ]);
             return true;
@@ -342,7 +342,6 @@ class ProductModel
             return false;
         }
     }
-
     // In ProductModel.php
     public function processCartSubmissionWithInventory($cartItems)
     {
@@ -352,6 +351,7 @@ class ProductModel
             foreach ($cartItems as $item) {
                 $inventoryId = $item['inventoryId'];
                 $quantityToBuy = (int)$item['quantity'];
+                $cartPrice = isset($item['price']) ? (float)$item['price'] : null;
 
                 // Lock and check inventory
                 $inventoryStmt = $this->pdo->prepare("SELECT product_name, quantity, amount, image FROM inventory WHERE id = :id FOR UPDATE");
@@ -376,6 +376,8 @@ class ProductModel
                 }
 
                 $newQty = $inventory['quantity'] - $quantityToBuy;
+                $priceToUse = $cartPrice ?? $inventory['amount']; // Prefer cart price if provided
+                $totalPrice = $quantityToBuy * $priceToUse;
 
                 // Update inventory
                 $inventoryUpdate = $this->pdo->prepare("UPDATE inventory SET quantity = :quantity WHERE id = :id");
@@ -386,13 +388,18 @@ class ProductModel
                 $productUpdate->execute([':quantity' => $newQty, ':id' => $product['id']]);
 
                 // Save to reports
-                $this->saveToReports(
+                $reportSuccess = $this->saveToReports(
                     $product['id'],              // product_id
                     $inventory['product_name'],  // product_name
                     $quantityToBuy,             // quantity
-                    $inventory['amount'],       // price (using inventory amount)
+                    $priceToUse,                // price
+                    $totalPrice,                // total_price
                     $inventory['image']         // image
                 );
+
+                if (!$reportSuccess) {
+                    throw new Exception("Failed to save report for inventory ID: $inventoryId");
+                }
 
                 $this->logTransaction($product['id'], $quantityToBuy);
             }

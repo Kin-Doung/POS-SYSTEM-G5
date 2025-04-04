@@ -1,32 +1,200 @@
 .navbar {
     display: flex;
-    flex-direction: row;
-    width: 100%;
-    .search-container {
-        width: 50%;
-        /* margin-left: 30px; */
-    }
-    .icons {
-        width: 20%;
-        display: flex;
-        flex-direction: row;
-        /* margin-right: 180px; */
-        .icon-btn {
-           .fas {
-            color: black;
-            margin-right: 10px;
-            
-           }
-           .notification-badge {
-            font-size: 7px;
-           }
-        }
-        
-    }
-    .profile {
-        width: 15%;
-        margin-right: 1.5%;
-        box-shadow: none;
-    }
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+   
+}
 
+/* Search Container */
+.search-container {
+    display: flex;
+    align-items: center;
+    background-color: #f1f3f4;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+.search-container i {
+    margin-right: 10px;
+    color: #888;
+}
+
+.search-container input {
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 14px;
+}
+
+/* Icons Section */
+.icons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #007bff;
+    position: relative; /* To position the notification dropdown */
+}
+
+.icon-btn {
+    position: relative;
+    cursor: pointer;
+    font-size: 18px;
+    color: #333;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #ff4d4f;
+    color: white;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 50%;
+}
+
+/* Profile Section */
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.profile img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+   
+}
+
+.profile-info .store-name {
+    font-size: 12px;
+    color: #888;
+}
+
+.menu {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu.show {
+    display: block;
+}
+
+.menu li {
+    padding: 10px 20px;
+}
+
+.menu li a {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.menu li a:hover {
+    background-color: #f1f3f4;
+}
+
+/* Notification Dropdown */
+.notification-dropdown {
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: 0;
+    width: 350px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(168, 163, 163, 0.1);
+    z-index: 1000;
+}
+
+.notification-dropdown.show {
+    display: block;
+}
+
+.notification-header {
+    padding: 10px 15px;
+    border-bottom: 1px solid rgb(160, 159, 159);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notification-header h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.notification-header a {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: red;
+    text-decoration: none;
+}
+
+.notification-item {
+    padding: 10px 15px;
+    border-bottom: 1px solid #a3a2a2;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.notification-item img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-content p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.notification-content small {
+    color: #888;
+    font-size: 12px;
+}
+
+.notification-footer {
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.notification-footer a {
+    font-size: 14px;
+    color: white;
+    text-decoration: none;
+}
+.notification-footer.btn{
+    background-color: #007bff;
+
+}
+
+.notification-footer a:hover {
+    text-decoration: underline;
 }

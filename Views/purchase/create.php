@@ -3,6 +3,47 @@
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+    .head-add{
+        font-family: 'Poppins', sans-serif;
+        font-weight: bold;
+        color: #000;
+    }
+    .btn-preview{
+        background: none;
+        color: #000;
+        z-index: 1000;
+        text-decoration: underline;
+        transition: all 0.3s ease-in-out;
+    }
+    .btn-preview:hover{
+        border-radius: 5px;
+        background: orange;
+    }
+    #addMore , #submitted{
+        border-radius: 50px;
+        padding: 8px 20px;
+        background: darkblue;
+        box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+        transition: all 0.2s ease-in-out;
+    }
+    #addMore:hover{
+        background: rgb(10, 0, 95);  
+    }
+    #submitted{
+        background: green;
+    }
+    #submitted:hover{
+        background: darkgreen;
+    }
+    .removeRow{
+        background: none;
+        color: red;
+        text-decoration: underline;
+    }
+    .removeRow:hover{
+        background: none;
+    }
+    
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -11,7 +52,7 @@
 <main class="main-content create-content position-relative max-height-vh-100 h-100">
     <h2 class="text-center head-add" style="padding-top: 20px;">Add Stock Products</h2>
     <div class="d-flex justify-content-end align-item-center me-3">
-        <button type="button" id="previewInvoice" class="btn btn-preview" data-bs-toggle="modal" data-bs-target="#invoiceModal">Preview Invoice</button>
+        <button type="button" id="previewInvoice" class=" btn-preview" data-bs-toggle="modal" data-bs-target="#invoiceModal">Preview Invoice</button>
     </div>
     <div class="col-md-12 mt-n3 mx-auto">
         <div class="card p-3" style="box-shadow: none;border:none">
@@ -47,8 +88,12 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="d-flex justify-content-between">
+
                 <button type="button" id="addMore">Add More</button>
-                <button type="submit">Submit</button>
+                <button type="submit" id="submitted" >Submit</button>
+                </div>
+                
             </form>
         </div>
     </div>

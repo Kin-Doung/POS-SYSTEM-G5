@@ -10,38 +10,16 @@ class ProductModel
         $this->pdo = (new Database())->getConnection();
     }
 
-    // Fetch all products
     public function getProducts()
     {
         return $this->fetchAll("SELECT * FROM products ORDER BY id DESC");
     }
 
-    // Fetch a product by ID
-    public function getProductById($id)
-    {
-        return $this->fetchOne("SELECT * FROM products WHERE id = :id LIMIT 1", ['id' => $id]);
-    }
-
-    // Fetch all categories
     public function getCategories()
     {
         return $this->fetchAll("SELECT * FROM categories ORDER BY id DESC");
     }
 
-    public function updatePrice($productId, $newPrice)
-    {
-        // Create a database connection
-        $db = new Database();
-        $pdo = $db->getConnection();
-
-        // Prepare and execute the SQL query
-        $stmt = $pdo->prepare("UPDATE products SET price = :price WHERE id = :id");
-        $stmt->bindParam(':price', $newPrice);
-        $stmt->bindParam(':id', $productId);
-        return $stmt->execute();
-    }
-
-    // Fetch inventory details with product data
     public function getInventoryWithProductDetails()
     {
         $query = "
@@ -61,7 +39,51 @@ class ProductModel
         return $this->fetchAll($query);
     }
 
-    // Create a new product
+    public function updateProductPrice($productId, $newPrice)
+    {
+        try {
+            $this->pdo->beginTransaction();
+
+            $query = "SELECT price, quantity FROM products WHERE id = :id";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute([':id' => $productId]);
+            $product = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($product === false) {
+                return false;
+            }
+
+            $oldPrice = $product['price'];
+            $quantity = $product['quantity'];
+
+            $historyQuery = "INSERT INTO price_history (product_id, old_price, new_price, changed_at) VALUES (:product_id, :old_price, :new_price, NOW())";
+            $this->executeQuery($historyQuery, [
+                ':product_id' => $productId,
+                ':old_price' => $oldPrice,
+                ':new_price' => $newPrice
+            ]);
+
+            $updateQuery = "UPDATE products SET price = :price WHERE id = :id";
+            $this->executeQuery($updateQuery, [
+                ':price' => $newPrice,
+                ':id' => $productId
+            ]);
+
+            $inventoryUpdateQuery = "UPDATE inventory SET quantity = quantity - :quantity WHERE product_id = :product_id";
+            $this->executeQuery($inventoryUpdateQuery, [
+                ':quantity' => $quantity,
+                ':product_id' => $productId
+            ]);
+
+            $this->pdo->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            error_log("Error updating product price: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function createProduct($data)
     {
         $query = "INSERT INTO products (category_id, name, category_name, barcode, price, purchase_id, created_at, quantity, image) 
@@ -69,7 +91,6 @@ class ProductModel
         return $this->executeQuery($query, $data);
     }
 
-    // Check if a product exists by name and category
     public function getProductByNameAndCategory($productName, $categoryName)
     {
         $query = "
@@ -80,7 +101,6 @@ class ProductModel
         return $this->fetchOne($query, ['name' => $productName, 'category_name' => $categoryName]);
     }
 
-    // Update product information from inventory
     public function updateProductFromInventory($id, $data)
     {
         $sql = "UPDATE products SET 
@@ -100,94 +120,137 @@ class ProductModel
         ]);
     }
 
-    // Insert products from inventory into the products table
-    public function insertProductsFromInventory()
-    {
-        $this->pdo->beginTransaction();
-        try {
-            $query = "
-                SELECT 
-                    i.product_name, 
-                    c.id AS category_id, 
-                    c.name AS category_name, 
-                    i.amount AS price, 
-                    i.quantity, 
-                    i.image
-                FROM inventory i
-                JOIN categories c ON i.category_id = c.id;
-            ";
-            $inventoryItems = $this->fetchAll($query);
-            foreach ($inventoryItems as $item) {
-                $existingProduct = $this->getProductByNameAndCategory($item['product_name'], $item['category_name']);
-                if ($existingProduct) {
-                    $this->updateProductFromInventory($existingProduct['id'], $item);
-                } else {
-                    $this->createProduct($item);
-                }
-            }
-            $this->pdo->commit();
-            return true;
-        } catch (Exception $e) {
-            $this->pdo->rollBack();
-            error_log("Error inserting products: " . $e->getMessage());
-            return false;
-        }
-    }
-
-    public function updateProductPrice($productId, $newPrice)
-    {
-        try {
-            // Fetch current price and quantity from the products table
-            $query = "SELECT price, quantity FROM products WHERE id = :id";
-            $stmt = $this->pdo->prepare($query);
-            $stmt->execute([':id' => $productId]);
-            $product = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($product === false) {
-                return false; // Product not found
-            }
-
-            // Get the old price and current quantity of the product
-            $oldPrice = $product['price'];
-            $quantity = $product['quantity'];
-
-            // Update price history for tracking
-            $historyQuery = "INSERT INTO price_history (product_id, old_price, new_price, changed_at) VALUES (:product_id, :old_price, :new_price, NOW())";
-            $this->executeQuery($historyQuery, [
-                ':product_id' => $productId,
-                ':old_price' => $oldPrice,
-                ':new_price' => $newPrice
-            ]);
-
-            // Update the product price in the products table
-            $updateQuery = "UPDATE products SET price = :price WHERE id = :id";
-            $this->executeQuery($updateQuery, [
-                ':price' => $newPrice,
-                ':id' => $productId
-            ]);
-
-            // Now subtract the quantity in inventory (i.e., subtract product quantity from inventory)
-            // If the price change results in a product being moved to another state, this is where the logic comes in
-            $inventoryUpdateQuery = "UPDATE inventory SET quantity = quantity - :quantity WHERE product_id = :product_id";
-            $this->executeQuery($inventoryUpdateQuery, [
-                ':quantity' => $quantity,
-                ':product_id' => $productId
-            ]);
-
-            return true;
-        } catch (Exception $e) {
-            error_log("Error updating product price and inventory: " . $e->getMessage());
-            return false;
-        }
-    }
-
-
     public function getPriceHistory($productId)
     {
         return $this->fetchAll("SELECT * FROM price_history WHERE product_id = :product_id ORDER BY changed_at DESC", ['product_id' => $productId]);
     }
 
-    // Helper function to fetch all rows with optional parameters
+    public function deductInventoryAndUpdateProduct($productId, $quantityToBuy)
+    {
+        try {
+            $this->pdo->beginTransaction();
+
+            $productStmt = $this->pdo->prepare("SELECT quantity FROM products WHERE id = :id FOR UPDATE");
+            $productStmt->execute([':id' => $productId]);
+            $product = $productStmt->fetch(PDO::FETCH_ASSOC);
+
+            $inventoryStmt = $this->pdo->prepare("SELECT quantity FROM inventory WHERE product_id = :product_id FOR UPDATE");
+            $inventoryStmt->execute([':product_id' => $productId]);
+            $inventory = $inventoryStmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$product || !$inventory || 
+                $product['quantity'] < $quantityToBuy || 
+                $inventory['quantity'] < $quantityToBuy) {
+                $this->pdo->rollBack();
+                return false;
+            }
+
+            $newQuantity = $product['quantity'] - $quantityToBuy;
+
+            $this->pdo->prepare("UPDATE products SET quantity = :quantity WHERE id = :id")
+                ->execute([':quantity' => $newQuantity, ':id' => $productId]);
+
+            $this->pdo->prepare("UPDATE inventory SET quantity = :quantity WHERE product_id = :product_id")
+                ->execute([':quantity' => $newQuantity, ':product_id' => $productId]);
+
+            $this->pdo->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            error_log("Error in deductInventoryAndUpdateProduct: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function processCartSubmission($cartItems)
+    {
+        try {
+            $this->pdo->beginTransaction();
+    
+            foreach ($cartItems as $item) {
+                $productId = $item['productId'];
+                $quantityToBuy = (int)$item['quantity'];
+    
+                // Lock and check product
+                $productStmt = $this->pdo->prepare("SELECT quantity FROM products WHERE id = :id FOR UPDATE");
+                $productStmt->execute([':id' => $productId]);
+                $product = $productStmt->fetch(PDO::FETCH_ASSOC);
+    
+                if (!$product) {
+                    throw new Exception("Product not found: ID $productId");
+                }
+    
+                // Lock and check inventory
+                $inventoryStmt = $this->pdo->prepare("SELECT quantity FROM inventory WHERE product_id = :product_id FOR UPDATE");
+                $inventoryStmt->execute([':product_id' => $productId]);
+                $inventory = $inventoryStmt->fetch(PDO::FETCH_ASSOC);
+    
+                if (!$inventory) {
+                    throw new Exception("No inventory record for product ID: $productId");
+                }
+    
+                // Verify sufficient stock
+                if ($product['quantity'] < $quantityToBuy) {
+                    throw new Exception("Insufficient product stock for ID: $productId. Available: {$product['quantity']}");
+                }
+                if ($inventory['quantity'] < $quantityToBuy) {
+                    throw new Exception("Insufficient inventory stock for ID: $productId. Available: {$inventory['quantity']}");
+                }
+    
+                // Calculate new quantities
+                $newProductQty = $product['quantity'] - $quantityToBuy;
+                $newInventoryQty = $inventory['quantity'] - $quantityToBuy;
+    
+                // Update products table
+                $productUpdate = $this->pdo->prepare("UPDATE products SET quantity = :quantity WHERE id = :id");
+                $productSuccess = $productUpdate->execute([
+                    ':quantity' => $newProductQty,
+                    ':id' => $productId
+                ]);
+    
+                if (!$productSuccess) {
+                    throw new Exception("Failed to update product quantity for ID: $productId");
+                }
+    
+                // Update inventory table
+                $inventoryUpdate = $this->pdo->prepare("UPDATE inventory SET quantity = :quantity WHERE product_id = :product_id");
+                $inventorySuccess = $inventoryUpdate->execute([
+                    ':quantity' => $newInventoryQty,
+                    ':product_id' => $productId
+                ]);
+    
+                if (!$inventorySuccess) {
+                    throw new Exception("Failed to update inventory quantity for ID: $productId");
+                }
+    
+                $this->logTransaction($productId, $quantityToBuy);
+            }
+    
+            $this->pdo->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            error_log("Cart processing failed: " . $e->getMessage());
+            throw $e;
+        }
+    }
+    private function logTransaction($productId, $quantity)
+    {
+        try {
+            $query = "INSERT INTO transaction_log (product_id, quantity_sold, transaction_date) 
+                     VALUES (:product_id, :quantity, NOW())";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute([
+                ':product_id' => $productId,
+                ':quantity' => $quantity
+            ]);
+        } catch (Exception $e) {
+            error_log("Error logging transaction: " . $e->getMessage());
+        }
+    }
+
+    // ... (keeping all other helper methods unchanged) ...
+
     private function fetchAll($query, $params = [])
     {
         $stmt = $this->pdo->prepare($query);
@@ -195,7 +258,6 @@ class ProductModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Helper function to fetch a single row
     private function fetchOne($query, $params)
     {
         $stmt = $this->pdo->prepare($query);
@@ -203,7 +265,6 @@ class ProductModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Helper function to execute a query (insert, update, delete)
     private function executeQuery($query, $params)
     {
         try {
@@ -215,79 +276,100 @@ class ProductModel
         }
     }
 
-    public function deductInventoryQuantity($productId, $quantitySold)
-    {
-        try {
-            // Check if there is enough inventory
-            $query = "SELECT quantity FROM inventory WHERE product_id = :product_id";
-            $stmt = $this->pdo->prepare($query);
-            $stmt->execute([':product_id' => $productId]);
-            $inventory = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if (!$inventory || $inventory['quantity'] < $quantitySold) {
-                return false; // Not enough stock
-            }
-
-            // Deduct the quantity
-            $updateQuery = "UPDATE inventory SET quantity = quantity - :quantity WHERE product_id = :product_id";
-            return $this->executeQuery($updateQuery, [
-                ':quantity' => $quantitySold,
-                ':product_id' => $productId
-            ]);
-        } catch (Exception $e) {
-            error_log("Error updating inventory: " . $e->getMessage());
-            return false;
-        }
-    }
-    public function deductInventoryAndUpdateProduct($productId, $quantityToBuy)
+    public function syncProductQuantityFromInventory($inventoryId, $quantity)
     {
         try {
             $this->pdo->beginTransaction();
     
-            // Step 1: Check and deduct inventory quantity
-            $inventoryQuery = "SELECT quantity FROM inventory WHERE product_id = :product_id";
-            $stmt = $this->pdo->prepare($inventoryQuery);
-            $stmt->execute([':product_id' => $productId]);
-            $inventory = $stmt->fetch(PDO::FETCH_ASSOC);
+            $inventoryStmt = $this->pdo->prepare("SELECT product_name, quantity, amount FROM inventory WHERE id = :id");
+            $inventoryStmt->execute([':id' => $inventoryId]);
+            $inventory = $inventoryStmt->fetch(PDO::FETCH_ASSOC);
     
-            error_log("Product ID: $productId, Inventory Data: " . json_encode($inventory));
-    
-            if (!$inventory || $inventory['quantity'] < $quantityToBuy) {
-                $this->pdo->rollBack();
-                echo json_encode(['success' => false, 'message' => 'Not enough stock or inventory not found']);
-                return false;
+            if (!$inventory) {
+                throw new Exception("Inventory item not found: ID $inventoryId");
             }
     
-            $newInventoryQuantity = $inventory['quantity'] - $quantityToBuy;
-            $updateInventoryQuery = "UPDATE inventory SET quantity = :quantity WHERE product_id = :product_id";
-            $this->executeQuery($updateInventoryQuery, [
-                ':quantity' => $newInventoryQuantity,
-                ':product_id' => $productId
-            ]);
+            $productStmt = $this->pdo->prepare("SELECT id FROM products WHERE name = :name LIMIT 1");
+            $productStmt->execute([':name' => $inventory['product_name']]);
+            $product = $productStmt->fetch(PDO::FETCH_ASSOC);
     
-            // Step 2: Update product quantity
-            $updateProductQuery = "UPDATE products SET quantity = :quantity WHERE id = :id";
-            $this->executeQuery($updateProductQuery, [
-                ':quantity' => $newInventoryQuantity,
-                ':id' => $productId
-            ]);
+            if ($product) {
+                $updateStmt = $this->pdo->prepare("UPDATE products SET quantity = :quantity WHERE id = :id");
+                $updateStmt->execute([
+                    ':quantity' => $quantity,
+                    ':id' => $product['id']
+                ]);
+            } else {
+                $insertStmt = $this->pdo->prepare(
+                    "INSERT INTO products (name, price, quantity, created_at) 
+                     VALUES (:name, :price, :quantity, NOW())"
+                );
+                $insertStmt->execute([
+                    ':name' => $inventory['product_name'],
+                    ':price' => $inventory['amount'],
+                    ':quantity' => $quantity
+                ]);
+            }
     
             $this->pdo->commit();
             return true;
         } catch (Exception $e) {
             $this->pdo->rollBack();
-            error_log("Error updating inventory and product: " . $e->getMessage());
-            return false;
+            error_log("Error syncing quantity: " . $e->getMessage());
+            throw $e; // Propagate exception to controller
         }
     }
-    public function testConnection()
+
+    public function processCartSubmissionWithInventory($cartItems)
     {
         try {
-            $stmt = $this->pdo->query("SELECT 1");
-            return $stmt->fetch() !== false;
+            $this->pdo->beginTransaction();
+    
+            foreach ($cartItems as $item) {
+                $inventoryId = $item['inventoryId'];
+                $quantityToBuy = (int)$item['quantity'];
+    
+                // Lock and check inventory
+                $inventoryStmt = $this->pdo->prepare("SELECT product_name, quantity FROM inventory WHERE id = :id FOR UPDATE");
+                $inventoryStmt->execute([':id' => $inventoryId]);
+                $inventory = $inventoryStmt->fetch(PDO::FETCH_ASSOC);
+    
+                if (!$inventory) {
+                    throw new Exception("Inventory not found: ID $inventoryId");
+                }
+    
+                // Lock and check product
+                $productStmt = $this->pdo->prepare("SELECT id, quantity FROM products WHERE name = :name FOR UPDATE");
+                $productStmt->execute([':name' => $inventory['product_name']]);
+                $product = $productStmt->fetch(PDO::FETCH_ASSOC);
+    
+                if (!$product) {
+                    throw new Exception("Product not found for inventory ID: $inventoryId");
+                }
+    
+                if ($inventory['quantity'] < $quantityToBuy || $product['quantity'] < $quantityToBuy) {
+                    throw new Exception("Insufficient stock for ID: $inventoryId");
+                }
+    
+                $newQty = $inventory['quantity'] - $quantityToBuy;
+    
+                // Update inventory
+                $inventoryUpdate = $this->pdo->prepare("UPDATE inventory SET quantity = :quantity WHERE id = :id");
+                $inventoryUpdate->execute([':quantity' => $newQty, ':id' => $inventoryId]);
+    
+                // Update product
+                $productUpdate = $this->pdo->prepare("UPDATE products SET quantity = :quantity WHERE id = :id");
+                $productUpdate->execute([':quantity' => $newQty, ':id' => $product['id']]);
+    
+                $this->logTransaction($product['id'], $quantityToBuy);
+            }
+    
+            $this->pdo->commit();
+            return true;
         } catch (Exception $e) {
-            error_log("Connection failed: " . $e->getMessage());
-            return false;
+            $this->pdo->rollBack();
+            error_log("Cart processing failed: " . $e->getMessage());
+            throw $e;
         }
     }
 }

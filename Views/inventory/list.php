@@ -65,7 +65,7 @@
                         <th>Product Name</th>
                         <th>Quantity</th>
                         <th>Price</th>
-                        <th>Total Price</th>
+                        <th style="display: none;">Total Price</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -82,7 +82,6 @@
                             <td><?= htmlspecialchars($item['product_name']) ?></td>
                             <td><span class="quantity-text"><?= htmlspecialchars($item['quantity']) ?></span></td>
                             <td>$<?= htmlspecialchars(number_format($item['amount'], 2)) ?></td>
-                            <td>$<?= htmlspecialchars(number_format($item['total_price'], 2)) ?></td>
                             <td>
                                 <div class="dropdown">
                                     <button class="btn-seemore dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -107,6 +106,7 @@
                                     </ul>
                                 </div>
 
+
                                 <!-- View Modal -->
                                 <div class="modal fade" id="viewModal<?= $item['id']; ?>" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
@@ -121,7 +121,7 @@
                                                     <p><strong>Category:</strong> <?= !empty($item['category_name']) ? htmlspecialchars($item['category_name']) : '-'; ?></p>
                                                     <p><strong>Quantity:</strong> <?= htmlspecialchars($item['quantity']); ?></p>
                                                     <p><strong>Price:</strong> $<?= htmlspecialchars(number_format($item['amount'], 2)); ?></p>
-                                                    <p><strong>Total Price:</strong> $<?= htmlspecialchars(number_format($item['total_price'], 2)); ?></p>
+                                                    <p style="display: none;"><strong>Total Price:</strong> $<?= htmlspecialchars(number_format($item['total_price'], 2)); ?></p>
                                                 </div>
                                                 <?php if (!empty($item['image'])): ?>
                                                     <div class="mb-3">
@@ -167,10 +167,7 @@
                                                             <label class="form-label">Amount</label>
                                                             <input type="number" class="form-control" name="amount" id="amount" required step="0.01" min="0">
                                                         </div>
-                                                        <div class="col-md-6 mb-3">
-                                                            <label class="form-label">Expiration Date</label>
-                                                            <input type="date" class="form-control" name="expiration_date" id="expiration_date" required>
-                                                        </div>
+
                                                     </div>
                                                     <div class="mb-3">
                                                         <label class="form-label">Image</label>
@@ -197,5 +194,7 @@
 
     <!-- JavaScript for Edit Modal Population -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+   
 
 </main>

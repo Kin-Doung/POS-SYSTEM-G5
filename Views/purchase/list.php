@@ -46,7 +46,7 @@
                         <th><input type="checkbox" id="selectAll"></th>
                         <th>Image</th>
                         <th>Product Name</th>
-                        <th>Categories Name</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="purchasesTableBody">
@@ -67,28 +67,35 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <span class="editable" data-field="category_name" data-id="<?= htmlspecialchars($item['id']); ?>">
-                                        <?= htmlspecialchars($item['category_name']); ?>
-                                    </span>
+                                    <button type="button" class="btn btn-primary edit-btn"
+                                        data-id="<?= htmlspecialchars($item['id']); ?>"
+                                        data-product-name="<?= htmlspecialchars($item['product_name']); ?>"
+                                        data-category-id="<?= htmlspecialchars($item['category_id']); ?>">Edit</button>
+                                    <button type="button" class="btn btn-danger delete-btn"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal<?= htmlspecialchars($item['id']); ?>">Delete</button>
                                 </td>
                             </tr>
-
-                            <!-- Single Delete Modal -->
-                            <div class="modal fade" id="deleteModal<?= htmlspecialchars($item['id']); ?>" tabindex="-1" aria-labelledby="deleteModalLabel<?= htmlspecialchars($item['id']); ?>" aria-hidden="true">
+                            <!-- Edit Modal -->
+                            <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="deleteModalLabel<?= htmlspecialchars($item['id']); ?>">Delete Purchase</h5>
+                                            <h5 class="modal-title" id="editModalLabel">Edit Purchase</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            Are you sure you want to delete "<?= htmlspecialchars($item['product_name']); ?>"?
+                                            <form id="editForm">
+                                                <input type="hidden" id="editId" name="id">
+                                                <div class="mb-3">
+                                                    <label for="editProductName" class="form-label">Product Name</label>
+                                                    <input type="text" class="form-control" id="editProductName" name="product_name" required>
+                                                </div>
+                                            </form>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                            <form method="POST" action="/purchase/destroy/<?= htmlspecialchars($item['id']); ?>" style="display: inline;">
-                                                <button type="submit" class="btn btn-danger">Delete</button>
-                                            </form>
+                                            <button type="button" id="saveEdit" class="btn btn-primary">Save</button>
                                         </div>
                                     </div>
                                 </div>
@@ -125,145 +132,53 @@
     </div>
     <button type="button" id="bulkDeleteBtn" class="btn btn-danger pos-btn-danger" style="display: none;">Delete Selected</button>
 
-    <style>
-        .purchase-head {
-            color: #1a3c34;
-            font-size: 24px;
-            margin-bottom: 0;
-        }
 
-        .btn-new-product {
-            background-color: #1a3c34;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .btn-new-product:hover {
-            background-color: #152e2a;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        .table {
-            background-color: white;
-            border-radius: 6px;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .table thead th {
-            background-color: #1a3c34;
-            color: white;
-            padding: 12px;
-            font-weight: 500;
-            border: none;
-        }
-
-        .table td {
-            padding: 12px;
-            vertical-align: middle;
-            border-color: #e9ecef;
-        }
-
-        .editable {
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-        }
-
-        .editable:hover {
-            background-color: #f1f3f5;
-        }
-
-        /* Modal Styling */
-        .modal-content {
-            border-radius: 8px;
-            border: none;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-        }
-
-        .modal-header {
-            background-color: #1a3c34;
-            color: white;
-            border-bottom: none;
-        }
-
-        .modal-title {
-            font-weight: 500;
-        }
-
-        .modal-body {
-            padding: 20px;
-            color: #333;
-        }
-
-        .modal-footer {
-            border-top: none;
-            padding: 15px 20px;
-        }
-
-        .btn-secondary {
-            background-color: #6c757d;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-secondary:hover {
-            background-color: #5a6268;
-            transform: translateY(-1px);
-        }
-
-        .btn-danger {
-            background-color: #dc3545;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-danger:hover {
-            background-color: #c82333;
-            transform: translateY(-1px);
-        }
-
-        .pos-btn-danger {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 12px 24px;
-            font-weight: 500;
-            border-radius: 6px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Checkbox styling */
-        input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-
-        /* Image styling */
-        .table td img {
-            object-fit: cover;
-            border: 1px solid #e9ecef;
-        }
-    </style>
 
 </main>
 
 <script>
+    document.querySelectorAll('.edit-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.dataset.id;
+            const productName = this.dataset.productName;
+            const categoryId = this.dataset.categoryId;
+
+            document.getElementById('editId').value = id;
+            document.getElementById('editProductName').value = productName;
+
+            const modal = new bootstrap.Modal(document.getElementById('editModal'));
+            modal.show();
+        });
+    });
+
+    document.getElementById('saveEdit').addEventListener('click', function() {
+        const form = document.getElementById('editForm');
+        const formData = new FormData(form);
+
+        fetch('/purchase/update', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Update failed: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while updating.');
+            });
+    });
+
+    // Ensure Delete buttons work (already partially handled by modal)
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            // The modal is triggered via data-bs attributes, so no additional JS needed here
+        });
+    });
     // Inline Editing
     document.querySelectorAll('.editable').forEach(function(element) {
         element.addEventListener('click', function() {
@@ -358,3 +273,141 @@
 </script>
 
 <?php require_once './views/layouts/footer.php'; ?>
+
+
+
+<style>
+    .purchase-head {
+        color: #1a3c34;
+        font-size: 24px;
+        margin-bottom: 0;
+    }
+
+    .btn-new-product {
+        background-color: #1a3c34;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .btn-new-product:hover {
+        background-color: #152e2a;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .table {
+        background-color: white;
+        border-radius: 6px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .table thead th {
+        background-color: #1a3c34;
+        color: white;
+        padding: 12px;
+        font-weight: 500;
+        border: none;
+    }
+
+    .table td {
+        padding: 12px;
+        vertical-align: middle;
+        border-color: #e9ecef;
+    }
+
+    .editable {
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+
+    .editable:hover {
+        background-color: #f1f3f5;
+    }
+
+    /* Modal Styling */
+    .modal-content {
+        border-radius: 8px;
+        border: none;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal-header {
+        background-color: #1a3c34;
+        color: white;
+        border-bottom: none;
+    }
+
+    .modal-title {
+        font-weight: 500;
+    }
+
+    .modal-body {
+        padding: 20px;
+        color: #333;
+    }
+
+    .modal-footer {
+        border-top: none;
+        padding: 15px 20px;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        transform: translateY(-1px);
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+        transform: translateY(-1px);
+    }
+
+    .pos-btn-danger {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 12px 24px;
+        font-weight: 500;
+        border-radius: 6px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Checkbox styling */
+    input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+    }
+
+    /* Image styling */
+    .table td img {
+        object-fit: cover;
+        border: 1px solid #e9ecef;
+    }
+</style>

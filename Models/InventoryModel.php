@@ -81,7 +81,6 @@ class InventoryModel
         $stmt->bindParam(':image', $data['image']); // Optional, only if image is provided
         $stmt->execute();
     }
-
     public function createInventory(array $data): int
     {
         $defaults = [
@@ -95,23 +94,28 @@ class InventoryModel
             'total_price' => 0
         ];
         $data = array_merge($defaults, $data);
-
+    
         try {
-            $stmt = $this->pdo->getConnection()->prepare("
+            $stmt = $this->getConnection()->prepare("
                 INSERT INTO inventory (image, product_name, category_id, quantity, amount, category_name, expiration_date, total_price)
                 VALUES (:image, :product_name, :category_id, :quantity, :amount, :category_name, :expiration_date, :total_price)
             ");
-            $stmt->bindParam(':image', $data['image']); // String path
-            $stmt->bindParam(':product_name', $data['product_name']);
-            $stmt->bindParam(':category_id', $data['category_id'], PDO::PARAM_INT);
-            $stmt->bindParam(':quantity', $data['quantity'], PDO::PARAM_INT);
-            $stmt->bindParam(':amount', $data['amount']);
-            $stmt->bindParam(':category_name', $data['category_name']);
-            $stmt->bindParam(':expiration_date', $data['expiration_date']);
-            $stmt->bindParam(':total_price', $data['total_price']);
-
-            $stmt->execute();
-            return (int)$this->pdo->getConnection()->lastInsertId();
+            $stmt->execute([
+                ':image' => $data['image'],
+                ':product_name' => $data['product_name'],
+                ':category_id' => $data['category_id'],
+                ':quantity' => $data['quantity'],
+                ':amount' => $data['amount'],
+                ':category_name' => $data['category_name'],
+                ':expiration_date' => $data['expiration_date'],
+                ':total_price' => $data['total_price']
+            ]);
+            $newId = (int)$this->getConnection()->lastInsertId();
+    
+            // Sync with products table
+            $this->syncProductQuantity($newId, $data['quantity'], $data['product_name'], $data['category_id'], $data['amount']);
+    
+            return $newId;
         } catch (PDOException $e) {
             error_log("Insert error: " . $e->getMessage());
             throw new Exception("Failed to create inventory: " . $e->getMessage());
@@ -279,6 +283,10 @@ class InventoryModel
                 ':image' => $data['image'],
                 ':id' => $id
             ]);
+    
+            // Sync with products table
+            $this->syncProductQuantity($id, $data['quantity'] - $this->getInventoryById($id)['quantity'], $data['product_name'], $data['category_id'], $data['amount']);
+    
             return true;
         } catch (PDOException $e) {
             error_log("Update error: " . $e->getMessage());
@@ -335,25 +343,69 @@ class InventoryModel
         ]);
     }
 
-   
-    
-    public function getProductById($id) {
+
+
+    public function getProductById($id)
+    {
         $stmt = $this->pdo->query("SELECT p.*, c.name as category_name 
                                     FROM products p
                                     LEFT JOIN categories c ON p.category_id = c.id
                                     WHERE p.id = :id");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-    
+
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    
 
-    public function getPurchaseByProductId($productId) {
+
+    public function getPurchaseByProductId($productId)
+    {
         $stmt = $this->pdo->getConnection()->prepare("
             SELECT * FROM purchases WHERE product_id = :id
         ");
         $stmt->execute([':id' => $productId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+
+
+    public function syncProductQuantity($productId, $quantity, $productName = null, $categoryId = null, $amount = null)
+    {
+        try {
+            // Check if the product exists in the products table
+            $stmt = $this->getConnection()->prepare("SELECT id, quantity FROM products WHERE id = :id");
+            $stmt->execute([':id' => $productId]);
+            $product = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($product) {
+                // Product exists, update its quantity
+                $newQuantity = $product['quantity'] + $quantity; // Add to existing quantity
+                $stmt = $this->getConnection()->prepare("
+                UPDATE products 
+                SET quantity = :quantity
+                WHERE id = :id
+            ");
+                $stmt->execute([
+                    ':quantity' => $newQuantity,
+                    ':id' => $productId
+                ]);
+            } else if ($productName && $categoryId) {
+                // Product doesn't exist, create it (assuming product_id in inventory matches products table)
+                $stmt = $this->getConnection()->prepare("
+                INSERT INTO products (id, name, category_id, quantity, price)
+                VALUES (:id, :name, :category_id, :quantity, :price)
+            ");
+                $stmt->execute([
+                    ':id' => $productId,
+                    ':name' => $productName,
+                    ':category_id' => $categoryId,
+                    ':quantity' => $quantity,
+                    ':price' => $amount ?? 0
+                ]);
+            }
+        } catch (PDOException $e) {
+            error_log("Error syncing product quantity: " . $e->getMessage());
+            throw new Exception("Failed to sync product quantity: " . $e->getMessage());
+        }
     }
 }

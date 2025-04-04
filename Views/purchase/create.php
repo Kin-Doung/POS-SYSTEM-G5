@@ -3,6 +3,32 @@
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+    .add-moree{
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    background: rgb(37, 37, 255);
+    color: #fff;
+}
+.add-moree:hover{
+    background-color: darkblue;
+    text-decoration: none;
+    color: #fff;
+} 
+.btn-submit{
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    background: #479708 !important;
+    color: #fff;
+}
+.btn-submit:hover{
+    background-color: darkblue;
+    text-decoration: none;
+    color: #fff;
+}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>

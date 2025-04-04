@@ -1,45 +1,15 @@
-<?php 
-require_once './views/layouts/header.php';
-require_once(__DIR__ . '/../layouts/side.php') ?>
-
+<?php require_once(__DIR__ . '/../layouts/header.php'); ?>
+<?php require_once(__DIR__ . '/../layouts/side.php'); ?>
 <main class="main-content position-relative max-height-vh-50 h-50 border-radius-lg ">
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="search-container">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search...">
-        </div>
-        <div class="icons">
-            <i class="fas fa-globe icon-btn"></i>
-            <div class="icon-btn" id="notification-icon">
-                <i class="fas fa-bell"></i>
-                <span class="notification-badge" id="notification-count">8</span>
-            </div>
-        </div>
-        <div class="profile" id="profile">
-            <img src="../../views/assets/images/image.png" alt="User">
-            <div class="profile-info">
-                <span id="profile-name">Eng Ly</span>
-                <span class="store-name" id="store-name">Owner Store</span>
-            </div>
-            <ul class="menu" id="menu">
-                <li><a href="/" class="item">Account</a></li>
-                <li><a href="/settings" class="item">Setting</a></li>
-                <li><a href="/logout" class="item">Logout</a></li>
-            </ul>
-            <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
-            <link rel="stylesheet" href="../../views/assets/css/settings/edit.css">
-            <script src="../../views/assets/js/setting.js"></script>
-        </div>
 
-    </nav>
+    <!-- Navbar -->
+    <?php require_once(__DIR__ . '/../layouts/nav.php'); ?>
     <!-- End Navbar -->
-    <?php require_once(__DIR__ . '/../layouts/header.php') ?>
 
     <!-- Modal structure -->
     <div class="container mt-5">
         <!-- <a href="/settings/create" class="btn btn-primary btn-lg mb-3 shadow-sm" style="width: 150px;">Add New</a> -->
-        <div class="card shadow-lg ">
+        <div class="card shadow-lg">
             <div class="card-header text-center">
                 <h3 class="mb-0">Personal Account</h3>
             </div>
@@ -97,8 +67,5 @@ require_once(__DIR__ . '/../layouts/side.php') ?>
         </div>
     </div>
 
-
-
-
-    <?php require_once(__DIR__ . '/../layouts/footer.php') ?>
+    <?php require_once(__DIR__ . '/../layouts/footer.php'); ?>
 </main>

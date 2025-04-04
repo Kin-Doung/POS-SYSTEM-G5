@@ -3,10 +3,14 @@
 
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
 
+    <!-- Navbar -->
     <?php require_once './views/layouts/nav.php' ?>
 
-    <div class="container-fluid py-4 table-inventory">
-        <div class="orders" style="width: 98%; margin: 0 auto;">
+        <!-- Remove Nav bar that code with html
+         using import navbar instead -->
+    <!-- End Navbar -->
+    <div class="container table-inventory">
+        <div class="orders">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h2 style="font-weight: bold;" class="purchase-head">Purchasing Orders</h2>
                 <div>
@@ -16,238 +20,229 @@
                 </div>
             </div>
 
-            <div class="table-responsive shadow-sm rounded mb-4">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th style="background-color:#fff; color: #212529;"><input type="checkbox" id="selectAll"></th>
-                            <th style="background-color:#fff; color: #212529;">Image</th>
-                            <th style="background-color:#fff; color: #212529;">Product Name</th>
-                            <th style="background-color:#fff; color: #212529;">Quantity</th>
-                            <th style="background-color:#fff; color: #212529;">Price</th>
-                            <th style="background-color:#fff; color: #212529;">Type of Products</th>
-                        </tr>
-                    </thead>
-                    <tbody id="purchasesTableBody">
-                        <?php if (!empty($purchases)): ?>
-                            <?php foreach ($purchases as $index => $item): ?>
-                                <tr data-category-id="<?= htmlspecialchars($item['category_id']); ?>">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAll"></th>
+                        <th>Image</th>
+                        <th>Product Name</th>
+                        <th>Categories Name</th>
+                    </tr>
+                </thead>
+                <tbody id="purchasesTableBody">
+                    <?php if (!empty($purchases)): ?>
+                        <?php foreach ($purchases as $index => $item): ?>
+                            <tr data-category-id="<?= htmlspecialchars($item['category_id']); ?>">
 
-                                    <td><input type="checkbox" class="selectItem" value="<?= htmlspecialchars($item['id']); ?>"></td>
-                                    <td>
-                                        <?php if (!empty($item['image'])): ?>
-                                            <img src="data:image/jpeg;base64,<?= base64_encode($item['image']); ?>"
-                                                alt="Image of <?= htmlspecialchars($item['product_name']); ?>"
-                                                style="width: 40px; height: 40px; border-radius: 100%;">
-                                        <?php else: ?>
-                                            <span>No image</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <span class="editable" data-field="product_name" data-id="<?= htmlspecialchars($item['id']); ?>">
-                                            <?= htmlspecialchars($item['product_name']); ?>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="editable" data-field="quantity" data-id="<?= htmlspecialchars($item['id']); ?>">
-                                            <?= htmlspecialchars($item['quantity']); ?>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="editable" data-field="price" data-id="<?= htmlspecialchars($item['id']); ?>">
-                                            <?= htmlspecialchars($item['price']); ?>$
-                                        </span>
-                                    </td>
-                                    <td><?= htmlspecialchars($item['type_of_product']); ?></td>
+                                <td><input type="checkbox" class="selectItem" value="<?= htmlspecialchars($item['id']); ?>"></td>
+                                <td>
+                                    <!-- Display image for inventory item -->
+                                    <img src="<?= htmlspecialchars($item['image']) ?>"
+                                        alt="Image of <?= htmlspecialchars($item['product_name']) ?>"
+                                        style="width: 40px; height:auto;">
+                                </td>
+                                <td>
+                                    <span class="editable" data-field="product_name" data-id="<?= htmlspecialchars($item['id']); ?>">
+                                        <?= htmlspecialchars($item['product_name']); ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="editable" data-field="category_name" data-id="<?= htmlspecialchars($item['id']); ?>">
+                                        <?= htmlspecialchars($item['category_name']); ?>
+                                    </span>
+                                </td>
+                               
+                            </tr>
 
-                                </tr>
 
-                                <!-- Single Delete Modal -->
-                                <div class="modal fade" id="deleteModal<?= htmlspecialchars($item['id']); ?>" tabindex="-1" aria-labelledby="deleteModalLabel<?= htmlspecialchars($item['id']); ?>" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="deleteModalLabel<?= htmlspecialchars($item['id']); ?>">Delete Purchase</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                Are you sure you want to delete "<?= htmlspecialchars($item['product_name']); ?>"?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                <form method="POST" action="/purchase/destroy/<?= htmlspecialchars($item['id']); ?>" style="display: inline;">
-                                                    <button type="submit" class="btn btn-danger">Delete</button>
-                                                </form>
-                                            </div>
+                            <!-- Single Delete Modal -->
+                            <div class="modal fade" id="deleteModal<?= htmlspecialchars($item['id']); ?>" tabindex="-1" aria-labelledby="deleteModalLabel<?= htmlspecialchars($item['id']); ?>" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel<?= htmlspecialchars($item['id']); ?>">Delete Purchase</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete "<?= htmlspecialchars($item['product_name']); ?>"?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <form method="POST" action="/purchase/destroy/<?= htmlspecialchars($item['id']); ?>" style="display: inline;">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="8">No purchases found.</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="3">No purchases found.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
 
-            <!-- Bulk Delete Modal -->
-            <div class="modal fade" id="bulkDeleteModal" tabindex="-1" aria-labelledby="bulkDeleteModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="bulkDeleteModalLabel">Delete Selected Purchases</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            Are you sure you want to delete the selected purchases?
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel harrowing</button>
-                            <button type="button" id="confirmBulkDelete" class="btn btn-danger">Delete</button>
-                        </div>
+        </div>
+
+        <!-- Bulk Delete Modal -->
+        <div class="modal fade" id="bulkDeleteModal" tabindex="-1" aria-labelledby="bulkDeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="bulkDeleteModalLabel">Delete Selected Purchases</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete the selected purchases?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel harrowing</button>
+                        <button type="button" id="confirmBulkDelete" class="btn btn-danger">Delete</button>
                     </div>
                 </div>
             </div>
         </div>
-        <button type="button" id="bulkDeleteBtn" class="btn btn-danger pos-btn-danger" style="display: none;">Delete Selected</button>
+    </div>
+    <button type="button" id="bulkDeleteBtn" class="btn btn-danger pos-btn-danger" style="display: none;">Delete Selected</button>
 
-        <style>
-            .purchase-head {
-                color: #1a3c34;
-                font-size: 24px;
-                margin-bottom: 0;
-            }
+    <style>
+        .purchase-head {
+            color: #1a3c34;
+            font-size: 24px;
+            margin-bottom: 0;
+        }
 
-            .btn-new-product {
-                background-color: #1a3c34;
-                color: white;
-                padding: 10px 20px;
-                border-radius: 6px;
-                text-decoration: none;
-                font-weight: 500;
-                transition: all 0.3s ease;
-                display: inline-flex;
-                align-items: center;
-                gap: 5px;
-            }
+        .btn-new-product {
+            background-color: #1a3c34;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
 
-            .btn-new-product:hover {
-                background-color: #152e2a;
-                color: white;
-                transform: translateY(-2px);
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-            }
+        .btn-new-product:hover {
+            background-color: #152e2a;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
 
-            .table {
-                background-color: white;
-                border-radius: 6px;
-                overflow: hidden;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            }
+        .table {
+            background-color: white;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
 
-            .table thead th {
-                background-color: #1a3c34;
-                color: white;
-                padding: 12px;
-                font-weight: 500;
-                border: none;
-            }
 
-            .table td {
-                padding: 12px;
-                vertical-align: middle;
-                border-color: #e9ecef;
-            }
+        .table thead th {
+            background-color: #1a3c34;
+            color: white;
+            padding: 12px;
+            font-weight: 500;
+            border: none;
+        }
 
-            .editable {
-                cursor: pointer;
-                padding: 4px 8px;
-                border-radius: 4px;
-                transition: background-color 0.2s;
-            }
+        .table td {
+            padding: 12px;
+            vertical-align: middle;
+            border-color: #e9ecef;
+        }
 
-            .editable:hover {
-                background-color: #f1f3f5;
-            }
+        .editable {
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
 
-            /* Modal Styling */
-            .modal-content {
-                border-radius: 8px;
-                border: none;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-            }
+        .editable:hover {
+            background-color: #f1f3f5;
+        }
 
-            .modal-header {
-                background-color: #1a3c34;
-                color: white;
-                border-bottom: none;
-            }
+        /* Modal Styling */
+        .modal-content {
+            border-radius: 8px;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
 
-            .modal-title {
-                font-weight: 500;
-            }
+        .modal-header {
+            background-color: #1a3c34;
+            color: white;
+            border-bottom: none;
+        }
 
-            .modal-body {
-                padding: 20px;
-                color: #333;
-            }
+        .modal-title {
+            font-weight: 500;
+        }
 
-            .modal-footer {
-                border-top: none;
-                padding: 15px 20px;
-            }
+        .modal-body {
+            padding: 20px;
+            color: #333;
+        }
 
-            .btn-secondary {
-                background-color: #6c757d;
-                border: none;
-                padding: 8px 20px;
-                border-radius: 6px;
-                transition: all 0.3s ease;
-            }
+        .modal-footer {
+            border-top: none;
+            padding: 15px 20px;
+        }
 
-            .btn-secondary:hover {
-                background-color: #5a6268;
-                transform: translateY(-1px);
-            }
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
 
-            .btn-danger {
-                background-color: #dc3545;
-                border: none;
-                padding: 8px 20px;
-                border-radius: 6px;
-                transition: all 0.3s ease;
-            }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-1px);
+        }
 
-            .btn-danger:hover {
-                background-color: #c82333;
-                transform: translateY(-1px);
-            }
+        .btn-danger {
+            background-color: #dc3545;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
 
-            .pos-btn-danger {
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                padding: 12px 24px;
-                font-weight: 500;
-                border-radius: 6px;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            }
+        .btn-danger:hover {
+            background-color: #c82333;
+            transform: translateY(-1px);
+        }
 
-            /* Checkbox styling */
-            input[type="checkbox"] {
-                width: 18px;
-                height: 18px;
-                cursor: pointer;
-            }
+        .pos-btn-danger {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            font-weight: 500;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
 
-            /* Image styling */
-            .table td img {
-                object-fit: cover;
-                border: 1px solid #e9ecef;
-            }
-        </style>
+        /* Checkbox styling */
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* Image styling */
+        .table td img {
+            object-fit: cover;
+            border: 1px solid #e9ecef;
+        }
+    </style>
 
 </main>
 
@@ -263,7 +258,8 @@
             input.type = field === 'quantity' || field === 'price' ? 'number' : 'text';
             input.value = originalValue;
             input.className = 'form-control';
-            if (field === 'quantity') input.min = '1';
+            if (field === 'quantity') input.min = '0';
+
             if (field === 'price') input.step = '0.01';
 
             this.innerHTML = '';

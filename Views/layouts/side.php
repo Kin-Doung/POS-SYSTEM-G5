@@ -1,3 +1,4 @@
+
 <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-0 my-0 fixed-start ms-0 bg-white" id="sidenav-main">
   <div class="sidenav-header ms-0 my-0">
     <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -44,6 +45,15 @@
           <span class="nav-link-text ms-1">Order</span>
         </a>
       </li>
+      <!-- nav history -->
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="/history">
+          <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
+            <i class="material-icons opacity-10">history</i>
+          </div>
+          <span class="nav-link-text ms-1">Report</span>
+        </a>
+      </li>
       <!-- nav Categories -->
       <li class="nav-item">
         <a class="nav-link text-dark " href="/category">
@@ -71,14 +81,7 @@
           <span class="nav-link-text ms-1">Account</span>
         </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link text-dark" href="/language">
-          <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">language</i>
-          </div>
-          <span class="nav-link-text ms-1">Language</span>
-        </a>
-      </li>
+
       <li class="nav-item">
         <a class="nav-link text-dark" href="/logout">
           <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
@@ -93,5 +96,3 @@
     <!-- footer content if needed -->
   </div>
 </aside>
-
-

@@ -53,3 +53,4 @@ class Router
         require_once  "views/errors/404.php";
     }
 }
+

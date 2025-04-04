@@ -27,8 +27,13 @@ class CategoryModel
         $stmt->execute([':id' => $categoryId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    
-    
+    public function getCategoryByName($name)
+    {
+        $query = "SELECT * FROM categories WHERE name = :name LIMIT 1";
+        $stmt = $this->pdo->getConnection()->prepare($query);
+        $stmt->execute(['name' => $name]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 
     function getCategorys($id)
     {
@@ -36,15 +41,6 @@ class CategoryModel
         $category = $stmt->fetch();
         return $category;
     }
-
-    public function getCategoryByName($name)
-{
-    $query = "SELECT * FROM categories WHERE name = :name LIMIT 1";
-    $stmt = $this->pdo->query($query);
-    $stmt->execute(['name' => $name]);
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
-
 
     function updateCategory($id, $data)
     {
@@ -54,21 +50,18 @@ class CategoryModel
         ]);
     }
     public function deleteCategory($id)
-{
-    // Sanitize the id to ensure it is an integer (this is important for security)
-    $id = (int)$id;
+    {
+        // Sanitize the id to ensure it is an integer (this is important for security)
+        $id = (int)$id;
 
-    // Directly inject the id into the query string
-    $query = "DELETE FROM categories WHERE id = $id";
+        // Directly inject the id into the query string
+        $query = "DELETE FROM categories WHERE id = $id";
 
-    // Execute the query
-    if ($this->pdo->query($query)) {
-        return true;
-    } else {
-        return false;
+        // Execute the query
+        if ($this->pdo->query($query)) {
+            return true;
+        } else {
+            return false;
+        }
     }
-}
-
-    
-    
 }

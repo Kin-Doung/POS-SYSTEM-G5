@@ -71,7 +71,7 @@ class ProductController extends BaseController
 
             try {
                 $existingProduct = $this->model->getProductByNameAndCategory($item['inventory_product_name'], $item['category_name']);
-                
+
                 if ($existingProduct) {
                     $this->model->updateProductFromInventory($existingProduct['id'], [
                         'category_id' => $categoryId,
@@ -112,6 +112,7 @@ class ProductController extends BaseController
         $this->views('products/price_history', ['history' => $this->model->getPriceHistory($productId)]);
     }
 
+    // In ProductController.php (unchanged)
     public function submitCart()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

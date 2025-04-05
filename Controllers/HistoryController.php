@@ -1,20 +1,109 @@
 <?php
 require_once './Models/HistoryModel.php';
- 
-class HistoryController extends BaseController {
-    public function index() {
-        // Sample data (replace with database query)
-        $history = [
-            ['id' => 1, 'image' => 'https://via.placeholder.com/50', 'name' => 'Sample Product 1', 'quantity' => 10, 'price' => 25.00],
-            ['id' => 2, 'image' => 'https://via.placeholder.com/50', 'name' => 'Sample Product 2', 'quantity' => 5, 'price' => 15.00],
-        ];
-        // Pass data to a view (assuming a simple templating system)
-        require_once 'views/histories/list.php';
+
+
+class HistoryController extends BaseController
+{
+    private $model;
+
+    function __construct()
+    {
+        $this->model = new HistoryModel();
     }
 
-    public function delete($id) {
-        // Logic to delete history entry with $id
-        header('Location: /history'); // Redirect back to history page
-        exit;
+    function index()
+    {
+        $report = $this->model->getHistories();
+        $this->views('histories/list', ['reports' => $report]);
+    }
+
+
+
+    function store()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Handle image upload
+            $imagePath = null;
+            if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+                $uploadDir = 'uploads/';
+                $imageName = time() . '_' . basename($_FILES['image']['name']);
+                $imagePath = $uploadDir . $imageName;
+
+                if (!move_uploaded_file($_FILES['image']['tmp_name'], $imagePath)) {
+                    $imagePath = null; // If upload fails, set to null
+                }
+            }
+
+            $data = [
+                'product_id'  => $_POST['product_id'],
+                'product_name'  => $_POST['product_name'],
+                'quantity'  => $_POST['quantity'],
+                'price'  => $_POST['price'],
+                'total_price'  => $_POST['total_price'],
+                'created_at'  => $_POST['created_at'],
+                'image' => $imagePath
+            ];
+        }
+    }
+
+    function edit($id)
+    {
+        $report = $this->model->getHistory($id);
+        $this->views('histories/edit', ['reports' => $report]);
+    }
+
+    function update($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $report = $this->model->getHistory($id);
+            $imagePath = $report['image'];
+            $data = [
+                'product_id'  => $_POST['product_id'],
+                'product_name'  => $_POST['product_name'],
+                'quantity'  => $_POST['quantity'],
+                'price'  => $_POST['price'],
+                'total_price'  => $_POST['natotal_priceme'],
+                'created_at'  => $_POST['created_at'],
+                'image' => $imagePath
+            ];
+
+            $this->model->updateHistory($id, $data);
+            $this->redirect('/histories');
+        }
+    }
+    function destroy($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'DELETE') { // Change to DELETE
+            $record = $this->model->getHistory($id);
+            if (!$record) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'error' => 'Record not found']);
+                exit;
+            }
+            $this->model->deleteHistory($id);
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true]);
+            exit;
+        }
+    }
+    function fetchFilteredHistories()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $filter = $_POST['filter'] ?? 'all';
+            $startDate = $_POST['start_date'] ?? '2000-01-01';
+            $endDate = $_POST['end_date'] ?? '2099-12-31';
+            $search = $_POST['search'] ?? '';
+
+            $reports = $this->model->getFilteredHistories($filter, $startDate, $endDate, $search);
+            $totalPrice = array_sum(array_column($reports, 'total_price'));
+
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => true,
+                'reports' => $reports,
+                'total_price' => number_format($totalPrice, 2)
+            ]);
+            exit;
+        }
     }
 }

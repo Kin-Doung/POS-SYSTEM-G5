@@ -132,7 +132,6 @@ class InventoryController extends BaseController
             $categoryId = $_POST['category_id'];
             $category = $this->categories->getCategoryById($categoryId);
             $categoryName = $category['name'];
-
             $data = [
                 'category_id' => $categoryId,
                 'category_name' => $categoryName,
@@ -143,7 +142,6 @@ class InventoryController extends BaseController
                 'expiration_date' => $_POST['expiration_date'],
                 'image' => $imagePath,
             ];
-
             $this->model->updateInventory($id, $data);
             $this->redirect('/inventory');
         }

@@ -71,6 +71,7 @@
                                         <?= htmlspecialchars($item['category_name']); ?>
                                     </span>
                                 </td>
+                               
                             </tr>
 
 
@@ -289,7 +290,6 @@
                 const newValue = this.value;
                 const parent = this.parentElement;
                 parent.textContent = field === 'price' ? newValue + '$' : newValue;
-
 
                 fetch('/purchase/update-inline', {
                         method: 'POST',

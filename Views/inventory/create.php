@@ -21,7 +21,7 @@ require_once './views/layouts/side.php';
                         <thead>
                             <tr>
                                 <th>Product Image</th>
-                                <th>Category</th>
+                                <th style="display: none;">Category</th>
                                 <th>Product Name</th>
                                 <th>Quantity</th>
                                 <th>Price ($)</th>
@@ -31,21 +31,17 @@ require_once './views/layouts/side.php';
                         <tbody id="productTableBody">
                             <tr class="product-row">
                                 <td>
-                                    <input type="file" class="form-control image-add" name="image[]" accept="image/*" required>
-                                    <img src="" alt="Product Image" class="img-preview" style="display: none; width: 50px; height: 50px;">
+                                    <!-- <input type="file" class="form-control image-add" name="image[]" accept="image/*"> -->
+                                    <img src="" alt="Product Image" class="img-preview" style="display: none; width: 50px; height: 50px; margin: 0 auto;">
                                 </td>
                                 <td>
                                     <select name="category_id[]" class="form-control category-select" required>
                                         <option value="">Select Category</option>
-                                        <?php if (!empty($categories)): ?>
-                                            <?php foreach ($categories as $category): ?>
-                                                <option value="<?= htmlspecialchars($category['id']) ?>">
-                                                    <?= htmlspecialchars($category['name']) ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <option disabled>No Categories Found</option>
-                                        <?php endif; ?>
+                                        <?php foreach ($categories as $category): ?>
+                                            <option value="<?= htmlspecialchars($category['id']) ?>">
+                                                <?= htmlspecialchars($category['name']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </td>
                                 <td>

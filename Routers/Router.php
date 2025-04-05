@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../Controllers/TrackingController.php';
+
 class Router
 {
     private $routes = [];
@@ -53,3 +55,4 @@ class Router
         require_once  "views/errors/404.php";
     }
 }
+

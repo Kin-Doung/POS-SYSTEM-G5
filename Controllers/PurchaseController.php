@@ -106,7 +106,6 @@
                     return [];
                 }
 
-
                 $productName = htmlspecialchars(trim($productName)); // Sanitize product name
                 $image = $this->handleImageUpload($key); // Handle image upload
 

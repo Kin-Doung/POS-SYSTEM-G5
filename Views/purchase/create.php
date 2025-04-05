@@ -98,7 +98,6 @@
         </div>
     </div>
 
-
     <!-- Modal for Invoice Preview -->
     <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -190,7 +189,6 @@
             }
         });
     }
-
 
     // Invoice Preview
     $('#previewInvoice').on('click', function() {

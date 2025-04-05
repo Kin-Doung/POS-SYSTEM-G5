@@ -1,12 +1,9 @@
 <?php require_once './views/layouts/header.php' ?>
 <?php require_once './views/layouts/side.php' ?>
-
-
-
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <!-- Navbar -->
     <nav class="navbar">
-        <div class="search-container" style="background-color: #fff;">
+        <div class="search-container">
             <i class="fas fa-search"></i>
             <input type="text" placeholder="Search...">
         </div>
@@ -40,18 +37,18 @@
                 <h2 style="font-weight: bold;" class="purchase-head">Restock Products</h2>
                 <div>
                     <a href="/inventory/create" class="btn-new-product">
-                        + Add Stocks
+                        <i class="bi-plus-lg"></i> + Add Stocks
                     </a>
                 </div>
             </div>
             <div class="input-group">
                 <input type="text" id="searchInput" class="form-control input-group-search" placeholder="Search...">
-                <select id="categorySelect" class="ms-2 selected" onchange="filterTable()" style="border-radius: 0;">
+                <select id="categorySelect" class="ms-2 selected" onchange="filterTable()">
                     <option value="">Select Category</option>
                     <?php if (!empty($categories)): ?>
                         <?php foreach ($categories as $category): ?>
                             <option value="<?= htmlspecialchars($category['id']) ?>">
-                                   <?= htmlspecialchars($category['name']) ?>
+                                <?= htmlspecialchars($category['name']) ?>
                             </option>
                         <?php endforeach; ?>
                     <?php else: ?>
@@ -68,7 +65,7 @@
                         <th>Product Name</th>
                         <th>Quantity</th>
                         <th>Price</th>
-                        <th>Total Price</th>
+                        <th style="display: none;">Total Price</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -80,19 +77,18 @@
                                 <!-- Display image for inventory item -->
                                 <img src="<?= htmlspecialchars($item['image']) ?>"
                                     alt="Image of <?= htmlspecialchars($item['product_name']) ?>"
-                                    style="width: 40px; height: 40px; border-radius: 100%;">
+                                    style="width: 40px; height:auto;">
                             </td>
                             <td><?= htmlspecialchars($item['product_name']) ?></td>
                             <td><span class="quantity-text"><?= htmlspecialchars($item['quantity']) ?></span></td>
                             <td>$<?= htmlspecialchars(number_format($item['amount'], 2)) ?></td>
-                            <td>$<?= htmlspecialchars(number_format($item['total_price'], 2)) ?></td>
                             <td>
                                 <div class="dropdown">
                                     <button class="btn-seemore dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                         See more...
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item text-dark" href="#" data-bs-toggle="modal" data-bs-target="#viewModal<?= $item['id']; ?>"><i class="fa-solid fa-eye"></i> View</a></li>
+                                        <li><a class="dropdown-item text-daryk" href="#" data-bs-toggle="modal" data-bs-target="#viewModal<?= $item['id']; ?>"><i class="fa-solid fa-eye"></i> View</a></li>
                                         <li>
                                             <a class="dropdown-item text-dark" href="#"
                                                 data-bs-toggle="modal"
@@ -102,7 +98,6 @@
                                                 data-category_id="<?= $item['category_id'] ?>"
                                                 data-quantity="<?= $item['quantity'] ?>"
                                                 data-amount="<?= $item['amount'] ?>"
-                                                data-expiration_date="<?= $item['expiration_date'] ?>"
                                                 data-image="<?= htmlspecialchars($item['image']) ?>"> <!-- Ensure image data is properly escaped -->
                                                 <i class="fa-solid fa-pen-to-square"></i> Edit
                                             </a>
@@ -110,6 +105,7 @@
                                         <li><a class="dropdown-item text-dark" href="/inventory/delete?id=<?= $item['id'] ?>" onclick="return confirm('Are you sure you want to delete this item?');"><i class="fa-solid fa-trash"></i> Delete</a></li>
                                     </ul>
                                 </div>
+
 
                                 <!-- View Modal -->
                                 <div class="modal fade" id="viewModal<?= $item['id']; ?>" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
@@ -125,8 +121,7 @@
                                                     <p><strong>Category:</strong> <?= !empty($item['category_name']) ? htmlspecialchars($item['category_name']) : '-'; ?></p>
                                                     <p><strong>Quantity:</strong> <?= htmlspecialchars($item['quantity']); ?></p>
                                                     <p><strong>Price:</strong> $<?= htmlspecialchars(number_format($item['amount'], 2)); ?></p>
-                                                    <p><strong>Total Price:</strong> $<?= htmlspecialchars(number_format($item['total_price'], 2)); ?></p>
-                                                    <p><strong>Expiration Date:</strong> <?= htmlspecialchars($item['expiration_date']); ?></p>
+                                                    <p style="display: none;"><strong>Total Price:</strong> $<?= htmlspecialchars(number_format($item['total_price'], 2)); ?></p>
                                                 </div>
                                                 <?php if (!empty($item['image'])): ?>
                                                     <div class="mb-3">
@@ -172,10 +167,7 @@
                                                             <label class="form-label">Amount</label>
                                                             <input type="number" class="form-control" name="amount" id="amount" required step="0.01" min="0">
                                                         </div>
-                                                        <div class="col-md-6 mb-3">
-                                                            <label class="form-label">Expiration Date</label>
-                                                            <input type="date" class="form-control" name="expiration_date" id="expiration_date" required>
-                                                        </div>
+
                                                     </div>
                                                     <div class="mb-3">
                                                         <label class="form-label">Image</label>
@@ -203,7 +195,6 @@
     <!-- JavaScript for Edit Modal Population -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+   
+
 </main>
-
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

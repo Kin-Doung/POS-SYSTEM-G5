@@ -70,6 +70,11 @@ class SettingModel
 
         return $stmt->execute(); // Execute the update query
     }
+ 
+
+
+
+
 
     // Delete an admin user
     public function deleteAdmin($id)

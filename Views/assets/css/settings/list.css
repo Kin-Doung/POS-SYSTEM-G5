@@ -7,29 +7,36 @@ nav {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+
     .search-container {
         width: 60%;
     }
+
     .icons {
         margin-right: 100px;
     }
+
     .profile {
         margin-right: 100px;
+
         img {
             width: 50px;
             height: 50px;
             border-radius: 50%;
             margin: 10px;
         }
+
         .profile-info {
             display: flex;
             flex-direction: column;
+
             #profile-name {
                 font-size: 16px;
                 font-weight: bold;
                 color: rgb(88, 85, 85);
             }
         }
+
         .menu {
             display: none;
             position: absolute;
@@ -41,14 +48,152 @@ nav {
             padding: 10px;
             list-style: none;
             min-width: 140px;
+
             li {
                 padding: 10px;
+
                 a {
                     text-decoration: none;
                     color: black;
                     display: block;
                 }
             }
+
+            li:hover {
+                background: #f2f2f2;
+            }
+        }
+    }
+
+}
+
+
+.menu {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background: #fff;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 10px;
+    list-style: none;
+    min-width: 120px;
+}
+
+.menu li {
+    padding: 10px;
+}
+
+.menu li a {
+    text-decoration: none;
+    color: black;
+    display: block;
+}
+
+.menu li:hover {
+    background: #f2f2f2;
+}
+
+.custom-btn {
+    background-color: #048c24;
+    /* Green */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.custom-btn:hover {
+    background-color: #218838;
+    /* Darker green */
+}
+
+.custom-btnn {
+    background-color: #de8806;
+    /* Green */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.custom-btn:hover {
+    background-color: #218838;
+    /* Darker green */
+}
+
+.form-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    /* Adjust space between inputs */
+}
+
+.group {
+    flex: 1;
+    /* Makes both fields equal width */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+    .search-container {
+        width: 60%;
+    }
+
+    .icons {
+        margin-right: 100px;
+    }
+
+    .profile {
+        margin-right: 100px;
+
+        img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 10px;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+
+            #profile-name {
+                font-size: 16px;
+                font-weight: bold;
+                color: rgb(88, 85, 85);
+            }
+        }
+
+        .menu {
+            display: none;
+            position: absolute;
+            top: 80px;
+            right: 50px;
+            background: #fff;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 10px;
+            list-style: none;
+            min-width: 140px;
+
+            li {
+                padding: 10px;
+
+                a {
+                    text-decoration: none;
+                    color: black;
+                    display: block;
+                }
+            }
+
             li:hover {
                 background: #f2f2f2;
             }
@@ -63,3 +208,175 @@ nav {
 
 
 
+.container {
+    width: 1000px;
+    margin-left: 0px;
+
+    .card {
+        width: 1165px;
+        padding: 40px;
+
+        .edit {
+            display: flex;
+            background: none;
+            justify-content: flex-end;
+
+            a {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 100px;
+                height: 40px;
+                border-radius: 15px;
+                margin: 20px;
+                color: white;
+                background: rgb(13, 99, 122);
+                font-style: normal;
+
+            }
+        }
+
+        h2 {
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .account-details {
+            padding: 20px;
+            border-radius: 20px;
+            background: rgba(249, 249, 249, 0.777);
+
+            .account-row {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                gap: 100px;
+                padding: 40px;
+
+                .left {
+                    display: flex;
+                    flex-direction: column;
+                    width: 40%;
+                    gap: 30px;
+
+
+                    .aa {
+                        display: flex;
+                        flex-direction: row;
+                        gap: 40px;
+
+                        h6 {
+                            color: rgb(91, 89, 89);
+                            display: flex;
+                            justify-content: flex-start;
+                            align-items: flex-start;
+                        }
+
+                    }
+
+                    .aa-1 {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-start;
+
+                        gap: 10px;
+
+                        h6 {
+                            color: rgb(91, 89, 89);
+                            display: flex;
+                            justify-content: flex-start;
+                            align-items: flex-start;
+                        }
+
+                        .a-1 {
+                            display: flex;
+                            background: rgba(227, 225, 225, 0.504);
+
+                            width: 350px;
+                            border-radius: 5px;
+
+                            p {
+                                display: flex;
+                                justify-content: flex-start;
+                                align-items: center;
+                                padding-left: 20px;
+                            }
+                        }
+                    }
+                }
+
+                .right {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-start;
+                    align-items: flex-start;
+                    width: 40%;
+                    margin-left: 30px;
+                    gap: 30px;
+
+
+                    .bb {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-start;
+
+                        gap: 10px;
+
+                        h6 {
+                            color: rgb(91, 89, 89);
+                            display: flex;
+                            justify-content: flex-start;
+                            align-items: flex-start;
+                        }
+
+                        .bb-1,
+                        .bb-2,
+                        .bb-3 {
+
+                            background: rgba(227, 225, 225, 0.504);
+                            width: 350px;
+                            border-radius: 5px;
+
+                            p {
+                                display: flex;
+                                justify-content: flex-start;
+                                align-items: center;
+                                padding-left: 20px;
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            .buttom {
+                display: flex;
+                margin-top: 0px;
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 30px;
+                gap: 10px;
+
+                .bt-1 {
+
+
+                    width: 820px;
+                    background: rgba(227, 225, 225, 0.504);
+                    border-radius: 5px;
+
+                    p {
+                        display: flex;
+                        justify-content: flex-start;
+                        align-items: center;
+                        padding-left: 20px;
+                        height: 40px;
+                    }
+
+                }
+            }
+        }
+
+    }
+}

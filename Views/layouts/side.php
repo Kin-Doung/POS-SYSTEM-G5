@@ -45,6 +45,15 @@
           <span class="nav-link-text ms-1">Order</span>
         </a>
       </li>
+      <!-- nav stock tracking -->
+      <li class="nav-item">
+        <a class="nav-link text-dark " href="/tracking">
+          <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
+            <i class="material-icons opacity-10">bar_chart</i>
+          </div>
+          <span class="nav-link-text ms-1">Stock tracking</span>
+        </a>
+      </li>
       <!-- nav Categories -->
       <li class="nav-item">
         <a class="nav-link text-dark " href="/category">
@@ -75,7 +84,7 @@
       <!-- Dark Mode (with Toggle Switch) -->
       <li class="nav-item">
                 <div class="nav-link text-<?php echo $theme === 'dark' ? 'light' : 'dark'; ?>">
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center">navbar
                         <div class="text-<?php echo $theme === 'dark' ? 'light' : 'dark'; ?> text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="material-icons opacity-10">dark_mode</i>
                         </div>

@@ -48,6 +48,14 @@ $routes->get('/inventory/delete', [InventoryController::class, 'destroy']);
 $routes->get('/inventory/view', [InventoryController::class, 'view']); // View an inventory item
 
 
+// Stock tracking
+$routes->get('/tracking', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
 
 
 

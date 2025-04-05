@@ -2,7 +2,6 @@
 <?php require_once './views/layouts/side.php'; ?>
 
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-
     <nav class="navbar">
         <div class="search-container">
             <i class="fas fa-search"></i>
@@ -15,21 +14,23 @@
                 <span class="notification-badge" id="notification-count">8</span>
             </div>
         </div>
-        <div class="profile">
+        <div class="profile" id="profile">
             <img src="../../views/assets/images/image.png" alt="User">
             <div class="profile-info">
                 <span id="profile-name">Eng Ly</span>
                 <span class="store-name" id="store-name">Owner Store</span>
             </div>
-            <!-- <ul class="menu" id="menu">
+            <ul class="menu" id="menu">
                 <li><a href="/settings" class="item">Account</a></li>
                 <li><a href="/settings" class="item">Setting</a></li>
                 <li><a href="/logout" class="item">Logout</a></li>
-            </ul> -->
+            </ul>
+            <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
+            <script src="../../views/assets/js/setting.js"></script>
         </div>
     </nav>
 
-    <div class="container table-inventory">
+    <div class="container table-inventory mt-5">
         <div class="orders">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h2 style="font-weight: bold;" class="purchase-head">Purchasing Orders</h2>
@@ -71,7 +72,7 @@
                                         <?= htmlspecialchars($item['category_name']); ?>
                                     </span>
                                 </td>
-                               
+
                             </tr>
 
 

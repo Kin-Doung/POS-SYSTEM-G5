@@ -41,3 +41,60 @@
     #profile-name {
         color: gray;
     }
+
+
+    
+
+.custom-btn {
+    background-color: #048c24; /* Green */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.custom-btn:hover {
+    background-color: #218838; /* Darker green */
+}
+.custom-btnn {
+    background-color: #de8806; /* Green */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.custom-btn:hover {
+    background-color: #218838; /* Darker green */
+}
+
+.form-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; /* Adjust space between inputs */
+}
+
+.group {
+    flex: 1; /* Makes both fields equal width */
+    display: flex;
+    flex-direction: row;
+}
+
+.form-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}

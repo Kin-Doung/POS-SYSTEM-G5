@@ -8,7 +8,20 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-<main class="main-content create-content position-relative max-height-vh-100 h-100">
+<main class="main-content create-content position-relative max-height-vh-100 h-100 me-2">
+    <style>
+        main {
+            padding: 20px;
+            margin-top: 40px;
+            border-radius: 20px;
+        }
+    
+        .col-md-12 {
+            border-radius: 20px;
+        }
+    </style>
+    
+    
     <h2 class="text-center head-add" style="padding-top: 20px;">Add Stock Products</h2>
     <div class="d-flex justify-content-end align-item-center me-3">
         <button type="button" id="previewInvoice" class="btn btn-preview" data-bs-toggle="modal" data-bs-target="#invoiceModal">Preview Invoice</button>
@@ -150,8 +163,8 @@
         const tableBody = $('#productTableBody');
         const invoiceTableBody = $('#invoiceTableBody');
         let totalPrice = 0;
-        invoiceTableBody.empty();  // Clear previous rows
-        
+        invoiceTableBody.empty(); // Clear previous rows
+
         tableBody.find('.product-row').each(function() {
             const image = $(this).find('input[type="file"]')[0].files[0];
             const category = $(this).find('select[name="category_id[]"]').val();
@@ -174,10 +187,14 @@
 
     // Export to PDF
     $('#exportPDF').on('click', function() {
-        const { jsPDF } = window.jspdf;
+        const {
+            jsPDF
+        } = window.jspdf;
         const doc = new jsPDF();
         const table = document.querySelector('#invoiceTableBody');
-        doc.autoTable({ html: table });
+        doc.autoTable({
+            html: table
+        });
         doc.save('invoice.pdf');
     });
 
@@ -185,7 +202,10 @@
     $('#exportExcel').on('click', function() {
         const table = document.querySelector('#invoiceTableBody');
         const wb = XLSX.utils.table_to_book(table);
-        XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+        XLSX.write(wb, {
+            bookType: 'xlsx',
+            type: 'binary'
+        });
         XLSX.writeFile(wb, 'invoice.xlsx');
     });
 </script>

@@ -1,31 +1,23 @@
 <?php require_once './views/layouts/side.php' ?>
 
-
-
 <style>
   .move-left {
     margin-left: -10px;
-    /* Adjust as needed */
   }
 </style>
 
 <body id="page-top">
-
-
   <!-- Page Wrapper -->
   <div id="wrapper" style="margin-left: 250px;">
-
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
       <!-- Main Content -->
       <div id="content">
-
-
-        <nav class="navbar move-left">
-          <div class="search-container " style="background-color: #fff;">
+        <nav class="navbar ml-4 mb-5">
+          <div class="search-container">
             <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search..." >
+            <input type="text" placeholder="Search...">
           </div>
           <div class="icons">
             <i class="fas fa-globe icon-btn"></i>
@@ -34,7 +26,7 @@
               <span class="notification-badge" id="notification-count">8</span>
             </div>
           </div>
-          <div class="profile">
+          <div class="profile" id="profile">
             <img src="../../views/assets/images/image.png" alt="User">
             <div class="profile-info">
               <span id="profile-name">Eng Ly</span>
@@ -51,6 +43,7 @@
         </nav>
         <!-- Begin Page Content -->
         <div class="container-fluid">
+
 
           <!-- Content Row -->
           <div class="row">
@@ -185,8 +178,7 @@
                 <div class="card-body" style="height: 368px;">
                   <h4 class="small text-left">Server Migration <span class="float-right">20%</span></h4>
                   <div class="progress mb-4" style="height: 15px;">
-                    <div class="progress-bar" role="progressbar" style="width: 20%; height: 100%;   background-color: rgb(226, 160, 160);
-"
+                    <div class="progress-bar" role="progressbar" style="width: 20%; height: 100%;   background-color: rgb(226, 160, 160);"
                       aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
                   <h4 class="small text-left">Sales Tracking <span class="float-right">40%</span></h4>

@@ -1,7 +1,6 @@
 <?php require_once './views/layouts/header.php' ?>
 <?php require_once './views/layouts/side.php' ?>
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-    <!-- Navbar -->
     <nav class="navbar">
         <div class="search-container">
             <i class="fas fa-search"></i>
@@ -14,7 +13,7 @@
                 <span class="notification-badge" id="notification-count">8</span>
             </div>
         </div>
-        <div class="profile">
+        <div class="profile" id="profile">
             <img src="../../views/assets/images/image.png" alt="User">
             <div class="profile-info">
                 <span id="profile-name">Eng Ly</span>
@@ -29,7 +28,6 @@
             <script src="../../views/assets/js/setting.js"></script>
         </div>
     </nav>
-
 
     <div class="container table-inventory">
         <div class="orders">
@@ -195,6 +193,6 @@
     <!-- JavaScript for Edit Modal Population -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-   
+
 
 </main>

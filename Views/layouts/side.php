@@ -1,5 +1,5 @@
 
-<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-0 my-0 fixed-start ms-0 bg-white" id="sidenav-main">
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-0 my-0 fixed-start me-0 ms-0 bg-white" id="sidenav-main">
   <div class="sidenav-header ms-0 my-0">
     <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
     <a class="navbar-brand m-0" href="#" target="_blank">
@@ -81,27 +81,6 @@
           <span class="nav-link-text ms-1">Account</span>
         </a>
       </li>
-      <!-- Dark Mode (with Toggle Switch) -->
-      <li class="nav-item">
-                <div class="nav-link text-<?php echo $theme === 'dark' ? 'light' : 'dark'; ?>">
-                    <div class="d-flex align-items-center">navbar
-                        <div class="text-<?php echo $theme === 'dark' ? 'light' : 'dark'; ?> text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="material-icons opacity-10">dark_mode</i>
-                        </div>
-                        <span class="nav-link-text ms-1">Dark Mood</span>
-                    </div>
-                    <div class="ms-4 mt-1">
-                        <input type="checkbox" id="toggle" <?php echo $theme === 'dark' ? 'checked' : ''; ?>>
-                        <label class="toggle" for="toggle">
-                            <i class="bx bxs-sun"></i>
-                            <i class="bx bx-moon"></i>
-                            <span class="ball"></span>
-                        </label>
-                    </div>
-                </div>
-            </li>
-    
- 
       <li class="nav-item">
         <a class="nav-link text-dark" href="/logout">
           <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">

@@ -21,11 +21,11 @@
                 <span id="profile-name">Eng Ly</span>
                 <span class="store-name" id="store-name">Owner Store</span>
             </div>
-            <!-- <ul class="menu" id="menu">
+            <ul class="menu" id="menu">
                 <li><a href="/settings" class="item">Account</a></li>
                 <li><a href="/settings" class="item">Setting</a></li>
                 <li><a href="/logout" class="item">Logout</a></li>
-            </ul> -->
+            </ul>
         </div>
     </nav>
 

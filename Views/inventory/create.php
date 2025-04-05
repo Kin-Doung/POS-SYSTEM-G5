@@ -17,62 +17,60 @@ require_once './views/layouts/side.php';
         <div class="card p-3" style="box-shadow: none;border:none">
             <form id="productForm" action="/inventory/store" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
                 <div id="productFields" class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Product Image</th>
-                                <th style="display: none;">Category</th>
-                                <th>Product Name</th>
-                                <th>Quantity</th>
-                                <th>Price ($)</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="productTableBody">
-                            <tr class="product-row">
-                                <td>
-                                    <!-- <input type="file" class="form-control image-add" name="image[]" accept="image/*"> -->
-                                    <img src="" alt="Product Image" class="img-preview" style="display: none; width: 50px; height: 50px; margin: 0 auto;">
-                                </td>
-                                <td>
-                                    <select name="category_id[]" class="form-control category-select" required>
-                                        <option value="">Select Category</option>
-                                        <?php foreach ($categories as $category): ?>
-                                            <option value="<?= htmlspecialchars($category['id']) ?>">
-                                                <?= htmlspecialchars($category['name']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select name="product_name[]" class="form-control product-select" required>
-                                        <option value="">Select Product</option>
-                                        <?php if (!empty($inventory)): ?>
-                                            <?php foreach ($inventory as $product): ?>
-                                                <option value="<?= htmlspecialchars($product['id']) ?>">
-                                                    <?= htmlspecialchars($product['product_name']) ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <option disabled>No Products Found</option>
-                                        <?php endif; ?>
-                                    </select>
-
-                                    </td>
-                                <td>
-                                    <input type="number" class="form-control quantity-input" name="quantity[]" min="1" required>
-                                </td>
-                                <td>
-                                    <input type="number" class="form-control amount-input" name="amount[]" min="0" step="0.01" required>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn removeRow" style="background: none; border: none; color: red; box-shadow:none;text-decoration:underline;font-size:15px;">
-                                        <i class="fa-solid fa-trash"></i>remove
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Product Image</th>
+            <th style="display: none;">Category</th> <!-- Already hidden in your code -->
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price ($)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="productTableBody">
+        <tr class="product-row">
+            <td>
+                <img src="" alt="Product Image" class="img-preview" style="display: none; width: 50px; height: 50px; margin: 0 auto;">
+            </td>
+            <td style="display: none;"> <!-- Hide the category cell in the body as well -->
+                <select name="category_id[]" class="form-control category-select" required>
+                    <option value="">Select Category</option>
+                    <?php foreach ($categories as $category): ?>
+                        <option value="<?= htmlspecialchars($category['id']) ?>">
+                            <?= htmlspecialchars($category['name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </td>
+            <td>
+                <select name="product_name[]" class="form-control product-select" required>
+                    <option value="">Select Product</option>
+                    <?php if (!empty($inventory)): ?>
+                        <?php foreach ($inventory as $product): ?>
+                            <option value="<?= htmlspecialchars($product['id']) ?>">
+                                <?= htmlspecialchars($product['product_name']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <option disabled>No Products Found</option>
+                    <?php endif; ?>
+                </select>
+            </td>
+            <td>
+                <input type="number" class="form-control quantity-input" name="quantity[]" min="1" required>
+            </td>
+            <td>
+                <input type="number" class="form-control amount-input" name="amount[]" min="0" step="0.01" required>
+            </td>
+            <td>
+                <button type="button" class="btn removeRow" style="background: none; border: none; color: red; box-shadow:none;text-decoration:underline;font-size:15px;">
+                    <i class="fa-solid fa-trash"></i>remove
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
                 </div>
                 <div class="d-flex justify-content-end align-items-center">
                     <button type="button" id="addMore" class="add-moree">Add more</button>

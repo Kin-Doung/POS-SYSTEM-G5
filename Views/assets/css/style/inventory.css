@@ -234,6 +234,10 @@
 #searchInput:focus{
   outline: none !important;
 }
+.input-group{
+  background-color:#eaecf4;
+  box-shadow: none;
+}
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {

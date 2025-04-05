@@ -15,14 +15,14 @@
         </div>
         <div class="eng-ly">Engly shop</div>
         <div class="user-info">
-            <p>Username: 
-                <span id="username" class="blur-text">Engly</span> 
+            <p>Username:
+                <span id="username" class="blur-text">Engly</span>
                 <i class="toggle-icon" onclick="toggleVisibility('username', this)">👁️</i>
             </p>
         </div>
         <div class="user-pass">
-            <p>Password: 
-                <span id="password" class="blur-text">123</span> 
+            <p>Password:
+                <span id="password" class="blur-text">123</span>
                 <i class="toggle-icon" onclick="toggleVisibility('password', this)">👁️</i>
             </p>
         </div>
@@ -37,4 +37,3 @@
 
 
 <!-- end of logout form -->
-

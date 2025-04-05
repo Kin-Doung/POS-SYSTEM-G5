@@ -30,6 +30,7 @@ $routes->put('/settings/update', [SettingController::class, 'update']);
 $routes->delete('/settings/destroy', [SettingController::class, 'destroy']);
 
 
+
 //inventory
 $routes->get('/inventory', [InventoryController::class, 'index']); // Display all inventory
 
@@ -50,6 +51,14 @@ $routes->get('/inventory/delete', [InventoryController::class, 'destroy']);
 $routes->get('/inventory/view', [InventoryController::class, 'view']); // View an inventory item
 
 
+// Stock tracking
+$routes->get('/tracking', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
 
 $routes->get('/inventory/getProductDetails', [InventoryController::class, 'getProductDetails']);
 
@@ -94,7 +103,8 @@ $routes->get('/purchase/get-existing-products', [PurchaseController::class, 'get
 // Router of the history product
 $routes->get('/history', [HistoryController::class, 'index']);              // List all history entries
 $routes->post('/history/store', [HistoryController::class, 'store']);       // Store a new history entry
-$routes->delete('/history/delete/(:num)', [HistoryController::class, 'delete']); // Delete a specific history entry
+$routes->delete('/history/destroy', [HistoryController::class, 'destroy']); // Delete a specific history entry (renamed from 'delete' to 'destroy')
+$routes->post('/history/fetchFilteredHistories', [HistoryController::class, 'fetchFilteredHistories']); // Fetch filtered history entries
 
 
 

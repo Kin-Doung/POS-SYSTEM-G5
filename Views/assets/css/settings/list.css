@@ -72,12 +72,67 @@
     /* Makes both fields equal width */
     display: flex;
     flex-direction: row;
+    justify-content: space-around;
+
+    .search-container {
+        width: 60%;
+    }
+
+    .icons {
+        margin-right: 100px;
+    }
+
+    .profile {
+        margin-right: 100px;
+
+        img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 10px;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+
+            #profile-name {
+                font-size: 16px;
+                font-weight: bold;
+                color: rgb(88, 85, 85);
+            }
+        }
+
+        .menu {
+            display: none;
+            position: absolute;
+            top: 80px;
+            right: 50px;
+            background: #fff;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 10px;
+            list-style: none;
+            min-width: 140px;
+
+            li {
+                padding: 10px;
+
+                a {
+                    text-decoration: none;
+                    color: black;
+                    display: block;
+                }
+            }
+
+            li:hover {
+                background: #f2f2f2;
+            }
+        }
+    }
+
 }
 
-.form-label {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
 
 .form-control {
     width: 100%;

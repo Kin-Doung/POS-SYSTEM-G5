@@ -1,19 +1,14 @@
 <?php require_once './views/layouts/side.php' ?>
 
-
 <style>
   .move-left {
     margin-left: -10px;
-    /* Adjust as needed */
   }
 </style>
 
 <body id="page-top">
-
-
   <!-- Page Wrapper -->
   <div id="wrapper" style="margin-left: 250px;">
-
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
@@ -25,6 +20,7 @@
           using import navbar instead -->
         <!-- Begin Page Content -->
         <div class="container-fluid">
+
 
           <!-- Content Row -->
           <div class="row">
@@ -159,8 +155,7 @@
                 <div class="card-body" style="height: 368px;">
                   <h4 class="small text-left">Server Migration <span class="float-right">20%</span></h4>
                   <div class="progress mb-4" style="height: 15px;">
-                    <div class="progress-bar" role="progressbar" style="width: 20%; height: 100%;   background-color: rgb(226, 160, 160);
-"
+                    <div class="progress-bar" role="progressbar" style="width: 20%; height: 100%;   background-color: rgb(226, 160, 160);"
                       aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
                   <h4 class="small text-left">Sales Tracking <span class="float-right">40%</span></h4>

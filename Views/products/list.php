@@ -2,113 +2,488 @@
 require_once './views/layouts/header.php';
 require_once './views/layouts/side.php';
 ?>
+<style>
+    /* Sidebar */
+    .sidebar {
+        width: 250px;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #f8f9fa;
+        padding: 20px;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
 
-<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg p-3">
+    /* Main Content */
+    .main-content {
+        margin-left: 250px;
+        padding: 20px;
+        position: relative;
+        z-index: 1;
+        min-height: 100vh;
+        transition: margin-right 0.3s ease;
+        margin-top: 70px;
+        /* Offset for fixed navbar */
+    }
 
-    <nav class="navbar">
-        <div class="search-container" style="background-color: #fff;"> 
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search...">
+    .cart-visible .main-content {
+        margin-right: 350px;
+        /* Adjust for cart width */
+    }
+
+    .navbar {
+        width: 81.5%;
+        position: sticky;
+        top: 0;
+        left: 280px;
+        background: #fff;
+    }
+
+    .cart-icon {
+        position: relative;
+        cursor: pointer;
+    }
+
+    .cart-count {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: #dc3545;
+        color: white;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+    }
+
+    /* Container */
+    .container-fluid {
+        width: 100%;
+        padding: 0 5px;
+        /* Reduced for closer cards */
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -5px;
+    }
+
+    /* Product Section */
+    .product-section {
+        width: 100%;
+        padding: 0 5px;
+        margin-top: -70px;
+    }
+
+    /* Product Card */
+    .product-col {
+        width: 25%;
+        /* 4 per row by default */
+        padding: 0 5px;
+        margin-bottom: 10px;
+        opacity: 1;
+        transition: opacity 0.3s ease;
+    }
+
+    .product-col.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .cart-visible .product-col {
+        width: 33.33%;
+        /* 3 cards per row when cart is visible */
+    }
+
+    .product-card {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        height: 100%;
+        transition: transform 0.2s ease;
+    }
+
+    .product-card:hover {
+        transform: scale(1.04);
+    }
+
+    .image-wrapper {
+        position: relative;
+        padding-top: 70%;
+        background-color: #f8f9fa;
+        overflow: hidden;
+    }
+
+    .image-wrapper img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 80%;
+        height: 80%;
+        transform: translate(-50%, -50%);
+        object-fit: contain;
+    }
+
+    .card-body {
+        padding: 5px;
+        text-align: center;
+    }
+
+    .card-title {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 3px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .price {
+        font-size: 1.1rem;
+        color: #28a745;
+        margin-bottom: 3px;
+    }
+
+    .quantity {
+        color: #666;
+        margin-bottom: 5px;
+    }
+
+    .buy {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 5px;
+        width: 100%;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .buy:hover {
+        background-color: #0056b3;
+    }
+
+    /* Cart Section */
+    .cart-section {
+        position: fixed;
+        top: 70px;
+        /* Below fixed navbar */
+        right: 0;
+        width: 350px;
+        height: calc(100vh - 70px);
+        padding: 15px;
+        z-index: 900;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        background-color: #fff;
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart-section.visible {
+        transform: translateX(0);
+    }
+
+    .cart-card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cart-header {
+        background-color: #343a40;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+        position: relative;
+    }
+
+    .close-cart {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 18px;
+        cursor: pointer;
+    }
+
+    .cart-body {
+        padding: 15px;
+        flex-grow: 1;
+        overflow-y: auto;
+    }
+
+    .cart-table {
+        width: 100%;
+        border-collapse: collapse;
+        /* Simpler, no gaps */
+        background-color: #fff;
+        /* Clean white background */
+    }
+
+    .cart-table th {
+        background-color: #f1f1f1;
+        /* Light gray header */
+        color: #333;
+        /* Darker text */
+        padding: 8px;
+        /* Reduced padding */
+        font-weight: 500;
+        /* Lighter weight */
+        font-size: 0.9rem;
+        text-align: left;
+        /* Simple alignment */
+    }
+
+    .cart-table td {
+        padding: 8px;
+        /* Consistent padding */
+        border-bottom: 1px solid #eee;
+        /* Subtle border */
+        text-align: left;
+        /* Simpler alignment */
+    }
+
+    .cart-table tr:last-child td {
+        border-bottom: none;
+        /* Clean finish */
+    }
+
+    .cart-qty,
+    .cart-price {
+        width: 60px;
+        /* Smaller for simplicity */
+        padding: 4px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        text-align: center;
+        font-size: 0.9rem;
+        background-color: #fff;
+    }
+
+    .cart-footer {
+        padding: 15px;
+        background-color: #f8f9fa;
+        text-align: center;
+        border-top: 1px solid #ddd;
+    }
+
+    .cart-btn {
+        padding: 10px 20px;
+        /* Larger for easy clicking */
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        margin: 5px;
+        /* More spacing */
+        cursor: pointer;
+        font-size: 1rem;
+        /* Larger text */
+        width: 120px;
+        /* Consistent size */
+        transition: background-color 0.2s ease, transform 0.1s ease;
+        /* Smooth interaction */
+    }
+
+    .cart-btn:hover {
+        transform: scale(1.05);
+        /* Slight hover effect */
+    }
+
+    .cart-btn:active {
+        transform: scale(0.98);
+        /* Press effect */
+    }
+
+    .cart-btn-success {
+        background-color: #28a745;
+    }
+
+    .cart-btn-success:hover {
+        background-color: #218838;
+    }
+
+    .cart-btn-info {
+        background-color: #17a2b8;
+    }
+
+    .cart-btn-info:hover {
+        background-color: #138496;
+    }
+
+    .cart-btn-secondary {
+        background-color: #6c757d;
+    }
+
+    .cart-btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+    .cart-btn-danger {
+        background-color: #dc3545;
+    }
+
+    .cart-btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    
+
+    /* Responsive Adjustments */
+    @media (max-width: 767px) {
+        .product-col {
+            width: 50%;
+        }
+
+        .cart-section {
+            width: 100%;
+            top: 70px;
+            height: calc(100vh - 70px);
+        }
+
+        .cart-visible .main-content {
+            margin-right: 0;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .product-col {
+            width: 100%;
+        }
+    }
+</style>
+<nav class="navbar">
+    <div class="search-container">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search...">
+    </div>
+    <div class="icons">
+        <i class="fas fa-globe icon-btn"></i>
+        <div class="icon-btn" id="notification-icon">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" id="notification-count">8</span>
         </div>
-        <div class="icons">
-            <i class="fas fa-globe icon-btn"></i>
-            <div class="icon-btn" id="notification-icon">
-                <i class="fas fa-bell"></i>
-                <span class="notification-badge" id="notification-count">8</span>
-            </div>
+        <div class="cart-icon" id="cartToggle">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count" id="cartCount">0</span>
         </div>
-        <div class="profile">
-            <img src="../../views/assets/images/image.png" alt="User">
-            <div class="profile-info">
-                <span id="profile-name">Eng Ly</span>
-                <span class="store-name" id="store-name">Owner Store</span>
-            </div>
-            <ul class="menu" id="menu">
-                <li><a href="/settings" class="item">Account</a></li>
-                <li><a href="/settings" class="item">Setting</a></li>
-                <li><a href="/logout" class="item">Logout</a></li>
-            </ul>
-            <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
-            <script src="../../views/assets/js/setting.js"></script>
+    </div>
+    <div class="profile">
+        <img src="../../views/assets/images/image.png" alt="User">
+        <div class="profile-info">
+            <span id="profile-name">Eng Ly</span>
+            <span class="store-name" id="store-name">Owner Store</span>
         </div>
-    </nav>
-    <div class="container-fluid mt-4">
-        <div class="row">
+        <ul class="menu" id="menu">
+            <li><a href="/settings" class="item">Account</a></li>
+            <li><a href="/settings" class="item">Setting</a></li>
+            <li><a href="/logout" class="item">Logout</a></li>
+        </ul>
+        <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
+        <script src="../../views/assets/js/setting.js"></script>
+    </div>
+</nav>
+<main class="main-content">
+
+    <div class="container-fluid">
+        <div class="row" id="productRow">
             <!-- Product List Section -->
-            <div class="col-lg-8 col-md-7">
+            <div class="product-section">
                 <h3 class="mb-3 text-dark">Order Products</h3>
                 <div class="row">
                     <?php foreach ($inventory as $item): ?>
-                        <div class="col-6 col-sm-4 col-md-3 mb-4">
-                            <div class="card h-100 shadow-sm border-0">
+                        <div class="product-col">
+                            <div class="product-card">
                                 <div class="image-wrapper">
                                     <?php if (!empty($item['image'])): ?>
                                         <img src="<?= htmlspecialchars($item['image']) ?>"
-                                            class="card-img-top"
                                             alt="<?= htmlspecialchars($item['inventory_product_name']) ?>"
                                             onerror="this.src='/views/assets/images/default-product.jpg'">
                                     <?php else: ?>
                                         <img src="/views/assets/images/default-product.jpg"
-                                            class="card-img-top"
                                             alt="Default Product Image">
                                     <?php endif; ?>
                                 </div>
-                                <div class="card-body text-center p-2">
-                                    <h6 class="card-title mb-1"><?= htmlspecialchars($item['inventory_product_name']) ?></h6>
-                                    <p class="card-text text-success mb-1 price" data-id="<?= htmlspecialchars($item['inventory_id']) ?>">
+                                <div class="card-body">
+                                    <h6 class="card-title"><?= htmlspecialchars($item['inventory_product_name']) ?></h6>
+                                    <p class="price" data-id="<?= htmlspecialchars($item['inventory_id']) ?>">
                                         $<?= htmlspecialchars($item['amount']) ?>
                                     </p>
-                                    <p style="display: none;" class="card-text text-muted mb-2 quantity" data-id="<?= htmlspecialchars($item['inventory_id']) ?>">
+                                    <p class="quantity" data-id="<?= htmlspecialchars($item['inventory_id']) ?>" style="display: none;">
                                         Qty: <?= htmlspecialchars($item['quantity']) ?>
                                     </p>
                                     <input type="hidden" name="inventory_id" value="<?= htmlspecialchars($item['inventory_id']) ?>" />
-                                    <button class="buy btn btn-primary btn-sm w-100">Add to Cart</button>
+                                    <button class="buy">Add to Cart</button>
                                 </div>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
             </div>
-
-            <!-- Cart Section -->
-            <div class="col-lg-4 col-md-5">
-                <div class="card shadow-sm border-0" id="cartSection" style="display: none;">
-                    <div class="card-header bg-dark text-white text-center">
-                        <h4 class="mb-0">POS Terminal</h4>
-                    </div>
-                    <div class="card-body p-3">
-                        <table class="table table-hover table-bordered text-center" id="cartTable">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Qty</th>
-                                    <th>Price ($)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="cartBody"></tbody>
-                        </table>
-                        <div class="text-end mt-3">
-                            <h5 class="fw-bold">Total: $<span id="grandTotal">0.00</span></h5>
-                        </div>
-                    </div>
-                    <div class="card-footer bg-light p-3 text-center">
-                        <button class="btn btn-success btn-sm mx-1" id="submitCart">Checkout</button>
-                        <button class="btn btn-info btn-sm mx-1" id="savePdf">Save Receipt</button>
-                        <button class="btn btn-secondary btn-sm mx-1" id="printCart">Print Receipt</button>
-                        <button class="btn btn-danger btn-sm mx-1" id="clearCart">Clear</button>
+        </div>
+        <!-- Cart Section -->
+        <div class="cart-section" id="cartSection">
+            <div class="cart-card">
+                <div class="cart-header">
+                    <h4>POS Terminal</h4>
+                    <button class="close-cart" id="closeCart">✖</button>
+                </div>
+                <div class="cart-body">
+                    <table class="cart-table" id="cartTable">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Qty</th>
+                                <th>Price ($)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cartBody"></tbody>
+                    </table>
+                    <div style="text-align: right; margin-top: 15px;">
+                        <h5 style="font-weight: bold;">Total: $<span id="grandTotal">0.00</span></h5>
                     </div>
                 </div>
+                <div class="cart-footer">
+    <button class="cart-btn cart-btn-info" id="savePdf">Save PDF</button>
+    <button class="cart-btn cart-btn-danger" id="clearCart">Clear</button>
+    <button class="cart-btn cart-btn-primary" id="completeCart">Complete</button>
+    <button class="cart-btn cart-btn-success" id="submitCart">Checkout</button>
+</div>
+
+<div id="qr-container" style="display: none;">
+    <img id="qr-code-img" src="../assets/images/QR-code.png" alt="QR Code" style="width: 200px; height: 200px; margin-bottom: 15px;" />
+    <input type="text" id="inputField" placeholder="Enter your details" />
+</div>
+
             </div>
         </div>
     </div>
-
     <?php require_once 'views/layouts/footer.php'; ?>
 </main>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
+    const cartSection = document.getElementById('cartSection');
+    const cartToggle = document.getElementById('cartToggle');
+    const closeCart = document.getElementById('closeCart');
+    const cartCount = document.getElementById('cartCount');
+
     function showCart() {
-        document.getElementById('cartSection').style.display = 'block';
+        cartSection.classList.add('visible');
+        document.body.classList.add('cart-visible');
+    }
+
+    function hideCart() {
+        cartSection.classList.remove('visible');
+        document.body.classList.remove('cart-visible');
     }
 
     function updateCard(inventoryId, newQuantity) {
@@ -126,22 +501,37 @@ require_once './views/layouts/side.php';
         document.getElementById('grandTotal').textContent = total.toFixed(2);
     }
 
+    function updateCartCount() {
+        const itemCount = document.querySelectorAll('#cartBody tr').length;
+        cartCount.textContent = itemCount;
+    }
+
+    cartToggle.addEventListener('click', () => {
+        if (cartSection.classList.contains('visible')) {
+            hideCart();
+        } else {
+            showCart();
+        }
+    });
+
+    closeCart.addEventListener('click', hideCart);
+
     document.querySelectorAll('.buy').forEach(button => {
         button.addEventListener('click', async function() {
-            const card = this.closest('.card');
+            const card = this.closest('.product-card');
             const inventoryId = card.querySelector('input[name="inventory_id"]').value;
             const productName = card.querySelector('.card-title').textContent.trim();
             const price = parseFloat(card.querySelector('.price').textContent.replace('$', ''));
             const quantity = parseInt(card.querySelector('.quantity').textContent.replace('Qty: ', ''));
-
             const existingRow = document.querySelector(`#cartBody tr[data-id="${inventoryId}"]`);
             if (existingRow) {
                 const qtyInput = existingRow.querySelector('.cart-qty');
                 qtyInput.value = parseInt(qtyInput.value) + 1;
                 qtyInput.dispatchEvent(new Event('input'));
+                updateCartCount();
+                showCart();
                 return;
             }
-
             try {
                 const response = await fetch('/products/syncQuantity', {
                     method: 'POST',
@@ -153,25 +543,20 @@ require_once './views/layouts/side.php';
                         quantity
                     })
                 });
-
                 if (!response.ok) throw new Error(`Server error: ${response.status}`);
                 const data = await response.json();
-
                 if (data.success) {
-                    showCart();
-
                     const row = document.createElement('tr');
                     row.dataset.id = inventoryId;
-                    const initialQty = 1;
-                    const initialPrice = price;
-
                     row.innerHTML = `
-                        <td class="align-middle">${productName}</td>
-                        <td><input type="number" class="cart-qty form-control form-control-sm d-inline text-center" min="1" max="${quantity}" value="${initialQty}" style="width: 60px;"></td>
-                        <td><input type="number" class="cart-price form-control form-control-sm d-inline text-center" min="0" step="0.01" value="${initialPrice.toFixed(2)}" style="width: 80px;"></td>
+                        <td style="vertical-align: middle;">${productName}</td>
+                        <td><input type="number" class="cart-qty" min="1" max="${quantity}" value="1"></td>
+                        <td><input type="number" class="cart-price" min="0" step="0.01" value="${price.toFixed(2)}"></td>
                     `;
                     document.getElementById('cartBody').appendChild(row);
                     updateGrandTotal();
+                    updateCartCount();
+                    showCart();
                 } else {
                     alert(`Error syncing quantity: ${data.message}`);
                 }
@@ -184,24 +569,14 @@ require_once './views/layouts/side.php';
 
     document.addEventListener('input', function(e) {
         if (e.target.classList.contains('cart-qty') || e.target.classList.contains('cart-price')) {
-            const row = e.target.closest('tr');
-            const qtyInput = row.querySelector('.cart-qty');
-            const priceInput = row.querySelector('.cart-price');
-            const newQty = parseInt(qtyInput.value) || 1;
-            const newPrice = parseFloat(priceInput.value) || 0;
-
             updateGrandTotal();
-
-            if (e.target.classList.contains('cart-qty')) {
-                qtyInput.dataset.lastValue = newQty;
-            }
+            updateCartCount();
         }
     });
 
     document.getElementById('submitCart').addEventListener('click', function() {
         const cartItems = [];
         let valid = true;
-
         document.querySelectorAll('#cartBody tr').forEach(row => {
             const inventoryId = row.dataset.id;
             const quantityInput = row.querySelector('.cart-qty');
@@ -209,7 +584,6 @@ require_once './views/layouts/side.php';
             const quantity = parseInt(quantityInput.value) || 0;
             const price = parseFloat(priceInput.value) || 0;
             const maxQty = parseInt(quantityInput.max);
-
             if (quantity > 0) {
                 if (quantity > maxQty) {
                     alert(`Quantity for ${row.cells[0].textContent} exceeds available stock (${maxQty})`);
@@ -217,28 +591,25 @@ require_once './views/layouts/side.php';
                     return;
                 }
                 cartItems.push({
-                    inventoryId: inventoryId,
-                    quantity: quantity,
-                    price: price
+                    inventoryId,
+                    quantity,
+                    price
                 });
             }
         });
-
         if (!valid || cartItems.length === 0) {
             if (cartItems.length === 0) alert('Cart is empty! Please add items to proceed.');
             return;
         }
-
         this.disabled = true;
         this.textContent = 'Processing...';
-
         fetch('/products/submitCart', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    cartItems: cartItems
+                    cartItems
                 })
             })
             .then(response => {
@@ -253,7 +624,8 @@ require_once './views/layouts/side.php';
                         updateCard(item.inventoryId, currentQty - item.quantity);
                     });
                     document.getElementById('cartBody').innerHTML = '';
-                    document.getElementById('cartSection').style.display = 'none';
+                    hideCart();
+                    updateCartCount();
                     alert('Checkout completed successfully! Inventory updated.');
                 } else {
                     alert('Error: ' + data.message);
@@ -269,23 +641,20 @@ require_once './views/layouts/side.php';
             });
     });
 
-    // Clear Cart
     document.getElementById('clearCart').addEventListener('click', function() {
         if (confirm('Are you sure you want to clear the cart?')) {
             document.getElementById('cartBody').innerHTML = '';
             document.getElementById('grandTotal').textContent = '0.00';
-            document.getElementById('cartSection').style.display = 'none';
+            updateCartCount();
+            hideCart();
         }
     });
 
-    // Save as PDF (Professional Receipt)
     const {
         jsPDF
     } = window.jspdf;
     document.getElementById('savePdf').addEventListener('click', function() {
         const doc = new jsPDF();
-
-        // Header
         doc.setFontSize(18);
         doc.text('Store Name POS', 105, 15, {
             align: 'center'
@@ -297,9 +666,7 @@ require_once './views/layouts/side.php';
         doc.text(`Date: ${new Date().toLocaleString()}`, 105, 31, {
             align: 'center'
         });
-        doc.line(10, 35, 200, 35); // Horizontal line
-
-        // Table Header
+        doc.line(10, 35, 200, 35);
         let y = 45;
         doc.setFontSize(12);
         doc.text('Item', 10, y);
@@ -314,15 +681,12 @@ require_once './views/layouts/side.php';
         });
         y += 5;
         doc.line(10, y, 200, y);
-
-        // Table Content
         y += 5;
         document.querySelectorAll('#cartBody tr').forEach(row => {
-            const product = row.cells[0].textContent.trim().substring(0, 20); // Truncate long names
+            const product = row.cells[0].textContent.trim().substring(0, 20);
             const qty = row.querySelector('.cart-qty').value;
             const price = parseFloat(row.querySelector('.cart-price').value).toFixed(2);
             const total = (qty * price).toFixed(2);
-
             doc.text(product, 10, y);
             doc.text(qty, 100, y, {
                 align: 'right'
@@ -335,8 +699,6 @@ require_once './views/layouts/side.php';
             });
             y += 10;
         });
-
-        // Footer
         doc.line(10, y, 200, y);
         y += 10;
         const grandTotal = document.getElementById('grandTotal').textContent;
@@ -349,71 +711,36 @@ require_once './views/layouts/side.php';
         doc.text('Thank you for shopping with us!', 105, y, {
             align: 'center'
         });
-
         doc.save('pos-receipt.pdf');
     });
 
-    // Print Receipt
-    document.getElementById('printCart').addEventListener('click', function() {
-        const printWindow = window.open('', '_blank');
-        printWindow.document.write(`
-            <html>
-            <head>
-                <title>POS Receipt</title>
-                <style>
-                    body { font-family: Arial, sans-serif; width: 300px; margin: 10px auto; font-size: 12px; }
-                    h4 { text-align: center; margin: 0; font-size: 16px; }
-                    p { text-align: center; margin: 5px 0; }
-                    table { width: 100%; border-collapse: collapse; }
-                    th, td { padding: 5px; text-align: right; }
-                    th:first-child, td:first-child { text-align: left; }
-                    .total { font-weight: bold; font-size: 14px; margin-top: 10px; text-align: right; }
-                    hr { border: 0; border-top: 1px dashed #000; margin: 10px 0; }
-                </style>
-            </head>
-            <body>
-                <h4>Store Name POS</h4>
-                <p>123 Business Ave, City, ST 12345</p>
-                <p>Date: ${new Date().toLocaleString()}</p>
-                <hr>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Qty</th>
-                            <th>Price</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-        `);
 
-        document.querySelectorAll('#cartBody tr').forEach(row => {
-            const product = row.cells[0].textContent.trim().substring(0, 15);
-            const qty = row.querySelector('.cart-qty').value;
-            const price = parseFloat(row.querySelector('.cart-price').value).toFixed(2);
-            const total = (qty * price).toFixed(2);
-            printWindow.document.write(`
-                <tr>
-                    <td>${product}</td>
-                    <td>${qty}</td>
-                    <td>$${price}</td>
-                    <td>$${total}</td>
-                </tr>
-            `);
+    // Search functionality with animation
+    const searchInput = document.querySelector('.search-container input');
+    const productCards = document.querySelectorAll('.product-col');
+
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.trim().toLowerCase();
+
+        productCards.forEach(card => {
+            const productName = card.querySelector('.card-title').textContent.trim().toLowerCase();
+
+            // Toggle hidden class for animation
+            if (productName.includes(searchTerm)) {
+                card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
+            }
         });
-
-        const grandTotal = document.getElementById('grandTotal').textContent;
-        printWindow.document.write(`
-                    </tbody>
-                </table>
-                <hr>
-                <p class="total">Grand Total: $${grandTotal}</p>
-                <p>Thank you for shopping with us!</p>
-            </body>
-            </html>
-        `);
-        printWindow.document.close();
-        printWindow.print();
     });
+
+    document.getElementById('completeCart').addEventListener('click', function() {
+    // Show QR code image and input field below the cart
+    document.getElementById('qr-container').style.display = 'block';
+
+    // Set the QR code image source (replace with your QR code image path)
+    var qrCodeImageUrl = "path/to/your/qr-code-image.png";
+    document.getElementById('qr-code-img').src = qrCodeImageUrl;
+});
+
 </script>

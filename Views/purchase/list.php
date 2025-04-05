@@ -4,7 +4,7 @@
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
 
     <nav class="navbar">
-        <div class="search-container">
+        <div class="search-container" style="background-color: #fff;">
             <i class="fas fa-search"></i>
             <input type="text" placeholder="Search...">
         </div>
@@ -21,11 +21,11 @@
                 <span id="profile-name">Eng Ly</span>
                 <span class="store-name" id="store-name">Owner Store</span>
             </div>
-            <ul class="menu" id="menu">
+            <!-- <ul class="menu" id="menu">
                 <li><a href="/settings" class="item">Account</a></li>
                 <li><a href="/settings" class="item">Setting</a></li>
                 <li><a href="/logout" class="item">Logout</a></li>
-            </ul>
+            </ul> -->
         </div>
     </nav>
 

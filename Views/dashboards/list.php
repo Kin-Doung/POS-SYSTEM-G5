@@ -1,75 +1,114 @@
 <?php require_once './views/layouts/side.php' ?>
-<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg bg-white ">
-  <!-- Navbar -->
-  <?php require_once './views/layouts/nav.php' ?>
-  <!-- End Navbar -->
-  <div class="container-fluid py-4"> 
-    <div class="row d-flex justify-content-center align-item-center mb-3">
-      <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-        <div class="cards card-money">
-          <div class="card-header p-3 pt-2">
-            <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
-              <i class="material-icons opacity-10">weekend</i>
-            </div>
-            <div class="text-end pt-1">
-              <p class="text-sm mb-0 text-capitalize">Today's Money</p>
-              <h4 class="mb-0">$53</h4>
-            </div>
-          </div>
-          <!-- <hr class="dark horizontal my-0"> -->
-          <div class="card-footer p-3 mt-n2">
-            <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+55% </span>than last week</p>
-          </div>
-        </div>
-      </div>
-  
-      <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-        <div class="cards card-client">
-          <div class="card-header p-3 pt-2">
-            <div class="icon icon-lg icon-shape bg-gradient-success shadow-success text-center border-radius-xl mt-n4 position-absolute">
-              <i class="material-icons opacity-10">person</i>
-            </div>
-            <div class="text-end pt-1">
-              <p class="text-sm mb-0 text-capitalize">New Clients</p>
-              <h4 class="mb-0">100</h4>
-            </div>
-          </div>
-          <!-- <hr class="dark horizontal my-0"> -->
-          <div class="card-footer p-3 mt-n2">
-            <p class="mb-0"><span class="text-danger text-sm font-weight-bolder">-2%</span> than yesterday</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-xl-3 col-sm-6">
-        <div class="cards card-sale">
-          <div class="card-header p-3 pt-2">
-            <div class="icon icon-lg icon-shape bg-gradient-info shadow-info text-center border-radius-xl mt-n4 position-absolute">
-              <i class="material-icons opacity-10">weekend</i>
-            </div>
-            <div class="text-end pt-1">
-              <p class="text-sm mb-0 text-capitalize">Sales</p>
-              <h4 class="mb-0">$103,430</h4>
-            </div>
-          </div>
-          <!-- <hr class="dark horizontal my-0"> -->
-          <div class="card-footer p-3 mt-n2 d-flex justify-content-center align-item-center">
-            <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+5% </span>than yesterday</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    
 
-    <div class="col-xl-12 grid-margin stretch-card flex-column">
-  
-    <div class="row h-100">
-      <div class="col-md-12 stretch-card">
-        <div class="card-chart" style="width: 75%; background: transparent; box-shadow: none; border: none;">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-start flex-wrap">
-              <div>
-                <p class="mb-3 ms-5">Monthly Increase</p>
-            
+
+<style>
+  .move-left {
+    margin-left: -10px;
+    /* Adjust as needed */
+  }
+</style>
+
+<body id="page-top">
+
+
+  <!-- Page Wrapper -->
+  <div id="wrapper" style="margin-left: 250px;">
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+        <?php require_once './views/layouts/nav.php' ?>
+
+        <!-- Remove Nav bar that code with html
+          using import navbar instead -->
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Content Row -->
+          <div class="row">
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                        Today's (Money)</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                        New (Client)</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Incomming
+                      </div>
+                      <div class="row no-gutters align-items-center">
+                        <div class="col-auto">
+                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
+                        </div>
+                        <div class="col">
+                          <div class="progress progress-sm mr-2">
+                            <div class="progress-bar bg-info" role="progressbar"
+                              style="width: 50%" aria-valuenow="50" aria-valuemin="0"
+                              aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pending Requests Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                        Today's (Expense)</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-comments fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

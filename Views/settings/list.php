@@ -4,6 +4,9 @@
 <main class="main-content position-relative max-height-vh-50 h-50 border-radius-lg ">
     <!-- Navbar -->
     <?php require_once './views/layouts/nav.php' ?>
+    
+    <!-- End Navbar -->
+
     <!-- Modal structure -->
 
     <div class="container">

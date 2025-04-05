@@ -140,7 +140,7 @@
     position: absolute;
     top: 40px;
     right: 0;
-    height: auto ;
+    height: 400px ;
     width: 400px;
     background-color: white;
     border-radius: 8px;
@@ -181,6 +181,7 @@
 }
 
 .notification-item img {
+    margin: 10px;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -202,6 +203,7 @@
 
 .notification-footer {
     padding: 10px 15px;
+    margin-top: 20px;
     display: flex;
     justify-content: space-between;
 }

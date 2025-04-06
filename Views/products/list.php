@@ -25,12 +25,10 @@ require_once './views/layouts/side.php';
         min-height: 100vh;
         transition: margin-right 0.3s ease;
         margin-top: 70px;
-        /* Offset for fixed navbar */
     }
 
     .cart-visible .main-content {
         margin-right: 350px;
-        /* Adjust for cart width */
     }
 
     .navbar {
@@ -61,11 +59,9 @@ require_once './views/layouts/side.php';
         font-size: 10px;
     }
 
-    /* Container */
     .container-fluid {
         width: 100%;
         padding: 0 5px;
-        /* Reduced for closer cards */
     }
 
     .row {
@@ -74,17 +70,14 @@ require_once './views/layouts/side.php';
         margin: 0 -5px;
     }
 
-    /* Product Section */
     .product-section {
         width: 100%;
         padding: 0 5px;
         margin-top: -70px;
     }
 
-    /* Product Card */
     .product-col {
         width: 25%;
-        /* 4 per row by default */
         padding: 0 5px;
         margin-bottom: 10px;
         opacity: 1;
@@ -98,7 +91,6 @@ require_once './views/layouts/side.php';
 
     .cart-visible .product-col {
         width: 33.33%;
-        /* 3 cards per row when cart is visible */
     }
 
     .product-card {
@@ -171,11 +163,9 @@ require_once './views/layouts/side.php';
         background-color: #0056b3;
     }
 
-    /* Cart Section */
     .cart-section {
         position: fixed;
         top: 70px;
-        /* Below fixed navbar */
         right: 0;
         width: 350px;
         height: calc(100vh - 70px);
@@ -224,44 +214,37 @@ require_once './views/layouts/side.php';
 
     .cart-table {
         width: 100%;
-        border-collapse: collapse;
-        /* Simpler, no gaps */
         background-color: #fff;
-        /* Clean white background */
     }
 
     .cart-table th {
         background-color: #f1f1f1;
-        /* Light gray header */
         color: #333;
-        /* Darker text */
         padding: 8px;
-        /* Reduced padding */
         font-weight: 500;
-        /* Lighter weight */
         font-size: 0.9rem;
         text-align: left;
-        /* Simple alignment */
     }
 
     .cart-table td {
         padding: 8px;
-        /* Consistent padding */
-        border-bottom: 1px solid #eee;
-        /* Subtle border */
         text-align: left;
-        /* Simpler alignment */
+        vertical-align: middle;
     }
 
-    .cart-table tr:last-child td {
-        border-bottom: none;
-        /* Clean finish */
+    .remove-item {
+        cursor: pointer;
+        color: #dc3545;
+        font-size: 16px;
+    }
+
+    .remove-item:hover {
+        color: #c82333;
     }
 
     .cart-qty,
     .cart-price {
         width: 60px;
-        /* Smaller for simplicity */
         padding: 4px;
         border: 1px solid #ddd;
         border-radius: 3px;
@@ -275,36 +258,28 @@ require_once './views/layouts/side.php';
         background-color: #f8f9fa;
         text-align: center;
         border-top: 1px solid #ddd;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
     }
 
     .cart-btn {
-        padding: 10px 20px;
-        /* Larger for easy clicking */
+        padding: 12px 24px;
         border: none;
         border-radius: 5px;
         color: #fff;
-        margin: 5px;
-        /* More spacing */
         cursor: pointer;
         font-size: 1rem;
-        /* Larger text */
-        width: 120px;
-        /* Consistent size */
         transition: background-color 0.2s ease, transform 0.1s ease;
-        /* Smooth interaction */
-    }
-
-    .cart-btn:hover {
-        transform: scale(1.05);
-        /* Slight hover effect */
-    }
-
-    .cart-btn:active {
-        transform: scale(0.98);
-        /* Press effect */
+        width: 100%;
+        max-width: 200px;
     }
 
     .cart-btn-success {
+        padding: 14px 28px;
+        font-size: 1.1rem;
+        max-width: 220px;
         background-color: #28a745;
     }
 
@@ -312,12 +287,10 @@ require_once './views/layouts/side.php';
         background-color: #218838;
     }
 
-    .cart-btn-info {
-        background-color: #17a2b8;
-    }
-
-    .cart-btn-info:hover {
-        background-color: #138496;
+    .more-options {
+        position: relative;
+        width: 100%;
+        max-width: 200px;
     }
 
     .cart-btn-secondary {
@@ -328,6 +301,64 @@ require_once './views/layouts/side.php';
         background-color: #5a6268;
     }
 
+    .options-dropdown {
+        display: none;
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+        z-index: 1000;
+        width: 100%;
+        max-width: 200px;
+        flex-direction: column;
+    }
+
+    .options-dropdown.visible {
+        display: flex;
+    }
+
+    .options-dropdown button {
+        width: 100%;
+        border: none;
+        margin: 0;
+        padding: 10px;
+        font-size: 0.95rem;
+        color: #fff;
+        text-align: center;
+        transition: background-color 0.2s ease, transform 0.1s ease;
+        border-radius: 0;
+    }
+
+    .options-dropdown button:first-child {
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+
+    .options-dropdown button:last-child {
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+
+    .options-dropdown button:hover {
+        transform: scale(1.02);
+        opacity: 0.9;
+    }
+
+    .options-dropdown button:active {
+        transform: scale(0.98);
+    }
+
+    .cart-btn-info {
+        background-color: #17a2b8;
+    }
+
+    .cart-btn-info:hover {
+        background-color: #138496;
+    }
+
     .cart-btn-danger {
         background-color: #dc3545;
     }
@@ -336,9 +367,23 @@ require_once './views/layouts/side.php';
         background-color: #c82333;
     }
 
-    
+    .cart-btn-primary {
+        background-color: #007bff;
+    }
 
-    /* Responsive Adjustments */
+    .cart-btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .cart-btn:hover {
+        transform: scale(1.05);
+    }
+
+    #qr-container {
+        margin-top: 15px;
+        text-align: center;
+    }
+
     @media (max-width: 767px) {
         .product-col {
             width: 50%;
@@ -352,6 +397,31 @@ require_once './views/layouts/side.php';
 
         .cart-visible .main-content {
             margin-right: 0;
+        }
+
+        .cart-btn {
+            max-width: 100%;
+        }
+
+        .cart-btn-success {
+            padding: 12px 24px;
+            font-size: 1rem;
+            max-width: 100%;
+        }
+
+        .more-options {
+            max-width: 100%;
+        }
+
+        .options-dropdown {
+            max-width: 100%;
+            left: 0;
+            transform: none;
+        }
+
+        .options-dropdown button {
+            padding: 12px;
+            font-size: 1rem;
         }
     }
 
@@ -393,10 +463,8 @@ require_once './views/layouts/side.php';
     </div>
 </nav>
 <main class="main-content">
-
     <div class="container-fluid">
         <div class="row" id="productRow">
-            <!-- Product List Section -->
             <div class="product-section">
                 <h3 class="mb-3 text-dark">Order Products</h3>
                 <div class="row">
@@ -430,7 +498,6 @@ require_once './views/layouts/side.php';
                 </div>
             </div>
         </div>
-        <!-- Cart Section -->
         <div class="cart-section" id="cartSection">
             <div class="cart-card">
                 <div class="cart-header">
@@ -444,6 +511,7 @@ require_once './views/layouts/side.php';
                                 <th>Item</th>
                                 <th>Qty</th>
                                 <th>Price ($)</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody id="cartBody"></tbody>
@@ -451,19 +519,22 @@ require_once './views/layouts/side.php';
                     <div style="text-align: right; margin-top: 15px;">
                         <h5 style="font-weight: bold;">Total: $<span id="grandTotal">0.00</span></h5>
                     </div>
+                    <div id="qr-container" style="display: none;">
+                        <img id="qr-code-img" src="../../views/assets/images/QR-code.png" alt="QR Code" style="width: 80px; height: 80px; margin-bottom: 15px;" />
+                        <input type="text" id="inputField" placeholder="Enter your details" />
+                    </div>
                 </div>
                 <div class="cart-footer">
-    <button class="cart-btn cart-btn-info" id="savePdf">Save PDF</button>
-    <button class="cart-btn cart-btn-danger" id="clearCart">Clear</button>
-    <button class="cart-btn cart-btn-primary" id="completeCart">Complete</button>
-    <button class="cart-btn cart-btn-success" id="submitCart">Checkout</button>
-</div>
-
-<div id="qr-container" style="display: none;">
-    <img id="qr-code-img" src="../assets/images/QR-code.png" alt="QR Code" style="width: 200px; height: 200px; margin-bottom: 15px;" />
-    <input type="text" id="inputField" placeholder="Enter your details" />
-</div>
-
+                    <div class="more-options">
+                        <button class="cart-btn cart-btn-secondary" id="moreOptionsBtn">More Options</button>
+                        <div class="options-dropdown" id="optionsDropdown">
+                            <button class="cart-btn cart-btn-info" id="savePdf">Save PDF</button>
+                            <button class="cart-btn cart-btn-primary" id="completeCart">Complete</button>
+                            <button class="cart-btn cart-btn-danger" id="clearCart">Clear</button>
+                        </div>
+                    </div>
+                    <button class="cart-btn cart-btn-success" id="submitCart">Checkout</button>
+                </div>
             </div>
         </div>
     </div>
@@ -552,6 +623,7 @@ require_once './views/layouts/side.php';
                         <td style="vertical-align: middle;">${productName}</td>
                         <td><input type="number" class="cart-qty" min="1" max="${quantity}" value="1"></td>
                         <td><input type="number" class="cart-price" min="0" step="0.01" value="${price.toFixed(2)}"></td>
+                        <td><span class="remove-item">✖</span></td>
                     `;
                     document.getElementById('cartBody').appendChild(row);
                     updateGrandTotal();
@@ -565,6 +637,14 @@ require_once './views/layouts/side.php';
                 alert(`Failed to add item: ${error.message}`);
             }
         });
+    });
+
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-item')) {
+            e.target.closest('tr').remove();
+            updateGrandTotal();
+            updateCartCount();
+        }
     });
 
     document.addEventListener('input', function(e) {
@@ -645,40 +725,27 @@ require_once './views/layouts/side.php';
         if (confirm('Are you sure you want to clear the cart?')) {
             document.getElementById('cartBody').innerHTML = '';
             document.getElementById('grandTotal').textContent = '0.00';
+            document.getElementById('qr-container').style.display = 'none';
             updateCartCount();
             hideCart();
         }
     });
 
-    const {
-        jsPDF
-    } = window.jspdf;
+    const { jsPDF } = window.jspdf;
     document.getElementById('savePdf').addEventListener('click', function() {
         const doc = new jsPDF();
         doc.setFontSize(18);
-        doc.text('Store Name POS', 105, 15, {
-            align: 'center'
-        });
+        doc.text('Store Name POS', 105, 15, { align: 'center' });
         doc.setFontSize(10);
-        doc.text('123 Business Ave, City, ST 12345', 105, 23, {
-            align: 'center'
-        });
-        doc.text(`Date: ${new Date().toLocaleString()}`, 105, 31, {
-            align: 'center'
-        });
+        doc.text('123 Business Ave, City, ST 12345', 105, 23, { align: 'center' });
+        doc.text(`Date: ${new Date().toLocaleString()}`, 105, 31, { align: 'center' });
         doc.line(10, 35, 200, 35);
         let y = 45;
         doc.setFontSize(12);
         doc.text('Item', 10, y);
-        doc.text('Qty', 100, y, {
-            align: 'right'
-        });
-        doc.text('Price', 140, y, {
-            align: 'right'
-        });
-        doc.text('Total', 180, y, {
-            align: 'right'
-        });
+        doc.text('Qty', 100, y, { align: 'right' });
+        doc.text('Price', 140, y, { align: 'right' });
+        doc.text('Total', 180, y, { align: 'right' });
         y += 5;
         doc.line(10, y, 200, y);
         y += 5;
@@ -688,44 +755,35 @@ require_once './views/layouts/side.php';
             const price = parseFloat(row.querySelector('.cart-price').value).toFixed(2);
             const total = (qty * price).toFixed(2);
             doc.text(product, 10, y);
-            doc.text(qty, 100, y, {
-                align: 'right'
-            });
-            doc.text(`$${price}`, 140, y, {
-                align: 'right'
-            });
-            doc.text(`$${total}`, 180, y, {
-                align: 'right'
-            });
+            doc.text(qty, 100, y, { align: 'right' });
+            doc.text(`$${price}`, 140, y, { align: 'right' });
+            doc.text(`$${total}`, 180, y, { align: 'right' });
             y += 10;
         });
         doc.line(10, y, 200, y);
         y += 10;
         const grandTotal = document.getElementById('grandTotal').textContent;
         doc.setFontSize(14);
-        doc.text(`Grand Total: $${grandTotal}`, 180, y, {
-            align: 'right'
-        });
+        doc.text(`Grand Total: $${grandTotal}`, 180, y, { align: 'right' });
         y += 10;
         doc.setFontSize(10);
-        doc.text('Thank you for shopping with us!', 105, y, {
-            align: 'center'
-        });
+        doc.text('Thank you for shopping with us!', 105, y, { align: 'center' });
         doc.save('pos-receipt.pdf');
     });
 
+    document.getElementById('completeCart').addEventListener('click', function() {
+        const qrContainer = document.getElementById('qr-container');
+        qrContainer.style.display = 'block';
+        showCart();
+    });
 
-    // Search functionality with animation
     const searchInput = document.querySelector('.search-container input');
     const productCards = document.querySelectorAll('.product-col');
 
     searchInput.addEventListener('input', function() {
         const searchTerm = this.value.trim().toLowerCase();
-
         productCards.forEach(card => {
             const productName = card.querySelector('.card-title').textContent.trim().toLowerCase();
-
-            // Toggle hidden class for animation
             if (productName.includes(searchTerm)) {
                 card.classList.remove('hidden');
             } else {
@@ -734,13 +792,18 @@ require_once './views/layouts/side.php';
         });
     });
 
-    document.getElementById('completeCart').addEventListener('click', function() {
-    // Show QR code image and input field below the cart
-    document.getElementById('qr-container').style.display = 'block';
+    // Toggle the More Options dropdown
+    const moreOptionsBtn = document.getElementById('moreOptionsBtn');
+    const optionsDropdown = document.getElementById('optionsDropdown');
 
-    // Set the QR code image source (replace with your QR code image path)
-    var qrCodeImageUrl = "path/to/your/qr-code-image.png";
-    document.getElementById('qr-code-img').src = qrCodeImageUrl;
-});
+    moreOptionsBtn.addEventListener('click', function() {
+        optionsDropdown.classList.toggle('visible');
+    });
 
+    // Close the dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!moreOptionsBtn.contains(e.target) && !optionsDropdown.contains(e.target)) {
+            optionsDropdown.classList.remove('visible');
+        }
+    });
 </script>

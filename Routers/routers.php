@@ -88,16 +88,14 @@ $routes->get('/category/delete', [CategoryController::class, 'delete']);  // Cha
 
 
 
-// purchase order
+// Purchase Order Routes
 $routes->get('/purchase', [PurchaseController::class, 'index']);
 $routes->get('/purchase/create', [PurchaseController::class, 'create']);
 $routes->post('/purchase/store', [PurchaseController::class, 'store']);
 $routes->get('/purchase/edit/(:num)', [PurchaseController::class, 'edit']);
-
-$routes->post('/purchase/update/(:num)', [PurchaseController::class, 'update']); // Added ID for updating
-$routes->post('/purchase/destroy/(:num)', [PurchaseController::class, 'destroy']); // Fixed
+$routes->post('/purchase/update/(:num)', [PurchaseController::class, 'update']);
+$routes->post('/purchase/destroy/(:num)', [PurchaseController::class, 'destroy']);
 $routes->post('/purchase/bulk-destroy', [PurchaseController::class, 'bulkDestroy']);
-$routes->get('/purchase/get-existing-products', [PurchaseController::class, 'getExistingProducts']);
 
 
 

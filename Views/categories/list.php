@@ -33,7 +33,7 @@
         </div>
     </nav>
     <!-- End Navbar -->
-    <div class="container">
+    <div>
         <div class="mt-5">
             <a href="/category/create" class="create-ct">
                 <i class="bi-plus-lg"></i> Add New Categories

@@ -229,7 +229,8 @@
                 </div>
               </div>
             </div>
-            <!-- End of Main Content -->
+
+           <!-- Dashboards procress done -->
 
             <!-- Footer -->
             <footer class="sticky-footer bg-white">

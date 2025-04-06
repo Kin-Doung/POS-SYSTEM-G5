@@ -4,6 +4,16 @@ require_once './views/layouts/side.php';
 ?>
 
 <style>
+    .profit {
+        color: green;
+        font-weight: bold;
+    }
+
+    .loss {
+        color: red;
+        font-weight: bold;
+    }
+
     /* Main content wrapper to account for sidebar */
     .main-content {
         margin-left: 250px;

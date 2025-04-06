@@ -144,6 +144,10 @@
                                                             <label class="form-label">Amount</label>
                                                             <input type="number" class="form-control" name="amount" id="amount" required step="0.01" min="0">
                                                         </div>
+                                                        <div class="col-md-6 mb-3">
+                                                            <label class="form-label">Expiration Date</label>
+                                                            <input type="date" class="form-control" name="expiration_date" id="expiration_date">
+                                                        </div>
 
                                                     </div>
                                                     <div class="mb-3">

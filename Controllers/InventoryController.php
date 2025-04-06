@@ -58,19 +58,19 @@ class InventoryController extends BaseController
             $quantities = $_POST['quantity'];
             $prices = $_POST['amount'];
             $expirationDates = $_POST['expiration_date'] ?? [];
-    
+
             foreach ($productIds as $index => $productId) {
                 $imagePath = $this->handleImageUpload($index);
                 $categoryId = $categoryIds[$index];
                 $category = $this->categories->getCategoryById($categoryId);
-    
+
                 if (!$category) {
                     die("Invalid category selected.");
                 }
-    
+
                 // Check if the product already exists in the inventory by ID
                 $existingInventory = $this->model->getInventoryById($productId);
-    
+
                 if ($existingInventory) {
                     // Product exists, update it
                     $data = [
@@ -83,13 +83,13 @@ class InventoryController extends BaseController
                         'expiration_date' => $expirationDates[$index] ?? $existingInventory['expiration_date'],
                         'image' => $imagePath ?: $existingInventory['image'], // Use new image if uploaded, else keep old
                     ];
-    
+
                     $this->model->updateInventory($productId, $data);
                 } else {
                     // Product doesn’t exist, create a new one
                     // Assuming a new product name is provided in a separate field (e.g., 'new_product_name')
                     $newProductName = $_POST['new_product_name'][$index] ?? 'Unknown Product';
-    
+
                     $data = [
                         'product_name' => $newProductName,
                         'category_id' => $categoryId,
@@ -101,11 +101,11 @@ class InventoryController extends BaseController
                         'expiration_date' => $expirationDates[$index] ?? null,
                         'image' => $imagePath,
                     ];
-    
+
                     $this->model->createInventory($data);
                 }
             }
-    
+
             $this->redirect('/inventory');
         }
     }
@@ -127,23 +127,22 @@ class InventoryController extends BaseController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $inventory = $this->model->getInventorys($id);
-            $imagePath = $this->handleImageUpload(null, $inventory['image']);
-            
+            $imagePath = $this->handleImageUpload(null, $inventory['image']); // Retains old image if no new upload
+
             $categoryId = $_POST['category_id'];
             $category = $this->categories->getCategoryById($categoryId);
-            $categoryName = $category['name'];
             $data = [
                 'category_id' => $categoryId,
-                'category_name' => $categoryName,
+                'category_name' => $category['name'],
                 'product_name' => $_POST['product_name'],
                 'quantity' => $_POST['quantity'],
                 'amount' => $_POST['amount'],
                 'total_price' => $this->calculateTotalPrice($_POST['quantity'], $_POST['amount']),
                 'expiration_date' => $_POST['expiration_date'],
-                'image' => $imagePath,
+                'image' => $imagePath, // This should be the new or existing image path
             ];
             $this->model->updateInventory($id, $data);
-            $this->redirect('/inventory');
+            $this->redirect('/inventory'); // Redirects to the list view
         }
     }
 
@@ -202,12 +201,15 @@ class InventoryController extends BaseController
      */
     private function handleImageUpload($index = null, $existingImage = null)
     {
-        if (isset($_FILES['image']) && $_FILES['image']['error'][$index] == 0) {
+        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) { // Check for successful upload
             $targetDir = "uploads/";
-            $imagePath = $targetDir . uniqid() . '-' . basename($_FILES['image']['name'][$index]);
-            move_uploaded_file($_FILES['image']['tmp_name'][$index], $imagePath);
-            return $imagePath;
+            $imagePath = $targetDir . uniqid() . '-' . basename($_FILES['image']['name']);
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $imagePath)) {
+                return $imagePath; // Return new path if upload succeeds
+            } else {
+                error_log("Failed to move uploaded file to $imagePath");
+            }
         }
-        return $existingImage;
+        return $existingImage; // Return old path if no new upload or upload fails
     }
 }

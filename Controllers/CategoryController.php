@@ -32,9 +32,9 @@ class CategoryController extends BaseController
     function edit($id)
     {
         $category = $this->model->getCategorys($id);
-        $this->views('categories/edit', ['category' => $category]); 
+        $this->views('categories/edit', ['category' => $category]);
     }
-    
+
 
     function update($id)
     {
@@ -47,29 +47,22 @@ class CategoryController extends BaseController
             $this->redirect('/category');
         }
     }
-    
 
     public function delete()
     {
         if (isset($_GET['id'])) {
             $categoryId = $_GET['id'];
             $categoryModel = new CategoryModel();
-            
             if ($categoryModel->deleteCategory($categoryId)) {
-                // After deletion, redirect to the category list page
-                header('Location: /category');  // Adjust the URL if needed
+                header('Location: /category?deleted=true');
                 exit();
             } else {
-                // Handle failure if category deletion fails
-                echo "Error: Unable to delete category.";
+                header('Location: /category?error=category_in_use');
+                exit();
             }
         } else {
-            // Handle invalid ID
-            echo "Error: Invalid category ID.";
+            header('Location: /category?error=no_id');
+            exit();
         }
     }
-    
-    
-    
-    
-}
+}   

@@ -3,15 +3,17 @@ require_once './views/layouts/header.php';
 require_once './views/layouts/side.php';
 ?>
 
+
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg p-3">
 
     <nav class="navbar">
-        <div class="search-container" style="background-color: #fff;"> 
+        <div class="search-container" style="background-color: #fff;">
             <i class="fas fa-search"></i>
             <input type="text" placeholder="Search...">
         </div>
         <div class="icons">
             <i class="fas fa-globe icon-btn"></i>
+            <i class="fas fa-dolly-flatbed"></i>
             <div class="icon-btn" id="notification-icon">
                 <i class="fas fa-bell"></i>
                 <span class="notification-badge" id="notification-count">8</span>

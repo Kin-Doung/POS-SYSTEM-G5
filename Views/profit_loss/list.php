@@ -4,8 +4,6 @@ require_once './views/layouts/side.php';
 ?>
 
 <style>
-    /* Profit/Loss Styles */
-
     /* Main content wrapper to account for sidebar */
     .main-content {
         margin-left: 250px;
@@ -425,20 +423,6 @@ require_once './views/layouts/side.php';
             padding: 6px 15px;
             font-size: 13px;
         }
-
-
-    }
-
-    .profit {
-        color: green;
-        font-weight: bold;
-        /* Optional */
-    }
-
-    .loss {
-        color: red;
-        font-weight: bold;
-        /* Optional */
     }
 </style>
 <div class="main-content">
@@ -521,8 +505,6 @@ require_once './views/layouts/side.php';
                     </tr>
                 <?php endif; ?>
             </tbody>
-
-
         </table>
     </div>
 
@@ -543,13 +525,87 @@ require_once './views/layouts/side.php';
         </div>
     </div>
 
-    <!-- Total Price Display -->
-    <div class="total-price">
-        Total Price: <span>$</span>
-    </div>
+    <!-- JavaScript (Merged) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectAllCheckbox = document.getElementById('select-all');
+            const selectItemCheckboxes = document.querySelectorAll('.select-item');
+            const deleteButton = document.getElementById('delete-selected');
+            const confirmModal = document.getElementById('confirm-modal');
+            const confirmYes = document.getElementById('confirm-yes');
+            const confirmNo = document.getElementById('confirm-no');
+            const deleteMessage = document.getElementById('delete-message');
+
+            function updateDeleteButton() {
+                const checkedBoxes = document.querySelectorAll('.select-item:checked');
+                deleteButton.style.display = checkedBoxes.length > 0 ? 'block' : 'none';
+            }
+
+            selectAllCheckbox.addEventListener('change', function() {
+                selectItemCheckboxes.forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                });
+                updateDeleteButton();
+            });
+
+            selectItemCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateDeleteButton);
+            });
+
+            deleteButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                const checkedBoxes = document.querySelectorAll('.select-item:checked');
+                if (checkedBoxes.length > 0) {
+                    confirmModal.style.display = 'block';
+                }
+            });
+
+            confirmYes.addEventListener('click', function() {
+                const checkedBoxes = document.querySelectorAll('.select-item:checked');
+                const idsToDelete = Array.from(checkedBoxes).map(cb => cb.dataset.id);
+
+                fetch('/profit_loss/destroy_multiple', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({
+                            ids: idsToDelete
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            checkedBoxes.forEach(checkbox => {
+                                checkbox.closest('tr').remove();
+                            });
+                            deleteMessage.style.display = 'block';
+                            setTimeout(() => {
+                                deleteMessage.style.display = 'none';
+                            }, 3000);
+                        } else {
+                            alert('Deletion failed: ' + (data.message || 'Unknown error'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error occurred while deleting');
+                    });
+
+                confirmModal.style.display = 'none';
+                updateDeleteButton();
+            });
+
+            confirmNo.addEventListener('click', function() {
+                confirmModal.style.display = 'none';
+            });
+        });
+    </script>
 </div>
-
-
 
 <?php
 require_once './views/layouts/footer.php';

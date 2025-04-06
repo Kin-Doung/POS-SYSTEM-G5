@@ -43,12 +43,46 @@ class Profit_LossModel
         $stmt->execute(['id' => $id]);
         return $stmt->fetch();
     }
-
-    // Delete a profit/loss record by ID
     function deleteProfit_Loss($id)
     {
-        $stmt = $this->pdo->query("DELETE FROM sales_data WHERE id = :id");
-        $stmt->execute(['id' => $id]);
+        try {
+            if (is_array($id)) {
+                if (empty($id)) {
+                    error_log("No IDs provided to delete");
+                    return false;
+                }
+                // Convert all IDs to integers
+                $id = array_map('intval', $id);
+                error_log("Deleting multiple IDs: " . implode(',', $id));
+                $placeholders = implode(',', array_fill(0, count($id), '?'));
+                $sql = "DELETE FROM sales_data WHERE id IN ($placeholders)";
+                $stmt = $this->pdo->query($sql);
+                $stmt->execute($id);
+            } else {
+                $id = (int)$id; // Ensure single ID is integer
+                error_log("Deleting single ID: " . $id);
+                $sql = "DELETE FROM sales_data WHERE id = ?";
+                $stmt = $this->pdo->query($sql);
+                $stmt->execute([$id]);
+            }
+            $rowCount = $stmt->rowCount();
+            error_log("Rows affected: " . $rowCount);
+            return $rowCount > 0;
+        } catch (PDOException $e) {
+            error_log("Delete error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    // Add this temporary method to your model to test
+    function testConnection()
+    {
+        try {
+            $stmt = $this->pdo->query("SELECT 1");
+            return $stmt !== false;
+        } catch (PDOException $e) {
+            error_log("Connection test failed: " . $e->getMessage());
+            return false;
+        }
     }
 }
-?>

@@ -97,11 +97,12 @@ $routes->get('/history', [HistoryController::class, 'index']);              // L
 $routes->post('/history/store', [HistoryController::class, 'store']);       // Store a new history entry
 $routes->delete('/history/destroy', [HistoryController::class, 'destroy']); // Delete a specific history entry (renamed from 'delete' to 'destroy')
 $routes->post('/history/fetchFilteredHistories', [HistoryController::class, 'fetchFilteredHistories']); // Fetch filtered history entries
- 
+
 // Profit_Loss
 $routes->get('/profit_loss', [Profit_LossController::class, 'index']);
 $routes->post('/profit_loss/store', [Profit_LossController::class, 'store']);
-$routes->get('/profit_loss/delete', [Profit_LossController::class, 'delete']);
+$routes->get('/profit_loss/delete', [Profit_LossController::class, 'delete']); // Note: This seems unused
+$routes->post('/profit_loss/destroy_multiple', [Profit_LossController::class, 'destroy_multiple']); // Add this
 
 
 // logout

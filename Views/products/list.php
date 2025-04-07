@@ -53,10 +53,14 @@ require_once './views/layouts/side.php';
         border-radius: 50%;
         width: 16px;
         height: 16px;
-        display: flex;
+        display: none;
         align-items: center;
         justify-content: center;
         font-size: 10px;
+    }
+
+    .cart-count.visible {
+        display: flex;
     }
 
     .container-fluid {
@@ -304,16 +308,18 @@ require_once './views/layouts/side.php';
     .options-dropdown {
         display: none;
         position: absolute;
-        bottom: 100%;
+        bottom: calc(100% + 5px);
         left: 50%;
         transform: translateX(-50%);
         background-color: #fff;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        border-radius: 5px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        border-radius: 6px;
         z-index: 1000;
         width: 100%;
         max-width: 200px;
         flex-direction: column;
+        padding: 5px;
+        border: 1px solid #eee;
     }
 
     .options-dropdown.visible {
@@ -323,32 +329,25 @@ require_once './views/layouts/side.php';
     .options-dropdown button {
         width: 100%;
         border: none;
-        margin: 0;
-        padding: 10px;
+        margin: 2px 0;
+        padding: 12px;
         font-size: 0.95rem;
         color: #fff;
         text-align: center;
-        transition: background-color 0.2s ease, transform 0.1s ease;
-        border-radius: 0;
-    }
-
-    .options-dropdown button:first-child {
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
-    }
-
-    .options-dropdown button:last-child {
-        border-bottom-left-radius: 5px;
-        border-bottom-right-radius: 5px;
+        transition: all 0.2s ease;
+        border-radius: 4px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
     }
 
     .options-dropdown button:hover {
-        transform: scale(1.02);
-        opacity: 0.9;
+        transform: translateY(-1px);
+        opacity: 0.95;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .options-dropdown button:active {
-        transform: scale(0.98);
+        transform: translateY(1px);
     }
 
     .cart-btn-info {
@@ -382,6 +381,24 @@ require_once './views/layouts/side.php';
     #qr-container {
         margin-top: 15px;
         text-align: center;
+    }
+    
+    /* Added styles for buttons in QR container */
+    #qr-container .cart-btn {
+        margin: 5px auto;
+    }
+    
+    #qr-container #inputField {
+        margin-bottom: 15px;
+        padding: 8px;
+        width: 100%;
+        max-width: 200px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    #cartToggle {
+        font-size: 20px;
     }
 
     @media (max-width: 767px) {
@@ -431,6 +448,7 @@ require_once './views/layouts/side.php';
         }
     }
 </style>
+
 <nav class="navbar">
     <div class="search-container">
         <i class="fas fa-search"></i>
@@ -462,6 +480,7 @@ require_once './views/layouts/side.php';
         <script src="../../views/assets/js/setting.js"></script>
     </div>
 </nav>
+
 <main class="main-content">
     <div class="container-fluid">
         <div class="row" id="productRow">
@@ -522,10 +541,11 @@ require_once './views/layouts/side.php';
                     <div id="qr-container" style="display: none;">
                         <img id="qr-code-img" src="../../views/assets/images/QR-code.png" alt="QR Code" style="width: 80px; height: 80px; margin-bottom: 15px;" />
                         <input type="text" id="inputField" placeholder="Enter your details" />
+                        <!-- The buttons will be moved here via JavaScript -->
                     </div>
                 </div>
                 <div class="cart-footer">
-                    <div class="more-options">
+                    <div class="more-options" id="moreOptionsContainer">
                         <button class="cart-btn cart-btn-secondary" id="moreOptionsBtn">More Options</button>
                         <div class="options-dropdown" id="optionsDropdown">
                             <button class="cart-btn cart-btn-info" id="savePdf">Save PDF</button>
@@ -540,12 +560,24 @@ require_once './views/layouts/side.php';
     </div>
     <?php require_once 'views/layouts/footer.php'; ?>
 </main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
     const cartSection = document.getElementById('cartSection');
     const cartToggle = document.getElementById('cartToggle');
     const closeCart = document.getElementById('closeCart');
     const cartCount = document.getElementById('cartCount');
+
+    // Telegram Bot Configuration
+    const TELEGRAM_BOT_TOKEN = 'YOUR_BOT_TOKEN_HERE'; // Replace with your bot token
+    const TELEGRAM_CHAT_ID = 'YOUR_CHAT_ID_HERE'; // Replace with your chat ID
+
+    // Load cart from localStorage on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadCartFromLocalStorage();
+    });
 
     function showCart() {
         cartSection.classList.add('visible');
@@ -570,11 +602,77 @@ require_once './views/layouts/side.php';
                 return sum + (qty * price);
             }, 0);
         document.getElementById('grandTotal').textContent = total.toFixed(2);
+        return total; // Return the total for use in Telegram message
     }
 
     function updateCartCount() {
         const itemCount = document.querySelectorAll('#cartBody tr').length;
-        cartCount.textContent = itemCount;
+        const cartCountElement = document.getElementById('cartCount');
+        cartCountElement.textContent = itemCount;
+        if (itemCount > 0) {
+            cartCountElement.classList.add('visible');
+        } else {
+            cartCountElement.classList.remove('visible');
+        }
+        updateGrandTotal();
+    }
+
+    function saveCartToLocalStorage() {
+        const cartItems = [];
+        document.querySelectorAll('#cartBody tr').forEach(row => {
+            cartItems.push({
+                inventoryId: row.dataset.id,
+                productName: row.cells[0].textContent,
+                quantity: parseInt(row.querySelector('.cart-qty').value),
+                price: parseFloat(row.querySelector('.cart-price').value),
+                maxQty: parseInt(row.querySelector('.cart-qty').max)
+            });
+        });
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    }
+
+    function loadCartFromLocalStorage() {
+        const savedItems = localStorage.getItem('cartItems');
+        if (savedItems) {
+            const cartItems = JSON.parse(savedItems);
+            cartItems.forEach(item => {
+                const row = document.createElement('tr');
+                row.dataset.id = item.inventoryId;
+                row.innerHTML = `
+                    <td style="vertical-align: middle;">${item.productName}</td>
+                    <td><input type="number" class="cart-qty" min="1" max="${item.maxQty}" value="${item.quantity}"></td>
+                    <td><input type="number" class="cart-price" min="0" step="0.01" value="${item.price.toFixed(2)}"></td>
+                    <td><span class="remove-item">✖</span></td>
+                `;
+                document.getElementById('cartBody').appendChild(row);
+            });
+            updateCartCount();
+        }
+    }
+
+    // Function to send message to Telegram
+    async function sendToTelegram(message) {
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: message,
+                    parse_mode: 'Markdown' // Optional: for better formatting
+                })
+            });
+            const data = await response.json();
+            if (!data.ok) {
+                throw new Error('Failed to send message to Telegram');
+            }
+        } catch (error) {
+            console.error('Error sending to Telegram:', error);
+            alert('Failed to send order details to Telegram: ' + error.message);
+        }
     }
 
     cartToggle.addEventListener('click', () => {
@@ -595,14 +693,17 @@ require_once './views/layouts/side.php';
             const price = parseFloat(card.querySelector('.price').textContent.replace('$', ''));
             const quantity = parseInt(card.querySelector('.quantity').textContent.replace('Qty: ', ''));
             const existingRow = document.querySelector(`#cartBody tr[data-id="${inventoryId}"]`);
+            
             if (existingRow) {
                 const qtyInput = existingRow.querySelector('.cart-qty');
                 qtyInput.value = parseInt(qtyInput.value) + 1;
                 qtyInput.dispatchEvent(new Event('input'));
                 updateCartCount();
+                saveCartToLocalStorage();
                 showCart();
                 return;
             }
+            
             try {
                 const response = await fetch('/products/syncQuantity', {
                     method: 'POST',
@@ -626,8 +727,8 @@ require_once './views/layouts/side.php';
                         <td><span class="remove-item">✖</span></td>
                     `;
                     document.getElementById('cartBody').appendChild(row);
-                    updateGrandTotal();
                     updateCartCount();
+                    saveCartToLocalStorage();
                     showCart();
                 } else {
                     alert(`Error syncing quantity: ${data.message}`);
@@ -642,31 +743,36 @@ require_once './views/layouts/side.php';
     document.addEventListener('click', function(e) {
         if (e.target.classList.contains('remove-item')) {
             e.target.closest('tr').remove();
-            updateGrandTotal();
             updateCartCount();
+            saveCartToLocalStorage();
         }
     });
 
     document.addEventListener('input', function(e) {
         if (e.target.classList.contains('cart-qty') || e.target.classList.contains('cart-price')) {
             updateGrandTotal();
-            updateCartCount();
+            saveCartToLocalStorage();
         }
     });
 
-    document.getElementById('submitCart').addEventListener('click', function() {
+    document.getElementById('submitCart').addEventListener('click', async function() {
         const cartItems = [];
         let valid = true;
+        const itemsData = [];
+
+        // Collect cart items for submission and Telegram message
         document.querySelectorAll('#cartBody tr').forEach(row => {
             const inventoryId = row.dataset.id;
+            const productName = row.cells[0].textContent.trim();
             const quantityInput = row.querySelector('.cart-qty');
             const priceInput = row.querySelector('.cart-price');
             const quantity = parseInt(quantityInput.value) || 0;
             const price = parseFloat(priceInput.value) || 0;
             const maxQty = parseInt(quantityInput.max);
+
             if (quantity > 0) {
                 if (quantity > maxQty) {
-                    alert(`Quantity for ${row.cells[0].textContent} exceeds available stock (${maxQty})`);
+                    alert(`Quantity for ${productName} exceeds available stock (${maxQty})`);
                     valid = false;
                     return;
                 }
@@ -675,50 +781,79 @@ require_once './views/layouts/side.php';
                     quantity,
                     price
                 });
+                itemsData.push({
+                    productName,
+                    quantity,
+                    price
+                });
             }
         });
+
         if (!valid || cartItems.length === 0) {
             if (cartItems.length === 0) alert('Cart is empty! Please add items to proceed.');
             return;
         }
+
         this.disabled = true;
         this.textContent = 'Processing...';
+
+        // Prepare data for Telegram message
+        const productNames = itemsData.map(item => item.productName).join(', ');
+        const quantities = itemsData.map(item => item.quantity).join(', ');
+        const prices = itemsData.map(item => `$${item.price.toFixed(2)}`).join(', ');
+        const datetime = new Date().toLocaleString();
+        const totalPrice = updateGrandTotal().toFixed(2);
+
+        const telegramMessage = `
+*New Order Checkout*
+Product name: ${productNames}
+Quantity: ${quantities}
+Price: ${prices}
+Datetime: ${datetime}
+Total price: $${totalPrice}
+        `;
+
+        // Send to Telegram
+        await sendToTelegram(telegramMessage);
+
+        // Proceed with the checkout
         fetch('/products/submitCart', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    cartItems
-                })
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                cartItems
             })
-            .then(response => {
-                if (!response.ok) throw new Error('Server error: ' + response.status);
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    cartItems.forEach(item => {
-                        const qtyElement = document.querySelector(`.quantity[data-id="${item.inventoryId}"]`);
-                        const currentQty = parseInt(qtyElement.textContent.replace('Qty: ', ''));
-                        updateCard(item.inventoryId, currentQty - item.quantity);
-                    });
-                    document.getElementById('cartBody').innerHTML = '';
-                    hideCart();
-                    updateCartCount();
-                    alert('Checkout completed successfully! Inventory updated.');
-                } else {
-                    alert('Error: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to submit cart: ' + error.message);
-            })
-            .finally(() => {
-                this.disabled = false;
-                this.textContent = 'Checkout';
-            });
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Server error: ' + response.status);
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                cartItems.forEach(item => {
+                    const qtyElement = document.querySelector(`.quantity[data-id="${item.inventoryId}"]`);
+                    const currentQty = parseInt(qtyElement.textContent.replace('Qty: ', ''));
+                    updateCard(item.inventoryId, currentQty - item.quantity);
+                });
+                document.getElementById('cartBody').innerHTML = '';
+                localStorage.removeItem('cartItems');
+                hideCart();
+                updateCartCount();
+                alert('Checkout completed successfully! Inventory updated. Order details sent to Telegram.');
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to submit cart: ' + error.message);
+        })
+        .finally(() => {
+            this.disabled = false;
+            this.textContent = 'Checkout';
+        });
     });
 
     document.getElementById('clearCart').addEventListener('click', function() {
@@ -726,8 +861,11 @@ require_once './views/layouts/side.php';
             document.getElementById('cartBody').innerHTML = '';
             document.getElementById('grandTotal').textContent = '0.00';
             document.getElementById('qr-container').style.display = 'none';
+            localStorage.removeItem('cartItems');
             updateCartCount();
             hideCart();
+            // Show More Options button when clearing cart
+            document.getElementById('moreOptionsContainer').style.display = 'block';
         }
     });
 
@@ -773,7 +911,43 @@ require_once './views/layouts/side.php';
 
     document.getElementById('completeCart').addEventListener('click', function() {
         const qrContainer = document.getElementById('qr-container');
+        const moreOptionsBtn = document.getElementById('moreOptionsBtn');
+        const optionsDropdown = document.getElementById('optionsDropdown');
+        const moreOptionsContainer = document.getElementById('moreOptionsContainer');
+        
+        // Show QR container
         qrContainer.style.display = 'block';
+        
+        // Hide the More Options container (including the button and dropdown)
+        moreOptionsContainer.style.display = 'none';
+        
+        // Reset QR container content
+        qrContainer.innerHTML = `
+            <img id="qr-code-img" src="../../views/assets/images/QR-code.png" alt="QR Code" style="width: 80px; height: 80px; margin-bottom: 15px;" />
+            <input type="text" id="inputField" placeholder="Enter your details" style="margin-bottom: 15px;" />
+            <button class="cart-btn cart-btn-info" id="savePdf2">Save PDF</button>
+            <button class="cart-btn cart-btn-primary" id="completeCart2">Complete</button>
+            <button class="cart-btn cart-btn-danger" id="clearCart2">Clear</button>
+        `;
+        
+        // Add event listeners to new buttons
+        document.getElementById('savePdf2').addEventListener('click', function() {
+            document.getElementById('savePdf').click();
+        });
+        
+        document.getElementById('completeCart2').addEventListener('click', function() {
+            alert('Order completed!');
+            qrContainer.style.display = 'none'; // Hide QR container after completion
+            moreOptionsContainer.style.display = 'block'; // Show More Options button again
+        });
+        
+        document.getElementById('clearCart2').addEventListener('click', function() {
+            document.getElementById('clearCart').click();
+        });
+        
+        // Hide the dropdown
+        optionsDropdown.classList.remove('visible');
+        
         showCart();
     });
 
@@ -792,7 +966,6 @@ require_once './views/layouts/side.php';
         });
     });
 
-    // Toggle the More Options dropdown
     const moreOptionsBtn = document.getElementById('moreOptionsBtn');
     const optionsDropdown = document.getElementById('optionsDropdown');
 
@@ -800,7 +973,6 @@ require_once './views/layouts/side.php';
         optionsDropdown.classList.toggle('visible');
     });
 
-    // Close the dropdown when clicking outside
     document.addEventListener('click', function(e) {
         if (!moreOptionsBtn.contains(e.target) && !optionsDropdown.contains(e.target)) {
             optionsDropdown.classList.remove('visible');

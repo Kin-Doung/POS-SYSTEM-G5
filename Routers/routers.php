@@ -12,6 +12,7 @@ require_once './Controllers/LogoutController.php';
 require_once './Controllers/LanguageController.php';
 require_once './Controllers/LoginController.php';
 require_once './Controllers/HistoryController.php';
+require_once './Controllers/Profit_LossController.php';
 
 
 
@@ -26,8 +27,9 @@ $routes->get('/settings', [SettingController::class, 'index']);
 $routes->get('/settings/create', [SettingController::class, 'create']);
 $routes->post('/settings/store', [SettingController::class, 'store']);
 $routes->get('/settings/edit', [SettingController::class, 'edit']);
-$routes->put('/settings/update/(:num)', [SettingController::class, 'update']);
+$routes->put('/settings/update', [SettingController::class, 'update']);
 $routes->delete('/settings/destroy', [SettingController::class, 'destroy']);
+
 
 
 //inventory
@@ -50,6 +52,14 @@ $routes->get('/inventory/delete', [InventoryController::class, 'destroy']);
 $routes->get('/inventory/view', [InventoryController::class, 'view']); // View an inventory item
 
 
+// Stock tracking
+$routes->get('/tracking', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
 
 $routes->get('/inventory/getProductDetails', [InventoryController::class, 'getProductDetails']);
 
@@ -90,13 +100,18 @@ $routes->post('/purchase/bulk-destroy', [PurchaseController::class, 'bulkDestroy
 $routes->get('/purchase/get-existing-products', [PurchaseController::class, 'getExistingProducts']);
 
 
-// router of the history product
+
 // Router of the history product
 $routes->get('/history', [HistoryController::class, 'index']);              // List all history entries
 $routes->post('/history/store', [HistoryController::class, 'store']);       // Store a new history entry
 $routes->delete('/history/destroy', [HistoryController::class, 'destroy']); // Delete a specific history entry (renamed from 'delete' to 'destroy')
 $routes->post('/history/fetchFilteredHistories', [HistoryController::class, 'fetchFilteredHistories']); // Fetch filtered history entries
 
+// Profit_Loss
+$routes->get('/profit_loss', [Profit_LossController::class, 'index']);
+$routes->post('/profit_loss/store', [Profit_LossController::class, 'store']);
+$routes->get('/profit_loss/delete', [Profit_LossController::class, 'delete']); // Note: This seems unused
+$routes->post('/profit_loss/destroy_multiple', [Profit_LossController::class, 'destroy_multiple']); // Add this
 
 
 // logout

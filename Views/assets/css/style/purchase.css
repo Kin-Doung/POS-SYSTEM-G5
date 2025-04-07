@@ -50,6 +50,3 @@ button:hover {
 #myModal:target {
   display: block;
 }
-.table th{
-  background: #f8f9fa;
-}

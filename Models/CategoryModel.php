@@ -49,18 +49,38 @@ class CategoryModel
             'id' => $id
         ]);
     }
+
+
+    public function hasProducts($categoryId)
+    {
+        $stmt = $this->pdo->getConnection()->prepare("SELECT COUNT(*) FROM products WHERE category_id = :id");
+        $stmt->execute(['id' => (int)$categoryId]);
+        return $stmt->fetchColumn() > 0;
+    }
     public function deleteCategory($id)
     {
-        // Sanitize the id to ensure it is an integer (this is important for security)
         $id = (int)$id;
+        $pdo = $this->pdo->getConnection();
+        try {
+            $pdo->beginTransaction();
 
-        // Directly inject the id into the query string
-        $query = "DELETE FROM categories WHERE id = $id";
+            // Delete reports linked to products in this category
+            $stmt1 = $pdo->prepare("DELETE r FROM reports r INNER JOIN products p ON r.product_id = p.id WHERE p.category_id = :id");
+            $stmt1->execute(['id' => $id]);
 
-        // Execute the query
-        if ($this->pdo->query($query)) {
+            // Delete products in this category
+            $stmt2 = $pdo->prepare("DELETE FROM products WHERE category_id = :id");
+            $stmt2->execute(['id' => $id]);
+
+            // Delete the category
+            $stmt3 = $pdo->prepare("DELETE FROM categories WHERE id = :id");
+            $stmt3->execute(['id' => $id]);
+
+            $pdo->commit();
             return true;
-        } else {
+        } catch (PDOException $e) {
+            $pdo->rollBack();
+            error_log("Delete failed: " . $e->getMessage());
             return false;
         }
     }

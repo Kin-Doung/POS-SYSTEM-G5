@@ -278,7 +278,7 @@ class InventoryModel
                 ':amount' => $data['amount'],
                 ':total_price' => $data['total_price'],
                 ':expiration_date' => $data['expiration_date'],
-                ':image' => $data['image'],
+                ':image' => $data['image'], // This should save the correct path
                 ':id' => $id
             ]);
             return true;
@@ -337,21 +337,23 @@ class InventoryModel
         ]);
     }
 
-   
-    
-    public function getProductById($id) {
+
+
+    public function getProductById($id)
+    {
         $stmt = $this->pdo->query("SELECT p.*, c.name as category_name 
                                     FROM products p
                                     LEFT JOIN categories c ON p.category_id = c.id
                                     WHERE p.id = :id");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-    
+
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    
 
-    public function getPurchaseByProductId($productId) {
+
+    public function getPurchaseByProductId($productId)
+    {
         $stmt = $this->pdo->getConnection()->prepare("
             SELECT * FROM purchases WHERE product_id = :id
         ");

@@ -1,28 +1,28 @@
-
-.navbar {
+/* Navbar base */
+nav.navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #8b8b8b;
+    background-color: #2c3e50;
+    padding: 10px 20px;
     color: #fff;
     font-family: 'Segoe UI', sans-serif;
-    margin-bottom: 20px;
-    width: 100%;
+    position: relative;
+    z-index: 10;
 }
 
-/* Search Box */
+/* Search bar */
 .search-container {
     display: flex;
     align-items: center;
-    background-color: #fff;
+    background-color: #ecf0f1;
+    border-radius: 25px;
     padding: 6px 12px;
-    border-radius: 20px;
-    color: #333;
+    gap: 8px;
 }
 
 .search-container i {
-    margin-right: 8px;
-    color: #888;
+    color: #7f8c8d;
 }
 
 .search-container input {
@@ -30,7 +30,8 @@
     outline: none;
     background: transparent;
     font-size: 14px;
-    color: #333;
+    color: #2c3e50;
+    width: 180px;
 }
 
 /* Icons */
@@ -44,37 +45,32 @@
     position: relative;
     cursor: pointer;
     font-size: 18px;
-    transition: color 0.3s ease;
+    color: #ecf0f1;
 }
 
-.icon-btn:hover {
-    color: #ffeb3b;
-}
-
-/* Notification Badge */
 .notification-badge {
     position: absolute;
-    top: -5px;
+    top: -6px;
     right: -10px;
-    background: red;
+    background-color: #e74c3c;
     color: #fff;
-    font-size: 12px;
-    padding: 2px 6px;
     border-radius: 50%;
+    font-size: 11px;
+    padding: 2px 6px;
 }
 
 /* Profile */
 .profile {
-    position: relative;
     display: flex;
     align-items: center;
     gap: 10px;
+    position: relative;
     cursor: pointer;
 }
 
 .profile img {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #fff;
@@ -83,47 +79,46 @@
 .profile-info {
     display: flex;
     flex-direction: column;
-    color: #888;
+    font-size: 13px;
 }
 
-.profile-info span:first-child {
+.profile-info span#profile-name {
     font-weight: 600;
 }
 
-.store-name {
-    font-size: 12px;
-    color: #e0e0e0;
+.profile-info .store-name {
+    font-size: 11px;
+    color: #bdc3c7;
 }
 
-/* Dropdown Menu */
+/* Dropdown menu */
 .menu {
     position: absolute;
     top: 60px;
     right: 0;
-    background: #fff;
-    color: #333;
+    background-color: #34495e;
     border-radius: 6px;
     list-style: none;
-    padding: 10px 0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 8px 0;
     display: none;
-    z-index: 1000;
-    min-width: 150px;
+    min-width: 140px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 .menu .item {
     display: block;
     padding: 10px 20px;
+    color: #ecf0f1;
     text-decoration: none;
-    color: #333;
-    transition: background 0.3s ease;
+    transition: background 0.2s ease;
 }
 
 .menu .item:hover {
-    background-color: #f0f0f0;
+    background-color: #2c3e50;
+    color: #fff;
 }
 
-/* Show menu on hover (optional) */
+/* Show menu on hover */
 .profile:hover .menu {
     display: block;
 }

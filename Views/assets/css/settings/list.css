@@ -1,12 +1,15 @@
 nav {
     background: white;
-    border-radius: 0px 0px 0px 10px;
-    height: 13vh;
-    margin-right: 0px;
-    margin-left: 20px;
+    height: 12.6vh;
+    position: relative;
+    right: 25px;
     display: flex;
+    width: 100%;
+    padding-right: 30px; 
     flex-direction: row;
+    ;
     justify-content: space-around;
+    align-items: center;
 
     .search-container {
         width: 60%;
@@ -66,145 +69,6 @@ nav {
     }
 
 }
-
-
-.menu {
-    display: none;
-    position: absolute;
-    top: 50px;
-    right: 0;
-    background: #fff;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    padding: 10px;
-    list-style: none;
-    min-width: 120px;
-}
-
-.menu li {
-    padding: 10px;
-}
-
-.menu li a {
-    text-decoration: none;
-    color: black;
-    display: block;
-}
-
-.menu li:hover {
-    background: #f2f2f2;
-}
-
-.custom-btn {
-    background-color: #048c24;
-    /* Green */
-    color: white;
-    padding: 10px 20px;
-    border-radius: 10px;
-    text-decoration: none;
-    display: inline-block;
-    font-weight: bold;
-    transition: background 0.3s;
-}
-
-.custom-btn:hover {
-    background-color: #218838;
-    /* Darker green */
-}
-
-.custom-btnn {
-    background-color: #de8806;
-    /* Green */
-    color: white;
-    padding: 10px 20px;
-    border-radius: 10px;
-    text-decoration: none;
-    display: inline-block;
-    font-weight: bold;
-    transition: background 0.3s;
-}
-
-.custom-btn:hover {
-    background-color: #218838;
-    /* Darker green */
-}
-
-.form-group {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    /* Adjust space between inputs */
-}
-
-.group {
-    flex: 1;
-    /* Makes both fields equal width */
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-
-    .search-container {
-        width: 60%;
-    }
-
-    .icons {
-        margin-right: 100px;
-    }
-
-    .profile {
-        margin-right: 100px;
-
-        img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin: 10px;
-        }
-
-        .profile-info {
-            display: flex;
-            flex-direction: column;
-
-            #profile-name {
-                font-size: 16px;
-                font-weight: bold;
-                color: rgb(88, 85, 85);
-            }
-        }
-
-        .menu {
-            display: none;
-            position: absolute;
-            top: 80px;
-            right: 50px;
-            background: #fff;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            padding: 10px;
-            list-style: none;
-            min-width: 140px;
-
-            li {
-                padding: 10px;
-
-                a {
-                    text-decoration: none;
-                    color: black;
-                    display: block;
-                }
-            }
-
-            li:hover {
-                background: #f2f2f2;
-            }
-        }
-    }
-
-}
-
-
-
-
 
 
 

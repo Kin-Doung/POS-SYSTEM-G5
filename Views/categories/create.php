@@ -1,44 +1,54 @@
 <?php require_once './views/layouts/side.php' ?>
 
-<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="search-container">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search...">
-        </div>
-        <div class="icons">
-            <i class="fas fa-globe icon-btn"></i>
-            <div class="icon-btn" id="notification-icon">
-                <i class="fas fa-bell"></i>
-                <span class="notification-badge" id="notification-count">8</span>
-            </div>
-        </div>
-        <div class="profile" id="profile">
-            <img src="../../views/assets/images/image.png" alt="User">
-            <div class="profile-info">
-                <span id="profile-name">Eng Ly</span>
-                <span class="store-name" id="store-name">Owner Store</span>
-            </div>
-            <ul class="menu" id="menu">
-                <li><a href="/settings" class="item">Account</a></li>
-                <li><a href="/settings" class="item">Setting</a></li>
-                <li><a href="/logout" class="item">Logout</a></li>
-            </ul>
-            <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
-            <script src="../../views/assets/js/setting.js"></script>
-        </div>
-    </nav>
+<body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper" style="margin-left: 250px;">
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
 
-    <div class="container">
-        <form action="/category/store" method="POST">
-            <div class="form-group">
-                <label for="" class="form-label">Name:</label>
-                <input type="text" value="" name="name" class="form-controll">
+            <!-- Main Content -->
+            <div id="content">
+                <nav class="navbar ml-4 mb-5">
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                    <div class="icons">
+                        <i class="fas fa-globe icon-btn"></i>
+                        <div class="icon-btn" id="notification-icon">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge" id="notification-count">8</span>
+                        </div>
+                    </div>
+                    <div class="profile" id="profile">
+                        <img src="../../views/assets/images/image.png" alt="User">
+                        <div class="profile-info">
+                            <span id="profile-name">Eng Ly</span>
+                            <span class="store-name" id="store-name">Owner Store</span>
+                        </div>
+                        <ul class="menu" id="menu">
+                            <li><a href="/settings" class="item">Account</a></li>
+                            <li><a href="/settings" class="item">Setting</a></li>
+                            <li><a href="/logout" class="item">Logout</a></li>
+                        </ul>
+                        <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
+                        <script src="../../views/assets/js/setting.js"></script>
+                    </div>
+                </nav>
+
+
+                <div class="container">
+                    <form action="/category/store" method="POST">
+                        <div class="form-group">
+                            <label for="" class="form-label">Name:</label>
+                            <input type="text" value="" name="name" class="form-controll">
+                        </div>
+                        <button type="submit" class="btn btn-success mt-3">Submit</button>
+                    </form>
+                </div>
+
+                <?php require_once 'views/layouts/footer.php'; ?>
             </div>
-            <button type="submit" class="btn btn-success mt-3">Submit</button>
-        </form>
+        </div>
     </div>
-
-    <?php require_once 'views/layouts/footer.php'; ?>
-</main>
+    <script src="../../views/assets/js/demo/chart-area-demo.js"></script>

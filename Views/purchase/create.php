@@ -8,104 +8,142 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-<main class="main-content create-content position-relative max-height-vh-100 h-100 me-2">
-    <style>
-        main {
-            padding: 20px;
-            margin-top: 40px;
-            border-radius: 20px;
-        }
-    
-        .col-md-12 {
-            border-radius: 20px;
-        }
-    </style>
-    
-    
-    <h2 class="text-center head-add" style="padding-top: 20px;">Add Stock Products</h2>
-    <div class="d-flex justify-content-end align-item-center me-3">
-        <button type="button" id="previewInvoice" class="btn btn-preview" data-bs-toggle="modal" data-bs-target="#invoiceModal">Preview Invoice</button>
-    </div>
-    <div class="col-md-12 mt-n3 mx-auto">
-        <div class="card p-3" style="box-shadow: none;border:none">
-            <form id="productForm" method="POST" action="/purchase/store" enctype="multipart/form-data">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Category</th>
-                            <th>Product Name</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="productTableBody">
-                        <tr class="product-row">
-                            <td>
-                                <input type="file" class="form-control image-add" name="image[]" accept="image/*">
-                            </td>
-                            <td>
-                                <select name="category_id[]" class="form-control" required>
-                                    <option value="">Select Category</option>
-                                    <?php foreach ($categories as $category): ?>
-                                        <option value="<?= htmlspecialchars($category['id']) ?>"><?= htmlspecialchars($category['name']) ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" name="product_name[]" required>
-                            </td>
-                            <td>
-                                <button type="button" class="removeRow">Remove</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <button type="button" id="addMore">Add More</button>
-                <button type="submit">Submit</button>
-            </form>
-        </div>
-    </div>
+<body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper" style="margin-left: 250px;">
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
 
-    <!-- Modal for Invoice Preview -->
-    <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="invoiceModalLabel">Invoice Preview</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Product Image</th>
-                                <th>Category</th>
-                                <th>Product Name</th>
-                            </tr>
-                        </thead>
-                        <tbody id="invoiceTableBody">
-                            <!-- Dynamic Rows will be added here -->
-                        </tbody>
-                    </table>
-                    <div class="d-flex justify-content-end">
-                        <p>Total Price: $<span id="totalPrice">0</span></p>
+            <!-- Main Content -->
+            <div id="content">
+                <nav class="navbar ml-4 mb-5">
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search...">
                     </div>
-                    <div class="button-container">
-                        <button type="button" id="exportPDF" class="btn-system btn-export-pdf">Export to PDF</button>
-                        <button type="button" id="exportExcel" class="btn-system btn-export-excel">Export to Excel</button>
+                    <div class="icons">
+                        <i class="fas fa-globe icon-btn"></i>
+                        <div class="icon-btn" id="notification-icon">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge" id="notification-count">8</span>
+                        </div>
+                    </div>
+                    <div class="profile" id="profile">
+                        <img src="../../views/assets/images/image.png" alt="User">
+                        <div class="profile-info">
+                            <span id="profile-name">Eng Ly</span>
+                            <span class="store-name" id="store-name">Owner Store</span>
+                        </div>
+                        <ul class="menu" id="menu">
+                            <li><a href="/settings" class="item">Account</a></li>
+                            <li><a href="/settings" class="item">Setting</a></li>
+                            <li><a href="/logout" class="item">Logout</a></li>
+                        </ul>
+                        <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
+                        <script src="../../views/assets/js/setting.js"></script>
+                    </div>
+                </nav>
+
+                <style>
+                    main {
+                        padding: 20px;
+                        margin-top: 40px;
+                        border-radius: 20px;
+                    }
+
+                    .col-md-12 {
+                        border-radius: 20px;
+                    }
+                </style>
+
+
+                <h2 class="text-center head-ad" style="padding-top: 20px;">Add Stock Products</h2>
+                <div class="d-flex justify-content-end align-item-center me-3">
+                    <button type="button" id="previewInvoice" class="btn btn-preview" data-bs-toggle="modal" data-bs-target="#invoiceModal">Preview Invoice</button>
+                </div>
+                <div class="col-md-12 mt-3 mx-auto">
+                    <div class="card p-3" style="box-shadow: none;border:none">
+                        <form id="productForm" method="POST" action="/purchase/store" enctype="multipart/form-data">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Category</th>
+                                        <th>Product Name</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productTableBody">
+                                    <tr class="product-row">
+                                        <td>
+                                            <input type="file" class="form-control image-add" name="image[]" accept="image/*">
+                                        </td>
+                                        <td>
+                                            <select name="category_id[]" class="form-control" required>
+                                                <option value="">Select Category</option>
+                                                <?php foreach ($categories as $category): ?>
+                                                    <option value="<?= htmlspecialchars($category['id']) ?>"><?= htmlspecialchars($category['name']) ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" name="product_name[]" required>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="removeRow">Remove</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button type="button" id="addMore">Add More</button>
+                            <button type="submit">Submit</button>
+                        </form>
                     </div>
                 </div>
+
+                <!-- Modal for Invoice Preview -->
+                <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="invoiceModalLabel">Invoice Preview</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Product Image</th>
+                                            <th>Category</th>
+                                            <th>Product Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="invoiceTableBody">
+                                        <!-- Dynamic Rows will be added here -->
+                                    </tbody>
+                                </table>
+                                <div class="d-flex justify-content-end">
+                                    <p>Total Price: $<span id="totalPrice">0</span></p>
+                                </div>
+                                <div class="button-container">
+                                    <button type="button" id="exportPDF" class="btn-system btn-export-pdf">Export to PDF</button>
+                                    <button type="button" id="exportExcel" class="btn-system btn-export-excel">Export to Excel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
+    <script src="../../views/assets/js/demo/chart-area-demo.js"></script>
 
-</main>
-
-<script>
-    // Add New Product Row
-    $('#addMore').on('click', function() {
-        const tableBody = $('#productTableBody');
-        const newRow = $(`
+    <script>
+        // Add New Product Row
+        $('#addMore').on('click', function() {
+            const tableBody = $('#productTableBody');
+            const newRow = $(`
             <tr class="product-row">
                 <td>
                     <input type="file" class="form-control image-add" name="image[]" accept="image/*">
@@ -129,83 +167,83 @@
                 </td>
             </tr>
         `);
-        tableBody.append(newRow);
-        initImagePreview(newRow.find('.image-add'));
-    });
+            tableBody.append(newRow);
+            initImagePreview(newRow.find('.image-add'));
+        });
 
-    // Remove Product Row
-    $('#productTableBody').on('click', '.removeRow', function() {
-        const tbody = $(this).closest('tbody');
-        if (tbody.find('tr').length > 1) {
-            $(this).closest('tr').remove();
-        } else {
-            alert('At least one product is required.');
-        }
-    });
-
-    // Image Preview
-    function initImagePreview(fileInput) {
-        fileInput.on('change', function(event) {
-            const file = event.target.files[0];
-            const preview = $(event.target).closest('td').find('.img-preview');
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.attr('src', e.target.result).show();
-                };
-                reader.readAsDataURL(file);
+        // Remove Product Row
+        $('#productTableBody').on('click', '.removeRow', function() {
+            const tbody = $(this).closest('tbody');
+            if (tbody.find('tr').length > 1) {
+                $(this).closest('tr').remove();
+            } else {
+                alert('At least one product is required.');
             }
         });
-    }
 
-    // Invoice Preview
-    $('#previewInvoice').on('click', function() {
-        const tableBody = $('#productTableBody');
-        const invoiceTableBody = $('#invoiceTableBody');
-        let totalPrice = 0;
-        invoiceTableBody.empty(); // Clear previous rows
+        // Image Preview
+        function initImagePreview(fileInput) {
+            fileInput.on('change', function(event) {
+                const file = event.target.files[0];
+                const preview = $(event.target).closest('td').find('.img-preview');
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.attr('src', e.target.result).show();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
 
-        tableBody.find('.product-row').each(function() {
-            const image = $(this).find('input[type="file"]')[0].files[0];
-            const category = $(this).find('select[name="category_id[]"]').val();
-            const productName = $(this).find('input[name="product_name[]"]').val();
+        // Invoice Preview
+        $('#previewInvoice').on('click', function() {
+            const tableBody = $('#productTableBody');
+            const invoiceTableBody = $('#invoiceTableBody');
+            let totalPrice = 0;
+            invoiceTableBody.empty(); // Clear previous rows
 
-            // Create invoice table rows
-            const row = `
+            tableBody.find('.product-row').each(function() {
+                const image = $(this).find('input[type="file"]')[0].files[0];
+                const category = $(this).find('select[name="category_id[]"]').val();
+                const productName = $(this).find('input[name="product_name[]"]').val();
+
+                // Create invoice table rows
+                const row = `
                 <tr>
                     <td><img src="${URL.createObjectURL(image)}" alt="Product Image" style="width: 50px; height: 50px;"></td>
                     <td>${category}</td>
                     <td>${productName}</td>
                 </tr>
             `;
-            invoiceTableBody.append(row);
+                invoiceTableBody.append(row);
+            });
+
+            // Update total price
+            $('#totalPrice').text(totalPrice.toFixed(2));
         });
 
-        // Update total price
-        $('#totalPrice').text(totalPrice.toFixed(2));
-    });
-
-    // Export to PDF
-    $('#exportPDF').on('click', function() {
-        const {
-            jsPDF
-        } = window.jspdf;
-        const doc = new jsPDF();
-        const table = document.querySelector('#invoiceTableBody');
-        doc.autoTable({
-            html: table
+        // Export to PDF
+        $('#exportPDF').on('click', function() {
+            const {
+                jsPDF
+            } = window.jspdf;
+            const doc = new jsPDF();
+            const table = document.querySelector('#invoiceTableBody');
+            doc.autoTable({
+                html: table
+            });
+            doc.save('invoice.pdf');
         });
-        doc.save('invoice.pdf');
-    });
 
-    // Export to Excel
-    $('#exportExcel').on('click', function() {
-        const table = document.querySelector('#invoiceTableBody');
-        const wb = XLSX.utils.table_to_book(table);
-        XLSX.write(wb, {
-            bookType: 'xlsx',
-            type: 'binary'
+        // Export to Excel
+        $('#exportExcel').on('click', function() {
+            const table = document.querySelector('#invoiceTableBody');
+            const wb = XLSX.utils.table_to_book(table);
+            XLSX.write(wb, {
+                bookType: 'xlsx',
+                type: 'binary'
+            });
+            XLSX.writeFile(wb, 'invoice.xlsx');
         });
-        XLSX.writeFile(wb, 'invoice.xlsx');
-    });
-</script>
+    </script>

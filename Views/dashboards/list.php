@@ -1,11 +1,5 @@
 <?php require_once './views/layouts/side.php' ?>
 
-<style>
-  .move-left {
-    margin-left: -10px;
-  }
-</style>
-
 <body id="page-top">
   <!-- Page Wrapper -->
   <div id="wrapper" style="margin-left: 250px;">

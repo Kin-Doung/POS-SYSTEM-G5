@@ -6,3 +6,7 @@
     position: relative;
     top: 4px;
 }
+
+#sidenav-main {
+    display: flex;
+}

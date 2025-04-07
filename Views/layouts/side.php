@@ -1,6 +1,5 @@
-<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-0 my-0 fixed-start me-0 ms-0 bg-white" id="sidenav-main">
-  
-  <div class="sidenav-header d-flex align-items-center justify-content-center">
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-0 my-0 fixed-start me-0 ms-0 bg-white" id="sidenav-main ">
+  <div class="sidenav-header ms-0 my-0">
     <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
     <a class="navbar-brand m-0 p-0" href="#" target="_blank">
       <img src="../../views/assets/img/logos/Engly-Logo.png" alt="main_logo" class="img-fluid" style="max-height: 80px;">
@@ -112,4 +111,11 @@
   <div class="sidenav-footer position-absolute w-100 bottom-0 ">
     <!-- footer content if needed -->
   </div>
+<<<<<<< HEAD
 </aside>
+=======
+
+  <link rel="stylesheet" href="../../views/assets/css/settings/aside.css">
+  <link rel="stylesheet" href="../assets/css/settings/aside.css">
+</aside>
+>>>>>>> stock/tracking

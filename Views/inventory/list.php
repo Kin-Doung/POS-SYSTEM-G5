@@ -1,15 +1,5 @@
 <?php require_once './views/layouts/header.php' ?>
 <?php require_once './views/layouts/side.php' ?>
-<<<<<<< HEAD
-<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-    <!-- Navbar -->
-    <?php require_once './views/layouts/nav.php' ?>
-        <!-- Remove Nav bar that code with html
-          using import navbar instead -->
-          
-    <!-- End Navbar -->
-=======
->>>>>>> stock/tracking
 
 <body id="page-top">
     <!-- Page Wrapper -->

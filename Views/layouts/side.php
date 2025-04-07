@@ -111,11 +111,7 @@
   <div class="sidenav-footer position-absolute w-100 bottom-0 ">
     <!-- footer content if needed -->
   </div>
-<<<<<<< HEAD
-</aside>
-=======
 
   <link rel="stylesheet" href="../../views/assets/css/settings/aside.css">
   <link rel="stylesheet" href="../assets/css/settings/aside.css">
 </aside>
->>>>>>> stock/tracking

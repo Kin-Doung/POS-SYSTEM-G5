@@ -25,6 +25,7 @@
             <input type="text" placeholder="Search...">
           </div>
           <div class="icons">
+            <!-- darkModeToggle -->
             <div class="toggle-container">
               <input type="checkbox" class="toggle" id="darkModeToggle">
               <label for="darkModeToggle" class="toggle-label">

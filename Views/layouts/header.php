@@ -13,7 +13,8 @@
   <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-  <script src="../assets/js/dashboard.js"></script> <!-- Adjust the path as necessary -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 
   <!-- CSS Files -->
   <link id="pagestyle" href="../../views/assets/css/material-dashboard.css?v=3.0.0" rel="stylesheet" />
@@ -58,12 +59,15 @@
   <!-- HTML to PDF Converter -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
 
- <!-- // darkmood// -->
+  <!-- // darkmood// -->
   <!-- BoxIcons v2.1.2 -->
   <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://www.youtube.com/redirect?event=video_description&redir_token=QUFFLUhqbE5DUWZIZEN6NWJab1NTanNGU2pfS2hhQmFTUXxBQ3Jtc0tsQ3loMnM3Ry0tY2NKaVB4aEc2amt2ZkwxTHpGaVVySUFwSVFZMWlJSDdGcmtSdm1KZ1JhWVFHbHdKVjBuaDZzLXlqMGdYMGRQQjZXNlBGMy1QVGNJb3pxZDhnczAzY2M5andxcDRLajJFTGx4NlB3dw&q=https%3A%2F%2Funpkg.com%2Fboxicons%402.1.2%2Fcss%2Fboxicons.min.css&v=bBRx5sewIqs">
-  
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- style nav -->
+  <link rel="stylesheet" href="../../views/assets/css//style/nav.css">
 
 
   <!-- new cahrt -->
@@ -73,7 +77,5 @@
 
 
 </head>
-<body class="<?= isset($_COOKIE['theme']) && $_COOKIE['theme'] === 'dark' ? 'dark-mode' : '' ?>">
 
-
-
+<body class="g-sidenav-show bg-gray-200">

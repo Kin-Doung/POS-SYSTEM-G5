@@ -1,26 +1,15 @@
 <?php require_once './views/layouts/side.php' ?>
-<style>
-  .move-left {
-    margin-left: -10px;
-    /* Adjust as needed */
-  }
-</style>
 
 <body id="page-top">
-
-
   <!-- Page Wrapper -->
   <div id="wrapper" style="margin-left: 250px;">
-
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
       <!-- Main Content -->
       <div id="content">
-
-
-        <nav class="navbar move-left">
-          <div class="search-container " style="background-color: #fff;">
+        <nav class="navbar ml-4 mb-5">
+          <div class="search-container">
             <i class="fas fa-search"></i>
             <input type="text" placeholder="Search...">
           </div>
@@ -40,7 +29,7 @@
             </div>
 
           </div>
-          <div class="profile">
+          <div class="profile" id="profile">
             <img src="../../views/assets/images/image.png" alt="User">
             <div class="profile-info">
               <span id="profile-name">Eng Ly</span>
@@ -55,8 +44,12 @@
             <script src="../../views/assets/js/setting.js"></script>
           </div>
         </nav>
+
+        <!-- Remove Nav bar that code with html
+          using import navbar instead -->
         <!-- Begin Page Content -->
         <div class="container-fluid">
+
 
           <!-- Content Row -->
           <div class="row">
@@ -181,70 +174,112 @@
             </div>
 
 
+
+
+            <?php
+            // Sample data (replace with your actual $tracking array)
+            $tracking = [
+              ['category_id' => 1, 'image' => 'fan.jpg', 'product_name' => 'Shaeleigh English', 'quantity' => 74],
+              ['category_id' => 2, 'image' => 'bag.jpg', 'product_name' => 'Laura Chambers', 'quantity' => 42],
+              ['category_id' => 3, 'image' => 'tools.jpg', 'product_name' => 'Vincent Santiago', 'quantity' => 19],
+              ['category_id' => 4, 'image' => 'fan2.jpg', 'product_name' => 'Lillian Sykes', 'quantity' => 57],
+            ];
+
+            // Initialize counters for statuses
+            $lowCount = 0;
+            $mediumCount = 0;
+            $highCount = 0;
+            $totalFiltered = 0;
+
+            // Filter products and count statuses
+            foreach ($tracking as $item) {
+              $quantity = $item['quantity'];
+
+              // Only process items with quantity >= 0 (including 0)
+              if ($quantity < 0) {
+                continue;
+              }
+
+              // Increment total filtered products
+              $totalFiltered++;
+
+              // Determine status
+              $status = '';
+              if ($quantity >= 50) {
+                $status = 'High';
+                $highCount++;
+              } elseif ($quantity >= 10) {
+                $status = 'Medium';
+                $mediumCount++;
+              } else { // This now explicitly includes quantity = 0
+                $status = 'Low';
+                $lowCount++;
+              }
+            }
+
+            // Calculate percentages (avoid division by zero)
+            $lowPercent = $totalFiltered > 0 ? ($lowCount / $totalFiltered) * 100 : 0;
+            $mediumPercent = $totalFiltered > 0 ? ($mediumCount / $totalFiltered) * 100 : 0;
+            $highPercent = $totalFiltered > 0 ? ($highCount / $totalFiltered) * 100 : 0;
+            ?>
+
             <div class="col-xl-4 col-lg-5">
               <div class="card shadow mb-4">
                 <!-- Project Card Example -->
                 <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Products (Stock Status)</h6>
                 </div>
-
                 <div class="card-body" style="height: 368px;">
-                  <h4 class="small text-left">Server Migration <span class="float-right">20%</span></h4>
+                  <h4 class="small text-left">Low (0-9)<span class="float-right"><?php echo round($lowPercent); ?>%</span></h4>
                   <div class="progress mb-4" style="height: 15px;">
-                    <div class="progress-bar" role="progressbar" style="width: 20%; height: 100%;   background-color: rgb(226, 160, 160);
-"
-                      aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar" role="progressbar" style="width: <?php echo $lowPercent; ?>%; height: 100%; background-color: rgb(226, 160, 160);"
+                      aria-valuenow="<?php echo $lowPercent; ?>" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
-                  <h4 class="small text-left">Sales Tracking <span class="float-right">40%</span></h4>
+                  <h4 class="small text-left">Medium (10-49)<span class="float-right"><?php echo round($mediumPercent); ?>%</span></h4>
                   <div class="progress mb-4" style="height: 15px;">
-                    <div class="progress-bar " role="progressbar" style="width: 40%; height: 100%;background-color: rgb(253, 215, 144);"
-                      aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar" role="progressbar" style="width: <?php echo $mediumPercent; ?>%; height: 100%; background-color: rgb(253, 215, 144);"
+                      aria-valuenow="<?php echo $mediumPercent; ?>" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
-                  <h4 class="small text-left">Customer Database <span class="float-right">60%</span></h4>
+                  <h4 class="small text-left">High (50+)<span class="float-right"><?php echo round($highPercent); ?>%</span></h4>
                   <div class="progress mb-4" style="height: 15px;">
-                    <div class="progress-bar" role="progressbar" style="width: 60%; height: 100%; background-color: rgb(154, 154, 255); "
-                      aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar" role="progressbar" style="width: <?php echo $highPercent; ?>%; height: 100%; background-color: rgb(154, 154, 255);"
+                      aria-valuenow="<?php echo $highPercent; ?>" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
-                  <h4 class="small text-left">Payout Details <span class="float-right">80%</span></h4>
+                  <h4 class="small text-left">Total Items<span class="float-right"><?php echo $totalFiltered; ?> items</span></h4>
                   <div class="progress mb-4" style="height: 15px;">
-                    <div class="progress-bar " role="progressbar" style="width: 80%; height: 100%; background-color: lightblue;"
-                      aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar" role="progressbar" style="width: 100%; height: 100%; background-color: lightblue;"
+                      aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
-                  <h4 class="small text-left">Account Setup <span class="float-right">Complete!</span></h4>
+                  <h4 class="small text-left">Processing Complete<span class="float-right">Done!</span></h4>
                   <div class="progress" style="height: 15px;">
-                    <div class="progress-bar " role="progressbar" style="width: 100%; height: 100%;   background-color: rgb(165, 253, 165);"
+                    <div class="progress-bar" role="progressbar" style="width: 100%; height: 100%; background-color: rgb(165, 253, 165);"
                       aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
                 </div>
-
               </div>
             </div>
 
+            <!-- Dashboards procress done -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+              <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                  <span>created by G5 team & PNC student 2025</span>
+                </div>
+              </div>
+            </footer>
+            <!-- End of Footer -->
+
           </div>
-          <!-- /.container-fluid -->
+          <!-- End of Content Wrapper -->
 
         </div>
-        <!-- End of Main Content -->
+        <!-- End of Page Wrapper -->
 
-        <!-- Footer -->
-        <footer class="sticky-footer bg-white">
-          <div class="container my-auto">
-            <div class="copyright text-center my-auto">
-              <span>created by G5 team & PNC student 2025</span>
-            </div>
-          </div>
-        </footer>
-        <!-- End of Footer -->
+        <!-- Scroll to Top Button-->
+        <a class="scroll-to-top rounded" href="#page-top">
+          <i class="fas fa-angle-up"></i>
+        </a>
 
-      </div>
-      <!-- End of Content Wrapper -->
-
-    </div>
-    <!-- End of Page Wrapper -->
-
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-      <i class="fas fa-angle-up"></i>
-    </a>
-
-    <script src="../../views/assets/js/demo/chart-area-demo.js"></script>
+        <script src="../../views/assets/js/demo/chart-area-demo.js"></script>

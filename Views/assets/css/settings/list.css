@@ -1,100 +1,11 @@
-.profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+nav {
+    background: white;
+    height: 11.3vh;
     position: relative;
-    cursor: pointer;
-    padding: 10px;
-    border-radius: 8px;
-    background: #fff;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.profile img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-}
-
-.profile-info {
+    right: 25px;
     display: flex;
-    flex-direction: column;
-}
-
-.menu {
-    display: none;
-    position: absolute;
-    top: 50px;
-    right: 0;
-    background: #fff;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    padding: 10px;
-    list-style: none;
-    min-width: 120px;
-}
-
-.menu li {
-    padding: 10px;
-}
-
-.menu li a {
-    text-decoration: none;
-    color: black;
-    display: block;
-}
-
-.menu li:hover {
-    background: #f2f2f2;
-}
-.custom-btn {
-    background-color: #048c24; /* Green */
-    color: white;
-    padding: 10px 20px;
-    border-radius: 10px;
-    text-decoration: none;
-    display: inline-block;
-    font-weight: bold;
-    transition: background 0.3s;
-}
-
-.custom-btn:hover {
-    background-color: #218838; /* Darker green */
-}
-.custom-btnn {
-    background-color: #de8806; /* Green */
-    color: white;
-    padding: 10px 20px;
-    border-radius: 10px;
-    text-decoration: none;
-    display: inline-block;
-    font-weight: bold;
-    transition: background 0.3s;
-}
-
-.custom-btn:hover {
-    background-color: #218838; /* Darker green */
-}
-
-.form-group {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px; /* Adjust space between inputs */
-}
-
-.group {
-    flex: 1; /* Makes both fields equal width */
-    display: flex;
-    flex-direction: row;
-}
-
-.form-label {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.form-control {
     width: 100%;
+<<<<<<< HEAD
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -107,10 +18,91 @@
     .card {
         width: 1165px;
         padding: 40px;
+=======
+    padding-right: 30px; 
+    flex-direction: row;
+    ;
+    justify-content: space-around;
+    align-items: center;
+
+    .search-container {
+        width: 60%;
+    }
+
+    .icons {
+        margin-right: 100px;
+    }
+
+    .profile {
+        margin-right: 100px;
+
+        img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 10px;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+
+            #profile-name {
+                font-size: 16px;
+                font-weight: bold;
+                color: rgb(88, 85, 85);
+            }
+        }
+
+        .menu {
+            display: none;
+            position: absolute;
+            top: 80px;
+            right: 50px;
+            background: #fff;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 10px;
+            list-style: none;
+            min-width: 140px;
+
+            li {
+                padding: 10px;
+
+                a {
+                    text-decoration: none;
+                    color: black;
+                    display: block;
+                }
+            }
+
+            li:hover {
+                background: #f2f2f2;
+            }
+        }
+    }
+
+}
+
+
+
+.container {
+    width: 1000px;
+    margin-left: 0px;
+
+    .card {
+        width: 1165px;
+        padding: 40px;
+
+>>>>>>> fa0aef182a31eaa4b0177b6a1374aa44bdd0ad86
         .edit {
             display: flex;
             background: none;
             justify-content: flex-end;
+<<<<<<< HEAD
+=======
+
+>>>>>>> fa0aef182a31eaa4b0177b6a1374aa44bdd0ad86
             a {
                 display: flex;
                 justify-content: center;
@@ -122,7 +114,11 @@
                 color: white;
                 background: rgb(13, 99, 122);
                 font-style: normal;
+<<<<<<< HEAD
                 
+=======
+
+>>>>>>> fa0aef182a31eaa4b0177b6a1374aa44bdd0ad86
             }
         }
 
@@ -137,7 +133,11 @@
             padding: 20px;
             border-radius: 20px;
             background: rgba(249, 249, 249, 0.777);
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> fa0aef182a31eaa4b0177b6a1374aa44bdd0ad86
             .account-row {
                 display: flex;
                 flex-direction: row;
@@ -151,15 +151,28 @@
                     width: 40%;
                     gap: 30px;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> fa0aef182a31eaa4b0177b6a1374aa44bdd0ad86
                     .aa {
                         display: flex;
                         flex-direction: row;
                         gap: 40px;
+<<<<<<< HEAD
                         h6 {
                             color: rgb(91, 89, 89);
                            display: flex;
                            justify-content: flex-start;
                            align-items: flex-start;
+=======
+
+                        h6 {
+                            color: rgb(91, 89, 89);
+                            display: flex;
+                            justify-content: flex-start;
+                            align-items: flex-start;
+>>>>>>> fa0aef182a31eaa4b0177b6a1374aa44bdd0ad86
                         }
 
                     }
@@ -168,6 +181,7 @@
                         display: flex;
                         flex-direction: column;
                         align-items: flex-start;
+<<<<<<< HEAD
                       
                         gap: 10px;
                         h6 {
@@ -180,6 +194,22 @@
                             display: flex;
                             background: rgba(227, 225, 225, 0.504);
                         
+=======
+
+                        gap: 10px;
+
+                        h6 {
+                            color: rgb(91, 89, 89);
+                            display: flex;
+                            justify-content: flex-start;
+                            align-items: flex-start;
+                        }
+
+                        .a-1 {
+                            display: flex;
+                            background: rgba(227, 225, 225, 0.504);
+
+>>>>>>> fa0aef182a31eaa4b0177b6a1374aa44bdd0ad86
                             width: 350px;
                             border-radius: 5px;
 
@@ -201,29 +231,51 @@
                     width: 40%;
                     margin-left: 30px;
                     gap: 30px;
+<<<<<<< HEAD
                    
+=======
+
+>>>>>>> fa0aef182a31eaa4b0177b6a1374aa44bdd0ad86
 
                     .bb {
                         display: flex;
                         flex-direction: column;
                         align-items: flex-start;
+<<<<<<< HEAD
                       
+=======
+
+>>>>>>> fa0aef182a31eaa4b0177b6a1374aa44bdd0ad86
                         gap: 10px;
 
                         h6 {
                             color: rgb(91, 89, 89);
+<<<<<<< HEAD
                            display: flex;
                            justify-content: flex-start;
                            align-items: flex-start;
+=======
+                            display: flex;
+                            justify-content: flex-start;
+                            align-items: flex-start;
+>>>>>>> fa0aef182a31eaa4b0177b6a1374aa44bdd0ad86
                         }
 
                         .bb-1,
                         .bb-2,
                         .bb-3 {
+<<<<<<< HEAD
                            
                             background: rgba(227, 225, 225, 0.504);
                             width: 350px;
                             border-radius: 5px;
+=======
+
+                            background: rgba(227, 225, 225, 0.504);
+                            width: 350px;
+                            border-radius: 5px;
+
+>>>>>>> fa0aef182a31eaa4b0177b6a1374aa44bdd0ad86
                             p {
                                 display: flex;
                                 justify-content: flex-start;
@@ -245,11 +297,20 @@
                 gap: 10px;
 
                 .bt-1 {
+<<<<<<< HEAD
                     
                  
                     width: 820px;
                     background: rgba(227, 225, 225, 0.504);
                     border-radius: 5px;
+=======
+
+
+                    width: 820px;
+                    background: rgba(227, 225, 225, 0.504);
+                    border-radius: 5px;
+
+>>>>>>> fa0aef182a31eaa4b0177b6a1374aa44bdd0ad86
                     p {
                         display: flex;
                         justify-content: flex-start;
@@ -257,7 +318,11 @@
                         padding-left: 20px;
                         height: 40px;
                     }
+<<<<<<< HEAD
                     
+=======
+
+>>>>>>> fa0aef182a31eaa4b0177b6a1374aa44bdd0ad86
                 }
             }
         }

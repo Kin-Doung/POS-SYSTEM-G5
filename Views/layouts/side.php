@@ -6,7 +6,7 @@
       <img src="../../views/assets/img/logos/logo.png" class="navbar-brand-img h-100" alt="main_logo">
     </a>
   </div>
-  <hr class="horizontal dark mt-0 mb-2">
+
   <div>
     <ul class="navbar-nav">
       <!-- nav dashboard -->

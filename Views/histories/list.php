@@ -7,12 +7,10 @@ require_once './views/layouts/side.php';
     /* Main content wrapper to account for sidebar */
     .main-content {
         margin-left: 250px;
-        /* Adjust this based on your sidebar width */
         padding: 20px;
         background-color: #f8f9fa;
         height: 100vh;
     }
-
     .table-container {
         border-radius: 10px;
     }
@@ -425,7 +423,10 @@ require_once './views/layouts/side.php';
         }
     }
 </style>
+
+
 <div class="main-content">
+
     <!-- Filter Buttons, Date Range, and Search Bar -->
     <div class="filter-search-container">
         <div class="filter-date-wrapper">

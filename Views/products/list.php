@@ -2,6 +2,10 @@
 require_once './views/layouts/header.php';
 require_once './views/layouts/side.php';
 ?>
+
+<!-- Add Font Awesome for the ellipsis icon -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
 <style>
     /* Sidebar */
     .sidebar {
@@ -81,7 +85,6 @@ require_once './views/layouts/side.php';
     }
 
     #submitCart {
-        /* background: #000; */
         padding: 10px;
     }
 
@@ -91,7 +94,6 @@ require_once './views/layouts/side.php';
 
     #moreOptionsBtn::after {
         content: "\f0d7";
-        /* caret-down by default */
         font-family: "Font Awesome 6 Free";
         font-weight: 900;
         margin-left: 8px;
@@ -99,8 +101,8 @@ require_once './views/layouts/side.php';
 
     #moreOptionsBtn.active::after {
         content: "\f0d8";
-        /* caret-up when active */
     }
+
 
     .product-col {
         width: 25%;
@@ -117,7 +119,6 @@ require_once './views/layouts/side.php';
 
     .cart-visible .product-col {
         width: 33.33%;
-        /* Fixed: Ensures 3 cards per row when cart is visible */
     }
 
     .product-card {
@@ -127,10 +128,13 @@ require_once './views/layouts/side.php';
         overflow: hidden;
         height: 100%;
         transition: transform 0.2s ease;
+        position: relative;
+        /* Added for kebab menu positioning */
+        z-index: 1;
+        /* Base z-index for cards */
     }
 
     .product-card:hover {
-        /* transform: scale(1.04); */
         box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
     }
 
@@ -189,6 +193,53 @@ require_once './views/layouts/side.php';
 
     .buy:hover {
         background-color: #0056b3;
+    }
+
+    /* New Kebab Menu Styles */
+    .kebab-menu {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        cursor: pointer;
+        font-size: 20px;
+        padding: 5px;
+        z-index: 1001;
+    }
+
+    .kebab-menu:hover {
+        color: #333;
+    }
+
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 30px;
+        right: 5px;
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+        padding: 5px 0;
+        z-index: 1002;
+        /* Highest z-index to ensure it's in front */
+    }
+
+    .dropdown-menu.visible {
+        display: block;
+    }
+
+    .dropdown-menu{
+        width: 100%;
+        padding: 8px 15px;
+        border: none;
+        background: none;
+        text-align: left;
+        cursor: pointer;
+        color: #dc3545;
+        font-size: 14px;
+    }
+
+    .dropdown-menu:hover {
+        background-color: #f8f9fa;
     }
 
     .cart-section {
@@ -407,7 +458,6 @@ require_once './views/layouts/side.php';
         text-align: center;
     }
 
-    /* Added styles for buttons in QR container */
     #qr-container .cart-btn {
         margin: 5px auto;
     }
@@ -514,6 +564,12 @@ require_once './views/layouts/side.php';
                     <?php foreach ($inventory as $item): ?>
                         <div class="product-col">
                             <div class="product-card">
+                                <!-- Add Font Awesome ellipsis icon -->
+                                <i class="fa-solid fa-ellipsis-vertical kebab-menu"></i>
+<div class="dropdown-menu">
+    <p class="delete-btn" data-id="<?= htmlspecialchars($item['inventory_id']) ?>"><i class="fa-solid fa-trash"></i></p>
+</div>
+
                                 <div class="image-wrapper">
                                     <?php if (!empty($item['image'])): ?>
                                         <img src="<?= htmlspecialchars($item['image']) ?>"
@@ -544,7 +600,7 @@ require_once './views/layouts/side.php';
         <div class="cart-section" id="cartSection">
             <div class="cart-card">
                 <div class="cart-header">
-                    <h4>POS Terminal</h4>
+                    <h4>POS Payout</h4>
                     <button class="close-cart" id="closeCart">✖</button>
                 </div>
                 <div class="cart-body">
@@ -565,7 +621,6 @@ require_once './views/layouts/side.php';
                     <div id="qr-container" style="display: none;">
                         <img id="qr-code-img" src="../../views/assets/images/QR-code.png" alt="QR Code" style="width: 80px; height: 80px; margin-bottom: 15px;" />
                         <input type="text" id="inputField" placeholder="Enter your details" />
-                        <!-- The buttons will be moved here via JavaScript -->
                     </div>
                 </div>
                 <div class="cart-footer">
@@ -586,19 +641,15 @@ require_once './views/layouts/side.php';
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
     const cartSection = document.getElementById('cartSection');
     const cartToggle = document.getElementById('cartToggle');
     const closeCart = document.getElementById('closeCart');
     const cartCount = document.getElementById('cartCount');
 
-    // Telegram Bot credentials (replace with your own)
-    const TELEGRAM_BOT_TOKEN = '7914523767:AAEJxRARlS6nn4Qggt3lw8pOYWKdjAT3FaY'; // Your bot token
-    const TELEGRAM_CHAT_ID = '@engly_system_telegram'; // Your chat ID
+    const TELEGRAM_BOT_TOKEN = '7914523767:AAEJxRARlS6nn4Qggt3lw8pOYWKdjAT3FaY';
+    const TELEGRAM_CHAT_ID = '@engly_system_telegram';
 
-    // Load cart from localStorage on page load
     document.addEventListener('DOMContentLoaded', function() {
         loadCartFromLocalStorage();
     });
@@ -626,7 +677,7 @@ require_once './views/layouts/side.php';
                 return sum + (qty * price);
             }, 0);
         document.getElementById('grandTotal').textContent = total.toFixed(2);
-        return total; // Return the total for use in Telegram message
+        return total;
     }
 
     function updateCartCount() {
@@ -674,7 +725,6 @@ require_once './views/layouts/side.php';
         }
     }
 
-    // Function to send message to Telegram
     async function sendToTelegram(message) {
         const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
         try {
@@ -686,7 +736,7 @@ require_once './views/layouts/side.php';
                 body: JSON.stringify({
                     chat_id: TELEGRAM_CHAT_ID,
                     text: message,
-                    parse_mode: 'Markdown' // Use Markdown for formatting
+                    parse_mode: 'Markdown'
                 })
             });
             const data = await response.json();
@@ -785,7 +835,6 @@ require_once './views/layouts/side.php';
         let valid = true;
         const itemsData = [];
 
-        // Collect cart items for submission and Telegram message
         document.querySelectorAll('#cartBody tr').forEach(row => {
             const inventoryId = row.dataset.id;
             const productName = row.cells[0].textContent.trim();
@@ -822,7 +871,6 @@ require_once './views/layouts/side.php';
         this.disabled = true;
         this.textContent = 'Processing...';
 
-        // Prepare Telegram message with the desired format
         const now = new Date();
         const date = now.toLocaleDateString('en-GB', {
             day: '2-digit',
@@ -843,30 +891,27 @@ require_once './views/layouts/side.php';
         telegramMessage += `item             Qty    Price       Total\n`;
         telegramMessage += `-------------------------------------\n`;
 
-        // Add each item to the table
         itemsData.forEach(item => {
-            const productName = item.productName.padEnd(16, ' ').substring(0, 16); // Pad/truncate product name for alignment
-            const quantity = `x${item.quantity}`.padEnd(6, ' '); // Add 'x' prefix and pad quantity
-            const price = `$${item.price.toFixed(2)}`.padEnd(10, ' '); // Pad price
-            const total = `= $${(item.quantity * item.price).toFixed(2)}`; // Calculate total with '=' prefix
+            const productName = item.productName.padEnd(16, ' ').substring(0, 16);
+            const quantity = `x${item.quantity}`.padEnd(6, ' ');
+            const price = `$${item.price.toFixed(2)}`.padEnd(10, ' ');
+            const total = `= $${(item.quantity * item.price).toFixed(2)}`;
             telegramMessage += `${productName} ${quantity} ${price} ${total}\n`;
         });
 
         telegramMessage += `-------------------------------------\n`;
         const total = updateGrandTotal();
         const totalPrice = `$${total.toFixed(2)}`;
-        telegramMessage += `Total: ${' '.repeat(30 - totalPrice.length)}${totalPrice}\n`; // Right-align total
+        telegramMessage += `Total: ${' '.repeat(30 - totalPrice.length)}${totalPrice}\n`;
         telegramMessage += `-------------------------------------\n`;
         telegramMessage += "```\n";
         telegramMessage += `✅ Thank you!`;
 
-        // Send to Telegram
         const telegramSuccess = await sendToTelegram(telegramMessage);
         if (!telegramSuccess) {
             alert('Failed to send checkout details to Telegram. Proceeding with checkout anyway.');
         }
 
-        // Proceed with the checkout
         fetch('/products/submitCart', {
                 method: 'POST',
                 headers: {
@@ -914,7 +959,6 @@ require_once './views/layouts/side.php';
             localStorage.removeItem('cartItems');
             updateCartCount();
             hideCart();
-            // Show More Options button when clearing cart
             document.getElementById('moreOptionsContainer').style.display = 'block';
         }
     });
@@ -922,22 +966,32 @@ require_once './views/layouts/side.php';
     const {
         jsPDF
     } = window.jspdf;
+
     document.getElementById('savePdf').addEventListener('click', function() {
         const doc = new jsPDF();
-        doc.setFontSize(18);
-        doc.text('Store Name POS', 105, 15, {
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(20);
+        doc.text('Engly Store', 105, 15, {
             align: 'center'
         });
         doc.setFontSize(10);
-        doc.text('123 Business Ave, City, ST 12345', 105, 23, {
+        doc.setFont("helvetica", "normal");
+        doc.text('Phum TropeagnChhuk, Sangkat Tekla, Khan SenSok, Phnom Penh City', 105, 23, {
             align: 'center'
         });
-        doc.text(`Date: ${new Date().toLocaleString()}`, 105, 31, {
+        doc.text('Phone: (+855) 97 45 67 89', 105, 28, {
             align: 'center'
         });
-        doc.line(10, 35, 200, 35);
-        let y = 45;
+        doc.text(`Date: ${new Date().toLocaleString()}`, 10, 35);
+        doc.text(`Cashier`, 180, 35, {
+            align: 'right'
+        });
+        doc.setLineWidth(0.5);
+        doc.line(10, 40, 200, 40);
+        let y = 50;
         doc.setFontSize(12);
+        doc.setFont("helvetica", "bold");
         doc.text('Item', 10, y);
         doc.text('Qty', 100, y, {
             align: 'right'
@@ -949,8 +1003,12 @@ require_once './views/layouts/side.php';
             align: 'right'
         });
         y += 5;
+        doc.setLineWidth(0.2);
         doc.line(10, y, 200, y);
         y += 5;
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        let totalItems = 0;
         document.querySelectorAll('#cartBody tr').forEach(row => {
             const product = row.cells[0].textContent.trim().substring(0, 20);
             const qty = row.querySelector('.cart-qty').value;
@@ -966,21 +1024,55 @@ require_once './views/layouts/side.php';
             doc.text(`$${total}`, 180, y, {
                 align: 'right'
             });
-            y += 10;
+            totalItems += parseInt(qty);
+            y += 8;
         });
+        doc.setLineWidth(0.2);
         doc.line(10, y, 200, y);
         y += 10;
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "bold");
         const grandTotal = document.getElementById('grandTotal').textContent;
-        doc.setFontSize(14);
-        doc.text(`Grand Total: $${grandTotal}`, 180, y, {
+        doc.text(`Total Items: ${totalItems}`, 10, y);
+        doc.text(`Subtotal: $${grandTotal}`, 180, y, {
             align: 'right'
         });
         y += 10;
-        doc.setFontSize(10);
-        doc.text('Thank you for shopping with us!', 105, y, {
+        doc.setLineWidth(0.5);
+        doc.line(10, y, 200, y);
+        y += 10;
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "bold");
+        doc.text('THANK YOU FOR SHOPPING WITH US!', 105, y, {
             align: 'center'
         });
-        doc.save('pos-receipt.pdf');
+        y += 8;
+        doc.setFontSize(8);
+        doc.setFont("helvetica", "normal");
+        doc.text('engly@gmail.com', 105, y, {
+            align: 'center'
+        });
+        y += 9;
+        const qrImage = new Image();
+        qrImage.src = '../../views/assets/images/QR-code.png';
+        qrImage.crossOrigin = 'Anonymous';
+        qrImage.onload = function() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = qrImage.width;
+            canvas.height = qrImage.height;
+            ctx.drawImage(qrImage, 0, 0);
+            const qrDataURL = canvas.toDataURL('image/png');
+            doc.addImage(qrDataURL, 'PNG', 95, y, 20, 20);
+            doc.save('pos-receipt.pdf');
+        };
+        qrImage.onerror = function() {
+            console.error('Failed to load QR code image.');
+            doc.text('[QR Code Failed to Load]', 105, y, {
+                align: 'center'
+            });
+            doc.save('pos-receipt.pdf');
+        };
     });
 
     document.getElementById('completeCart').addEventListener('click', function() {
@@ -988,14 +1080,8 @@ require_once './views/layouts/side.php';
         const moreOptionsBtn = document.getElementById('moreOptionsBtn');
         const optionsDropdown = document.getElementById('optionsDropdown');
         const moreOptionsContainer = document.getElementById('moreOptionsContainer');
-
-        // Show QR container
         qrContainer.style.display = 'block';
-
-        // Hide the More Options container (including the button and dropdown)
         moreOptionsContainer.style.display = 'none';
-
-        // Reset QR container content
         qrContainer.innerHTML = `
             <img id="qr-code-img" src="../../views/assets/images/QR-code.png" alt="QR Code" style="width: 80px; height: 80px; margin-bottom: 15px;" />
             <input type="text" id="inputField" placeholder="Enter your details" style="margin-bottom: 15px;" />
@@ -1003,25 +1089,18 @@ require_once './views/layouts/side.php';
             <button class="cart-btn cart-btn-primary" id="completeCart2">Complete</button>
             <button class="cart-btn cart-btn-danger" id="clearCart2">Clear</button>
         `;
-
-        // Add event listeners to new buttons
         document.getElementById('savePdf2').addEventListener('click', function() {
             document.getElementById('savePdf').click();
         });
-
         document.getElementById('completeCart2').addEventListener('click', function() {
             alert('Order completed!');
-            qrContainer.style.display = 'none'; // Hide QR container after completion
-            moreOptionsContainer.style.display = 'block'; // Show More Options button again
+            qrContainer.style.display = 'none';
+            moreOptionsContainer.style.display = 'block';
         });
-
         document.getElementById('clearCart2').addEventListener('click', function() {
             document.getElementById('clearCart').click();
         });
-
-        // Hide the dropdown
         optionsDropdown.classList.remove('visible');
-
         showCart();
     });
 
@@ -1040,39 +1119,71 @@ require_once './views/layouts/side.php';
         });
     });
 
-    // const moreOptionsBtn = document.getElementById('moreOptionsBtn');
-    // const optionsDropdown = document.getElementById('optionsDropdown');
-    // moreOptionsBtn.addEventListener('click', function() {
-    //     optionsDropdown.classList.toggle('visible');
-
-        
-    // });
-
-    // document.addEventListener('click', function(e) {
-    //     if (!moreOptionsBtn.contains(e.target) && !optionsDropdown.contains(e.target)) {
-    //         optionsDropdown.classList.remove('visible');
-    //     }
-    // });
-
-
     const moreOptionsBtn = document.getElementById('moreOptionsBtn');
-const optionsDropdown = document.getElementById('optionsDropdown');
+    const optionsDropdown = document.getElementById('optionsDropdown');
 
-// Toggle dropdown visibility and icon
-moreOptionsBtn.addEventListener('click', function(e) {
-    e.stopPropagation();  // Prevent event from bubbling up to the document
-    optionsDropdown.classList.toggle('visible');
-    moreOptionsBtn.classList.toggle('active');
-});
+    moreOptionsBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        optionsDropdown.classList.toggle('visible');
+        moreOptionsBtn.classList.toggle('active');
+    });
 
-// Close the dropdown if clicking outside
-document.addEventListener('click', function(e) {
-    if (!moreOptionsBtn.contains(e.target) && !optionsDropdown.contains(e.target)) {
-        optionsDropdown.classList.remove('visible');
-        moreOptionsBtn.classList.remove('active');
-    }
-});
+    document.addEventListener('click', function(e) {
+        if (!moreOptionsBtn.contains(e.target) && !optionsDropdown.contains(e.target)) {
+            optionsDropdown.classList.remove('visible');
+            moreOptionsBtn.classList.remove('active');
+        }
+    });
 
-    
+    // New Kebab Menu Functionality
+    document.querySelectorAll('.kebab-menu').forEach(menu => {
+        menu.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const dropdown = this.nextElementSibling;
+            document.querySelectorAll('.dropdown-menu').forEach(d => {
+                if (d !== dropdown) d.classList.remove('visible');
+            });
+            dropdown.classList.toggle('visible');
+        });
+    });
 
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', async function(e) {
+            e.stopPropagation();
+            const inventoryId = this.dataset.id;
+            if (confirm('Are you sure you want to delete this product?')) {
+                try {
+                    const response = await fetch('/products/delete', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            inventoryId
+                        })
+                    });
+                    if (!response.ok) throw new Error(`Server error: ${response.status}`);
+                    const data = await response.json();
+                    if (data.success) {
+                        this.closest('.product-col').remove();
+                        alert('Product deleted successfully!');
+                    } else {
+                        alert(`Error: ${data.message}`);
+                    }
+                } catch (error) {
+                    console.error('Delete failed:', error);
+                    alert(`Failed to delete product: ${error.message}`);
+                }
+            }
+            this.closest('.dropdown-menu').classList.remove('visible');
+        });
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.kebab-menu') && !e.target.closest('.dropdown-menu')) {
+            document.querySelectorAll('.dropdown-menu').forEach(dropdown => {
+                dropdown.classList.remove('visible');
+            });
+        }
+    });
 </script>

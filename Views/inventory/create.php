@@ -132,63 +132,6 @@ require_once './views/layouts/side.php';
             </div>
         </div>
     </div>
-<<<<<<< HEAD
-</main>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $("#addMore").click(function() {
-            // Clone the first row
-            var newRow = $(".product-row:first").clone();
-
-            // Clear input values
-            newRow.find("select").val(""); // Clear dropdowns
-            newRow.find("input").val(""); // Clear input fields
-            newRow.find("img.img-preview").attr("src", "").hide(); // Hide image preview
-
-            // Remove previously set event listeners and attach new ones
-            newRow.find('.product-select').off('change').on('change', function() {
-                handleProductSelect(this);
-            });
-
-            newRow.find('.removeRow').off('click').on('click', function() {
-                if ($(".product-row").length > 1) {
-                    $(this).closest("tr").remove();
-                } else {
-                    alert("At least one product row is required!");
-                }
-            });
-
-            // Append the new row
-            $("#productTableBody").append(newRow);
-        });
-
-        // Remove row functionality
-        $(document).on("click", ".removeRow", function() {
-            if ($(".product-row").length > 1) {
-                $(this).closest("tr").remove();
-            } else {
-                alert("At least one product row is required!");
-            }
-        });
-
-        // Handle product selection
-        function handleProductSelect(selectElement) {
-            const productId = selectElement.value;
-            const row = selectElement.closest('tr');
-
-            if (productId) {
-                fetch('/inventory/getProductDetails?id=' + productId)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (!data.error && data) {
-                            row.querySelector('.category-select').value = data.category_id || '';
-
-                            const imgPreview = row.querySelector('.img-preview');
-                            if (data.image) {
-                                imgPreview.src = '/' + data.image;
-                                imgPreview.style.display = 'block';
-=======
     <script src="../../views/assets/js/demo/chart-area-demo.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -217,7 +160,6 @@ require_once './views/layouts/side.php';
                                     imgPreview.src = '';
                                     imgPreview.style.display = 'none';
                                 }
->>>>>>> stock/tracking
                             } else {
                                 alert('No existing data found for this product.');
                                 row.querySelector('.category-select').value = '';
@@ -225,60 +167,14 @@ require_once './views/layouts/side.php';
                                 imgPreview.src = '';
                                 imgPreview.style.display = 'none';
                             }
-<<<<<<< HEAD
-
-                            row.querySelector('.quantity-input').value = data.quantity || 0;
-                            row.querySelector('.amount-input').value = data.amount || 0;
-                        } else {
-                            row.querySelector('.category-select').value = '';
-                            row.querySelector('.img-preview').src = '';
-                            row.querySelector('.img-preview').style.display = 'none';
-                            row.querySelector('.quantity-input').value = '';
-                            row.querySelector('.amount-input').value = '';
-                        }
-                    })
-                    .catch(error => console.log(error));
-            } else {
-                row.querySelector('.category-select').value = '';
-                row.querySelector('.img-preview').src = '';
-                row.querySelector('.img-preview').style.display = 'none';
-                row.querySelector('.quantity-input').value = '';
-                row.querySelector('.amount-input').value = '';
-=======
                         })
                         .catch(error => {
                             console.error('Error:', error);
                             alert('Error fetching product data.');
                         });
                 }
->>>>>>> stock/tracking
             }
 
-<<<<<<< HEAD
-        // Attach event listener for existing elements
-        $(document).on("change", ".product-select", function() {
-            handleProductSelect(this);
-        });
-    });
-
-
-    function getProductDetails() {
-        var productId = document.getElementById("product_name").value;
-
-        if (productId) {
-            // Send AJAX request to fetch product details
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", "/inventory/getProductDetails?id=" + productId, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    var response = JSON.parse(xhr.responseText);
-
-                    // Handle the response and display the product details
-                    if (response.error) {
-                        document.getElementById("product_details").innerHTML = "Error: " + response.error;
-                    } else {
-                        document.getElementById("product_details").innerHTML = `
-=======
             // Attach event listener to existing product selects
             document.querySelectorAll('.product-select').forEach(select => {
                 select.addEventListener('change', function() {
@@ -345,7 +241,6 @@ require_once './views/layouts/side.php';
                             document.getElementById("product_details").innerHTML = "Error: " + response.error;
                         } else {
                             document.getElementById("product_details").innerHTML = `
->>>>>>> stock/tracking
                         <p><strong>Product Name:</strong> ${response.product_name}</p>
                         <p><strong>Category:</strong> ${response.category_name}</p>
                         <p><strong>Price:</strong> $${response.amount}</p>

@@ -57,7 +57,6 @@
                     <?php endif; ?>
                 </select>
             </div>
-
             <table class="table">
                 <thead>
                     <tr>
@@ -66,16 +65,17 @@
                         <th>Product Name</th>
                         <th>Quantity</th>
                         <th>Price</th>
-                        <th style="display: none;">Total Price</th>
+                        <th style="display: none;">Total Price</th> <!-- Made visible -->
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($inventory as $index => $item): ?>
+                    <?php foreach ($inventory as $index => $item):
+                        $totalPrice = $item['quantity'] * $item['amount']; // Calculate total price for each item
+                    ?>
                         <tr data-category-id="<?= htmlspecialchars($item['category_id']); ?>">
                             <td><?= $index + 1 ?></td>
                             <td>
-                                <!-- Display image for inventory item -->
                                 <img src="<?= htmlspecialchars($item['image']) ?>"
                                     alt="Image of <?= htmlspecialchars($item['product_name']) ?>"
                                     style="width: 40px; height:auto;">
@@ -83,13 +83,14 @@
                             <td><?= htmlspecialchars($item['product_name']) ?></td>
                             <td><span class="quantity-text"><?= htmlspecialchars($item['quantity']) ?></span></td>
                             <td>$<?= htmlspecialchars(number_format($item['amount'], 2)) ?></td>
+                            <td style="display: none;">$<span class="total-price-text"><?= number_format($totalPrice, 2) ?></span></td>
                             <td>
                                 <div class="dropdown">
                                     <button class="btn-seemore dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                         See more...
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item text-daryk" href="#" data-bs-toggle="modal" data-bs-target="#viewModal<?= $item['id']; ?>"><i class="fa-solid fa-eye"></i> View</a></li>
+                                        <li><a class="dropdown-item text-dark" href="#" data-bs-toggle="modal" data-bs-target="#viewModal<?= $item['id']; ?>"><i class="fa-solid fa-eye"></i> View</a></li>
                                         <li>
                                             <a class="dropdown-item text-dark" href="#"
                                                 data-bs-toggle="modal"
@@ -99,14 +100,14 @@
                                                 data-category_id="<?= $item['category_id'] ?>"
                                                 data-quantity="<?= $item['quantity'] ?>"
                                                 data-amount="<?= $item['amount'] ?>"
-                                                data-image="<?= htmlspecialchars($item['image']) ?>"> <!-- Ensure image data is properly escaped -->
+                                                data-total_price="<?= $totalPrice ?>"
+                                                data-image="<?= htmlspecialchars($item['image']) ?>">
                                                 <i class="fa-solid fa-pen-to-square"></i> Edit
                                             </a>
                                         </li>
                                         <li><a class="dropdown-item text-dark" href="/inventory/delete?id=<?= $item['id'] ?>" onclick="return confirm('Are you sure you want to delete this item?');"><i class="fa-solid fa-trash"></i> Delete</a></li>
                                     </ul>
                                 </div>
-
 
                                 <!-- View Modal -->
                                 <div class="modal fade" id="viewModal<?= $item['id']; ?>" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
@@ -122,7 +123,7 @@
                                                     <p><strong>Category:</strong> <?= !empty($item['category_name']) ? htmlspecialchars($item['category_name']) : '-'; ?></p>
                                                     <p><strong>Quantity:</strong> <?= htmlspecialchars($item['quantity']); ?></p>
                                                     <p><strong>Price:</strong> $<?= htmlspecialchars(number_format($item['amount'], 2)); ?></p>
-                                                    <p style="display: none;"><strong>Total Price:</strong> $<?= htmlspecialchars(number_format($item['total_price'], 2)); ?></p>
+                                                    <p style="display: none;"><strong>Total Price:</strong> $<span class="modal-total-price"><?= htmlspecialchars(number_format($totalPrice, 2)); ?></span></p>
                                                 </div>
                                                 <?php if (!empty($item['image'])): ?>
                                                     <div class="mb-3">
@@ -164,15 +165,18 @@
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-md-6 mb-3">
+                                                        <div class="col-md-4 mb-3">
                                                             <label class="form-label">Amount</label>
                                                             <input type="number" class="form-control" name="amount" id="amount" required step="0.01" min="0">
                                                         </div>
-                                                        <div class="col-md-6 mb-3">
+                                                        <div class="col-md-4 mb-3">
+                                                            <label class="form-label">Total Price</label>
+                                                            <input type="text" class="form-control" name="total_price" id="total_price" readonly>
+                                                        </div>
+                                                        <div class="col-md-4 mb-3">
                                                             <label class="form-label">Expiration Date</label>
                                                             <input type="date" class="form-control" name="expiration_date" id="expiration_date">
                                                         </div>
-
                                                     </div>
                                                     <div class="mb-3">
                                                         <label class="form-label">Image</label>
@@ -190,6 +194,123 @@
                     <?php endforeach; ?>
                 </tbody>
             </table>
+
+            <!-- Updated JavaScript -->
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    // Existing modal population code
+                    document.querySelectorAll('.dropdown-item[data-bs-target="#editModal"]').forEach((link) => {
+                        link.addEventListener("click", function(event) {
+                            const productName = event.target.getAttribute("data-product_name");
+                            const categoryId = event.target.getAttribute("data-category_id");
+                            const quantity = event.target.getAttribute("data-quantity");
+                            const amount = event.target.getAttribute("data-amount");
+                            const totalPrice = event.target.getAttribute("data-total_price");
+                            const image = event.target.getAttribute("data-image");
+                            const id = event.target.getAttribute("data-id");
+
+                            document.getElementById("product_name").value = productName;
+                            document.getElementById("category_id").value = categoryId;
+                            document.getElementById("quantity").value = quantity;
+                            document.getElementById("amount").value = amount;
+                            document.getElementById("total_price").value = parseFloat(totalPrice).toFixed(2);
+                            document.getElementById("imagePreview").src = image ? image : "";
+                            document.querySelector("#editModal form").action = "/inventory/update?id=" + id;
+                        });
+                    });
+
+                    // Add total price calculation in edit modal
+                    const quantityInput = document.getElementById("quantity");
+                    const amountInput = document.getElementById("amount");
+                    const totalPriceInput = document.getElementById("total_price");
+
+                    function updateTotalPrice() {
+                        const quantity = parseFloat(quantityInput.value) || 0;
+                        const amount = parseFloat(amountInput.value) || 0;
+                        const total = quantity * amount;
+                        totalPriceInput.value = total.toFixed(2);
+                    }
+
+                    if (quantityInput && amountInput) {
+                        quantityInput.addEventListener("input", updateTotalPrice);
+                        amountInput.addEventListener("input", updateTotalPrice);
+                    }
+
+                    // Add grand total display
+                    function updateGrandTotal() {
+                        let grandTotal = 0;
+                        document.querySelectorAll('tbody tr').forEach(row => {
+                            if (row.style.display !== 'none') {
+                                const totalPrice = parseFloat(row.querySelector('.total-price-text').textContent.replace(/,/g, ''));
+                                grandTotal += totalPrice;
+                            }
+                        });
+
+                        let grandTotalDiv = document.getElementById('grandTotal');
+                        if (!grandTotalDiv) {
+                            grandTotalDiv = document.createElement('div');
+                            grandTotalDiv.id = 'grandTotal';
+                            grandTotalDiv.className = 'grand-total-container';
+                            document.querySelector('.table').after(grandTotalDiv);
+                        }
+                        grandTotalDiv.innerHTML = `Grand Total: $${grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+                    }
+
+                    // Update existing filterTable function to include grand total
+                    function filterTable() {
+                        const searchInput = document.getElementById("searchInput");
+                        const categorySelect = document.getElementById("categorySelect");
+                        const tableRows = document.querySelectorAll("tbody tr");
+
+                        const searchValue = searchInput.value.toLowerCase();
+                        const selectedCategory = categorySelect.value;
+
+                        tableRows.forEach((row) => {
+                            const productName = row.children[2].textContent.toLowerCase();
+                            const categoryId = row.getAttribute("data-category-id");
+
+                            const matchesSearch = productName.includes(searchValue);
+                            const matchesCategory = selectedCategory === "" || categoryId === selectedCategory;
+
+                            row.style.display = matchesSearch && matchesCategory ? "" : "none";
+                        });
+
+                        updateGrandTotal();
+                    }
+
+                    // Add event listeners if search elements exist
+                    const searchInput = document.getElementById("searchInput");
+                    const categorySelect = document.getElementById("categorySelect");
+                    if (searchInput) searchInput.addEventListener("input", filterTable);
+                    if (categorySelect) categorySelect.addEventListener("change", filterTable);
+
+                    // Initial grand total calculation
+                    updateGrandTotal();
+                });
+            </script>
+
+            <!-- Updated CSS -->
+            <style>
+                .grand-total-container {
+                    margin-top: 15px;
+                    padding: 10px;
+                    background-color: #f8f9fa;
+                    border-radius: 4px;
+                    text-align: right;
+                    font-weight: bold;
+                    font-size: 1.1em;
+                }
+
+                .total-price-text {
+                    color: #2c3e50;
+                }
+
+                .modal-total-price {
+                    color: #28a745;
+                    font-weight: bold;
+                }
+            </style>
+
             <div class="update-quantity" id="updateQuantitySection" style="display: none;">
                 <h3>Update Quantity</h3>
                 <button class="btn btn-success" onclick="updateQuantities()">Update Selected Quantities</button>

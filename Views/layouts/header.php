@@ -71,6 +71,7 @@
   <link href="../../views/assets/css/sb-admin-2.css" rel="stylesheet">
   <script src="../../views/assets/js/sciptJS/vendor/chart.js/Chart.min.js"></script>
 
+  
 
 </head>
 

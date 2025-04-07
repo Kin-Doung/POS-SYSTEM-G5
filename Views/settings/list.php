@@ -1,7 +1,7 @@
 <?php require_once './views/layouts/header.php'; ?>
 <?php require_once './views/layouts/side.php' ?>
 <?php require_once './Databases/database.php' ?>
-<<<<<<< HEAD
+
 <main class="main-content position-relative max-height-vh-50 h-50 border-radius-lg ">
     <!-- Navbar -->
     <?php require_once './views/layouts/nav.php' ?>
@@ -76,7 +76,7 @@
         </div>
     </div>
 </main>
-=======
+
 <?php require_once './views/layouts/side.php' ?>
 
 
@@ -188,9 +188,5 @@
             </div>
         </div>
     </div>
-<<<<<<< HEAD
-</main>
-=======
     <script src="../../views/assets/js/demo/chart-area-demo.js"></script>
->>>>>>> stock/tracking
->>>>>>> fa0aef182a31eaa4b0177b6a1374aa44bdd0ad86
+

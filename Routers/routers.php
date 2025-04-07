@@ -13,6 +13,7 @@ require_once './Controllers/LanguageController.php';
 require_once './Controllers/LoginController.php';
 require_once './Controllers/HistoryController.php';
 require_once './Controllers/Profit_LossController.php';
+require_once __DIR__ . '/../Controllers/CalendarController.php';
 
 
 
@@ -60,6 +61,11 @@ $routes->get('/tracking', [TrackingController::class, 'index']);
 // $routes->get('/stock', [TrackingController::class, 'index']);
 // $routes->get('/stock', [TrackingController::class, 'index']);
 // $routes->get('/stock', [TrackingController::class, 'index']);
+
+// Calendar
+$routes->get('/calendar', [CalendarController::class, 'index']);
+
+
 
 $routes->get('/inventory/getProductDetails', [InventoryController::class, 'getProductDetails']);
 

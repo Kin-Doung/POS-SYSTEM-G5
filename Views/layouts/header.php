@@ -26,6 +26,7 @@
   <link rel="stylesheet" href="../../views/assets/css/style/categories.css">
   <link rel="stylesheet" href="../../views/assets/css/style/create.css">
   <link rel="stylesheet" href="../../views/assets/css/style/active.css">
+  <link rel="stylesheet" href="../../views/assets/css/style/calendar.css">
   
   
 
@@ -41,6 +42,7 @@
   <script src="../../views/assets/js/sciptJS/product.js" defer></script>
   <script src="../../views/assets/js/sciptJS/inventory.js" defer></script>
   <script src="../../views/assets/js/sciptJS/categories.js" defer></script>
+  <script src="../../views/assets/js/sciptJS/calendar.js" defer></script>
   <script src="../../views/assets/js/sciptJS/active.js" defer></script>
   <script src="../assets/js/dashboard.js" defer></script>
 

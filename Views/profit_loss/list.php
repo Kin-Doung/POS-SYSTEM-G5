@@ -4,6 +4,23 @@ require_once './views/layouts/side.php';
 ?>
 
 <style>
+    .total-values {
+        display: flex;
+        justify-content: flex-end;
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    #profit-total span {
+        color: #16a34a;
+        /* Green for profit */
+    }
+
+    #loss-total span {
+        color: #dc2626;
+        /* Red for loss */
+    }
+
     .profit {
         color: green;
         font-weight: bold;
@@ -435,6 +452,10 @@ require_once './views/layouts/side.php';
         }
     }
 </style>
+
+
+<!-- Your existing CSS remains unchanged -->
+
 <div class="main-content">
     <!-- Filter Buttons, Date Range, and Search Bar -->
     <div class="filter-search-container">
@@ -478,7 +499,7 @@ require_once './views/layouts/side.php';
             <tbody id="purchase-table">
                 <?php if (!empty($Profit_Loss) && is_array($Profit_Loss)) : ?>
                     <?php foreach ($Profit_Loss as $profit_loss) : ?>
-                        <tr data-date="<?= isset($profit_loss['created_at']) ? $profit_loss['created_at'] : '' ?>">
+                        <tr data-date="<?= isset($profit_loss['Sale_Date']) ? $profit_loss['Sale_Date'] : '' ?>">
                             <td><input type="checkbox" class="select-item" data-id="<?= isset($profit_loss['id']) ? $profit_loss['id'] : '' ?>"></td>
                             <td>
                                 <?php if (isset($profit_loss['image']) && !empty($profit_loss['image'])) : ?>
@@ -490,21 +511,15 @@ require_once './views/layouts/side.php';
                             <td><?= isset($profit_loss['Product_Name']) ? $profit_loss['Product_Name'] : 'N/A' ?></td>
                             <td>
                                 <?php
-                                $profit_loss_value = isset($profit_loss['Profit_Loss']) ? $profit_loss['Profit_Loss'] : 'N/A';
-                                $result_type_class = ($profit_loss_value == 'Profit') ? 'profit' : (($profit_loss_value == 'Loss') ? 'loss' : '');
+                                $profit_loss_value = isset($profit_loss['Profit_Loss']) ? floatval($profit_loss['Profit_Loss']) : 0;
+                                $result_type = isset($profit_loss['Result_Type']) ? $profit_loss['Result_Type'] : 'N/A';
+                                $class = ($result_type === 'Profit') ? 'profit' : (($result_type === 'Loss') ? 'loss' : '');
                                 ?>
-                                <span class="<?= $result_type_class ?>">
-                                    <?= $profit_loss_value ?>
-                                </span>
+                                <span class="<?= $class ?>"><?= number_format($profit_loss_value, 2) ?></span>
+                                <span class="numeric-value" style="display: none;"><?= $profit_loss_value ?></span>
                             </td>
                             <td>
-                                <?php
-                                $result_type_value = isset($profit_loss['Result_Type']) ? $profit_loss['Result_Type'] : 'N/A';
-                                $result_type_class = ($result_type_value === 'Profit') ? 'profit' : (($result_type_value === 'Loss') ? 'loss' : '');
-                                ?>
-                                <span class="<?= $result_type_class ?>">
-                                    <?= $result_type_value ?>
-                                </span>
+                                <span class="<?= $class ?>"><?= $result_type ?></span>
                             </td>
                             <td><?= isset($profit_loss['Sale_Date']) ? $profit_loss['Sale_Date'] : 'N/A' ?></td>
                         </tr>
@@ -518,7 +533,13 @@ require_once './views/layouts/side.php';
         </table>
     </div>
 
-    <!-- Delete Button (Hidden by Default) -->
+    <!-- Total Displays -->
+    <div class="total-values">
+        <div class="total-price" id="profit-total">Total Profit: <span>0.00</span></div>
+        <div class="total-price" id="loss-total">Total Loss: <span>0.00</span></div>
+    </div>
+
+    <!-- Delete Button -->
     <button class="delete-btn" id="delete-selected">Delete Selected</button>
 
     <!-- Custom Message Element -->
@@ -534,88 +555,210 @@ require_once './views/layouts/side.php';
             </div>
         </div>
     </div>
+</div>
 
-    <!-- JavaScript (Merged) -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const selectAllCheckbox = document.getElementById('select-all');
-            const selectItemCheckboxes = document.querySelectorAll('.select-item');
-            const deleteButton = document.getElementById('delete-selected');
-            const confirmModal = document.getElementById('confirm-modal');
-            const confirmYes = document.getElementById('confirm-yes');
-            const confirmNo = document.getElementById('confirm-no');
-            const deleteMessage = document.getElementById('delete-message');
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectAllCheckbox = document.getElementById('select-all');
+        const selectItemCheckboxes = document.querySelectorAll('.select-item');
+        const deleteButton = document.getElementById('delete-selected');
+        const confirmModal = document.getElementById('confirm-modal');
+        const confirmYes = document.getElementById('confirm-yes');
+        const confirmNo = document.getElementById('confirm-no');
+        const deleteMessage = document.getElementById('delete-message');
+        const profitTotalSpan = document.querySelector('#profit-total span');
+        const lossTotalSpan = document.querySelector('#loss-total span');
+        const filterButtons = document.querySelectorAll('.filter-btn');
 
-            function updateDeleteButton() {
-                const checkedBoxes = document.querySelectorAll('.select-item:checked');
-                deleteButton.style.display = checkedBoxes.length > 0 ? 'block' : 'none';
+        // Function to normalize date to YYYY-MM-DD
+        function normalizeDate(dateStr) {
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) {
+                console.error('Invalid date:', dateStr);
+                return null;
             }
+            return date.toISOString().split('T')[0];
+        }
 
-            selectAllCheckbox.addEventListener('change', function() {
-                selectItemCheckboxes.forEach(checkbox => {
-                    checkbox.checked = this.checked;
-                });
-                updateDeleteButton();
-            });
+        function updateDeleteButton() {
+            const checkedBoxes = document.querySelectorAll('.select-item:checked');
+            deleteButton.style.display = checkedBoxes.length > 0 ? 'block' : 'none';
+        }
 
-            selectItemCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', updateDeleteButton);
-            });
+        function calculateTotals() {
+            let profitTotal = 0;
+            let lossTotal = 0;
 
-            deleteButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                const checkedBoxes = document.querySelectorAll('.select-item:checked');
-                if (checkedBoxes.length > 0) {
-                    confirmModal.style.display = 'block';
+            document.querySelectorAll('#purchase-table tr:not([style*="display: none"])').forEach(row => {
+                const numericValue = parseFloat(row.querySelector('.numeric-value').textContent) || 0;
+                const resultType = row.querySelector('td:nth-child(5) span').textContent.trim();
+
+                if (resultType === 'Profit') {
+                    profitTotal += numericValue;
+                } else if (resultType === 'Loss') {
+                    lossTotal += numericValue;
                 }
             });
 
-            confirmYes.addEventListener('click', function() {
-                const checkedBoxes = document.querySelectorAll('.select-item:checked');
-                const idsToDelete = Array.from(checkedBoxes).map(cb => cb.dataset.id);
+            profitTotalSpan.textContent = profitTotal.toFixed(2);
+            lossTotalSpan.textContent = lossTotal.toFixed(2);
+        }
 
-                fetch('/profit_loss/destroy_multiple', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                        body: JSON.stringify({
-                            ids: idsToDelete
-                        })
-                    })
-                    .then(response => {
-                        if (!response.ok) throw new Error('Network response was not ok');
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.success) {
-                            checkedBoxes.forEach(checkbox => {
-                                checkbox.closest('tr').remove();
-                            });
-                            deleteMessage.style.display = 'block';
-                            setTimeout(() => {
-                                deleteMessage.style.display = 'none';
-                            }, 3000);
-                        } else {
-                            alert('Deletion failed: ' + (data.message || 'Unknown error'));
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Error occurred while deleting');
-                    });
+        function filterTable(filterType) {
+            const today = new Date();
+            let startDate, endDate;
 
-                confirmModal.style.display = 'none';
-                updateDeleteButton();
+            switch (filterType) {
+                case 'today':
+                    startDate = endDate = today.toISOString().split('T')[0];
+                    console.log('Today Filter - Date:', startDate);
+                    break;
+                case 'this-week':
+                    startDate = new Date(today);
+                    startDate.setDate(today.getDate() - today.getDay());
+                    endDate = new Date(today);
+                    endDate.setDate(startDate.getDate() + 6);
+                    startDate = startDate.toISOString().split('T')[0];
+                    endDate = endDate.toISOString().split('T')[0];
+                    console.log('This Week:', startDate, 'to', endDate);
+                    break;
+                case 'last-week':
+                    startDate = new Date(today);
+                    startDate.setDate(today.getDate() - today.getDay() - 7);
+                    endDate = new Date(today);
+                    endDate.setDate(today.getDate() - today.getDay() - 1);
+                    startDate = startDate.toISOString().split('T')[0];
+                    endDate = endDate.toISOString().split('T')[0];
+                    console.log('Last Week:', startDate, 'to', endDate);
+                    break;
+                case 'this-month':
+                    startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+                    endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                    startDate = startDate.toISOString().split('T')[0];
+                    endDate = endDate.toISOString().split('T')[0];
+                    console.log('This Month:', startDate, 'to', endDate);
+                    break;
+                case 'last-month':
+                    startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                    endDate = new Date(today.getFullYear(), today.getMonth(), 0);
+                    startDate = startDate.toISOString().split('T')[0];
+                    endDate = endDate.toISOString().split('T')[0];
+                    console.log('Last Month:', startDate, 'to', endDate);
+                    break;
+                case 'all':
+                default:
+                    startDate = '2000-01-01';
+                    endDate = '2099-12-31';
+                    console.log('All Data');
+                    break;
+            }
+
+            document.querySelectorAll('#purchase-table tr').forEach(row => {
+                const saleDateRaw = row.getAttribute('data-date');
+                const saleDate = normalizeDate(saleDateRaw);
+                console.log('Row Sale Date:', saleDateRaw, 'Normalized:', saleDate);
+
+                if (saleDate) {
+                    if (saleDate >= startDate && saleDate <= endDate) {
+                        row.style.display = '';
+                        console.log('Showing row with date:', saleDate);
+                    } else {
+                        row.style.display = 'none';
+                        console.log('Hiding row with date:', saleDate);
+                    }
+                } else {
+                    row.style.display = 'none';
+                    console.log('Invalid or missing date, hiding row:', saleDateRaw);
+                }
             });
 
-            confirmNo.addEventListener('click', function() {
-                confirmModal.style.display = 'none';
+            calculateTotals();
+        }
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                filterTable(this.getAttribute('data-filter'));
             });
         });
-    </script>
-</div>
+
+        selectAllCheckbox.addEventListener('change', function() {
+            selectItemCheckboxes.forEach(checkbox => {
+                if (checkbox.closest('tr').style.display !== 'none') {
+                    checkbox.checked = this.checked;
+                }
+            });
+            updateDeleteButton();
+            calculateTotals();
+        });
+
+        selectItemCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                updateDeleteButton();
+                calculateTotals();
+            });
+        });
+
+        deleteButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            const checkedBoxes = document.querySelectorAll('.select-item:checked');
+            if (checkedBoxes.length > 0) {
+                confirmModal.classList.add('show');
+            }
+        });
+
+        confirmYes.addEventListener('click', function() {
+            const checkedBoxes = document.querySelectorAll('.select-item:checked');
+            const idsToDelete = Array.from(checkedBoxes).map(cb => cb.dataset.id);
+
+            fetch('/profit_loss/destroy_multiple', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        ids: idsToDelete
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        checkedBoxes.forEach(checkbox => {
+                            checkbox.closest('tr').remove();
+                        });
+                        deleteMessage.classList.add('show');
+                        setTimeout(() => {
+                            deleteMessage.classList.remove('show');
+                        }, 3000);
+                        calculateTotals();
+                    } else {
+                        alert('Deletion failed: ' + (data.message || 'Unknown error'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error occurred while deleting');
+                });
+
+            confirmModal.classList.remove('show');
+            updateDeleteButton();
+        });
+
+        confirmNo.addEventListener('click', function() {
+            confirmModal.classList.remove('show');
+        });
+
+        // Initial setup
+        updateDeleteButton();
+        filterTable('all');
+    });
+</script>
+
 
 <?php
 require_once './views/layouts/footer.php';

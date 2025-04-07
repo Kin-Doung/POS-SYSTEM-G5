@@ -11,7 +11,6 @@
         </div>
         <div class="icons">
             <i class="fas fa-globe icon-btn"></i>
-            <i class="fas fa-dolly-flatbed"></i>
             <div class="icon-btn" id="notification-icon">
                 <i class="fas fa-bell"></i>
                 <span class="notification-badge" id="notification-count">8</span>

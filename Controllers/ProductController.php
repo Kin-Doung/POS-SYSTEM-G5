@@ -131,11 +131,8 @@ class ProductController extends BaseController
         }
 
         try {
-            $success = $this->model->processCartSubmissionWithSalesData($cartItems);
-            echo json_encode([
-                'success' => $success,
-                'message' => $success ? 'Cart processed and sales data recorded successfully' : 'Failed to process cart'
-            ]);
+            $success = $this->model->processCartSubmissionWithInventory($cartItems);
+            echo json_encode(['success' => $success, 'message' => $success ? 'Cart processed successfully' : 'Failed to process cart']);
         } catch (Exception $e) {
             http_response_code(500);
             echo json_encode(['success' => false, 'message' => 'Cart processing error: ' . $e->getMessage()]);

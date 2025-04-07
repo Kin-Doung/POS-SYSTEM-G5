@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../Controllers/TrackingController.php';
+
 class Router
 {
     private $routes = [];

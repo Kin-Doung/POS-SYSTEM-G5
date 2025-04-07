@@ -11,6 +11,9 @@ require_once './Controllers/SettingController.php';
 require_once './Controllers/LogoutController.php';
 require_once './Controllers/LanguageController.php';
 require_once './Controllers/LoginController.php';
+require_once './Controllers/HistoryController.php';
+require_once './Controllers/Profit_LossController.php';
+
 
 
 $routes = new Router();
@@ -24,8 +27,9 @@ $routes->get('/settings', [SettingController::class, 'index']);
 $routes->get('/settings/create', [SettingController::class, 'create']);
 $routes->post('/settings/store', [SettingController::class, 'store']);
 $routes->get('/settings/edit', [SettingController::class, 'edit']);
-$routes->put('/settings/update/(:num)', [SettingController::class, 'update']);
+$routes->put('/settings/update', [SettingController::class, 'update']);
 $routes->delete('/settings/destroy', [SettingController::class, 'destroy']);
+
 
 
 //inventory
@@ -48,6 +52,16 @@ $routes->get('/inventory/delete', [InventoryController::class, 'destroy']);
 $routes->get('/inventory/view', [InventoryController::class, 'view']); // View an inventory item
 
 
+// Stock tracking
+$routes->get('/tracking', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
+// $routes->get('/stock', [TrackingController::class, 'index']);
+
+$routes->get('/inventory/getProductDetails', [InventoryController::class, 'getProductDetails']);
 
 
 
@@ -56,14 +70,13 @@ $routes->get('/inventory/view', [InventoryController::class, 'view']); // View a
 
 //Notifications
 $routes->get('/notifications', [NotificationController::class, 'index']);
+$routes->post('/products/submitCart', [ProductController::class, 'submitCart']); // Process cart submission
+$routes->post('/products/syncQuantity', [ProductController::class, 'syncQuantity']); // Add this line for syncing quantity
 
-// products
 $routes->get('/products', [ProductController::class, 'index']);
 $routes->post('/products/store', [ProductController::class, 'store']);
-$routes->get('/products/edit', [ProductController::class, 'edit']);  // Edit product with ID
-$routes->post('/products/updatePrice', [ProductController::class, 'updatePrice']); // Update price for a specific product
-$routes->post('/products/update-quantity', [ProductController::class, 'updateProductQuantity']);
-
+$routes->get('/products/edit', [ProductController::class, 'edit']);
+$routes->post('/products/updatePrice', [ProductController::class, 'updatePrice']);
 
 // categories
 $routes->get('/category', [CategoryController::class, 'index']);
@@ -80,14 +93,25 @@ $routes->get('/purchase', [PurchaseController::class, 'index']);
 $routes->get('/purchase/create', [PurchaseController::class, 'create']);
 $routes->post('/purchase/store', [PurchaseController::class, 'store']);
 $routes->get('/purchase/edit/(:num)', [PurchaseController::class, 'edit']);
-$routes->post('/purchase/update/(:num)', [PurchaseController::class, 'update']);
-$routes->post('/purchase/destroy/(:num)', [PurchaseController::class, 'destroy']);
+
+$routes->post('/purchase/update/(:num)', [PurchaseController::class, 'update']); // Added ID for updating
+$routes->post('/purchase/destroy/(:num)', [PurchaseController::class, 'destroy']); // Fixed
 $routes->post('/purchase/bulk-destroy', [PurchaseController::class, 'bulkDestroy']);
 $routes->get('/purchase/get-existing-products', [PurchaseController::class, 'getExistingProducts']);
 
 
-// $routes->get('/orders', [OrderController::class, 'index']);
 
+// Router of the history product
+$routes->get('/history', [HistoryController::class, 'index']);              // List all history entries
+$routes->post('/history/store', [HistoryController::class, 'store']);       // Store a new history entry
+$routes->delete('/history/destroy', [HistoryController::class, 'destroy']); // Delete a specific history entry (renamed from 'delete' to 'destroy')
+$routes->post('/history/fetchFilteredHistories', [HistoryController::class, 'fetchFilteredHistories']); // Fetch filtered history entries
+
+// Profit_Loss
+$routes->get('/profit_loss', [Profit_LossController::class, 'index']);
+$routes->post('/profit_loss/store', [Profit_LossController::class, 'store']);
+$routes->get('/profit_loss/delete', [Profit_LossController::class, 'delete']); // Note: This seems unused
+$routes->post('/profit_loss/destroy_multiple', [Profit_LossController::class, 'destroy_multiple']); // Add this
 
 
 // logout

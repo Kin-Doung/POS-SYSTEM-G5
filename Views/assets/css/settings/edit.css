@@ -1,23 +1,42 @@
 .form-group {
-        display: flex;
-        justify-content: space-between;
-        gap: 20px; /* Adjust space between inputs */
-      
-    }
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; /* Adjust space between inputs */
+  
+}
 
-    .group {
+.group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 15px;
+}
+.group-1 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 15px;
+    width: 20px;
+    input {
+        width: 820px;
+    }
+    .group-1 {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         margin-top: 15px;
+        width: 20px;
+        input {
+            width: 820px;
+        }
     }
 
-    .form-label {
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
+.form-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
 
-    .form-control {
+    .form-control, .form-controls {
         width: 100%;
         padding: 8px;
         border: 1px solid #ccc;
@@ -26,18 +45,32 @@
     }
     
 
-    .btn-customm {
-        padding-left: 20px;
-        color: rgb(4, 10, 62);
-        font-size: 15px;
-    }
 
-    .form-groupp {
-        display: flex;
-        flex-direction: row;
-        gap: 30px;
-    }
+.btn-customm {
+    padding-left: 20px;
+    color: rgb(4, 10, 62);
+    font-size: 15px;
+}
 
     #profile-name {
         color: gray;
     }
+    
+    .form-control, .form-select {
+        width: 400px;
+    }
+    .form-controls {
+        width: 900px;
+    }
+
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+.card {
+    display: flex;
+    width: 1000px;
+}
+}

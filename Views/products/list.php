@@ -80,6 +80,28 @@ require_once './views/layouts/side.php';
         margin-top: -70px;
     }
 
+    #submitCart {
+        /* background: #000; */
+        padding: 10px;
+    }
+
+    #moreOptionsBtn {
+        padding: 10px;
+    }
+
+    #moreOptionsBtn::after {
+        content: "\f0d7";
+        /* caret-down by default */
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        margin-left: 8px;
+    }
+
+    #moreOptionsBtn.active::after {
+        content: "\f0d8";
+        /* caret-up when active */
+    }
+
     .product-col {
         width: 25%;
         padding: 0 5px;
@@ -95,6 +117,7 @@ require_once './views/layouts/side.php';
 
     .cart-visible .product-col {
         width: 33.33%;
+        /* Fixed: Ensures 3 cards per row when cart is visible */
     }
 
     .product-card {
@@ -107,7 +130,8 @@ require_once './views/layouts/side.php';
     }
 
     .product-card:hover {
-        transform: scale(1.04);
+        /* transform: scale(1.04); */
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
     }
 
     .image-wrapper {
@@ -382,12 +406,12 @@ require_once './views/layouts/side.php';
         margin-top: 15px;
         text-align: center;
     }
-    
+
     /* Added styles for buttons in QR container */
     #qr-container .cart-btn {
         margin: 5px auto;
     }
-    
+
     #qr-container #inputField {
         margin-bottom: 15px;
         padding: 8px;
@@ -549,11 +573,11 @@ require_once './views/layouts/side.php';
                         <button class="cart-btn cart-btn-secondary" id="moreOptionsBtn">More Options</button>
                         <div class="options-dropdown" id="optionsDropdown">
                             <button class="cart-btn cart-btn-info" id="savePdf">Save PDF</button>
-                            <button class="cart-btn cart-btn-primary" id="completeCart">Complete</button>
+                            <button class="cart-btn cart-btn-primary" id="completeCart">Payout</button>
                             <button class="cart-btn cart-btn-danger" id="clearCart">Clear</button>
                         </div>
                     </div>
-                    <button class="cart-btn cart-btn-success" id="submitCart">Checkout</button>
+                    <button class="cart-btn cart-btn-success" id="submitCart">Complete order</button>
                 </div>
             </div>
         </div>
@@ -570,9 +594,9 @@ require_once './views/layouts/side.php';
     const closeCart = document.getElementById('closeCart');
     const cartCount = document.getElementById('cartCount');
 
-    // Telegram Bot Configuration
-    const TELEGRAM_BOT_TOKEN = 'YOUR_BOT_TOKEN_HERE'; // Replace with your bot token
-    const TELEGRAM_CHAT_ID = 'YOUR_CHAT_ID_HERE'; // Replace with your chat ID
+    // Telegram Bot credentials (replace with your own)
+    const TELEGRAM_BOT_TOKEN = '7914523767:AAEJxRARlS6nn4Qggt3lw8pOYWKdjAT3FaY'; // Your bot token
+    const TELEGRAM_CHAT_ID = '@engly_system_telegram'; // Your chat ID
 
     // Load cart from localStorage on page load
     document.addEventListener('DOMContentLoaded', function() {
@@ -662,16 +686,17 @@ require_once './views/layouts/side.php';
                 body: JSON.stringify({
                     chat_id: TELEGRAM_CHAT_ID,
                     text: message,
-                    parse_mode: 'Markdown' // Optional: for better formatting
+                    parse_mode: 'Markdown' // Use Markdown for formatting
                 })
             });
             const data = await response.json();
             if (!data.ok) {
-                throw new Error('Failed to send message to Telegram');
+                throw new Error(`Telegram API error: ${data.description}`);
             }
+            return true;
         } catch (error) {
-            console.error('Error sending to Telegram:', error);
-            alert('Failed to send order details to Telegram: ' + error.message);
+            console.error('Failed to send message to Telegram:', error);
+            return false;
         }
     }
 
@@ -693,7 +718,7 @@ require_once './views/layouts/side.php';
             const price = parseFloat(card.querySelector('.price').textContent.replace('$', ''));
             const quantity = parseInt(card.querySelector('.quantity').textContent.replace('Qty: ', ''));
             const existingRow = document.querySelector(`#cartBody tr[data-id="${inventoryId}"]`);
-            
+
             if (existingRow) {
                 const qtyInput = existingRow.querySelector('.cart-qty');
                 qtyInput.value = parseInt(qtyInput.value) + 1;
@@ -703,7 +728,7 @@ require_once './views/layouts/side.php';
                 showCart();
                 return;
             }
-            
+
             try {
                 const response = await fetch('/products/syncQuantity', {
                     method: 'POST',
@@ -797,63 +822,88 @@ require_once './views/layouts/side.php';
         this.disabled = true;
         this.textContent = 'Processing...';
 
-        // Prepare data for Telegram message
-        const productNames = itemsData.map(item => item.productName).join(', ');
-        const quantities = itemsData.map(item => item.quantity).join(', ');
-        const prices = itemsData.map(item => `$${item.price.toFixed(2)}`).join(', ');
-        const datetime = new Date().toLocaleString();
-        const totalPrice = updateGrandTotal().toFixed(2);
+        // Prepare Telegram message with the desired format
+        const now = new Date();
+        const date = now.toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        }).split('/').join('/');
+        const time = now.toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true
+        });
 
-        const telegramMessage = `
-*New Order Checkout*
-Product name: ${productNames}
-Quantity: ${quantities}
-Price: ${prices}
-Datetime: ${datetime}
-Total price: $${totalPrice}
-        `;
+        let telegramMessage = `*Engly_Store Receipt*\n\n`;
+        telegramMessage += `Date: ${date}\n`;
+        telegramMessage += `Time: ${time}\n\n`;
+        telegramMessage += "```\n";
+        telegramMessage += `item             Qty    Price       Total\n`;
+        telegramMessage += `-------------------------------------\n`;
+
+        // Add each item to the table
+        itemsData.forEach(item => {
+            const productName = item.productName.padEnd(16, ' ').substring(0, 16); // Pad/truncate product name for alignment
+            const quantity = `x${item.quantity}`.padEnd(6, ' '); // Add 'x' prefix and pad quantity
+            const price = `$${item.price.toFixed(2)}`.padEnd(10, ' '); // Pad price
+            const total = `= $${(item.quantity * item.price).toFixed(2)}`; // Calculate total with '=' prefix
+            telegramMessage += `${productName} ${quantity} ${price} ${total}\n`;
+        });
+
+        telegramMessage += `-------------------------------------\n`;
+        const total = updateGrandTotal();
+        const totalPrice = `$${total.toFixed(2)}`;
+        telegramMessage += `Total: ${' '.repeat(30 - totalPrice.length)}${totalPrice}\n`; // Right-align total
+        telegramMessage += `-------------------------------------\n`;
+        telegramMessage += "```\n";
+        telegramMessage += `✅ Thank you!`;
 
         // Send to Telegram
-        await sendToTelegram(telegramMessage);
+        const telegramSuccess = await sendToTelegram(telegramMessage);
+        if (!telegramSuccess) {
+            alert('Failed to send checkout details to Telegram. Proceeding with checkout anyway.');
+        }
 
         // Proceed with the checkout
         fetch('/products/submitCart', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                cartItems
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    cartItems
+                })
             })
-        })
-        .then(response => {
-            if (!response.ok) throw new Error('Server error: ' + response.status);
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                cartItems.forEach(item => {
-                    const qtyElement = document.querySelector(`.quantity[data-id="${item.inventoryId}"]`);
-                    const currentQty = parseInt(qtyElement.textContent.replace('Qty: ', ''));
-                    updateCard(item.inventoryId, currentQty - item.quantity);
-                });
-                document.getElementById('cartBody').innerHTML = '';
-                localStorage.removeItem('cartItems');
-                hideCart();
-                updateCartCount();
-                alert('Checkout completed successfully! Inventory updated. Order details sent to Telegram.');
-            } else {
-                alert('Error: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Failed to submit cart: ' + error.message);
-        })
-        .finally(() => {
-            this.disabled = false;
-            this.textContent = 'Checkout';
-        });
+            .then(response => {
+                if (!response.ok) throw new Error('Server error: ' + response.status);
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    cartItems.forEach(item => {
+                        const qtyElement = document.querySelector(`.quantity[data-id="${item.inventoryId}"]`);
+                        const currentQty = parseInt(qtyElement.textContent.replace('Qty: ', ''));
+                        updateCard(item.inventoryId, currentQty - item.quantity);
+                    });
+                    document.getElementById('cartBody').innerHTML = '';
+                    localStorage.removeItem('cartItems');
+                    hideCart();
+                    updateCartCount();
+                    alert('Checkout completed successfully! Inventory updated.');
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to submit cart: ' + error.message);
+            })
+            .finally(() => {
+                this.disabled = false;
+                this.textContent = 'Checkout';
+            });
     });
 
     document.getElementById('clearCart').addEventListener('click', function() {
@@ -869,21 +919,35 @@ Total price: $${totalPrice}
         }
     });
 
-    const { jsPDF } = window.jspdf;
+    const {
+        jsPDF
+    } = window.jspdf;
     document.getElementById('savePdf').addEventListener('click', function() {
         const doc = new jsPDF();
         doc.setFontSize(18);
-        doc.text('Store Name POS', 105, 15, { align: 'center' });
+        doc.text('Store Name POS', 105, 15, {
+            align: 'center'
+        });
         doc.setFontSize(10);
-        doc.text('123 Business Ave, City, ST 12345', 105, 23, { align: 'center' });
-        doc.text(`Date: ${new Date().toLocaleString()}`, 105, 31, { align: 'center' });
+        doc.text('123 Business Ave, City, ST 12345', 105, 23, {
+            align: 'center'
+        });
+        doc.text(`Date: ${new Date().toLocaleString()}`, 105, 31, {
+            align: 'center'
+        });
         doc.line(10, 35, 200, 35);
         let y = 45;
         doc.setFontSize(12);
         doc.text('Item', 10, y);
-        doc.text('Qty', 100, y, { align: 'right' });
-        doc.text('Price', 140, y, { align: 'right' });
-        doc.text('Total', 180, y, { align: 'right' });
+        doc.text('Qty', 100, y, {
+            align: 'right'
+        });
+        doc.text('Price', 140, y, {
+            align: 'right'
+        });
+        doc.text('Total', 180, y, {
+            align: 'right'
+        });
         y += 5;
         doc.line(10, y, 200, y);
         y += 5;
@@ -893,19 +957,29 @@ Total price: $${totalPrice}
             const price = parseFloat(row.querySelector('.cart-price').value).toFixed(2);
             const total = (qty * price).toFixed(2);
             doc.text(product, 10, y);
-            doc.text(qty, 100, y, { align: 'right' });
-            doc.text(`$${price}`, 140, y, { align: 'right' });
-            doc.text(`$${total}`, 180, y, { align: 'right' });
+            doc.text(qty, 100, y, {
+                align: 'right'
+            });
+            doc.text(`$${price}`, 140, y, {
+                align: 'right'
+            });
+            doc.text(`$${total}`, 180, y, {
+                align: 'right'
+            });
             y += 10;
         });
         doc.line(10, y, 200, y);
         y += 10;
         const grandTotal = document.getElementById('grandTotal').textContent;
         doc.setFontSize(14);
-        doc.text(`Grand Total: $${grandTotal}`, 180, y, { align: 'right' });
+        doc.text(`Grand Total: $${grandTotal}`, 180, y, {
+            align: 'right'
+        });
         y += 10;
         doc.setFontSize(10);
-        doc.text('Thank you for shopping with us!', 105, y, { align: 'center' });
+        doc.text('Thank you for shopping with us!', 105, y, {
+            align: 'center'
+        });
         doc.save('pos-receipt.pdf');
     });
 
@@ -914,13 +988,13 @@ Total price: $${totalPrice}
         const moreOptionsBtn = document.getElementById('moreOptionsBtn');
         const optionsDropdown = document.getElementById('optionsDropdown');
         const moreOptionsContainer = document.getElementById('moreOptionsContainer');
-        
+
         // Show QR container
         qrContainer.style.display = 'block';
-        
+
         // Hide the More Options container (including the button and dropdown)
         moreOptionsContainer.style.display = 'none';
-        
+
         // Reset QR container content
         qrContainer.innerHTML = `
             <img id="qr-code-img" src="../../views/assets/images/QR-code.png" alt="QR Code" style="width: 80px; height: 80px; margin-bottom: 15px;" />
@@ -929,25 +1003,25 @@ Total price: $${totalPrice}
             <button class="cart-btn cart-btn-primary" id="completeCart2">Complete</button>
             <button class="cart-btn cart-btn-danger" id="clearCart2">Clear</button>
         `;
-        
+
         // Add event listeners to new buttons
         document.getElementById('savePdf2').addEventListener('click', function() {
             document.getElementById('savePdf').click();
         });
-        
+
         document.getElementById('completeCart2').addEventListener('click', function() {
             alert('Order completed!');
             qrContainer.style.display = 'none'; // Hide QR container after completion
             moreOptionsContainer.style.display = 'block'; // Show More Options button again
         });
-        
+
         document.getElementById('clearCart2').addEventListener('click', function() {
             document.getElementById('clearCart').click();
         });
-        
+
         // Hide the dropdown
         optionsDropdown.classList.remove('visible');
-        
+
         showCart();
     });
 
@@ -966,16 +1040,39 @@ Total price: $${totalPrice}
         });
     });
 
+    // const moreOptionsBtn = document.getElementById('moreOptionsBtn');
+    // const optionsDropdown = document.getElementById('optionsDropdown');
+    // moreOptionsBtn.addEventListener('click', function() {
+    //     optionsDropdown.classList.toggle('visible');
+
+        
+    // });
+
+    // document.addEventListener('click', function(e) {
+    //     if (!moreOptionsBtn.contains(e.target) && !optionsDropdown.contains(e.target)) {
+    //         optionsDropdown.classList.remove('visible');
+    //     }
+    // });
+
+
     const moreOptionsBtn = document.getElementById('moreOptionsBtn');
-    const optionsDropdown = document.getElementById('optionsDropdown');
+const optionsDropdown = document.getElementById('optionsDropdown');
 
-    moreOptionsBtn.addEventListener('click', function() {
-        optionsDropdown.classList.toggle('visible');
-    });
+// Toggle dropdown visibility and icon
+moreOptionsBtn.addEventListener('click', function(e) {
+    e.stopPropagation();  // Prevent event from bubbling up to the document
+    optionsDropdown.classList.toggle('visible');
+    moreOptionsBtn.classList.toggle('active');
+});
 
-    document.addEventListener('click', function(e) {
-        if (!moreOptionsBtn.contains(e.target) && !optionsDropdown.contains(e.target)) {
-            optionsDropdown.classList.remove('visible');
-        }
-    });
+// Close the dropdown if clicking outside
+document.addEventListener('click', function(e) {
+    if (!moreOptionsBtn.contains(e.target) && !optionsDropdown.contains(e.target)) {
+        optionsDropdown.classList.remove('visible');
+        moreOptionsBtn.classList.remove('active');
+    }
+});
+
+    
+
 </script>

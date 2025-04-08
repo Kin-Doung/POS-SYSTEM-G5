@@ -148,47 +148,33 @@
         }
 
 
-        // Edit purchase
-        public function edit($id)
-        {
+        public function edit($id) {
             $purchase = $this->model->getPurchase($id);
             if (!$purchase) {
                 $this->redirect('/purchase', 'Purchase not found.');
                 return;
             }
-
             $categories = $this->categoryModel->getCategory();
             $this->views('purchase/edit', ['purchase' => $purchase, 'categories' => $categories]);
         }
 
-        // Update purchase
-        // Update purchase
-        // Update purchase with image
-        public function update($id)
-        {
+        public function update($id) {
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                 $this->redirect("/purchase/edit/$id", 'Invalid request method.');
                 return;
             }
-
             $purchase = $this->model->getPurchase($id);
             if (!$purchase) {
                 $this->redirect('/purchase', 'Purchase not found.');
                 return;
             }
-
             $data = $this->preparePurchaseData();
-
-            // If a new image is uploaded, update the image
             if (isset($data['image'])) {
-                // New image uploaded
                 $this->model->updatePurchase($id, $data);
             } else {
-                // No image uploaded, retain the old image
-                unset($data['image']); // Don't update image if not provided
+                unset($data['image']);
                 $this->model->updatePurchase($id, $data);
             }
-
             $this->redirect('/purchase', 'Purchase updated successfully!');
         }
 
@@ -209,25 +195,17 @@
             return $data;
         }
 
-
-        // Prepare data for updating purchase
-
-
-        // Delete purchase
-        public function destroy($id)
-        {
+        public function destroy($id) {
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                 $this->redirect('/purchase', 'Invalid request method.');
                 return;
             }
-
             if ($this->model->deletePurchase($id)) {
                 $this->redirect('/purchase', 'Purchase deleted successfully!');
             } else {
                 $this->redirect('/purchase', 'Failed to delete purchase.');
             }
         }
-
         // Bulk delete purchases
         public function bulkDestroy()
         {

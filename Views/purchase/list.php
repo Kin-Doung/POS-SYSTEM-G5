@@ -54,59 +54,73 @@
                                     <th><input type="checkbox" id="selectAll"></th>
                                     <th>Image</th>
                                     <th>Product Name</th>
-                                    <th>Categories Name</th>
+                                    <th>Action</th> <!-- Change here -->
                                 </tr>
                             </thead>
                             <tbody id="purchasesTableBody">
                                 <?php if (!empty($purchases)): ?>
                                     <?php foreach ($purchases as $index => $item): ?>
                                         <tr data-category-id="<?= htmlspecialchars($item['category_id']); ?>">
-
                                             <td><input type="checkbox" class="selectItem" value="<?= htmlspecialchars($item['id']); ?>"></td>
                                             <td>
-                                                <!-- Display image for inventory item -->
-                                                <img src="<?= htmlspecialchars($item['image']) ?>"
-                                                    alt="Image of <?= htmlspecialchars($item['product_name']) ?>"
-                                                    style="width: 40px; height:auto;">
+                                                <img src="<?= htmlspecialchars($item['image']) ?>" alt="Image of <?= htmlspecialchars($item['product_name']) ?>" style="width: 40px; height:auto;">
                                             </td>
                                             <td>
                                                 <span class="editable" data-field="product_name" data-id="<?= htmlspecialchars($item['id']); ?>">
                                                     <?= htmlspecialchars($item['product_name']); ?>
                                                 </span>
                                             </td>
-                                            <td>
-                                                <span class="editable" data-field="category_name" data-id="<?= htmlspecialchars($item['id']); ?>">
-                                                    <?= htmlspecialchars($item['category_name']); ?>
-                                                </span>
+                                            <td class="action-column">
+                                                <a href="/purchase/edit/<?= htmlspecialchars($item['id']); ?>" class="edit-btn" title="Edit">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </a>
+
+                                                <form method="POST" action="/purchase/destroy/<?= htmlspecialchars($item['id']); ?>" class="inline-form" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                                                    <button type="submit" class="delete-btn" title="Delete">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                                <style>
+                                                    .edit-btn{
+                                                        background: none;
+                                                    }
+                                                    .delete-btn{
+                                                        background: none;
+                                                        color: red;
+                                              
+                                                    }
+                                                    .action-column {
+                                                        text-align: center;
+                                                        white-space: nowrap;
+                                                    }
+
+                                                    .inline-form {
+                                                        display: inline;
+                                                    }
+
+                                                    .btn {
+                                                        display: inline-flex;
+                                                        align-items: center;
+                                                        justify-content: center;
+                                                        padding: 6px 10px;
+                                                        margin: 0 2px;
+                                                        font-size: 14px;
+                                                        border: none;
+                                                        border-radius: 4px;
+                                                        cursor: pointer;
+                                                        text-decoration: none;
+                                                        transition: background-color 0.2s ease-in-out;
+                                                        color: white;
+                                                    }
+
+                                                </style>
                                             </td>
 
                                         </tr>
-
-
-                                        <!-- Single Delete Modal -->
-                                        <div class="modal fade" id="deleteModal<?= htmlspecialchars($item['id']); ?>" tabindex="-1" aria-labelledby="deleteModalLabel<?= htmlspecialchars($item['id']); ?>" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="deleteModalLabel<?= htmlspecialchars($item['id']); ?>">Delete Purchase</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        Are you sure you want to delete "<?= htmlspecialchars($item['product_name']); ?>"?
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                        <form method="POST" action="/purchase/destroy/<?= htmlspecialchars($item['id']); ?>" style="display: inline;">
-                                                            <button type="submit" class="btn btn-danger">Delete</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="3">No purchases found.</td>
+                                        <td colspan="4">No purchases found.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>

@@ -87,6 +87,7 @@
                                                     .delete-btn{
                                                         background: none;
                                                         color: red;
+                                              
                                                     }
                                                     .action-column {
                                                         text-align: center;

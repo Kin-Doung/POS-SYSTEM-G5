@@ -1,91 +1,73 @@
 <?php require_once './views/layouts/side.php'; ?>
 
+<style>
+    body {
+        overflow: hidden;
+    }
+    .main-content {
+        margin-left: 250px;
+    }
+    .nav, .navbar {
+        box-shadow: none;
+    }
+    th, td {
+        text-align: center;
+    }
+    #deleteSelectedBtn {
+        display: none;
+    }
+</style>
+
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <!-- Navbar -->
-    <nav class="navbar">
-        <!-- Search Bar -->
-        <div class="search-container" style="background-color: #ccc;">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search...">
-        </div>
-        <!-- Icons -->
-        <div class="icons">
-            <i class="fas fa-globe icon-btn"></i>
-            <div class="icon-btn" id="notification-icon">
-                <i class="fas fa-bell"></i>
-                <span class="notification-badge" id="notification-count">8</span>
-            </div>
-        </div>
-        <!-- Profile -->
-        <div class="profile" id="profile">
-            <img src="../../views/assets/images/image.png" alt="User">
-            <div class="profile-info">
-                <span id="profile-name">Eng Ly</span>
-                <span class="store-name" id="store-name">Owner Store</span>
-            </div>
-            <ul class="menu" id="menu">
-                <li><a href="/settings" class="item">Account</a></li>
-                <li><a href="/settings" class="item">Setting</a></li>
-                <li><a href="/logout" class="item">Logout</a></li>
-            </ul>
-            <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
-            <script src="../../views/assets/js/setting.js"></script>
-        </div>
-    </nav>
+    <?php require_once './views/layouts/nav.php' ?>
     <!-- End Navbar -->
+
     <div>
-
-
         <!-- Main Content -->
         <div id="content">
-
-
-            <!-- End Navbar -->
-            <div class="container ml-5">
-                <div class="mt-5">
-                    <a href="/category/create" class="create-ct">
+            <div class="container">
+                <div class="mt-5 d-flex justify-content-between align-items-center">
+                    <a href="javascript:void(0);" class="create-ct" data-bs-toggle="modal" data-bs-target="#createCategoryModal">
                         <i class="bi-plus-lg"></i> Add New Categories
                     </a>
+
+                    <!-- Delete selected button -->
+                    <form id="bulkDeleteForm" action="/category/bulk-delete" method="POST">
+                        <input type="hidden" name="ids" id="selectedIds">
+                        <button type="button" class="btn btn-danger" id="deleteSelectedBtn" onclick="confirmBulkDelete();">Delete Selected</button>
+                    </form>
                 </div>
 
-                <!-- Modal to Create New Category ---------------------------------------------------->
+                <!-- Modal to Create New Category -->
                 <div class="modal fade" id="createCategoryModal" tabindex="-1" aria-labelledby="createCategoryModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <div class="modal-header">
+                            <div class="modal-header" style="background: #1F51FF;">
                                 <h5 class="modal-title" id="createCategoryModalLabel">Create New Category</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <!-- Form to create category -->
                                 <form action="/category/store" method="POST">
                                     <div class="form-group">
                                         <label for="categoryName" class="form-label">Category Name:</label>
                                         <input type="text" name="name" id="categoryName" class="form-control" required>
                                     </div>
-                                    <button type="submit" class="add-categories mt-3">Add category</button>
+                                    <button type="submit" class="add-categories mt-3 btn btn-primary">Add category</button>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- end of create categories -------------------------------------------- -->
+                <!-- End of Create Category Modal -->
 
-
-                <div class="table-responsive">
-                    <!-- Success/Failure messages -->
-                    <?php if (isset($_GET['deleted']) && $_GET['deleted'] == 'true'): ?>
-                        <!-- <div class="alert alert-success">Category deleted successfully.</div> -->
-                    <?php elseif (isset($_GET['deleted']) && $_GET['deleted'] == 'false'): ?>
-                        <div class="alert alert-danger">Failed to delete the category.</div>
-                    <?php elseif (isset($_GET['error'])): ?>
-                        <div class="alert alert-warning">Invalid request. No category ID provided.</div>
-                    <?php endif; ?>
-
+                <div class="table-responsive mt-3">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>
+                                    <input type="checkbox" id="selectAllCheckbox">
+                                </th>
                                 <th>Category Names</th>
                                 <th>Action</th>
                             </tr>
@@ -93,16 +75,17 @@
                         <tbody>
                             <?php foreach ($categories as $index => $category): ?>
                                 <tr>
-                                    <td><?= $index + 1 ?></td>
+                                    <td>
+                                        <input type="checkbox" class="category-checkbox" value="<?= $category['id'] ?>">
+                                    </td>
                                     <td><?= $category['name'] ?></td>
                                     <td class="text-center">
-                                        <!-- Edit Icon with Tooltip -->
-                                        <a href="javascript:void(0);" class="icon edit-icon" data-tooltip="Edit" onclick="openEditModal(<?= $category['id'] ?>, '<?= $category['name'] ?>')">
+                                        <a href="javascript:void(0);" class="icon edit-icon" data-tooltip="Edit"
+                                           onclick="openEditModal(<?= $category['id'] ?>, '<?= $category['name'] ?>')">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </a>
-
-                                        <!-- Delete Icon with Tooltip and Confirmation -->
-                                        <a href="javascript:void(0);" class="icon delete-icon" data-tooltip="Delete" onclick="return confirmDelete(<?= $category['id'] ?>);">
+                                        <a href="javascript:void(0);" class="icon delete-icon" data-tooltip="Delete"
+                                           onclick="return confirmDelete(<?= $category['id'] ?>);">
                                             <i class="fa-solid fa-trash"></i>
                                         </a>
                                     </td>
@@ -111,17 +94,12 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
-    </div>
-    <script src="../../views/assets/js/demo/chart-area-demo.js"></script>
 
-
-
-
-    <!-- Edit Category Modal ------------------------------------------------------>
+    <!-- Edit Category Modal -->
     <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -133,38 +111,69 @@
                     <form action="/category/update" method="POST" id="editCategoryForm">
                         <div class="form-group">
                             <label for="categoryName" class="form-label">Categories Name:</label>
-                            <!-- <input type="text" value=" <?= $category['name'] ?>" name="name" class="form-controll update-cate"> -->
-                            <input type="text" id="categoryName<?= $category['id'] ?>" value="<?= $category['name'] ?>" name="name" class="form-control" required>
-
+                            <input type="text" id="categoryName" name="name" class="form-control" required>
                         </div>
-                        <button type="submit" class="update-categories mt-4">Update</button>
+                        <button type="submit" class="update-categories mt-4 btn btn-primary">Update</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    <!-- end of edit categories --------------------------------------------------- -->
-
-
+    <!-- End of Edit Category Modal -->
 
     <script>
-        // Function to open the modal and populate the form with category data
+        // Open edit modal
         function openEditModal(categoryId, categoryName) {
-            // Set the category name in the input field
             document.getElementById('categoryName').value = categoryName;
-
-            // Update the form's action URL to include the category ID for updating
             document.getElementById('editCategoryForm').action = '/category/update?id=' + categoryId;
-
-            // Show the modal using Bootstrap
             var myModal = new bootstrap.Modal(document.getElementById('editCategoryModal'));
             myModal.show();
         }
 
-        // Confirmation delete function
+        // Confirm delete
         function confirmDelete(categoryId) {
             if (confirm('Are you sure you want to delete this category?')) {
                 window.location.href = '/category/delete?id=' + categoryId;
             }
         }
+
+        // Confirm bulk delete
+        function confirmBulkDelete() {
+            const selectedIds = document.getElementById('selectedIds').value;
+            if (selectedIds) {
+                if (confirm('Are you sure you want to delete the selected categories?')) {
+                    document.getElementById('bulkDeleteForm').submit();
+                }
+            } else {
+                alert('Please select categories to delete.');
+            }
+        }
+
+        // Handle checkbox logic
+        const checkboxes = document.querySelectorAll('.category-checkbox');
+        const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+        const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
+        const selectedIdsInput = document.getElementById('selectedIds');
+
+        function updateDeleteButtonVisibility() {
+            const selected = Array.from(checkboxes).filter(cb => cb.checked);
+            deleteSelectedBtn.style.display = selected.length > 0 ? 'inline-block' : 'none';
+            selectedIdsInput.value = selected.map(cb => cb.value).join(',');
+        }
+
+        // Select all
+        selectAllCheckbox.addEventListener('change', () => {
+            checkboxes.forEach(cb => cb.checked = selectAllCheckbox.checked);
+            updateDeleteButtonVisibility();
+        });
+
+        // Individual checkbox
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', () => {
+                updateDeleteButtonVisibility();
+            });
+        });
+
+
     </script>
+</main>

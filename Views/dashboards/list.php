@@ -1,60 +1,27 @@
-<?php require_once './views/layouts/side.php';
-
+<?php 
+      require_once './views/layouts/header.php';
+      require_once './views/layouts/side.php';
 ?>
 
 
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper" style="margin-left: 250px;">
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
 
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<style>
-  .move-left {
-    margin-left: -10px;
-  }
-</style>
-
-
-<div class="main-content">
+      <!-- Main Content -->
+      <div id="content">
 
 
-  <body id="page-top">
-
-    <!-- Page Wrapper -->
-    <div id="wrapper" style="margin-left: 250px;">
-      <!-- Content Wrapper -->
-      <div id="content-wrapper" class="d-flex flex-column">
-
-        <!-- Main Content -->
-        <div id="content">
-          <nav class="navbar">
-            <div class="search-container" style="background-color: #fff;">
-              <i class="fas fa-search"></i>
-              <input type="text" placeholder="Search...">
-            </div>
-            <div class="icons">
-              <i class="fas fa-globe icon-btn"></i>
-              <div class="icon-btn" id="notification-icon">
-                <i class="fas fa-bell"></i>
-                <span class="notification-badge" id="notification-count">8</span>
-              </div>
-            </div>
-            <div class="profile">
-              <img src="../../views/assets/images/image.png" alt="User">
-              <div class="profile-info">
-                <span id="profile-name">Eng Ly</span>
-                <span class="store-name" id="store-name">Owner Store</span>
-              </div>
-              <ul class="menu" id="menu">
-                <li><a href="/settings" class="item">Account</a></li>
-                <li><a href="/settings" class="item">Setting</a></li>
-                <li><a href="/logout" class="item">Logout</a></li>
-              </ul>
-              <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
-              <script src="../../views/assets/js/setting.js"></script>
-            </div>
-          </nav>
+<!-- style of the navbar-----------------------------------------------------------------------------------  -->
+<?php require_once './views/layouts/nav.php' ?>
+ <!-- end of the navbar style-------------------------------------------------------------------------- -->
 
 
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
 
           <div class="row">
             <div class="col-xl-3 col-md-6 mb-4">
@@ -78,7 +45,7 @@
                       <div class="h5 mb-0 font-weight-bold text-gray-800 total-profit">$<?php echo number_format($Today_Profit, 2); ?></div>
                     </div>
                     <div class="col-auto">
-                      <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
                     </div>
                   </div>
                 </div>
@@ -217,7 +184,8 @@
                       </div>
                     </div>
                     <div class=" col-auto">
-                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        <i class="fas fa-user fa-2x text-gray-300"></i>
+
                       </div>
                     </div>
                   </div>
@@ -367,7 +335,7 @@
                         <div class="h5 mb-0 font-weight-bold text-gray-800 total-expense">$<?php echo number_format($Total_Inventory_Value ?? 0, 2); ?></div>
                       </div>
                       <div class="col-auto">
-                        <i class="fas fa-comments fa-2x text-gray-300"></i>
+                      <i class="fas fa-wallet fa-2x text-gray-300"></i>
                       </div>
                     </div>
                   </div>
@@ -419,7 +387,7 @@
 
           <!-- Content Row -->
 
-          <div class="row">
+          <div class="row ms-2 me-2">
 
             <!-- Area Chart -->
             <div class="col-xl-8 col-lg-7">
@@ -566,6 +534,4 @@
 </div>
 
 
-<!-- jQuery + Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../views/assets/js/demo/chart-area-demo.js"></script>

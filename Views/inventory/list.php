@@ -1,37 +1,23 @@
 <?php require_once './views/layouts/header.php' ?>
 <?php require_once './views/layouts/side.php' ?>
-<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-    <nav class="navbar">
-        <div class="search-container" style="background-color: #fff;">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search...">
-        </div>
-        <div class="icons">
-            <i class="fas fa-globe icon-btn"></i>
-            <div class="icon-btn" id="notification-icon">
-                <i class="fas fa-bell"></i>
-                <span class="notification-badge" id="notification-count">8</span>
-            </div>
-        </div>
-        <div class="profile">
-            <img src="../../views/assets/images/image.png" alt="User">
-            <div class="profile-info">
-                <span id="profile-name">Eng Ly</span>
-                <span class="store-name" id="store-name">Owner Store</span>
-            </div>
-            <ul class="menu" id="menu">
-                <li><a href="/settings" class="item">Account</a></li>
-                <li><a href="/settings" class="item">Setting</a></li>
-                <li><a href="/logout" class="item">Logout</a></li>
-            </ul>
-            <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
-            <script src="../../views/assets/js/setting.js"></script>
-        </div>
-    </nav>
+<?php require_once './views/layouts/nav.php' ?>
 
+<style>
+    .main-content{
+        margin-left: 270px;
+    }
+    .navbar{
+        margin-left: 250px;
+    }
+    .purchase-head{
+        font-family: "Poppins", sans-serif;
+    }
+</style>
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    <!-- Navbar -->
     <!-- End Navbar -->
 
-    <div class="table-inventory">
+    <div class="table-inventory me-4">
         <div class="orders">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h2 style="font-weight: bold;" class="purchase-head">Restock Products</h2>
@@ -42,7 +28,6 @@
                 </div>
             </div>
             <div class="input-group">
-                <input type="text" id="searchInput" class="form-control input-group-search" placeholder="Search...">
                 <select id="categorySelect" class="ms-2 selected" onchange="filterTable()">
                     <option value="">Select Category</option>
                     <?php if (!empty($categories)): ?>
@@ -59,12 +44,12 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll()"></th> <!-- Checkbox column -->
                         <th>Image</th>
                         <th>Product Name</th>
                         <th>Quantity</th>
                         <th>Price</th>
-                        <th style="display: none;">Total Price</th> <!-- Made visible -->
+                        <th style="display: none;">Total Price</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -73,7 +58,7 @@
                         $totalPrice = $item['quantity'] * $item['amount']; // Calculate total price for each item
                     ?>
                         <tr data-category-id="<?= htmlspecialchars($item['category_id']); ?>">
-                            <td><?= $index + 1 ?></td>
+                            <td><input type="checkbox" class="rowCheckbox" name="selectedItems[]" value="<?= htmlspecialchars($item['id']); ?>"></td>
                             <td>
                                 <img src="<?= htmlspecialchars($item['image']) ?>"
                                     alt="Image of <?= htmlspecialchars($item['product_name']) ?>"
@@ -107,12 +92,11 @@
                                         <li><a class="dropdown-item text-dark" href="/inventory/delete?id=<?= $item['id'] ?>" onclick="return confirm('Are you sure you want to delete this item?');"><i class="fa-solid fa-trash"></i> Delete</a></li>
                                     </ul>
                                 </div>
-
                                 <!-- View Modal -->
                                 <div class="modal fade" id="viewModal<?= $item['id']; ?>" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content rounded-4 shadow-lg">
-                                            <div class="modal-header">
+                                            <div class="modal-header" style="background: #1F51FF;">
                                                 <h2 class="modal-title">View Inventory Item</h2>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
@@ -138,7 +122,7 @@
                                 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
-                                            <div class="modal-header">
+                                            <div class="modal-header" style="background: #1F51FF;">
                                                 <h5 class="modal-title" id="editModalLabel">Edit Product</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
@@ -261,20 +245,21 @@
                         const categorySelect = document.getElementById("categorySelect");
                         const tableRows = document.querySelectorAll("tbody tr");
 
-                        const searchValue = searchInput.value.toLowerCase();
+                        const searchValue = searchInput ? searchInput.value.toLowerCase() : '';
                         const selectedCategory = categorySelect.value;
 
                         tableRows.forEach((row) => {
                             const productName = row.children[2].textContent.toLowerCase();
                             const categoryId = row.getAttribute("data-category-id");
 
-                            const matchesSearch = productName.includes(searchValue);
+                            const matchesSearch = searchInput ? productName.includes(searchValue) : true;
                             const matchesCategory = selectedCategory === "" || categoryId === selectedCategory;
 
                             row.style.display = matchesSearch && matchesCategory ? "" : "none";
                         });
 
                         updateGrandTotal();
+                        updateCheckboxStateAfterFilter();
                     }
 
                     // Add event listeners if search elements exist
@@ -285,6 +270,75 @@
 
                     // Initial grand total calculation
                     updateGrandTotal();
+
+                    // Checkbox functionality: Select/Deselect all
+                    function toggleSelectAll() {
+                        const selectAllCheckbox = document.getElementById("selectAll");
+                        const rowCheckboxes = document.querySelectorAll(".rowCheckbox");
+                        rowCheckboxes.forEach(checkbox => {
+                            // Only toggle checkboxes in visible rows
+                            const row = checkbox.closest('tr');
+                            if (row.style.display !== 'none') {
+                                checkbox.checked = selectAllCheckbox.checked;
+                            }
+                        });
+                        toggleUpdateQuantitySection();
+                    }
+
+                    // Show/hide the "Update Quantity" section based on selected checkboxes
+                    function toggleUpdateQuantitySection() {
+                        const rowCheckboxes = document.querySelectorAll(".rowCheckbox");
+                        const updateQuantitySection = document.getElementById("updateQuantitySection");
+                        const anyChecked = Array.from(rowCheckboxes).some(checkbox => {
+                            const row = checkbox.closest('tr');
+                            return checkbox.checked && row.style.display !== 'none';
+                        });
+                        updateQuantitySection.style.display = anyChecked ? "block" : "none";
+                    }
+
+                    // Add event listeners to row checkboxes
+                    document.querySelectorAll(".rowCheckbox").forEach(checkbox => {
+                        checkbox.addEventListener("change", function() {
+                            const row = checkbox.closest('tr');
+                            if (row.style.display !== 'none') {
+                                toggleUpdateQuantitySection();
+                                // Update "Select All" checkbox state
+                                const selectAllCheckbox = document.getElementById("selectAll");
+                                const rowCheckboxes = document.querySelectorAll(".rowCheckbox");
+                                const visibleCheckboxes = Array.from(rowCheckboxes).filter(cb => cb.closest('tr').style.display !== 'none');
+                                selectAllCheckbox.checked = visibleCheckboxes.length > 0 && visibleCheckboxes.every(cb => cb.checked);
+                            }
+                        });
+                    });
+
+                    // Adjust checkbox state when filtering
+                    function updateCheckboxStateAfterFilter() {
+                        const rowCheckboxes = document.querySelectorAll(".rowCheckbox");
+                        const selectAllCheckbox = document.getElementById("selectAll");
+                        const visibleCheckboxes = Array.from(rowCheckboxes).filter(cb => cb.closest('tr').style.display !== 'none');
+                        selectAllCheckbox.checked = visibleCheckboxes.length > 0 && visibleCheckboxes.every(cb => cb.checked);
+                        toggleUpdateQuantitySection();
+                    }
+
+                    // Function to handle updating quantities (placeholder for your backend logic)
+                    function updateQuantities() {
+                        const selectedItems = [];
+                        document.querySelectorAll(".rowCheckbox:checked").forEach(checkbox => {
+                            const row = checkbox.closest('tr');
+                            if (row.style.display !== 'none') {
+                                selectedItems.push(checkbox.value);
+                            }
+                        });
+
+                        if (selectedItems.length === 0) {
+                            alert("Please select at least one item to update.");
+                            return;
+                        }
+
+                        // Placeholder for updating quantities - you can replace this with your actual logic
+                        console.log("Selected item IDs for update:", selectedItems);
+                        alert("Update functionality to be implemented. Selected items: " + selectedItems.join(", "));
+                    }
                 });
             </script>
 
@@ -308,6 +362,13 @@
                     color: #28a745;
                     font-weight: bold;
                 }
+
+                .update-quantity {
+                    margin-top: 20px;
+                    padding: 10px;
+                    background-color: #f1f1f1;
+                    border-radius: 4px;
+                }
             </style>
 
             <div class="update-quantity" id="updateQuantitySection" style="display: none;">
@@ -319,6 +380,4 @@
 
     <!-- JavaScript for Edit Modal Population -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
 </main>

@@ -73,16 +73,21 @@ class HistoryController extends BaseController
     }
     function destroy($id)
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'DELETE') { // Change to DELETE
-            $record = $this->model->getHistory($id);
-            if (!$record) {
+        if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+            try {
+                $record = $this->model->getHistory($id);
+                if (!$record) {
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => false, 'error' => 'Record not found']);
+                    exit;
+                }
+                $this->model->deleteHistory($id);
                 header('Content-Type: application/json');
-                echo json_encode(['success' => false, 'error' => 'Record not found']);
-                exit;
+                echo json_encode(['success' => true]);
+            } catch (Exception $e) {
+                header('Content-Type: application/json', true, 500);
+                echo json_encode(['success' => false, 'error' => 'Database error: ' . $e->getMessage()]);
             }
-            $this->model->deleteHistory($id);
-            header('Content-Type: application/json');
-            echo json_encode(['success' => true]);
             exit;
         }
     }

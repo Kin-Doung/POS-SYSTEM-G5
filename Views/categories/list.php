@@ -97,12 +97,12 @@
                                     <td><?= $category['name'] ?></td>
                                     <td class="text-center">
                                         <!-- Edit Icon with Tooltip -->
-                                        <a href="javascript:void(0);" class="icon edit-icon" data-tooltip="Edit" onclick="openEditModal(<?= $category['id'] ?>, '<?= $category['name'] ?>')">
+                                        <a class="icon edit-icon" data-tooltip="Edit" onclick="openEditModal(<?= $category['id'] ?>, '<?= $category['name'] ?>')">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </a>
 
                                         <!-- Delete Icon with Tooltip and Confirmation -->
-                                        <a href="javascript:void(0);" class="icon delete-icon" data-tooltip="Delete" onclick="return confirmDelete(<?= $category['id'] ?>);">
+                                        <a class="icon delete-icon" data-tooltip="Delete" onclick="return confirmDelete(<?= $category['id'] ?>);">
                                             <i class="fa-solid fa-trash"></i>
                                         </a>
                                     </td>

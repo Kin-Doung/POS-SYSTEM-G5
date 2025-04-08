@@ -41,10 +41,13 @@ class CategoryController extends BaseController
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $data = [
                 'name' => $_POST['name'],
-                'category_id' => $_POST['category_id'],
+                'category_id' => $_POST['category_id'], // Now provided by the form
             ];
-            $this->model->updateCategory($id, $data);
-            $this->redirect('/category');
+            if ($this->model->updateCategory($id, $data)) {
+                $this->redirect('/category');
+            } else {
+                die("Failed to update category ID: $id");
+            }
         }
     }
 

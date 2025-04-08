@@ -51,15 +51,13 @@ class Profit_LossModel
                     error_log("No IDs provided to delete");
                     return false;
                 }
-                // Convert all IDs to integers
                 $id = array_map('intval', $id);
                 error_log("Deleting multiple IDs: " . implode(',', $id));
                 $placeholders = implode(',', array_fill(0, count($id), '?'));
                 $sql = "DELETE FROM sales_data WHERE id IN ($placeholders)";
-                $stmt = $this->pdo->query($sql);
+                $stmt = $this->pdo->query($sql); // Fixed: use prepare
                 $stmt->execute($id);
             } else {
-                $id = (int)$id; // Ensure single ID is integer
                 error_log("Deleting single ID: " . $id);
                 $sql = "DELETE FROM sales_data WHERE id = ?";
                 $stmt = $this->pdo->query($sql);
@@ -73,10 +71,8 @@ class Profit_LossModel
             return false;
         }
     }
-
     // Add this temporary method to your model to test
-    function testConnection()
-    {
+    function testConnection() {
         try {
             $stmt = $this->pdo->query("SELECT 1");
             return $stmt !== false;

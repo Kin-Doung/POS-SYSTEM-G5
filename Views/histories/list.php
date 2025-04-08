@@ -454,35 +454,39 @@ require_once './views/layouts/side.php';
     </div>
 
     <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th><input type="checkbox" id="select-all" title="Select All"></th>
-                    <th>Image</th>
-                    <th>Product Name</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Total Price</th>
-                    <th>Date of Sale</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="purchase-table">
-                <?php foreach ($reports as $report) : ?>
-                    <tr data-date="<?= $report['created_at'] ?>">
-                        <td><input type="checkbox" class="select-item" data-id="<?= $report['id'] ?>"></td>
-                        <td><img src="<?= $report['image'] ?>" alt="Product Image" width="50"></td>
-                        <td><?= $report['product_name'] ?></td>
-                        <td><?= $report['quantity'] ?></td>
-                        <td><?= $report['price'] ?>$</td>
-                        <td><?= $report['total_price'] ?>$</td>
-                        <td><?= $report['created_at'] ?></td>
-                        <td><button class="remove-btn" data-id="<?= $report['id'] ?>">Remove</button></td>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="select-all" title="Select All"></th>
+                        <th>Image</th>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total Price</th>
+                        <th>Date of Sale</th>
+                        <th>Action</th>
                     </tr>
-                <?php endforeach ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody id="purchase-table">
+                    <?php foreach ($reports as $report) : ?>
+                        <tr data-date="<?= $report['created_at'] ?>">
+                            <td><input type="checkbox" class="select-item" data-id="<?= $report['id'] ?>"></td>
+                            <td><img src="<?= $report['image'] ?>" alt="Product Image" width="50"></td>
+                            <td><?= htmlspecialchars($report['product_name']) ?></td>
+                            <td><?= $report['quantity'] ?></td>
+                            <td><?= $report['price'] ?>$</td>
+                            <td><?= $report['total_price'] ?>$</td>
+                            <td><?= $report['created_at'] ? date('Y-m-d', strtotime($report['created_at'])) : 'N/A' ?></td>
+                            <td><button class="remove-btn" data-id="<?= $report['id'] ?>">Remove</button></td>
+                        </tr>
+                    <?php endforeach ?>
+                </tbody>
+            </table>
+        </div>
     </div>
+    <div class="message" id="delete-message">Your product is deleted</div>
+
 
     <!-- Delete Button (Hidden by Default) -->
     <button class="delete-btn" id="delete-selected">Delete Selected</button>
@@ -549,22 +553,22 @@ require_once './views/layouts/side.php';
         console.log('Sending payload:', payload);
 
         fetch('/history/fetchFilteredHistories', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams(payload)
-        })
-        .then(response => {
-            console.log('Fetch Status:', response.status);
-            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-            return response.json();
-        })
-        .then(data => {
-            console.log('Received data:', data);
-            if (data.success) {
-                console.log('Reports count:', data.reports.length);
-                tableBody.innerHTML = data.reports.length > 0 ? data.reports.map(report => `
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams(payload)
+            })
+            .then(response => {
+                console.log('Fetch Status:', response.status);
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                return response.json();
+            })
+            .then(data => {
+                console.log('Received data:', data);
+                if (data.success) {
+                    console.log('Reports count:', data.reports.length);
+                    tableBody.innerHTML = data.reports.length > 0 ? data.reports.map(report => `
                     <tr data-date="${report.created_at}">
                         <td><input type="checkbox" class="select-item" data-id="${report.id}"></td>
                         <td><img src="${report.image}" alt="Product Image" width="50"></td>
@@ -576,18 +580,18 @@ require_once './views/layouts/side.php';
                         <td><button class="remove-btn" data-id="${report.id}">Remove</button></td>
                     </tr>
                 `).join('') : '<tr><td colspan="8">No records found for this filter</td></tr>';
-                totalPriceSpan.textContent = `$${data.total_price}`;
-                attachRemoveListeners();
-                attachCheckboxListeners();
-            } else {
-                console.log('Server error:', data.error);
-                alert('Failed to fetch data: ' + (data.error || 'Unknown error'));
-            }
-        })
-        .catch(error => {
-            console.error('Fetch Error:', error);
-            alert('Error fetching data: ' + error.message);
-        });
+                    totalPriceSpan.textContent = `$${data.total_price}`;
+                    attachRemoveListeners();
+                    attachCheckboxListeners();
+                } else {
+                    console.log('Server error:', data.error);
+                    alert('Failed to fetch data: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Fetch Error:', error);
+                alert('Error fetching data: ' + error.message);
+            });
     }
 
     // Handle Remove Button Clicks
@@ -605,32 +609,32 @@ require_once './views/layouts/side.php';
         modal.classList.add('show');
         confirmYes.onclick = () => {
             fetch(`/history/destroy/${id}`, { // Changed to match controller method name
-                method: 'POST', // Changed to POST to match controller
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({}) // No body needed for destroy
-            })
-            .then(response => {
-                console.log('Delete Status:', response.status);
-                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                return response.json();
-            })
-            .then(data => {
-                console.log('Delete Data:', data);
-                if (data.success) {
-                    row.remove(); // Remove the row from the table
-                    showMessage(); // Show success message
-                    modal.classList.remove('show'); // Hide modal
-                    fetchAndUpdateTable(); // Refresh table to update total price
-                } else {
-                    alert('Failed to delete: ' + (data.error || 'Unknown error'));
-                }
-            })
-            .catch(error => {
-                console.error('Delete Error:', error);
-                alert('Error deleting item: ' + error.message);
-            });
+                    method: 'POST', // Changed to POST to match controller
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({}) // No body needed for destroy
+                })
+                .then(response => {
+                    console.log('Delete Status:', response.status);
+                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Delete Data:', data);
+                    if (data.success) {
+                        row.remove(); // Remove the row from the table
+                        showMessage(); // Show success message
+                        modal.classList.remove('show'); // Hide modal
+                        fetchAndUpdateTable(); // Refresh table to update total price
+                    } else {
+                        alert('Failed to delete: ' + (data.error || 'Unknown error'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Delete Error:', error);
+                    alert('Error deleting item: ' + error.message);
+                });
         };
         confirmNo.onclick = () => modal.classList.remove('show');
     }

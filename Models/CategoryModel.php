@@ -44,10 +44,11 @@ class CategoryModel
 
     function updateCategory($id, $data)
     {
-        $this->pdo->query("UPDATE categories SET name = :name WHERE id = :id", [
+        $stmt = $this->pdo->query("UPDATE categories SET name = :name WHERE id = :id", [
             'name' => $data['name'],
             'id' => $id
         ]);
+        return $stmt->rowCount() > 0; // True if a row was updated
     }
 
 

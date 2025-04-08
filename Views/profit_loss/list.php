@@ -521,7 +521,7 @@ require_once './views/layouts/side.php';
                             <td>
                                 <span class="<?= $class ?>"><?= $result_type ?></span>
                             </td>
-                            <td><?= isset($profit_loss['Sale_Date']) ? $profit_loss['Sale_Date'] : 'N/A' ?></td>
+                            <td><?= isset($profit_loss['Sale_Date']) ? date('Y-m-d', strtotime($profit_loss['Sale_Date'])) : 'N/A' ?></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else : ?>

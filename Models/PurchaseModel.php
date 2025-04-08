@@ -30,32 +30,32 @@ class PurchaseModel
         return $category['name'] ?? null;
     }
 
-  // Insert a product (single)
-public function insertProduct($productName, $categoryId, $categoryName, $image = null)
-{
-    return $this->executeQuery(
-        "INSERT INTO purchase (product_name, category_id, category_name, image) VALUES (:product_name, :category_id, :category_name, :image)",
-        [
-            ':product_name' => $productName,
-            ':category_id' => $categoryId,
-            ':category_name' => $categoryName,
-            ':image' => $image
-        ]
-    );
-}
-
-// Insert multiple products
-public function insertProducts(array $products)
-{
-    $sql = "INSERT INTO purchase (product_name, category_id, category_name, image) VALUES (:product_name, :category_id, :category_name, :image)";
-    $stmt = $this->getConnection()->prepare($sql);
-
-    foreach ($products as $product) {
-        $this->bindAndExecute($stmt, $product);
+    // Insert a product (single)
+    public function insertProduct($productName, $categoryId, $categoryName, $image = null)
+    {
+        return $this->executeQuery(
+            "INSERT INTO purchase (product_name, category_id, category_name, image) VALUES (:product_name, :category_id, :category_name, :image)",
+            [
+                ':product_name' => $productName,
+                ':category_id' => $categoryId,
+                ':category_name' => $categoryName,
+                ':image' => $image
+            ]
+        );
     }
 
-    return true;
-}
+    // Insert multiple products
+    public function insertProducts(array $products)
+    {
+        $sql = "INSERT INTO purchase (product_name, category_id, category_name, image) VALUES (:product_name, :category_id, :category_name, :image)";
+        $stmt = $this->getConnection()->prepare($sql);
+
+        foreach ($products as $product) {
+            $this->bindAndExecute($stmt, $product);
+        }
+
+        return true;
+    }
 
     // Get all purchases
     public function getPurchases()
@@ -83,13 +83,14 @@ public function insertProducts(array $products)
         );
     }
 
-    // Update an existing purchase
     public function updatePurchase($id, $data)
     {
-        return $this->executeQuery(
-            "UPDATE purchase SET product_name = :product_name, category_id = :category_id, purchase_price = :purchase_price, image = :image WHERE id = :id",
-            array_merge($data, [':id' => $id])
-        );
+        $sql = "UPDATE purchase SET product_name = :product_name, category_id = :category_id";
+        if (isset($data['image'])) {
+            $sql .= ", image = :image";
+        }
+        $sql .= " WHERE id = :id";
+        return $this->executeQuery($sql, array_merge($data, [':id' => $id]));
     }
 
     // Delete a purchase by ID
@@ -116,6 +117,7 @@ public function insertProducts(array $products)
             throw new Exception('Error fetching data: ' . $e->getMessage());
         }
     }
+
 
     // Helper method for fetching a single result
     private function fetchOne($sql, $params = [])

@@ -4,6 +4,7 @@ require_once './views/layouts/side.php';
 ?>
 
 
+<link rel="stylesheet" href="../assets/css/style/calendar.css">
 <body id="page-top">
     <!-- Page Wrapper -->
     <div id="wrapper" style="margin-left: 250px;">

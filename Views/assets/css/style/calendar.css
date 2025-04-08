@@ -7,17 +7,19 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f7fa;
+    background-color:rgb(227, 217, 217);
     color: #333;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+
 }
 
 header {
     background-color: #2c3e50;
     color: white;
     padding: 15px 20px;
+    margin-top: 0px;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -29,19 +31,20 @@ header h1 {
 
 .container {
     display: flex;
-    flex: 1;
-    width: 100%;
+    width: 80%;
     padding: 20px;
+    justify-content: space-between;
     gap: 20px;
     overflow: hidden;
 }
 
 .calendar {
-    flex: 2;
+    
     background: white;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    flex: 7;
+    padding:25px;
     overflow-y: auto;
 }
 
@@ -112,10 +115,11 @@ h2 {
 }
 
 #plansDisplay {
-    flex: 1;
+    
     background: white;
     border-radius: 10px;
-    padding: 20px;
+    width: 30%;
+    flex: 3;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
 }

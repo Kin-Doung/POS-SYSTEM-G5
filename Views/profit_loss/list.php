@@ -435,188 +435,191 @@ require_once './views/layouts/side.php';
         }
     }
 </style>
-<div class="main-content">
-    <!-- Filter Buttons, Date Range, and Search Bar -->
-    <div class="filter-search-container">
-        <div class="filter-date-wrapper">
-            <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="today">Today</button>
-                <button class="filter-btn" data-filter="this-week">This Week</button>
-                <button class="filter-btn" data-filter="last-week">Last Week</button>
-                <button class="filter-btn" data-filter="this-month">This Month</button>
-                <button class="filter-btn" data-filter="last-month">Last Month</button>
-            </div>
-            <div class="date-filter">
-                <div>
-                    <label for="start-date">Choose date:</label>
-                    <input type="date" id="start-date" value="2000-01-01">
+
+    <script src="../../views/assets/js/demo/chart-area-demo.js"></script>
+
+    <div class="main-content">
+        <!-- Filter Buttons, Date Range, and Search Bar -->
+        <div class="filter-search-container">
+            <div class="filter-date-wrapper">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="today">Today</button>
+                    <button class="filter-btn" data-filter="this-week">This Week</button>
+                    <button class="filter-btn" data-filter="last-week">Last Week</button>
+                    <button class="filter-btn" data-filter="this-month">This Month</button>
+                    <button class="filter-btn" data-filter="last-month">Last Month</button>
                 </div>
-                <div>
-                    <input type="date" id="end-date" value="2099-12-31">
+                <div class="date-filter">
+                    <div>
+                        <label for="start-date">Choose date:</label>
+                        <input type="date" id="start-date" value="2000-01-01">
+                    </div>
+                    <div>
+                        <input type="date" id="end-date" value="2099-12-31">
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="search-container">
-        <input type="text" id="search-input" placeholder="Search by Product Name...">
-    </div>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search by Product Name...">
+        </div>
 
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th><input type="checkbox" id="select-all" title="Select All"></th>
-                    <th>Image</th>
-                    <th>Product Name</th>
-                    <th>Profit Loss</th>
-                    <th>Result Type</th>
-                    <th>Date of Sale</th>
-                </tr>
-            </thead>
-            <tbody id="purchase-table">
-                <?php if (!empty($Profit_Loss) && is_array($Profit_Loss)) : ?>
-                    <?php foreach ($Profit_Loss as $profit_loss) : ?>
-                        <tr data-date="<?= isset($profit_loss['created_at']) ? $profit_loss['created_at'] : '' ?>">
-                            <td><input type="checkbox" class="select-item" data-id="<?= isset($profit_loss['id']) ? $profit_loss['id'] : '' ?>"></td>
-                            <td>
-                                <?php if (isset($profit_loss['image']) && !empty($profit_loss['image'])) : ?>
-                                    <img src="<?= $profit_loss['image'] ?>" alt="Product Image" width="50">
-                                <?php else : ?>
-                                    <img src="path/to/default-image.jpg" alt="No Image" width="50">
-                                <?php endif; ?>
-                            </td>
-                            <td><?= isset($profit_loss['Product_Name']) ? $profit_loss['Product_Name'] : 'N/A' ?></td>
-                            <td>
-                                <?php
-                                $profit_loss_value = isset($profit_loss['Profit_Loss']) ? $profit_loss['Profit_Loss'] : 'N/A';
-                                $result_type_class = ($profit_loss_value == 'Profit') ? 'profit' : (($profit_loss_value == 'Loss') ? 'loss' : '');
-                                ?>
-                                <span class="<?= $result_type_class ?>">
-                                    <?= $profit_loss_value ?>
-                                </span>
-                            </td>
-                            <td>
-                                <?php
-                                $result_type_value = isset($profit_loss['Result_Type']) ? $profit_loss['Result_Type'] : 'N/A';
-                                $result_type_class = ($result_type_value === 'Profit') ? 'profit' : (($result_type_value === 'Loss') ? 'loss' : '');
-                                ?>
-                                <span class="<?= $result_type_class ?>">
-                                    <?= $result_type_value ?>
-                                </span>
-                            </td>
-                            <td><?= isset($profit_loss['Sale_Date']) ? $profit_loss['Sale_Date'] : 'N/A' ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else : ?>
+        <div class="table-container">
+            <table>
+                <thead>
                     <tr>
-                        <td colspan="7" style="text-align: center;">No profit/loss data found.</td>
+                        <th><input type="checkbox" id="select-all" title="Select All"></th>
+                        <th>Image</th>
+                        <th>Product Name</th>
+                        <th>Profit Loss</th>
+                        <th>Result Type</th>
+                        <th>Date of Sale</th>
                     </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody id="purchase-table">
+                    <?php if (!empty($Profit_Loss) && is_array($Profit_Loss)) : ?>
+                        <?php foreach ($Profit_Loss as $profit_loss) : ?>
+                            <tr data-date="<?= isset($profit_loss['created_at']) ? $profit_loss['created_at'] : '' ?>">
+                                <td><input type="checkbox" class="select-item" data-id="<?= isset($profit_loss['id']) ? $profit_loss['id'] : '' ?>"></td>
+                                <td>
+                                    <?php if (isset($profit_loss['image']) && !empty($profit_loss['image'])) : ?>
+                                        <img src="<?= $profit_loss['image'] ?>" alt="Product Image" width="50">
+                                    <?php else : ?>
+                                        <img src="path/to/default-image.jpg" alt="No Image" width="50">
+                                    <?php endif; ?>
+                                </td>
+                                <td><?= isset($profit_loss['Product_Name']) ? $profit_loss['Product_Name'] : 'N/A' ?></td>
+                                <td>
+                                    <?php
+                                    $profit_loss_value = isset($profit_loss['Profit_Loss']) ? $profit_loss['Profit_Loss'] : 'N/A';
+                                    $result_type_class = ($profit_loss_value == 'Profit') ? 'profit' : (($profit_loss_value == 'Loss') ? 'loss' : '');
+                                    ?>
+                                    <span class="<?= $result_type_class ?>">
+                                        <?= $profit_loss_value ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <?php
+                                    $result_type_value = isset($profit_loss['Result_Type']) ? $profit_loss['Result_Type'] : 'N/A';
+                                    $result_type_class = ($result_type_value === 'Profit') ? 'profit' : (($result_type_value === 'Loss') ? 'loss' : '');
+                                    ?>
+                                    <span class="<?= $result_type_class ?>">
+                                        <?= $result_type_value ?>
+                                    </span>
+                                </td>
+                                <td><?= isset($profit_loss['Sale_Date']) ? $profit_loss['Sale_Date'] : 'N/A' ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <tr>
+                            <td colspan="7" style="text-align: center;">No profit/loss data found.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
 
-    <!-- Delete Button (Hidden by Default) -->
-    <button class="delete-btn" id="delete-selected">Delete Selected</button>
+        <!-- Delete Button (Hidden by Default) -->
+        <button class="delete-btn" id="delete-selected">Delete Selected</button>
 
-    <!-- Custom Message Element -->
-    <div class="message" id="delete-message">Your product is deleted</div>
+        <!-- Custom Message Element -->
+        <div class="message" id="delete-message">Your product is deleted</div>
 
-    <!-- Custom Confirmation Modal -->
-    <div class="confirm-modal" id="confirm-modal">
-        <div class="confirm-modal-content">
-            <p>Are you sure you want to delete the selected items?</p>
-            <div class="confirm-modal-buttons">
-                <button id="confirm-yes">Yes</button>
-                <button id="confirm-no">No</button>
+        <!-- Custom Confirmation Modal -->
+        <div class="confirm-modal" id="confirm-modal">
+            <div class="confirm-modal-content">
+                <p>Are you sure you want to delete the selected items?</p>
+                <div class="confirm-modal-buttons">
+                    <button id="confirm-yes">Yes</button>
+                    <button id="confirm-no">No</button>
+                </div>
             </div>
         </div>
+
+        <!-- JavaScript (Merged) -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const selectAllCheckbox = document.getElementById('select-all');
+                const selectItemCheckboxes = document.querySelectorAll('.select-item');
+                const deleteButton = document.getElementById('delete-selected');
+                const confirmModal = document.getElementById('confirm-modal');
+                const confirmYes = document.getElementById('confirm-yes');
+                const confirmNo = document.getElementById('confirm-no');
+                const deleteMessage = document.getElementById('delete-message');
+
+                function updateDeleteButton() {
+                    const checkedBoxes = document.querySelectorAll('.select-item:checked');
+                    deleteButton.style.display = checkedBoxes.length > 0 ? 'block' : 'none';
+                }
+
+                selectAllCheckbox.addEventListener('change', function() {
+                    selectItemCheckboxes.forEach(checkbox => {
+                        checkbox.checked = this.checked;
+                    });
+                    updateDeleteButton();
+                });
+
+                selectItemCheckboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', updateDeleteButton);
+                });
+
+                deleteButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const checkedBoxes = document.querySelectorAll('.select-item:checked');
+                    if (checkedBoxes.length > 0) {
+                        confirmModal.style.display = 'block';
+                    }
+                });
+
+                confirmYes.addEventListener('click', function() {
+                    const checkedBoxes = document.querySelectorAll('.select-item:checked');
+                    const idsToDelete = Array.from(checkedBoxes).map(cb => cb.dataset.id);
+
+                    fetch('/profit_loss/destroy_multiple', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({
+                                ids: idsToDelete
+                            })
+                        })
+                        .then(response => {
+                            if (!response.ok) throw new Error('Network response was not ok');
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.success) {
+                                checkedBoxes.forEach(checkbox => {
+                                    checkbox.closest('tr').remove();
+                                });
+                                deleteMessage.style.display = 'block';
+                                setTimeout(() => {
+                                    deleteMessage.style.display = 'none';
+                                }, 3000);
+                            } else {
+                                alert('Deletion failed: ' + (data.message || 'Unknown error'));
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Error occurred while deleting');
+                        });
+
+                    confirmModal.style.display = 'none';
+                    updateDeleteButton();
+                });
+
+                confirmNo.addEventListener('click', function() {
+                    confirmModal.style.display = 'none';
+                });
+            });
+        </script>
     </div>
 
-    <!-- JavaScript (Merged) -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const selectAllCheckbox = document.getElementById('select-all');
-            const selectItemCheckboxes = document.querySelectorAll('.select-item');
-            const deleteButton = document.getElementById('delete-selected');
-            const confirmModal = document.getElementById('confirm-modal');
-            const confirmYes = document.getElementById('confirm-yes');
-            const confirmNo = document.getElementById('confirm-no');
-            const deleteMessage = document.getElementById('delete-message');
-
-            function updateDeleteButton() {
-                const checkedBoxes = document.querySelectorAll('.select-item:checked');
-                deleteButton.style.display = checkedBoxes.length > 0 ? 'block' : 'none';
-            }
-
-            selectAllCheckbox.addEventListener('change', function() {
-                selectItemCheckboxes.forEach(checkbox => {
-                    checkbox.checked = this.checked;
-                });
-                updateDeleteButton();
-            });
-
-            selectItemCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', updateDeleteButton);
-            });
-
-            deleteButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                const checkedBoxes = document.querySelectorAll('.select-item:checked');
-                if (checkedBoxes.length > 0) {
-                    confirmModal.style.display = 'block';
-                }
-            });
-
-            confirmYes.addEventListener('click', function() {
-                const checkedBoxes = document.querySelectorAll('.select-item:checked');
-                const idsToDelete = Array.from(checkedBoxes).map(cb => cb.dataset.id);
-
-                fetch('/profit_loss/destroy_multiple', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                        body: JSON.stringify({
-                            ids: idsToDelete
-                        })
-                    })
-                    .then(response => {
-                        if (!response.ok) throw new Error('Network response was not ok');
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.success) {
-                            checkedBoxes.forEach(checkbox => {
-                                checkbox.closest('tr').remove();
-                            });
-                            deleteMessage.style.display = 'block';
-                            setTimeout(() => {
-                                deleteMessage.style.display = 'none';
-                            }, 3000);
-                        } else {
-                            alert('Deletion failed: ' + (data.message || 'Unknown error'));
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Error occurred while deleting');
-                    });
-
-                confirmModal.style.display = 'none';
-                updateDeleteButton();
-            });
-
-            confirmNo.addEventListener('click', function() {
-                confirmModal.style.display = 'none';
-            });
-        });
-    </script>
-</div>
-
-<?php
-require_once './views/layouts/footer.php';
-?>
+    <?php
+    require_once './views/layouts/footer.php';
+    ?>

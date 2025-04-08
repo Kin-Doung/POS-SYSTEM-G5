@@ -227,7 +227,7 @@ require_once './views/layouts/side.php';
         display: block;
     }
 
-    .dropdown-menu{
+    .dropdown-menu {
         width: 100%;
         padding: 8px 15px;
         border: none;
@@ -543,9 +543,9 @@ require_once './views/layouts/side.php';
                             <div class="product-card">
                                 <!-- Add Font Awesome ellipsis icon -->
                                 <i class="fa-solid fa-ellipsis-vertical kebab-menu"></i>
-<div class="dropdown-menu">
-    <p class="delete-btn" data-id="<?= htmlspecialchars($item['inventory_id']) ?>"><i class="fa-solid fa-trash"></i></p>
-</div>
+                                <div class="dropdown-menu">
+                                    <p class="delete-btn" data-id="<?= htmlspecialchars($item['inventory_id']) ?>"><i class="fa-solid fa-trash"></i></p>
+                                </div>
 
                                 <div class="image-wrapper">
                                     <?php if (!empty($item['image'])): ?>
@@ -596,7 +596,7 @@ require_once './views/layouts/side.php';
                         <h5 style="font-weight: bold;">Total: $<span id="grandTotal">0.00</span></h5>
                     </div>
                     <div id="qr-container" style="display: none;">
-                        <img id="qr-code-img" src="../../views/assets/images/QR-code.png" alt="QR Code" style="width: 80px; height: 80px; margin-bottom: 15px;" />
+                        <img id="qr-code-img" src="../../views/assets/images/QR-code.png" alt="QR Code" style="width: 80px; height: 80px; margin-bottom: 15px;"/>
                         <input type="text" id="inputField" placeholder="Enter your details" />
                     </div>
                 </div>

@@ -72,12 +72,14 @@ $routes->get('/inventory/getProductDetails', [InventoryController::class, 'getPr
 //Notifications
 $routes->get('/notifications', [NotificationController::class, 'index']);
 $routes->post('/products/submitCart', [ProductController::class, 'submitCart']); // Process cart submission
-$routes->post('/products/syncQuantity', [ProductController::class, 'syncQuantity']); // Add this line for syncing quantity
+$routes->post('/products/syncQuantity', [ProductController::class, 'syncQuantity']); // Sync quantity
 
-$routes->get('/products', [ProductController::class, 'index']);
-$routes->post('/products/store', [ProductController::class, 'store']);
-$routes->get('/products/edit', [ProductController::class, 'edit']);
-$routes->post('/products/updatePrice', [ProductController::class, 'updatePrice']);
+$routes->get('/products', [ProductController::class, 'index']); // Show all products
+$routes->post('/products/store', [ProductController::class, 'store']); // Store a new product
+$routes->get('/purchase/edit/{id}', [PurchaseController::class, 'edit']);
+$routes->post('/purchase/update/{id}', [PurchaseController::class, 'update']);
+$routes->post('/products/delete/{id}', [ProductController::class, 'destroy']); // Delete a specific product
+$routes->post('/products/updatePrice', [ProductController::class, 'updatePrice']); // Update product price
 
 // categories
 $routes->get('/category', [CategoryController::class, 'index']);
@@ -93,9 +95,9 @@ $routes->get('/category/delete', [CategoryController::class, 'delete']);  // Cha
 $routes->get('/purchase', [PurchaseController::class, 'index']);
 $routes->get('/purchase/create', [PurchaseController::class, 'create']);
 $routes->post('/purchase/store', [PurchaseController::class, 'store']);
-$routes->get('/purchase/edit/(:num)', [PurchaseController::class, 'edit']);
-$routes->post('/purchase/update/(:num)', [PurchaseController::class, 'update']);
-$routes->post('/purchase/destroy/(:num)', [PurchaseController::class, 'destroy']);
+$routes->get('/purchase/edit/{id}', [PurchaseController::class, 'edit']);
+$routes->post('/purchase/update/{id}', [PurchaseController::class, 'update']);;
+$routes->post('/purchase/destroy/{id}', [PurchaseController::class, 'destroy']);
 $routes->post('/purchase/bulk-destroy', [PurchaseController::class, 'bulkDestroy']);
 
 

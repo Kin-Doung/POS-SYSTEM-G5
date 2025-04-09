@@ -39,7 +39,7 @@
                     </div>
                 </nav>
                 <!-- Modal structure -->
-                <div class="container mt-5 ml-5">
+                <div class="container mt-5">
                     <div class="card">
                         <h2>Personal Account</h2>
                         <div class="account-details">

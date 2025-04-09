@@ -1,8 +1,4 @@
-<?php 
-      require_once './views/layouts/header.php';
-      require_once './views/layouts/side.php';
-?>
-
+<?php require_once './views/layouts/side.php' ?>
 
 <body id="page-top">
   <!-- Page Wrapper -->

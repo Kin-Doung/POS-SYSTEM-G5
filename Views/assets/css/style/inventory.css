@@ -48,33 +48,17 @@
 
 /* Input Group */
 .input-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-
+  max-width: 300px;
+  background: none;
+  box-shadow: none;
+  margin-left: -30px;
 }
-
-.input-group-search {
-  flex: 1 1 200px;
-  padding: 10px 15px;
-  border: 1px solid #e9ecef;
-  border-radius: 6px;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.3s ease;
-}
-
-.input-group-search:focus {
-  border-color: #1a3c34;
-}
-
 .selected {
-  flex: 1 1 150px;
+  width: 200px;
   padding: 10px;
   border: 1px solid #e9ecef;
   border-radius: 6px;
   font-size: 14px;
-  background-color: #ffffff;
   cursor: pointer;
   transition: border-color 0.3s ease;
 }

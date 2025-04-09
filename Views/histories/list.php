@@ -1,18 +1,16 @@
+
 <?php
 require_once './views/layouts/header.php';
 require_once './views/layouts/side.php';
 ?>
-
 <style>
     /* Main content wrapper to account for sidebar */
     .main-content {
         margin-left: 250px;
-        /* Adjust this based on your sidebar width */
         padding: 20px;
         background-color: #f8f9fa;
-        height: 100vh;
+        height: auto;
     }
-
     .table-container {
         border-radius: 10px;
     }
@@ -127,7 +125,6 @@ require_once './views/layouts/side.php';
     input[type="checkbox"] {
         cursor: pointer;
         accent-color: #2575fc;
-        /* Custom checkbox color */
         width: 16px;
         height: 16px;
         border-radius: 4px;
@@ -198,9 +195,8 @@ require_once './views/layouts/side.php';
 
     .date-filter {
         display: flex;
-        gap: 25px;
+        gap: 10px;
         align-items: center;
-        /* Align date inputs vertically centered */
     }
 
     .date-filter label {
@@ -225,10 +221,10 @@ require_once './views/layouts/side.php';
     }
 
     .search-container {
-        width: 420px;
+        width: 400px;
         /* Fixed width for consistency */
         background: none;
-        margin-left: 660px;
+        margin-left: 665px;
         margin-top: -10px;
         margin-bottom: 10px;
     }
@@ -425,7 +421,14 @@ require_once './views/layouts/side.php';
         }
     }
 </style>
+
+<div style="display: none;">
+<?php  require_once './views/layouts/nav.php' ?>
+</div>
 <div class="main-content">
+
+
+
     <!-- Filter Buttons, Date Range, and Search Bar -->
     <div class="filter-search-container">
         <div class="filter-date-wrapper">

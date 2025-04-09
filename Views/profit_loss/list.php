@@ -3,7 +3,12 @@ require_once './views/layouts/header.php';
 require_once './views/layouts/side.php';
 ?>
 
+<div style="display: none;">
+<?php  require_once './views/layouts/nav.php' ?>
+</div>
+
 <style>
+   
     .total-values {
         display: flex;
         justify-content: flex-end;
@@ -19,6 +24,9 @@ require_once './views/layouts/side.php';
     #loss-total span {
         color: #dc2626;
         /* Red for loss */
+    }
+    #end-date{
+        margin-left: -10px;
     }
 
     .profit {
@@ -37,7 +45,7 @@ require_once './views/layouts/side.php';
         /* Adjust this based on your sidebar width */
         padding: 20px;
         background-color: #f8f9fa;
-        height: 100vh;
+        height: auto;
     }
 
     .table-container {
@@ -252,10 +260,10 @@ require_once './views/layouts/side.php';
     }
 
     .search-container {
-        width: 420px;
+        width: 400px;
         /* Fixed width for consistency */
         background: none;
-        margin-left: 660px;
+        margin-left: 665px;
         margin-top: -10px;
         margin-bottom: 10px;
     }

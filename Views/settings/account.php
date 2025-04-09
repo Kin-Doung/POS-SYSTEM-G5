@@ -1,10 +1,12 @@
-<?php require_once(__DIR__ . '/../layouts/header.php'); ?>
-<?php require_once(__DIR__ . '/../layouts/side.php'); ?>
-<main class="main-content position-relative max-height-vh-50 h-50 border-radius-lg ">
+<?php 
+require_once './views/layouts/header.php';
+require_once(__DIR__ . '/../layouts/side.php') ?>
+<?php require_once './views/layouts/nav.php' ?>
 
-    <!-- Navbar -->
-    <?php require_once(__DIR__ . '/../layouts/nav.php'); ?>
-    <!-- End Navbar -->
+
+<main class="main-content position-relative max-height-vh-50 h-50 border-radius-lg ">
+ 
+
 
     <!-- Modal structure -->
     <div class="container mt-5">

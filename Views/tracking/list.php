@@ -10,7 +10,7 @@
             <!-- Main Content -->
             <div id="content">
 <?php require_once './views/layouts/nav.php' ?>
-                <div class="container table-inventory" style="background-color: #fff;">
+                <div class="container table-inventory" style="background-color: #fff; height:auto">
                     <div class="orders">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h2 style="font-weight: bold;" class="purchase-head">Stock Tracking</h2>

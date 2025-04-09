@@ -11,7 +11,7 @@
       <li class="nav-item">
         <a class="nav-link text-dark" href="/dashboard">
           <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">dashboard</i>
+            <i class="fas fa-tachometer-alt opacity-10"></i>
           </div>
           <span class="nav-link-text ms-1">Dashboard</span>
         </a>
@@ -20,7 +20,7 @@
       <li class="nav-item">
         <a class="nav-link text-dark" href="/purchase">
           <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">shopping_cart</i>
+            <i class="fas fa-shopping-cart opacity-10"></i>
           </div>
           <span class="nav-link-text ms-1">Products</span>
         </a>
@@ -29,7 +29,7 @@
       <li class="nav-item">
         <a class="nav-link text-dark" href="/inventory">
           <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">warehouse</i>
+            <i class="fas fa-warehouse opacity-10"></i>
           </div>
           <span class="nav-link-text ms-1">Inventory</span>
         </a>
@@ -38,7 +38,7 @@
       <li class="nav-item">
         <a class="nav-link text-dark" href="/products">
           <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">sell</i>
+            <i class="fas fa-tag opacity-10"></i>
           </div>
           <span class="nav-link-text ms-1">Order</span>
         </a>
@@ -47,7 +47,7 @@
       <li class="nav-item">
         <a class="nav-link text-dark" href="/history">
           <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">history</i>
+            <i class="fas fa-history opacity-10"></i>
           </div>
           <span class="nav-link-text ms-1">Report</span>
         </a>
@@ -57,7 +57,7 @@
       <li class="nav-item">
         <a class="nav-link text-dark" href="/profit_loss">
           <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">account_balance</i>
+            <i class="fas fa-balance-scale opacity-10"></i>
           </div>
           <span class="nav-link-text ms-1">Profit_Loss</span>
         </a>
@@ -66,7 +66,7 @@
        <li class="nav-item">
         <a class="nav-link text-dark" href="/tracking">
           <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">trending_up</i>
+            <i class="fas fa-chart-line opacity-10"></i>
           </div>
           <span class="nav-link-text ms-1">Stock tracking</span>
         </a>
@@ -75,7 +75,7 @@
       <li class="nav-item">
         <a class="nav-link text-dark" href="/category">
           <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">category</i>
+            <i class="fas fa-list opacity-10"></i>
           </div>
           <span class="nav-link-text ms-1">Categories</span>
         </a>
@@ -84,7 +84,7 @@
       <li class="nav-item">
         <a class="nav-link text-dark" href="/notifications">
           <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">notifications</i>
+            <i class="fas fa-bell opacity-10"></i>
           </div>
           <span class="nav-link-text ms-1">Notifications</span>
         </a>
@@ -93,7 +93,7 @@
       <li class="nav-item">
         <a class="nav-link text-dark" href="/settings">
           <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">settings</i>
+            <i class="fas fa-cog opacity-10"></i>
           </div>
           <span class="nav-link-text ms-1">Account</span>
         </a>
@@ -102,7 +102,7 @@
       <li class="nav-item">
         <a class="nav-link text-dark" href="/logout">
           <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">logout</i>
+            <i class="fas fa-sign-out-alt opacity-10"></i>
           </div>
           <span class="nav-link-text ms-1">Log Out</span>
         </a>

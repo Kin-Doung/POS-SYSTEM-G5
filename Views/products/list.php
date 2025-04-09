@@ -554,6 +554,30 @@ require_once './views/layouts/side.php';
         <script src="../../views/assets/js/setting.js"></script>
     </div>
 </nav>
+<div class="barcode-modal" id="barcodeModal" style="display: none;">
+    <div class="barcode-modal-content">
+        <span class="close-modal" id="closeBarcodeModal">✖</span>
+        <h4>Scan Product Barcode</h4>
+        <div class="barcode-options">
+            <div class="scan-option">
+                <button class="scan-mode-btn active" id="scanMode">Scan Barcode</button>
+                <button class="scan-mode-btn" id="manualMode">Manual Entry</button>
+            </div>
+
+            <!-- Scanner Interface -->
+            <div class="scanner-container" id="scannerContainer">
+                <video id="barcodeScanner" style="width: 100%; max-width: 300px;"></video>
+                <p>Position barcode in front of camera</p>
+            </div>
+
+            <!-- Manual Entry -->
+            <div class="manual-container" id="manualContainer" style="display: none;">
+                <input type="text" id="manualBarcode" placeholder="Enter barcode manually">
+                <button id="submitManual">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <main class="main-content">
     <div class="container-fluid">
@@ -598,6 +622,7 @@ require_once './views/layouts/side.php';
             </div>
         </div>
         <div class="cart-section" id="cartSection">
+
             <div class="cart-card">
                 <div class="cart-header">
                     <h4>POS Payout</h4>
@@ -619,7 +644,7 @@ require_once './views/layouts/side.php';
                         <h5 style="font-weight: bold;">Total: $<span id="grandTotal">0.00</span></h5>
                     </div>
                     <div id="qr-container" style="display: none;">
-                        <img id="qr-code-img" src="../../views/assets/images/QR-code.png" alt="QR Code" style="width: 80px; height: 80px; margin-bottom: 15px;"/>
+                        <img id="qr-code-img" src="../../views/assets/images/QR-code.png" alt="QR Code" style="width: 80px; height: 80px; margin-bottom: 15px;" />
                         <input type="text" id="inputField" placeholder="Enter your details" />
                     </div>
                 </div>

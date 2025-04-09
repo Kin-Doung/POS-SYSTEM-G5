@@ -1,7 +1,6 @@
 <?php
 require_once './Models/HistoryModel.php';
 
-
 class HistoryController extends BaseController
 {
     private $model;
@@ -17,12 +16,9 @@ class HistoryController extends BaseController
         $this->views('histories/list', ['reports' => $report]);
     }
 
-
-
     function store()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Handle image upload
             $imagePath = null;
             if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
                 $uploadDir = 'uploads/';
@@ -30,7 +26,7 @@ class HistoryController extends BaseController
                 $imagePath = $uploadDir . $imageName;
 
                 if (!move_uploaded_file($_FILES['image']['tmp_name'], $imagePath)) {
-                    $imagePath = null; // If upload fails, set to null
+                    $imagePath = null;
                 }
             }
 
@@ -43,6 +39,9 @@ class HistoryController extends BaseController
                 'created_at'  => $_POST['created_at'],
                 'image' => $imagePath
             ];
+            // Add this to complete the method
+            $this->model->createHistories($data);
+            $this->redirect('/histories');
         }
     }
 
@@ -62,7 +61,7 @@ class HistoryController extends BaseController
                 'product_name'  => $_POST['product_name'],
                 'quantity'  => $_POST['quantity'],
                 'price'  => $_POST['price'],
-                'total_price'  => $_POST['natotal_priceme'],
+                'total_price'  => $_POST['total_price'], // Fixed typo from 'natotal_priceme'
                 'created_at'  => $_POST['created_at'],
                 'image' => $imagePath
             ];
@@ -71,17 +70,27 @@ class HistoryController extends BaseController
             $this->redirect('/histories');
         }
     }
-    function destroy($id)
+
+    function destroy()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+        if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+            $input = file_get_contents('php://input');
+            $data = json_decode($input, true);
+            $ids = $data['ids'] ?? [];
+
+            if (empty($ids)) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'error' => 'No IDs provided']);
+                exit;
+            }
+
             try {
-                $record = $this->model->getHistory($id);
-                if (!$record) {
-                    header('Content-Type: application/json');
-                    echo json_encode(['success' => false, 'error' => 'Record not found']);
-                    exit;
+                foreach ($ids as $id) {
+                    $record = $this->model->getHistory($id);
+                    if ($record) {
+                        $this->model->deleteHistory($id);
+                    }
                 }
-                $this->model->deleteHistory($id);
                 header('Content-Type: application/json');
                 echo json_encode(['success' => true]);
             } catch (Exception $e) {
@@ -91,6 +100,7 @@ class HistoryController extends BaseController
             exit;
         }
     }
+
     function fetchFilteredHistories()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {

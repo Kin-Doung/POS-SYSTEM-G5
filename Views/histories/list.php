@@ -470,7 +470,7 @@ require_once './views/layouts/side.php';
                 </thead>
                 <tbody id="purchase-table">
                     <?php foreach ($reports as $report) : ?>
-                        <tr data-date="<?= $report['created_at'] ?>">
+                        <tr data-date="<?= $report['created_at'] ? date('Y-m-d', strtotime($report['created_at'])) : 'N/A' ?>">
                             <td><input type="checkbox" class="select-item" data-id="<?= $report['id'] ?>"></td>
                             <td><img src="<?= $report['image'] ?>" alt="Product Image" width="50"></td>
                             <td><?= htmlspecialchars($report['product_name']) ?></td>
@@ -478,7 +478,6 @@ require_once './views/layouts/side.php';
                             <td><?= $report['price'] ?>$</td>
                             <td><?= $report['total_price'] ?>$</td>
                             <td><?= $report['created_at'] ? date('Y-m-d', strtotime($report['created_at'])) : 'N/A' ?></td>
-                            <td><button class="remove-btn" data-id="<?= $report['id'] ?>">Remove</button></td>
                         </tr>
                     <?php endforeach ?>
                 </tbody>
@@ -490,7 +489,6 @@ require_once './views/layouts/side.php';
 
     <!-- Delete Button (Hidden by Default) -->
     <button class="delete-btn" id="delete-selected">Delete Selected</button>
-
     <!-- Custom Message Element -->
     <div class="message" id="delete-message">Your product is deleted</div>
 
@@ -689,6 +687,7 @@ require_once './views/layouts/side.php';
 
     // Initial Load
     fetchAndUpdateTable();
+    
 </script>
 <?php
 require_once './views/layouts/footer.php';

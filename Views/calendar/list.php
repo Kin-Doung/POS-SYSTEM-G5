@@ -42,7 +42,7 @@ require_once './views/layouts/side.php';
                 </nav>
 
                 <header>
-                    <h1>Product Purchase Calendar</h1>
+                    <h1>Product Purchase Calendarr</h1>
                 </header>
 
                 <div class="container">

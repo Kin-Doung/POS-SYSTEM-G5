@@ -9,7 +9,7 @@
 }
 .modal-content {
   background-color: white;
-  width: 80%; /* Updated to 80% */
+  width: 80%;
   margin: 100px auto;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
@@ -50,3 +50,17 @@ button:hover {
 #myModal:target {
   display: block;
 }
+
+th{
+  background: lightblue !important;
+  color: #000 !important;
+  border-bottom: none;
+}
+.btn-new-product{
+  background: blue !important;
+}
+.btn-new-product:hover{
+  box-shadow: none !important;
+  background: darkblue !important;
+}
+

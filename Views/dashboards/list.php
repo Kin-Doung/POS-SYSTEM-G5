@@ -1,8 +1,4 @@
-<?php 
-      require_once './views/layouts/header.php';
-      require_once './views/layouts/side.php';
-?>
-
+<?php require_once './views/layouts/side.php' ?>
 
 <body id="page-top">
   <!-- Page Wrapper -->
@@ -14,9 +10,9 @@
       <div id="content">
 
 
-<!-- style of the navbar-----------------------------------------------------------------------------------  -->
-<?php require_once './views/layouts/nav.php' ?>
- <!-- end of the navbar style-------------------------------------------------------------------------- -->
+        <!-- style of the navbar-----------------------------------------------------------------------------------  -->
+        <?php require_once './views/layouts/nav.php' ?>
+        <!-- end of the navbar style-------------------------------------------------------------------------- -->
 
 
 
@@ -45,7 +41,7 @@
                       <div class="h5 mb-0 font-weight-bold text-gray-800 total-profit">$<?php echo number_format($Today_Profit, 2); ?></div>
                     </div>
                     <div class="col-auto">
-                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
                     </div>
                   </div>
                 </div>
@@ -338,7 +334,7 @@
                         <div class="h5 mb-0 font-weight-bold text-gray-800 total-expense">$<?php echo number_format($Total_Inventory_Value ?? 0, 2); ?></div>
                       </div>
                       <div class="col-auto">
-                      <i class="fas fa-wallet fa-2x text-gray-300"></i>
+                        <i class="fas fa-wallet fa-2x text-gray-300"></i>
                       </div>
                     </div>
                   </div>
@@ -547,11 +543,10 @@
         <script src="../../views/assets/js/demo/chart-area-demo.js"></script>
       </div>
     </div>
-</div>
+  </div>
 </body>
 </div>
 
 <!-- jQuery + Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-

@@ -89,6 +89,15 @@
           <span class="nav-link-text ms-1">Notifications</span>
         </a>
       </li>
+      <!-- //calendar// -->
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="/calendar">
+          <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
+            <i class="material-icons opacity-10">calendar_today</i>
+          </div>
+          <span class="nav-link-text ms-1">Calendar</span>
+        </a>
+      </li>
       <!-- nav setting -->
       <li class="nav-item">
         <a class="nav-link text-dark" href="/settings">

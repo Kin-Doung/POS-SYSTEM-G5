@@ -1,22 +1,6 @@
 <?php require_once './views/layouts/side.php'; ?>
 
-<style>
-    body {
-        overflow: hidden;
-    }
-    .main-content {
-        margin-left: 250px;
-    }
-    .nav, .navbar {
-        box-shadow: none;
-    }
-    th, td {
-        text-align: center;
-    }
-    #deleteSelectedBtn {
-        display: none;
-    }
-</style>
+
 
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <!-- Navbar -->

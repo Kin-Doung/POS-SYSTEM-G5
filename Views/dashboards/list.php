@@ -420,13 +420,18 @@
             </div>
 
             <?php
-            // Sample data (replace with your actual $tracking array)
-            $tracking = [
-              ['category_id' => 1, 'image' => 'fan.jpg', 'product_name' => 'Shaeleigh English', 'quantity' => 74],
-              ['category_id' => 2, 'image' => 'bag.jpg', 'product_name' => 'Laura Chambers', 'quantity' => 42],
-              ['category_id' => 3, 'image' => 'tools.jpg', 'product_name' => 'Vincent Santiago', 'quantity' => 19],
-              ['category_id' => 4, 'image' => 'fan2.jpg', 'product_name' => 'Lillian Sykes', 'quantity' => 57],
-            ];
+            // Get real data from database
+            require_once './Models/TrackingModel.php';
+            require_once './Models/CategoryModel.php';
+
+            // Initialize models
+            $trackingModel = new TrackingModel();
+            $categoryModel = new CategoryModel();
+
+            // Fetch real data from database
+            $tracking = $trackingModel->getInventory();
+            $categories = $categoryModel->getCategory();
+
 
             // Initialize counters for statuses
             $lowCount = 0;
@@ -460,10 +465,20 @@
               }
             }
 
+
             // Calculate percentages (avoid division by zero)
             $lowPercent = $totalFiltered > 0 ? ($lowCount / $totalFiltered) * 100 : 0;
             $mediumPercent = $totalFiltered > 0 ? ($mediumCount / $totalFiltered) * 100 : 0;
             $highPercent = $totalFiltered > 0 ? ($highCount / $totalFiltered) * 100 : 0;
+
+            // Add filtering based on selected category for Inventory Quantities
+            $selected_category = isset($_POST['category_id']) ? $_POST['category_id'] : '';
+            $filtered_tracking = $selected_category ?
+              array_filter($tracking, function ($item) use ($selected_category) {
+                return $item['category_id'] == $selected_category;
+              }) : $tracking;
+
+
             ?>
 
             <div class="col-xl-4 col-lg-5">
@@ -526,3 +541,13 @@
         </a>
 
         <script src="../../views/assets/js/demo/chart-area-demo.js"></script>
+      </div>
+    </div>
+</div>
+</body>
+</div>
+
+<!-- jQuery + Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+

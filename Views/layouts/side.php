@@ -75,16 +75,7 @@
       <li class="nav-item">
         <a class="nav-link text-dark" href="/category">
           <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">format_textdirection_r_to_l</i>
-          </div>
-          <span class="nav-link-text ms-1">Profit_Loss</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-dark " href="/category">
-
-          <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="material-icons opacity-10">format_textdirection_r_to_l</i>
+            <i class="fas fa-list opacity-10"></i>
           </div>
           <span class="nav-link-text ms-1">Categories</span>
         </a>

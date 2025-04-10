@@ -10,7 +10,7 @@ class Database
         $servername = "localhost";
         $username = "root";
         $password = "";
-        $dbname = "vc1_pos_system";  // Change the DB name if needed
+        $dbname = "vc1_pos_system2";  // Change the DB name if needed
 
         try {
             // Set up the PDO connection

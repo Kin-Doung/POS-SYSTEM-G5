@@ -1,4 +1,3 @@
-
 <?php
 require_once './views/layouts/header.php';
 require_once './views/layouts/side.php';
@@ -27,13 +26,11 @@ require_once './views/layouts/side.php';
         padding: 15px;
         text-align: left;
         border: none;
-        /* Remove default borders */
         transition: background-color 0.3s ease;
     }
 
     th {
         background-color: #5cbacc;
-        /* Simple solid color instead of gradient */
         color: white;
         font-weight: 600;
         text-transform: uppercase;
@@ -64,12 +61,10 @@ require_once './views/layouts/side.php';
 
     tr:nth-child(even) td {
         background-color: #f9fafb;
-        /* Subtle zebra striping */
     }
 
     tr:hover td {
         background-color: #eef2ff;
-        /* Light hover effect */
         cursor: pointer;
     }
 
@@ -80,12 +75,10 @@ require_once './views/layouts/side.php';
 
     .remove-btn {
         background: linear-gradient(45deg, #ff4d4d, #ff7878);
-        /* Gradient button */
         color: white;
         border: none;
         padding: 8px 15px;
         border-radius: 25px;
-        /* Rounded pill shape */
         cursor: pointer;
         font-size: 13px;
         font-weight: 500;
@@ -96,7 +89,6 @@ require_once './views/layouts/side.php';
     .remove-btn:hover {
         background: linear-gradient(45deg, #cc0000, #ff4d4d);
         transform: translateY(-2px);
-        /* Lift effect */
         box-shadow: 0 4px 10px rgba(255, 77, 77, 0.4);
     }
 
@@ -112,7 +104,6 @@ require_once './views/layouts/side.php';
         box-shadow: 0 2px 5px rgba(255, 77, 77, 0.3);
         transition: all 0.3s ease;
         display: none;
-        /* Hidden by default */
         margin-top: 10px;
     }
 
@@ -143,39 +134,29 @@ require_once './views/layouts/side.php';
 
     .total-price span {
         color: #16a34a;
-        /* Green for the total value */
         font-size: 18px;
     }
 
-    /* Filter and Search Styles */
+    /* Filter, Date, and Search Styles */
     .filter-search-container {
         display: flex;
-        flex-direction: column;
-        /* Stack filter-date-wrapper and search vertically */
-        gap: 15px;
-        margin-bottom: 20px;
-    }
-
-    .filter-date-wrapper {
-        display: flex;
-        flex-wrap: nowrap;
-        /* Prevent wrapping to ensure one line */
+        flex-direction: row;
         align-items: center;
         gap: 15px;
-        /* Space between filter buttons and date filters */
+        margin-bottom: 20px;
+        flex-wrap: nowrap;
         overflow-x: auto;
-        /* Allow horizontal scrolling if content overflows */
-        white-space: nowrap;
-        /* Prevent text wrapping */
     }
 
-    .filter-buttons {
+    .filter-dropdown-container,
+    .date-filter,
+    .search-container {
         display: flex;
+        align-items: center;
         gap: 10px;
-        /* Space between buttons */
     }
 
-    .filter-buttons button {
+    .filter-dropdown {
         background: #5cbacc;
         color: white;
         border: none;
@@ -185,18 +166,45 @@ require_once './views/layouts/side.php';
         font-weight: 500;
         cursor: pointer;
         transition: all 0.3s ease;
+        outline: none;
+        width: 150px;
     }
 
-    .filter-buttons button:hover,
-    .filter-buttons button.active {
+    .filter-dropdown:focus {
         background: #4a0e8f;
-        transform: translateY(-1px);
     }
 
-    .date-filter {
-        display: flex;
-        gap: 10px;
-        align-items: center;
+    .filter-dropdown option {
+        background: #fff;
+        color: #1e293b;
+    }
+
+    .date-filter input[type="text"],
+    .search-container input {
+        background: #fff;
+        color: #1e293b;
+        border: 1px solid #e5e7eb;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        outline: none;
+    }
+
+    .date-filter input[type="text"] {
+        width: 250px;
+        cursor: pointer;
+    }
+
+    .search-container input {
+        width: 400px;
+        cursor: text;
+    }
+
+    .date-filter input[type="text"]:focus,
+    .search-container input:focus {
+        border-color: #6a11cb;
     }
 
     .date-filter label {
@@ -206,50 +214,8 @@ require_once './views/layouts/side.php';
         margin-right: 5px;
     }
 
-    .date-filter input[type="date"] {
-        padding: 8px 10px;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        font-size: 14px;
-        outline: none;
-        transition: border-color 0.3s ease;
-        width: 180px;
-    }
-
-    .date-filter input[type="date"]:focus {
-        border-color: #6a11cb;
-    }
-
-    .search-container {
-        width: 400px;
-        /* Fixed width for consistency */
-        background: none;
-        margin-left: 665px;
-        margin-top: -10px;
-        margin-bottom: 10px;
-    }
-
-    .search-container input {
-        padding: 8px 35px 8px 15px;
-        border: 1px solid #e5e7eb;
-        border-radius: 20px;
-        font-size: 14px;
-        width: 100%;
-        outline: none;
-        transition: border-color 0.3s ease;
-    }
-
-    .search-container input:focus {
-        border-color: #6a11cb;
-    }
-
-    .search-container::after {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 16px;
-        color: #6a11cb;
+    .search-container input::placeholder {
+        color: #6b7280;
     }
 
     /* Custom Message Styles */
@@ -258,7 +224,6 @@ require_once './views/layouts/side.php';
         top: 20px;
         right: 20px;
         background-color: #16a34a;
-        /* Green background for success */
         color: white;
         padding: 10px 20px;
         border-radius: 5px;
@@ -275,14 +240,12 @@ require_once './views/layouts/side.php';
     /* Custom Confirmation Modal Styles */
     .confirm-modal {
         display: none;
-        /* Hidden by default */
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
         background-color: rgba(0, 0, 0, 0.5);
-        /* Semi-transparent overlay */
         z-index: 1000;
         justify-content: center;
         align-items: center;
@@ -290,7 +253,6 @@ require_once './views/layouts/side.php';
 
     .confirm-modal.show {
         display: flex;
-        /* Show when active */
     }
 
     .confirm-modal-content {
@@ -328,20 +290,17 @@ require_once './views/layouts/side.php';
 
     .confirm-modal-buttons #confirm-yes {
         background: #5cbacc;
-        /* Match filter button color */
         color: white;
     }
 
     .confirm-modal-buttons #confirm-yes:hover {
         background: #4a9bb0;
-        /* Slightly darker shade on hover */
         transform: translateY(-2px);
         box-shadow: 0 2px 5px rgba(92, 186, 204, 0.3);
     }
 
     .confirm-modal-buttons #confirm-no {
         background: linear-gradient(45deg, #ff4d4d, #ff7878);
-        /* Match delete button gradient */
         color: white;
     }
 
@@ -355,7 +314,6 @@ require_once './views/layouts/side.php';
     @media (max-width: 768px) {
         .main-content {
             margin-left: 0;
-            /* Collapse sidebar on small screens */
         }
 
         .table-container {
@@ -379,24 +337,22 @@ require_once './views/layouts/side.php';
             text-align: center;
         }
 
-        .filter-date-wrapper {
+        .filter-search-container {
             flex-wrap: nowrap;
-            /* Keep nowrap for horizontal scrolling */
             gap: 10px;
+            overflow-x: auto;
         }
 
-        .date-filter {
-            flex-direction: row;
-            /* Keep date inputs in a row */
-            gap: 10px;
+        .filter-dropdown {
+            width: 120px;
         }
 
-        .search-container {
-            width: 100%;
-            /* Full width on small screens */
-            margin-left: 0;
-            /* Reset margin for small screens */
-            margin-top: 10px;
+        .date-filter input[type="text"] {
+            width: 200px;
+        }
+
+        .search-container input {
+            width: 250px;
         }
 
         .message {
@@ -422,38 +378,33 @@ require_once './views/layouts/side.php';
     }
 </style>
 
+<!-- Include Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 <div style="display: none;">
-<?php  require_once './views/layouts/nav.php' ?>
+<?php require_once './views/layouts/nav.php' ?>
 </div>
 <div class="main-content">
 
-
-
-    <!-- Filter Buttons, Date Range, and Search Bar -->
+    <!-- Filter Dropdown, Date Range, and Search -->
     <div class="filter-search-container">
-        <div class="filter-date-wrapper">
-            <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="today">Today</button>
-                <button class="filter-btn" data-filter="this-week">This Week</button>
-                <button class="filter-btn" data-filter="last-week">Last Week</button>
-                <button class="filter-btn" data-filter="this-month">This Month</button>
-                <button class="filter-btn" data-filter="last-month">Last Month</button>
-            </div>
-            <div class="date-filter">
-                <div>
-                    <label for="start-date">Choose date:</label>
-                    <input type="date" id="start-date" value="2000-01-01">
-                </div>
-                <div>
-                    <input type="date" id="end-date" value="2099-12-31">
-                </div>
-            </div>
+        <div class="filter-dropdown-container">
+            <select class="filter-dropdown" id="filter-dropdown">
+                <option value="all" selected>All</option>
+                <option value="today">Today</option>
+                <option value="this-week">This Week</option>
+                <option value="last-week">Last Week</option>
+                <option value="this-month">This Month</option>
+                <option value="last-month">Last Month</option>
+            </select>
         </div>
-    </div>
-
-    <div class="search-container">
-        <input type="text" id="search-input" placeholder="Search by Product Name...">
+        <div class="date-filter">
+            <label for="date-range">Date Range:</label>
+            <input type="text" id="date-range" placeholder="Select date range...">
+        </div>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search by Product Name...">
+        </div>
     </div>
 
     <div class="table-container">
@@ -479,7 +430,7 @@ require_once './views/layouts/side.php';
                         <td><?= $report['quantity'] ?></td>
                         <td><?= $report['price'] ?>$</td>
                         <td><?= $report['total_price'] ?>$</td>
-                        <td><?= $report['created_at'] ?></td>
+        <td><?= $report['created_at'] ?></td>
                         <td><button class="remove-btn" data-id="<?= $report['id'] ?>">Remove</button></td>
                     </tr>
                 <?php endforeach ?>
@@ -510,15 +461,29 @@ require_once './views/layouts/side.php';
     </div>
 </div>
 
-
+<!-- Include Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
+    // Initialize Flatpickr for date range
+    flatpickr("#date-range", {
+        mode: "range",
+        dateFormat: "Y-m-d",
+        defaultDate: ["2024-01-01", "2099-12-31"],
+        minDate: "2024-01-01",
+        onChange: function(selectedDates) {
+            if (selectedDates.length === 2) {
+                const startDate = selectedDates[0].toISOString().split('T')[0];
+                const endDate = selectedDates[1].toISOString().split('T')[0];
+                fetchAndUpdateTable('all', startDate, endDate, searchInput.value);
+            }
+        }
+    });
+
     // Select All Checkbox and UI Elements
     const selectAll = document.getElementById('select-all');
     const deleteBtn = document.getElementById('delete-selected');
     const deleteMessage = document.getElementById('delete-message');
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const startDateInput = document.getElementById('start-date');
-    const endDateInput = document.getElementById('end-date');
+    const filterDropdown = document.getElementById('filter-dropdown');
     const searchInput = document.getElementById('search-input');
     const tableBody = document.getElementById('purchase-table');
     const totalPriceSpan = document.querySelector('.total-price span');
@@ -607,12 +572,12 @@ require_once './views/layouts/side.php';
 
         modal.classList.add('show');
         confirmYes.onclick = () => {
-            fetch(`/history/destroy/${id}`, { // Changed to match controller method name
-                method: 'POST', // Changed to POST to match controller
+            fetch(`/history/destroy/${id}`, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: new URLSearchParams({}) // No body needed for destroy
+                body: new URLSearchParams({})
             })
             .then(response => {
                 console.log('Delete Status:', response.status);
@@ -622,10 +587,10 @@ require_once './views/layouts/side.php';
             .then(data => {
                 console.log('Delete Data:', data);
                 if (data.success) {
-                    row.remove(); // Remove the row from the table
-                    showMessage(); // Show success message
-                    modal.classList.remove('show'); // Hide modal
-                    fetchAndUpdateTable(); // Refresh table to update total price
+                    row.remove();
+                    showMessage();
+                    modal.classList.remove('show');
+                    fetchAndUpdateTable();
                 } else {
                     alert('Failed to delete: ' + (data.error || 'Unknown error'));
                 }
@@ -662,28 +627,16 @@ require_once './views/layouts/side.php';
         updateDeleteButtonVisibility();
     }
 
-    // Filter Button Clicks
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            const filter = this.getAttribute('data-filter');
-            console.log('Filter clicked:', filter);
-            fetchAndUpdateTable(filter, null, null, searchInput.value);
-        });
-    });
-
-    // Date Input Changes
-    startDateInput.addEventListener('change', () => {
-        fetchAndUpdateTable('all', startDateInput.value, endDateInput.value, searchInput.value);
-    });
-    endDateInput.addEventListener('change', () => {
-        fetchAndUpdateTable('all', startDateInput.value, endDateInput.value, searchInput.value);
+    // Filter Dropdown Change
+    filterDropdown.addEventListener('change', function() {
+        const filter = this.value;
+        console.log('Filter selected:', filter);
+        fetchAndUpdateTable(filter, null, null, searchInput.value);
     });
 
     // Search Input
     searchInput.addEventListener('input', () => {
-        fetchAndUpdateTable('all', startDateInput.value, endDateInput.value, searchInput.value);
+        fetchAndUpdateTable('all', null, null, searchInput.value);
     });
 
     // Initial Load

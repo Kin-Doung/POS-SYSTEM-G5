@@ -344,20 +344,20 @@ require_once './views/layouts/side.php';
     }
 
     .cart-btn {
-        padding: 12px 24px;
+        padding: 6px 12px;
         border: none;
         border-radius: 5px;
         color: #fff;
         cursor: pointer;
         font-size: 1rem;
         transition: background-color 0.2s ease, transform 0.1s ease;
-        width: 100%;
-        max-width: 200px;
+        width: 50%;
+        max-width: 150px;
+        font-size: 14px;
     }
 
     .cart-btn-success {
-        padding: 14px 28px;
-        font-size: 1.1rem;
+        padding: 12px 24px;
         max-width: 220px;
         background-color: #28a745;
     }
@@ -374,6 +374,8 @@ require_once './views/layouts/side.php';
 
     .cart-btn-secondary {
         background-color: #6c757d;
+        max-width: 100%;
+        width: 160px;
     }
 
     .cart-btn-secondary:hover {
@@ -427,6 +429,7 @@ require_once './views/layouts/side.php';
 
     .cart-btn-info {
         background-color: #17a2b8;
+
     }
 
     .cart-btn-info:hover {

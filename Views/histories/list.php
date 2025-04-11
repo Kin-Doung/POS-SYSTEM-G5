@@ -2,6 +2,7 @@
 require_once './views/layouts/header.php';
 require_once './views/layouts/side.php';
 ?>
+
 <style>
     /* Main content wrapper to account for sidebar */
     .main-content {
@@ -12,6 +13,7 @@ require_once './views/layouts/side.php';
     }
     .table-container {
         border-radius: 10px;
+        margin-top: -20px;
     }
 
     table {
@@ -23,8 +25,8 @@ require_once './views/layouts/side.php';
 
     th,
     td {
-        padding: 15px;
-        text-align: left;
+        padding: 12px;
+        text-align: center;
         border: none;
         transition: background-color 0.3s ease;
     }
@@ -142,6 +144,7 @@ require_once './views/layouts/side.php';
         display: flex;
         flex-direction: row;
         align-items: center;
+        justify-content: space-between; /* Move search to the right */
         gap: 15px;
         margin-bottom: 20px;
         flex-wrap: nowrap;
@@ -154,13 +157,14 @@ require_once './views/layouts/side.php';
         display: flex;
         align-items: center;
         gap: 10px;
+        background: #f8f9fa;
     }
 
     .filter-dropdown {
         background: #5cbacc;
         color: white;
         border: none;
-        padding: 8px 15px;
+        padding: 8px 30px 8px 15px; /* Extra padding for the caret */
         border-radius: 20px;
         font-size: 13px;
         font-weight: 500;
@@ -168,10 +172,38 @@ require_once './views/layouts/side.php';
         transition: all 0.3s ease;
         outline: none;
         width: 150px;
+        position: relative; /* For the caret */
+        appearance: none; /* Remove default dropdown arrow */
+    }
+
+    /* Custom caret for dropdown */
+    .filter-dropdown-container {
+        position: relative;
+    }
+
+    .filter-dropdown-container::after {
+        content: '\25BC'; /* Down arrow */
+        position: absolute;
+        right: 15px;
+        color: white;
+        font-size: 12px;
+        pointer-events: none;
+        transition: transform 0.3s ease;
+    }
+
+    .filter-dropdown-container.active::after {
+        transform: rotate(180deg); /* Rotate arrow when dropdown is active */
+    }
+
+    /* Hover and focus effects for dropdown */
+    .filter-dropdown:hover {
+        background: #4a9bb0;
+        box-shadow: 0 2px 5px rgba(92, 186, 204, 0.3);
     }
 
     .filter-dropdown:focus {
         background: #4a0e8f;
+        box-shadow: 0 2px 5px rgba(74, 14, 143, 0.3);
     }
 
     .filter-dropdown option {
@@ -198,7 +230,7 @@ require_once './views/layouts/side.php';
     }
 
     .search-container input {
-        width: 400px;
+        width: 300px;
         cursor: text;
     }
 
@@ -338,9 +370,14 @@ require_once './views/layouts/side.php';
         }
 
         .filter-search-container {
+            justify-content: flex-start; /* On smaller screens, stack items */
             flex-wrap: nowrap;
             gap: 10px;
             overflow-x: auto;
+        }
+
+        .search-container {
+            order: 3; /* Ensure search stays on the right */
         }
 
         .filter-dropdown {
@@ -376,6 +413,15 @@ require_once './views/layouts/side.php';
             font-size: 13px;
         }
     }
+
+
+
+    .flatpickr-monthDropdown-months {
+    font-size: 15px !important; /* Reduced font size for month names */
+    padding: 5px !important; /* Adjust padding for better spacing */
+    font-weight: 500 !important; /* Slightly lighter font weight */
+    text-transform: capitalize !important; /* Capitalize month names */
+}
 </style>
 
 <!-- Include Flatpickr CSS -->
@@ -430,7 +476,7 @@ require_once './views/layouts/side.php';
                         <td><?= $report['quantity'] ?></td>
                         <td><?= $report['price'] ?>$</td>
                         <td><?= $report['total_price'] ?>$</td>
-        <td><?= $report['created_at'] ?></td>
+                        <td><?= $report['created_at'] ?></td>
                         <td><button class="remove-btn" data-id="<?= $report['id'] ?>">Remove</button></td>
                     </tr>
                 <?php endforeach ?>
@@ -468,8 +514,8 @@ require_once './views/layouts/side.php';
     flatpickr("#date-range", {
         mode: "range",
         dateFormat: "Y-m-d",
-        defaultDate: ["2024-01-01", "2099-12-31"],
-        minDate: "2024-01-01",
+        defaultDate: ["2025-01-01", "2099-12-31"], // Updated default start date to 2025-01-01
+        minDate: "2025-01-01", // Updated minimum date to 2025-01-01
         onChange: function(selectedDates) {
             if (selectedDates.length === 2) {
                 const startDate = selectedDates[0].toISOString().split('T')[0];
@@ -484,12 +530,21 @@ require_once './views/layouts/side.php';
     const deleteBtn = document.getElementById('delete-selected');
     const deleteMessage = document.getElementById('delete-message');
     const filterDropdown = document.getElementById('filter-dropdown');
+    const filterDropdownContainer = document.querySelector('.filter-dropdown-container');
     const searchInput = document.getElementById('search-input');
     const tableBody = document.getElementById('purchase-table');
     const totalPriceSpan = document.querySelector('.total-price span');
     const modal = document.getElementById('confirm-modal');
     const confirmYes = document.getElementById('confirm-yes');
     const confirmNo = document.getElementById('confirm-no');
+
+    // Add interactivity to dropdown
+    filterDropdown.addEventListener('focus', () => {
+        filterDropdownContainer.classList.add('active');
+    });
+    filterDropdown.addEventListener('blur', () => {
+        filterDropdownContainer.classList.remove('active');
+    });
 
     // Function to Show Custom Message
     function showMessage() {
@@ -642,6 +697,7 @@ require_once './views/layouts/side.php';
     // Initial Load
     fetchAndUpdateTable();
 </script>
+
 <?php
 require_once './views/layouts/footer.php';
-?>
+?>  

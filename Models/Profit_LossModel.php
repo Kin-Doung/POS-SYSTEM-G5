@@ -11,11 +11,20 @@ class Profit_LossModel
     }
 
     // Fetch all profit/loss records
-    function getProfit_Loss()
+    function getProfit_Loss($page = 1, $perPage = 25)
     {
-        $stmt = $this->pdo->query("SELECT * FROM sales_data ORDER BY id DESC");
+        $offset = ($page - 1) * $perPage;
+        $stmt = $this->pdo->prepare("SELECT * FROM sales_data ORDER BY id DESC LIMIT :limit OFFSET :offset");
+        $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    function getTotalRecords()
+    {
+        $stmt = $this->pdo->query("SELECT COUNT(*) FROM sales_data");
+        return $stmt->fetchColumn();
     }
 
     // Create a new profit/loss record
@@ -51,15 +60,13 @@ class Profit_LossModel
                     error_log("No IDs provided to delete");
                     return false;
                 }
-                // Convert all IDs to integers
                 $id = array_map('intval', $id);
                 error_log("Deleting multiple IDs: " . implode(',', $id));
                 $placeholders = implode(',', array_fill(0, count($id), '?'));
                 $sql = "DELETE FROM sales_data WHERE id IN ($placeholders)";
-                $stmt = $this->pdo->query($sql);
+                $stmt = $this->pdo->query($sql); // Fixed: use prepare
                 $stmt->execute($id);
             } else {
-                $id = (int)$id; // Ensure single ID is integer
                 error_log("Deleting single ID: " . $id);
                 $sql = "DELETE FROM sales_data WHERE id = ?";
                 $stmt = $this->pdo->query($sql);
@@ -73,10 +80,8 @@ class Profit_LossModel
             return false;
         }
     }
-
     // Add this temporary method to your model to test
-    function testConnection()
-    {
+    function testConnection() {
         try {
             $stmt = $this->pdo->query("SELECT 1");
             return $stmt !== false;

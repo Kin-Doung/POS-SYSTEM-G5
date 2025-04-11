@@ -26,17 +26,30 @@ class Database
     {
         return $this->pdo;
     }
+    public function prepare($sql)
+    {
+        return $this->pdo->prepare($sql); // For parameterized queries
+    }
 
     // General query execution method
     // In Databases/database.php
     public function query($sql, $params = [])
     {
-        $stmt = $this->pdo->prepare($sql); // Assuming $this->pdo is your PDO instance
-        $stmt->execute($params);
+        $stmt = $this->pdo->prepare($sql);
+
+        foreach ($params as $key => $value) {
+            if (is_int($value)) {
+                $stmt->bindValue(is_numeric($key) ? $key + 1 : $key, $value, PDO::PARAM_INT);
+            } else {
+                $stmt->bindValue(is_numeric($key) ? $key + 1 : $key, $value, PDO::PARAM_STR);
+            }
+        }
+
+        $stmt->execute();
         return $stmt;
     }
 
-    
+
 
 
 
@@ -58,5 +71,3 @@ class Database
         $this->pdo->rollBack();
     }
 }
-
-

@@ -12,14 +12,24 @@ class ProductController extends BaseController
         $this->model = new ProductModel();
     }
 
-    public function index()
-    {
-        $this->views('products/list', [
-            'inventory' => $this->model->getInventoryWithProductDetails(),
-            'categories' => $this->model->getCategories(),
-            'products' => $this->model->getProducts()
-        ]);
-    }
+// In ProductController.php
+public function index()
+{
+    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $perPage = 4;
+    
+    $inventory = $this->model->getInventoryWithProductDetails($page, $perPage);
+    $totalItems = $this->model->getInventoryCount();
+    $totalPages = ceil($totalItems / $perPage);
+
+    $this->views('products/list', [
+        'inventory' => $inventory,
+        'categories' => $this->model->getCategories(),
+        'products' => $this->model->getProducts(),
+        'currentPage' => $page,
+        'totalPages' => $totalPages
+    ]);
+}
 
     public function updatePrice()
     {

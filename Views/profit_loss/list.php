@@ -4,11 +4,10 @@ require_once './views/layouts/side.php';
 ?>
 
 <div style="display: none;">
-<?php  require_once './views/layouts/nav.php' ?>
+    <?php require_once './views/layouts/nav.php' ?>
 </div>
 
 <style>
-   
     .total-values {
         display: flex;
         justify-content: flex-end;
@@ -25,7 +24,8 @@ require_once './views/layouts/side.php';
         color: #dc2626;
         /* Red for loss */
     }
-    #end-date{
+
+    #end-date {
         margin-left: -10px;
     }
 
@@ -491,7 +491,6 @@ require_once './views/layouts/side.php';
     <div class="search-container">
         <input type="text" id="search-input" placeholder="Search by Product Name...">
     </div>
-
     <div class="table-container">
         <table>
             <thead>
@@ -507,16 +506,16 @@ require_once './views/layouts/side.php';
             <tbody id="purchase-table">
                 <?php if (!empty($Profit_Loss) && is_array($Profit_Loss)) : ?>
                     <?php foreach ($Profit_Loss as $profit_loss) : ?>
-                        <tr data-date="<?= isset($profit_loss['Sale_Date']) ? $profit_loss['Sale_Date'] : '' ?>">
-                            <td><input type="checkbox" class="select-item" data-id="<?= isset($profit_loss['id']) ? $profit_loss['id'] : '' ?>"></td>
+                        <tr data-date="<?= isset($profit_loss['Sale_Date']) ? htmlspecialchars($profit_loss['Sale_Date']) : '' ?>">
+                            <td><input type="checkbox" class="select-item" data-id="<?= isset($profit_loss['id']) ? htmlspecialchars($profit_loss['id']) : '' ?>"></td>
                             <td>
-                                <?php if (isset($profit_loss['image']) && !empty($profit_loss['image'])) : ?>
-                                    <img src="<?= $profit_loss['image'] ?>" alt="Product Image" width="50">
+                                <?php if (isset($profit_loss['image']) && !empty($profit_loss['image']) && file_exists($profit_loss['image'])) : ?>
+                                    <img src="<?= htmlspecialchars($profit_loss['image']) ?>" alt="Product Image" width="50">
                                 <?php else : ?>
                                     <img src="path/to/default-image.jpg" alt="No Image" width="50">
                                 <?php endif; ?>
                             </td>
-                            <td><?= isset($profit_loss['Product_Name']) ? $profit_loss['Product_Name'] : 'N/A' ?></td>
+                            <td><?= isset($profit_loss['Product_Name']) ? htmlspecialchars($profit_loss['Product_Name']) : 'N/A' ?></td>
                             <td>
                                 <?php
                                 $profit_loss_value = isset($profit_loss['Profit_Loss']) ? floatval($profit_loss['Profit_Loss']) : 0;
@@ -527,18 +526,77 @@ require_once './views/layouts/side.php';
                                 <span class="numeric-value" style="display: none;"><?= $profit_loss_value ?></span>
                             </td>
                             <td>
-                                <span class="<?= $class ?>"><?= $result_type ?></span>
+                                <span class="<?= $class ?>"><?= htmlspecialchars($result_type) ?></span>
                             </td>
-                            <td><?= isset($profit_loss['Sale_Date']) ? $profit_loss['Sale_Date'] : 'N/A' ?></td>
+                            <td>
+                                <?= isset($profit_loss['Sale_Date']) && strtotime($profit_loss['Sale_Date']) !== false ? date('Y-m-d', strtotime($profit_loss['Sale_Date'])) : 'N/A' ?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else : ?>
                     <tr>
-                        <td colspan="7" style="text-align: center;">No profit/loss data found.</td>
+                        <td colspan="6" style="text-align: center;">No profit/loss data found.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
         </table>
+
+        <div class="pagination-controls">
+            <?php if ($currentPage > 1) : ?>
+                <a href="?page=<?= $currentPage - 1 ?>"><i class="fa-solid fa-less-than"></i></a>
+            <?php else : ?>
+                <button disabled><i class="fa-solid fa-less-than"></i></button>
+            <?php endif; ?>
+
+            <span>Page <?= $currentPage ?> of <?= $totalPages ?></span>
+
+            <?php if ($currentPage < $totalPages) : ?>
+                <a href="?page=<?= $currentPage + 1 ?>"><i class="fa-solid fa-greater-than"></i></a>
+            <?php else : ?>
+                <button disabled><i class="fa-solid fa-greater-than"></i></button>
+            <?php endif; ?>
+        </div>
+        <style>
+            .pagination-controls {
+                margin-top: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 15px;
+                font-family: Arial, sans-serif;
+            }
+
+            .pagination-controls a,
+            .pagination-controls button {
+                padding: 8px 16px;
+                border: none;
+                border-radius: 6px;
+                font-size: 14px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            .pagination-controls a {
+                background-color: #007bff;
+                color: white;
+                text-decoration: none;
+            }
+
+            .pagination-controls a:hover {
+                background-color: #0056b3;
+            }
+
+            .pagination-controls button {
+                background-color: #ccc;
+                color: #fff;
+                cursor: not-allowed;
+            }
+
+            .pagination-controls span {
+                font-weight: bold;
+            }
+        </style>
+
     </div>
 
     <!-- Total Displays -->

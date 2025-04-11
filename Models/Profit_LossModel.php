@@ -11,11 +11,20 @@ class Profit_LossModel
     }
 
     // Fetch all profit/loss records
-    function getProfit_Loss()
+    function getProfit_Loss($page = 1, $perPage = 25)
     {
-        $stmt = $this->pdo->query("SELECT * FROM sales_data ORDER BY id DESC");
+        $offset = ($page - 1) * $perPage;
+        $stmt = $this->pdo->prepare("SELECT * FROM sales_data ORDER BY id DESC LIMIT :limit OFFSET :offset");
+        $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    function getTotalRecords()
+    {
+        $stmt = $this->pdo->query("SELECT COUNT(*) FROM sales_data");
+        return $stmt->fetchColumn();
     }
 
     // Create a new profit/loss record

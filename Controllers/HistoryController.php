@@ -9,11 +9,16 @@ class HistoryController extends BaseController
     {
         $this->model = new HistoryModel();
     }
-
-    function index()
-    {
-        $report = $this->model->getHistories();
-        $this->views('histories/list', ['reports' => $report]);
+    function index($page = 1) {
+        $perPage = 25;
+        $report = $this->model->getHistories($page, $perPage);
+        $total = $this->model->getTotalHistories('all', null, null, '');
+        $totalPages = ceil($total / $perPage);
+        $this->views('histories/list', [
+            'reports' => $report,
+            'currentPage' => $page,
+            'totalPages' => $totalPages
+        ]);
     }
 
     function store()
@@ -101,22 +106,27 @@ class HistoryController extends BaseController
         }
     }
 
-    function fetchFilteredHistories()
-    {
+    function fetchFilteredHistories() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $filter = $_POST['filter'] ?? 'all';
             $startDate = $_POST['start_date'] ?? '2000-01-01';
             $endDate = $_POST['end_date'] ?? '2099-12-31';
             $search = $_POST['search'] ?? '';
+            $page = $_POST['page'] ?? 1;
+            $perPage = 25;
 
-            $reports = $this->model->getFilteredHistories($filter, $startDate, $endDate, $search);
+            $reports = $this->model->getFilteredHistories($filter, $startDate, $endDate, $search, $page, $perPage);
+            $total = $this->model->getTotalHistories($filter, $startDate, $endDate, $search);
             $totalPrice = array_sum(array_column($reports, 'total_price'));
+            $totalPages = ceil($total / $perPage);
 
             header('Content-Type: application/json');
             echo json_encode([
                 'success' => true,
                 'reports' => $reports,
-                'total_price' => number_format($totalPrice, 2)
+                'total_price' => number_format($totalPrice, 2),
+                'currentPage' => (int)$page,
+                'totalPages' => $totalPages
             ]);
             exit;
         }

@@ -1,4 +1,3 @@
-
 <?php
 require_once './views/layouts/header.php';
 require_once './views/layouts/side.php';
@@ -11,6 +10,7 @@ require_once './views/layouts/side.php';
         background-color: #f8f9fa;
         height: auto;
     }
+
     .table-container {
         border-radius: 10px;
     }
@@ -423,7 +423,7 @@ require_once './views/layouts/side.php';
 </style>
 
 <div style="display: none;">
-<?php  require_once './views/layouts/nav.php' ?>
+    <?php require_once './views/layouts/nav.php' ?>
 </div>
 <div class="main-content">
 
@@ -457,36 +457,85 @@ require_once './views/layouts/side.php';
     </div>
 
     <div class="table-container">
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th><input type="checkbox" id="select-all" title="Select All"></th>
-                        <th>Image</th>
-                        <th>Product Name</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Total Price</th>
-                        <th>Date of Sale</th>
-                        <th>Action</th>
+        <table>
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="select-all" title="Select All"></th>
+                    <th>Image</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total Price</th>
+                    <th>Date of Sale</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="purchase-table">
+                <?php foreach ($reports as $report) : ?>
+                    <tr data-date="<?= $report['created_at'] ? date('Y-m-d', strtotime($report['created_at'])) : 'N/A' ?>">
+                        <td><input type="checkbox" class="select-item" data-id="<?= $report['id'] ?>"></td>
+                        <td><img src="<?= $report['image'] ?>" alt="Product Image" width="50"></td>
+                        <td><?= htmlspecialchars($report['product_name']) ?></td>
+                        <td><?= $report['quantity'] ?></td>
+                        <td><?= $report['price'] ?>$</td>
+                        <td><?= $report['total_price'] ?>$</td>
+                        <td><?= $report['created_at'] ? date('Y-m-d', strtotime($report['created_at'])) : 'N/A' ?></td>
+                        <td><button class="remove-btn" data-id="<?= $report['id'] ?>">Remove</button></td>
                     </tr>
-                </thead>
-                <tbody id="purchase-table">
-                    <?php foreach ($reports as $report) : ?>
-                        <tr data-date="<?= $report['created_at'] ? date('Y-m-d', strtotime($report['created_at'])) : 'N/A' ?>">
-                            <td><input type="checkbox" class="select-item" data-id="<?= $report['id'] ?>"></td>
-                            <td><img src="<?= $report['image'] ?>" alt="Product Image" width="50"></td>
-                            <td><?= htmlspecialchars($report['product_name']) ?></td>
-                            <td><?= $report['quantity'] ?></td>
-                            <td><?= $report['price'] ?>$</td>
-                            <td><?= $report['total_price'] ?>$</td>
-                            <td><?= $report['created_at'] ? date('Y-m-d', strtotime($report['created_at'])) : 'N/A' ?></td>
-                        </tr>
-                    <?php endforeach ?>
-                </tbody>
-            </table>
+                <?php endforeach ?>
+            </tbody>
+        </table>
+        <div class="pagination">
+            <?php if ($currentPage > 1): ?>
+                <button class="page-btn" data-page="<?= $currentPage - 1 ?>"><i class="fa-solid fa-less-than"></i></button>
+            <?php endif; ?>
+            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <button class="page-btn <?= $i == $currentPage ? 'active' : '' ?>" data-page="<?= $i ?>"><?= $i ?></button>
+            <?php endfor; ?>
+            <?php if ($currentPage < $totalPages): ?>
+                <button class="page-btn" data-page="<?= $currentPage + 1 ?>"><i class="fa-solid fa-greater-than"></i></button>
+            <?php endif; ?>
         </div>
     </div>
+    <style>
+
+
+        .pagination {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .page-btn {
+            padding: 5px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+          
+          
+        }
+
+        .page-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .page-btn.active {
+            background-color: #0056b3;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .page-btn {
+                padding: 8px 12px;
+            }
+        }
+    </style>
+
+
+
     <div class="message" id="delete-message">Your product is deleted</div>
 
 
@@ -527,6 +576,9 @@ require_once './views/layouts/side.php';
     const modal = document.getElementById('confirm-modal');
     const confirmYes = document.getElementById('confirm-yes');
     const confirmNo = document.getElementById('confirm-no');
+    const paginationContainer = document.querySelector('.pagination');
+
+    let currentPage = <?= $currentPage ?: 1 ?>;
 
     // Function to Show Custom Message
     function showMessage() {
@@ -541,7 +593,7 @@ require_once './views/layouts/side.php';
         deleteBtn.style.display = anyChecked ? 'block' : 'none';
     }
 
-    // Fetch and Update Table
+    // Original Fetch and Update Table (Unchanged)
     function fetchAndUpdateTable(filter = 'all', startDate = null, endDate = null, search = '') {
         const payload = {
             filter: filter,
@@ -580,7 +632,7 @@ require_once './views/layouts/side.php';
                         <td>${report.created_at}</td>
                         <td><button class="remove-btn" data-id="${report.id}">Remove</button></td>
                     </tr>
-                `).join('') : '<tr><td colspan="8">No records found for this filter</td></tr>';
+                `).join('') : '<tr><td colspan="8">No=No records found for this filter</td></tr>';
                     totalPriceSpan.textContent = `$${data.total_price}`;
                     attachRemoveListeners();
                     attachCheckboxListeners();
@@ -609,12 +661,12 @@ require_once './views/layouts/side.php';
 
         modal.classList.add('show');
         confirmYes.onclick = () => {
-            fetch(`/history/destroy/${id}`, { // Changed to match controller method name
-                    method: 'POST', // Changed to POST to match controller
+            fetch(`/history/destroy/${id}`, {
+                    method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
-                    body: new URLSearchParams({}) // No body needed for destroy
+                    body: new URLSearchParams({})
                 })
                 .then(response => {
                     console.log('Delete Status:', response.status);
@@ -624,9 +676,9 @@ require_once './views/layouts/side.php';
                 .then(data => {
                     console.log('Delete Data:', data);
                     if (data.success) {
-                        row.remove(); // Remove the row from the table
-                        showMessage(); // Show success message
-                        modal.classList.remove('show'); // Hide modal
+                        row.remove();
+                        showMessage();
+                        modal.classList.remove('show');
                         fetchAndUpdateTable(); // Refresh table to update total price
                     } else {
                         alert('Failed to delete: ' + (data.error || 'Unknown error'));
@@ -664,6 +716,101 @@ require_once './views/layouts/side.php';
         updateDeleteButtonVisibility();
     }
 
+    // New Pagination Functions (Added)
+    function fetchAndUpdateTableWithPagination(filter = 'all', startDate = null, endDate = null, search = '', page = currentPage) {
+        const payload = {
+            filter: filter,
+            search: search,
+            page: page
+        };
+        if (filter === 'all' && startDate && endDate) {
+            payload.start_date = startDate;
+            payload.end_date = endDate;
+        }
+        console.log('Sending payload with page:', payload);
+
+        fetch('/history/fetchFilteredHistories', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams(payload)
+            })
+            .then(response => {
+                console.log('Fetch Status:', response.status);
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                return response.json();
+            })
+            .then(data => {
+                console.log('Received data:', data);
+                if (data.success) {
+                    console.log('Reports count:', data.reports.length);
+                    tableBody.innerHTML = data.reports.length > 0 ? data.reports.map(report => `
+                    <tr data-date="${report.created_at}">
+                        <td><input type="checkbox" class="select-item" data-id="${report.id}"></td>
+                        <td><img src="${report.image}" alt="Product Image" width="50"></td>
+                        <td>${report.product_name}</td>
+                        <td>${report.quantity}</td>
+                        <td>${report.price}$</td>
+                        <td>${report.total_price}$</td>
+                        <td>${report.created_at}</td>
+                        <td><button class="remove-btn" data-id="${report.id}">Remove</button></td>
+                    </tr>
+                `).join('') : '<tr><td colspan="8">No records found for this filter</td></tr>';
+                    totalPriceSpan.textContent = `$${data.total_price}`;
+                    currentPage = data.currentPage;
+                    updatePagination(data.currentPage, data.totalPages);
+                    attachRemoveListeners();
+                    attachCheckboxListeners();
+                } else {
+                    console.log('Server error:', data.error);
+                    alert('Failed to fetch data: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Fetch Error:', error);
+                alert('Error fetching data: ' + error.message);
+            });
+    }
+
+    function updatePagination(currentPage, totalPages) {
+        let paginationHTML = '';
+        if (currentPage > 1) {
+            paginationHTML += `<button class="page-btn" data-page="${currentPage - 1}"><i class="fa-solid fa-less-than"></i></button>`;
+        }
+        for (let i = 1; i <= totalPages; i++) {
+            paginationHTML += `<button class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+        }
+        if (currentPage < totalPages) {
+            paginationHTML += `<button class="page-btn" data-page="${currentPage + 1}"><i class="fa-solid fa-greater-than"></i></button>`;
+        }
+        paginationContainer.innerHTML = paginationHTML;
+        attachPageListeners();
+    }
+
+    function attachPageListeners() {
+        const pageButtons = document.querySelectorAll('.page-btn');
+        console.log('Attaching listeners to', pageButtons.length, 'buttons');
+        pageButtons.forEach(button => {
+            button.removeEventListener('click', handlePageClick);
+            button.addEventListener('click', handlePageClick);
+        });
+    }
+
+    function handlePageClick() {
+        const page = parseInt(this.getAttribute('data-page'));
+        console.log('Page clicked:', page);
+        if (!isNaN(page)) {
+            fetchAndUpdateTableWithPagination(
+                document.querySelector('.filter-btn.active')?.getAttribute('data-filter') || 'all',
+                startDateInput.value,
+                endDateInput.value,
+                searchInput.value,
+                page
+            );
+        }
+    }
+
     // Filter Button Clicks
     filterButtons.forEach(button => {
         button.addEventListener('click', function() {
@@ -671,27 +818,29 @@ require_once './views/layouts/side.php';
             this.classList.add('active');
             const filter = this.getAttribute('data-filter');
             console.log('Filter clicked:', filter);
-            fetchAndUpdateTable(filter, null, null, searchInput.value);
+            fetchAndUpdateTableWithPagination(filter, null, null, searchInput.value, 1);
         });
     });
 
     // Date Input Changes
     startDateInput.addEventListener('change', () => {
-        fetchAndUpdateTable('all', startDateInput.value, endDateInput.value, searchInput.value);
+        fetchAndUpdateTableWithPagination('all', startDateInput.value, endDateInput.value, searchInput.value, 1);
     });
+
     endDateInput.addEventListener('change', () => {
-        fetchAndUpdateTable('all', startDateInput.value, endDateInput.value, searchInput.value);
+        fetchAndUpdateTableWithPagination('all', startDateInput.value, endDateInput.value, searchInput.value, 1);
     });
 
     // Search Input
     searchInput.addEventListener('input', () => {
-        fetchAndUpdateTable('all', startDateInput.value, endDateInput.value, searchInput.value);
+        fetchAndUpdateTableWithPagination('all', startDateInput.value, endDateInput.value, searchInput.value, 1);
     });
 
-    // Initial Load
-    fetchAndUpdateTable();
-    
+    // Initial Load with Pagination
+    fetchAndUpdateTableWithPagination();
+    attachPageListeners();
 </script>
+
 <?php
 require_once './views/layouts/footer.php';
 ?>

@@ -20,8 +20,9 @@ class ProductModel
         return $this->fetchAll("SELECT * FROM categories ORDER BY id DESC");
     }
 
-    public function getInventoryWithProductDetails()
+    public function getInventoryWithProductDetails($page = 1, $perPage = 5)
     {
+        $offset = ($page - 1) * $perPage;
         $query = "
             SELECT 
                 i.id AS inventory_id,
@@ -34,9 +35,22 @@ class ProductModel
                 c.name AS category_name
             FROM inventory i
             LEFT JOIN categories c ON i.category_id = c.id
-            LIMIT 25;
+            ORDER BY i.id DESC
+            LIMIT :limit OFFSET :offset
         ";
-        return $this->fetchAll($query);
+
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getInventoryCount()
+    {
+        $query = "SELECT COUNT(*) FROM inventory";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchColumn();
     }
 
     public function updateProductPrice($productId, $newPrice)

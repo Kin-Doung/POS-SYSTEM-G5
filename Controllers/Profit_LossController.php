@@ -13,8 +13,18 @@ class Profit_LossController extends BaseController
     function index()
     {
         header("Cache-Control: no-cache, must-revalidate"); // Prevent caching
-        $profit_loss = $this->model->getProfit_Loss();
-        $this->views('profit_loss/list', ['Profit_Loss' => $profit_loss]);
+        $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1; // Get page from URL, default to 1
+        $perPage = 25; // Show 5 cards per page
+        $profit_loss = $this->model->getProfit_Loss($page, $perPage);
+        $totalRecords = $this->model->getTotalRecords();
+        $totalPages = ceil($totalRecords / $perPage); // Calculate total pages
+
+        $this->views('profit_loss/list', [
+            'Profit_Loss' => $profit_loss,
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
+            'perPage' => $perPage
+        ]);
     }
 
     function store()

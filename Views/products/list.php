@@ -521,7 +521,8 @@ require_once './views/layouts/side.php';
             width: 100%;
         }
     }
-    h3{
+
+    h3 {
         font-family: "Poppins", sans-serif;
         font-weight: bold;
         margin-bottom: 10px;
@@ -541,12 +542,10 @@ require_once './views/layouts/side.php';
                     <?php foreach ($inventory as $item): ?>
                         <div class="product-col">
                             <div class="product-card">
-                                <!-- Add Font Awesome ellipsis icon -->
                                 <i class="fa-solid fa-ellipsis-vertical kebab-menu"></i>
                                 <div class="dropdown-menu">
                                     <p class="delete-btn" data-id="<?= htmlspecialchars($item['inventory_id']) ?>"><i class="fa-solid fa-trash"></i></p>
                                 </div>
-
                                 <div class="image-wrapper">
                                     <?php if (!empty($item['image'])): ?>
                                         <img src="<?= htmlspecialchars($item['image']) ?>"
@@ -572,6 +571,62 @@ require_once './views/layouts/side.php';
                         </div>
                     <?php endforeach; ?>
                 </div>
+
+                <div class="pagination-controls">
+                    <?php if ($currentPage > 1) : ?>
+                        <a href="?page=<?= $currentPage - 1 ?>"><i class="fa-solid fa-less-than"></i></a>
+                    <?php else : ?>
+                        <button disabled><i class="fa-solid fa-less-than"></i></button>
+                    <?php endif; ?>
+
+                    <span>Page <?= $currentPage ?> of <?= $totalPages ?></span>
+
+                    <?php if ($currentPage < $totalPages) : ?>
+                        <a href="?page=<?= $currentPage + 1 ?>"><i class="fa-solid fa-greater-than"></i></a>
+                    <?php else : ?>
+                        <button disabled><i class="fa-solid fa-greater-than"></i></button>
+                    <?php endif; ?>
+                </div>
+                <style>
+                    .pagination-controls {
+                        margin-top: 20px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        gap: 15px;
+                        font-family: Arial, sans-serif;
+                    }
+
+                    .pagination-controls a,
+                    .pagination-controls button {
+                        padding: 8px 16px;
+                        border: none;
+                        border-radius: 6px;
+                        font-size: 14px;
+                        cursor: pointer;
+                        transition: background-color 0.3s ease;
+                    }
+
+                    .pagination-controls a {
+                        background-color: #007bff;
+                        color: white;
+                        text-decoration: none;
+                    }
+
+                    .pagination-controls a:hover {
+                        background-color: #0056b3;
+                    }
+
+                    .pagination-controls button {
+                        background-color: #ccc;
+                        color: #fff;
+                        cursor: not-allowed;
+                    }
+
+                    .pagination-controls span {
+                        font-weight: bold;
+                    }
+                </style>
             </div>
         </div>
         <div class="cart-section" id="cartSection">

@@ -10,12 +10,16 @@ class HistoryModel
         $this->pdo = new Database();
     }
 
-    function getHistories()
+    function getHistories($page = 1, $perPage = 25)
     {
-        $report = $this->pdo->query("SELECT * FROM reports ORDER BY id DESC");
-        return $report->fetchAll();
+        $offset = ($page - 1) * $perPage;
+        $query = "SELECT * FROM reports ORDER BY id DESC LIMIT :limit OFFSET :offset";
+        $stmt = $this->pdo->query($query, [
+            'limit' => $perPage,
+            'offset' => $offset
+        ]);
+        return $stmt->fetchAll();
     }
-
     function createHistories($data)
     {
         $this->pdo->query("INSERT INTO reports (image, product_id, product_name, quantity, price, total_price, created_at) VALUES (:image, :product_id, :product_name, :quantity, :price, :total_price, :created_at)", [
@@ -62,8 +66,9 @@ class HistoryModel
             throw $e; // Let the controller handle it
         }
     }
-    function getFilteredHistories($filter, $startDate, $endDate, $search)
+    function getFilteredHistories($filter, $startDate, $endDate, $search, $page = 1, $perPage = 25)
     {
+        $offset = ($page - 1) * $perPage;
         $query = "SELECT * FROM reports WHERE 1=1";
         $params = [];
 
@@ -96,8 +101,66 @@ class HistoryModel
                 break;
         }
 
-        $query .= " ORDER BY id DESC";
+        $query .= " ORDER BY id DESC LIMIT :limit OFFSET :offset";
+        $params['limit'] = $perPage;
+        $params['offset'] = $offset;
+
         $stmt = $this->pdo->query($query, $params);
         return $stmt->fetchAll();
+    }
+    function getTotalHistories($filter, $startDate, $endDate, $search)
+    {
+        $query = "SELECT COUNT(*) as total FROM reports WHERE 1=1";
+        $params = [];
+
+        if ($startDate && $endDate) {
+            $query .= " AND created_at BETWEEN :start_date AND :end_date";
+            $params['start_date'] = $startDate;
+            $params['end_date'] = $endDate;
+        }
+
+        if (!empty($search)) {
+            $query .= " AND product_name LIKE :search";
+            $params['search'] = "%$search%";
+        }
+
+        switch ($filter) {
+            case 'today':
+                $query .= " AND DATE(created_at) = CURDATE()";
+                break;
+            case 'this-week':
+                $query .= " AND WEEK(created_at) = WEEK(CURDATE()) AND YEAR(created_at) = YEAR(CURDATE())";
+                break;
+            case 'last-week':
+                $query .= " AND WEEK(created_at) = WEEK(CURDATE()) - 1 AND YEAR(created_at) = YEAR(CURDATE())";
+                break;
+            case 'this-month':
+                $query .= " AND MONTH(created_at) = MONTH(CURDATE()) AND YEAR(created_at) = YEAR(CURDATE())";
+                break;
+            case 'last-month':
+                $query .= " AND MONTH(created_at) = MONTH(CURDATE()) - 1 AND YEAR(created_at) = YEAR(CURDATE())";
+                break;
+        }
+
+        $stmt = $this->pdo->query($query, $params);
+        return $stmt->fetch()['total'];
+    }
+    // In Profit_LossModel
+    function getProfit_Loss($page = 1, $itemsPerPage = 25)
+    {
+        $offset = ($page - 1) * $itemsPerPage;
+        $stmt = $this->pdo->query("SELECT * FROM sales_data ORDER BY id DESC LIMIT :limit OFFSET :offset");
+        $stmt->execute([
+            'limit' => $itemsPerPage,
+            'offset' => $offset
+        ]);
+        return $stmt->fetchAll();
+    }
+
+    // Add this to get total count
+    function getProfit_Loss_Count()
+    {
+        $stmt = $this->pdo->query("SELECT COUNT(*) FROM sales_data");
+        return $stmt->fetchColumn();
     }
 }

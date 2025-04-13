@@ -1,5 +1,6 @@
 <?php
 require_once './Databases/database.php';
+
 class InventoryModel
 {
     private $pdo;
@@ -13,7 +14,7 @@ class InventoryModel
     {
         return $this->pdo->getConnection();
     }
-    // Get all inventory items
+
     function getInventory()
     {
         try {
@@ -35,7 +36,6 @@ class InventoryModel
         return $inventory->fetchAll();
     }
 
-    // In InventoryModel.php
     function getInventoryWithCategory()
     {
         $query = "
@@ -78,7 +78,7 @@ class InventoryModel
         $stmt->bindParam(':category_name', $data['category_name']);
         $stmt->bindParam(':expiration_date', $data['expiration_date']);
         $stmt->bindParam(':total_price', $data['total_price']);
-        $stmt->bindParam(':image', $data['image']); // Optional, only if image is provided
+        $stmt->bindParam(':image', $data['image']);
         $stmt->execute();
     }
 
@@ -90,27 +90,28 @@ class InventoryModel
             'category_id' => null,
             'quantity' => 0,
             'amount' => 0,
+            'selling_price' => 0,
             'category_name' => '',
             'expiration_date' => null,
             'total_price' => 0
         ];
         $data = array_merge($defaults, $data);
-
-
+    
         try {
             $stmt = $this->pdo->getConnection()->prepare("
-                INSERT INTO inventory (image, product_name, category_id, quantity, amount, category_name, expiration_date, total_price)
-                VALUES (:image, :product_name, :category_id, :quantity, :amount, :category_name, :expiration_date, :total_price)
+                INSERT INTO inventory (image, product_name, category_id, quantity, amount, selling_price, category_name, expiration_date, total_price)
+                VALUES (:image, :product_name, :category_id, :quantity, :amount, :selling_price, :category_name, :expiration_date, :total_price)
             ");
-            $stmt->bindParam(':image', $data['image']); // String path
+            $stmt->bindParam(':image', $data['image']);
             $stmt->bindParam(':product_name', $data['product_name']);
             $stmt->bindParam(':category_id', $data['category_id'], PDO::PARAM_INT);
             $stmt->bindParam(':quantity', $data['quantity'], PDO::PARAM_INT);
             $stmt->bindParam(':amount', $data['amount']);
+            $stmt->bindParam(':selling_price', $data['selling_price']);
             $stmt->bindParam(':category_name', $data['category_name']);
             $stmt->bindParam(':expiration_date', $data['expiration_date']);
             $stmt->bindParam(':total_price', $data['total_price']);
-
+    
             $stmt->execute();
             return (int)$this->pdo->getConnection()->lastInsertId();
         } catch (PDOException $e) {
@@ -119,18 +120,12 @@ class InventoryModel
         }
     }
 
-
-
-    // Function to insert multiple inventory items at once
     public function createMultipleInventory($items)
     {
         try {
-            $this->pdo->beginTransaction(); // Start the transaction
-
+            $this->pdo->beginTransaction();
             $stmt = $this->pdo->query("INSERT INTO inventory (image, product_name, quantity, amount, category_id, category_name, expiration_date) 
                                          VALUES (:image, :product_name, :quantity, :amount, :category_id, :category_name, :expiration_date)");
-
-            // Loop through each item and execute the prepared statement
             foreach ($items as $item) {
                 $stmt->execute([
                     ':image' => $item['image'],
@@ -142,19 +137,15 @@ class InventoryModel
                     ':expiration_date' => $item['expiration_date']
                 ]);
             }
-
-            $this->pdo->commit(); // Commit the transaction
-            return true; // Return true if everything went well
+            $this->pdo->commit();
+            return true;
         } catch (Exception $e) {
-            $this->pdo->rollBack(); // Rollback the transaction if there's an error
-            echo "Error: " . $e->getMessage(); // Show error message
-            return false; // Return false if there was an error
+            $this->pdo->rollBack();
+            echo "Error: " . $e->getMessage();
+            return false;
         }
     }
 
-
-
-    // Get product by name and category from the inventory table
     public function getProductByName($productName, $categoryId)
     {
         $stmt = $this->pdo->query("SELECT * FROM inventory WHERE product_name = :product_name AND category_id = :category_id");
@@ -171,12 +162,10 @@ class InventoryModel
             $params[':amount'] = $amount;
         }
         $sql .= " WHERE id = :id";
-
-
         $stmt = $this->pdo->getConnection()->prepare($sql);
         $stmt->execute($params);
     }
-    // Insert a new product into the inventory table if it's not already there
+
     public function addNewProductToInventory($productName, $categoryId, $quantity, $amount, $type)
     {
         $stmt = $this->pdo->query("INSERT INTO inventory (product_name, category_id, quantity, amount, type) VALUES (:product_name, :category_id, :quantity, :amount, :type)");
@@ -189,7 +178,6 @@ class InventoryModel
         ]);
     }
 
-
     private function executeQuery($query, $params)
     {
         try {
@@ -197,12 +185,11 @@ class InventoryModel
             $stmt->execute($params);
             return $stmt;
         } catch (Exception $e) {
-            echo "Error executing query: " . $e->getMessage(); // 👈 Add this
-            echo "<br>Query: " . $query; // 👈 Add this
+            echo "Error executing query: " . $e->getMessage();
+            echo "<br>Query: " . $query;
             return null;
         }
     }
-
 
     public function insertProductsFromInventory()
     {
@@ -217,32 +204,26 @@ class InventoryModel
         FROM inventory i
         JOIN categories c ON i.category_name = c.name;
     ";
-
         $stmt = $this->executeQuery($query, []);
         return $stmt ? $stmt->rowCount() : 0;
     }
 
-    // Edit a category name
     public function updateCategory($categoryId, $newCategoryName)
     {
         $sql = "UPDATE categories SET name = :new_category_name WHERE id = :category_id";
-
         $params = [
             ':new_category_name' => $newCategoryName,
             ':category_id' => $categoryId
         ];
-
         $this->pdo->query($sql, $params);
     }
 
-    // Get a single inventory item by ID
     function getInventorys($id)
     {
         $stmt = $this->pdo->query("SELECT * FROM inventory WHERE id = :id", ['id' => $id]);
         return $stmt->fetch();
     }
 
-    // ✅ New function to fetch an inventory item with category name
     function viewInventory($id)
     {
         $stmt = $this->pdo->query("
@@ -251,8 +232,7 @@ class InventoryModel
             LEFT JOIN categories ON inventory.category_id = categories.id 
             WHERE inventory.id = :id
         ", ['id' => $id]);
-
-        return $stmt->fetch(); // Fetch only one row
+        return $stmt->fetch();
     }
 
     public function updateInventory($id, $data)
@@ -265,6 +245,7 @@ class InventoryModel
                     category_name = :category_name,
                     quantity = :quantity,
                     amount = :amount,
+                    selling_price = :selling_price,
                     total_price = :total_price,
                     expiration_date = :expiration_date,
                     image = :image
@@ -276,9 +257,10 @@ class InventoryModel
                 ':category_name' => $data['category_name'],
                 ':quantity' => $data['quantity'],
                 ':amount' => $data['amount'],
+                ':selling_price' => $data['selling_price'],
                 ':total_price' => $data['total_price'],
                 ':expiration_date' => $data['expiration_date'],
-                ':image' => $data['image'], // This should save the correct path
+                ':image' => $data['image'],
                 ':id' => $id
             ]);
             return true;
@@ -288,28 +270,22 @@ class InventoryModel
         }
     }
 
-
-    // Get a category by its ID
     public function getCategoryById($categoryId)
     {
         $stmt = $this->pdo->query("SELECT * FROM categories WHERE id = :category_id", ['category_id' => $categoryId]);
-        return $stmt->fetch(); // Fetch the category
+        return $stmt->fetch();
     }
-
 
     public function deleteItem($id)
     {
         try {
-            // Ensure that the ID is numeric
             if (is_numeric($id)) {
-                // Use query() method directly without query
-                $sql = "DELETE FROM inventory WHERE id = $id"; // Use the ID directly in the SQL
-                $this->pdo->query($sql);  // Execute the query
+                $sql = "DELETE FROM inventory WHERE id = $id";
+                $this->pdo->query($sql);
             } else {
-                throw new Exception("Invalid ID"); // Throw error if ID is not valid
+                throw new Exception("Invalid ID");
             }
         } catch (Exception $e) {
-            // Handle the error if it occurs
             echo "Error deleting item: " . $e->getMessage();
         }
     }
@@ -323,21 +299,32 @@ class InventoryModel
         ]);
         return $stmt->fetch();
     }
+
     public function addToInventory($data)
     {
-        $stmt = $this->getConnection()->prepare(
-            "INSERT INTO inventory (product_name, category_id, quantity, image) 
-             VALUES (:product_name, :category_id, :quantity, :image)"
-        );
-        return $stmt->execute([
-            ':product_name' => $data['product_name'],
-            ':category_id' => $data['category_id'],
-            ':quantity' => $data['quantity'],
-            ':image' => $data['image']
-        ]);
+        $sql = "INSERT INTO inventory (product_name, category_id, category_name, quantity, image, barcode, amount, selling_price, total_price, expiration_date) 
+                VALUES (:product_name, :category_id, :category_name, :quantity, :image, :barcode, :amount, :selling_price, :total_price, :expiration_date)";
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+            $success = $stmt->execute([
+                ':product_name' => $data['product_name'],
+                ':category_id' => $data['category_id'],
+                ':category_name' => $data['category_name'],
+                ':quantity' => $data['quantity'],
+                ':image' => $data['image'] ?? null,
+                ':barcode' => $data['barcode'] ?? null,
+                ':amount' => 0,
+                ':selling_price' => 0,
+                ':total_price' => 0,
+                ':expiration_date' => null
+            ]);
+            error_log("addToInventory: product_name = {$data['product_name']}, barcode = " . ($data['barcode'] ?? 'null') . ", success = " . ($success ? 'yes' : 'no'));
+            return $success;
+        } catch (Exception $e) {
+            error_log("addToInventory error: " . $e->getMessage());
+            throw new Exception('Error adding to inventory: ' . $e->getMessage());
+        }
     }
-
-
 
     public function getProductById($id)
     {
@@ -347,10 +334,8 @@ class InventoryModel
                                     WHERE p.id = :id");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-
 
     public function getPurchaseByProductId($productId)
     {

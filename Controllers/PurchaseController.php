@@ -1,235 +1,282 @@
 <?php
-    require_once 'Models/PurchaseModel.php';
-    require_once 'Models/InventoryModel.php';
-    require_once 'BaseController.php';
-    require_once './Models/CategoryModel.php';
+require_once 'Models/PurchaseModel.php';
+require_once 'Models/InventoryModel.php';
+require_once 'BaseController.php';
+require_once './Models/CategoryModel.php';
 
-    class PurchaseController extends BaseController
+class PurchaseController extends BaseController
+{
+    private $model;
+    private $categoryModel;
+    private $inventoryModel;
+
+    public function __construct()
     {
-        private $model;
-        private $categoryModel;
-        private $inventoryModel;
+        $this->model = new PurchaseModel();
+        $this->categoryModel = new CategoryModel();
+        $this->inventoryModel = new InventoryModel();
+    }
 
-        public function __construct()
-        {
-            $this->model = new PurchaseModel();
-            $this->categoryModel = new CategoryModel();
-            $this->inventoryModel = new InventoryModel();
-        }
+    public function index()
+    {
+        $purchases = $this->model->getPurchases();
+        $this->views('purchase/list', ['purchases' => $purchases]);
+    }
 
-        // Show all purchases
-        public function index()
-        {
-            $purchases = $this->model->getPurchases();
-            $this->views('purchase/list', ['purchases' => $purchases]);
-        }
+    public function create()
+    {
+        $categories = $this->categoryModel->getCategory();
+        $inventoryItems = $this->inventoryModel->getInventoryWithCategory();
+        $this->views('purchase/create', [
+            'categories' => $categories,
+            'inventoryItems' => $inventoryItems
+        ]);
+    }
 
-        // Show the form to create a new purchase
-        public function create()
-        {
-            $categories = $this->categoryModel->getCategory();
-            $inventoryItems = $this->inventoryModel->getInventoryWithCategory();
+    public function store()
+    {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new Exception('Invalid request method.');
+            }
 
-            $this->views('purchase/create', [
-                'categories' => $categories,
-                'inventoryItems' => $inventoryItems
-            ]);
-        }
+            $products = $this->processProductData();
+            if (empty($products)) {
+                throw new Exception('No valid products to insert.');
+            }
 
-        // Store new purchases
-        public function store()
-        {
+            // Start transaction
+            $this->model->startTransaction();
+
+            // Insert into purchase table
+            if (!$this->model->insertProducts($products)) {
+                throw new Exception('Failed to insert products into purchase table.');
+            }
+            error_log("Successfully inserted products into purchase table.");
+
+            // Update inventory for each product
+            foreach ($products as $index => $product) {
+                error_log("Processing product {$index}: product_name = {$product['product_name']}, barcode = " . ($product['barcode'] ?: 'empty'));
+                $this->updateInventory($product);
+            }
+
+            // Commit transaction
+            $this->model->commitTransaction();
+            error_log("Transaction committed successfully.");
+            $this->redirect('/purchase', 'Products successfully added and inventory updated.');
+        } catch (Exception $e) {
+            // Attempt rollback safely
             try {
-                if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-                    throw new Exception('Invalid request method.');
+                $connection = $this->model->getConnection();
+                if ($connection instanceof PDO && $connection->inTransaction()) {
+                    $this->model->rollBackTransaction();
+                    error_log("Transaction rolled back due to error.");
                 }
-
-                $products = $this->processProductData();
-                if (empty($products)) {
-                    throw new Exception('No valid products to insert');
-                }
-
-                // Start transaction
-                $this->model->startTransaction();
-
-                // Insert products into purchase table
-                $this->model->insertProducts($products);
-
-                // Update inventory for each product
-                foreach ($products as $product) {
-                    $this->updateInventory($product);
-                }
-
-                // Commit transaction
-                $this->model->commitTransaction();
-                $this->redirect('/purchase', 'Products successfully added and inventory updated.');
-            } catch (Exception $e) {
-                // Roll back only if transaction is active
-
-                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            } catch (Exception $rollbackError) {
+                error_log("Rollback error: " . $rollbackError->getMessage());
             }
-        }
-
-        // Helper method to update inventory
-        private function updateInventory($product)
-        {
-            // Check if the product already exists in inventory
-            $existingItem = $this->inventoryModel->getInventoryItemByProduct($product['product_name'], $product['category_id']);
-
-            if ($existingItem) {
-                // Update existing inventory (e.g., increment quantity)
-                $newQuantity = $existingItem['quantity'] + 1; // Assuming 1 unit per purchase; adjust as needed
-                $this->inventoryModel->updateInventory($existingItem['id'], [
-                    'quantity' => $newQuantity
-                ]);
-            } else {
-                // Add new item to inventory
-                $this->inventoryModel->addToInventory([
-                    'product_name' => $product['product_name'],
-                    'category_id' => $product['category_id'],
-                    'quantity' => 0, // Default quantity; adjust as needed
-                    'image' => $product['image'] ?? null
-                ]);
-            }
-        }
-
-        // Process and validate product data
-        private function processProductData()
-        {
-            $products = [];
-            foreach ($_POST['product_name'] as $key => $productName) {
-                $categoryId = $_POST['category_id'][$key];
-                $categoryName = $this->getCategoryNameById($categoryId);
-
-                if (!$categoryName) {
-                    echo json_encode(['success' => false, 'message' => "Category with ID $categoryId not found"]);
-                    return [];
-                }
-
-                $productName = htmlspecialchars(trim($productName)); // Sanitize product name
-                $image = $this->handleImageUpload($key); // Handle image upload
-
-                $products[] = [
-                    'product_name' => $productName,
-                    'category_id' => $categoryId,
-                    'category_name' => $categoryName,
-                    'image' => $image
-                ];
-            }
-
-            return $products;
-        }
-
-        // Fetch category name by ID
-        private function getCategoryNameById($categoryId)
-        {
-            $category = $this->categoryModel->getCategoryById($categoryId);
-            return $category ? $category['name'] : null;
-        }
-
-        // Handle image upload and return the file path
-        private function handleImageUpload($key)
-        {
-            if (isset($_FILES['image']['tmp_name'][$key]) && $_FILES['image']['error'][$key] == UPLOAD_ERR_OK) {
-                $uploadDirectory = './uploads/images/'; // Define your image upload directory
-                if (!is_dir($uploadDirectory)) {
-                    mkdir($uploadDirectory, 0755, true); // Create the directory if it doesn't exist
-                }
-
-                $fileName = uniqid('image_') . '.' . pathinfo($_FILES['image']['name'][$key], PATHINFO_EXTENSION);
-                $filePath = $uploadDirectory . $fileName;
-
-                // Move the uploaded file to the desired directory
-                if (move_uploaded_file($_FILES['image']['tmp_name'][$key], $filePath)) {
-                    return $filePath; // Store the file path in the database
-                }
-            }
-            return null; // Return null if no image uploaded
-        }
-
-
-        public function edit($id) {
-            $purchase = $this->model->getPurchase($id);
-            if (!$purchase) {
-                $this->redirect('/purchase', 'Purchase not found.');
-                return;
-            }
-            $categories = $this->categoryModel->getCategory();
-            $this->views('purchase/edit', ['purchase' => $purchase, 'categories' => $categories]);
-        }
-
-        public function update($id) {
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                $this->redirect("/purchase/edit/$id", 'Invalid request method.');
-                return;
-            }
-            $purchase = $this->model->getPurchase($id);
-            if (!$purchase) {
-                $this->redirect('/purchase', 'Purchase not found.');
-                return;
-            }
-            $data = $this->preparePurchaseData();
-            if (isset($data['image'])) {
-                $this->model->updatePurchase($id, $data);
-            } else {
-                unset($data['image']);
-                $this->model->updatePurchase($id, $data);
-            }
-            $this->redirect('/purchase', 'Purchase updated successfully!');
-        }
-
-
-        // Prepare data for updating purchase (including image)
-        private function preparePurchaseData()
-        {
-            $data = [
-                'product_name' => htmlspecialchars($_POST['product_name']),
-                'category_id' => intval($_POST['category_id']),
-            ];
-
-            // Only set image if uploaded
-            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $data['image'] = file_get_contents($_FILES['image']['tmp_name']);
-            }
-
-            return $data;
-        }
-
-        public function destroy($id) {
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                $this->redirect('/purchase', 'Invalid request method.');
-                return;
-            }
-            if ($this->model->deletePurchase($id)) {
-                $this->redirect('/purchase', 'Purchase deleted successfully!');
-            } else {
-                $this->redirect('/purchase', 'Failed to delete purchase.');
-            }
-        }
-        // Bulk delete purchases
-        public function bulkDestroy()
-        {
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                echo json_encode(['success' => false, 'message' => 'Invalid request method']);
-                return;
-            }
-
-            $input = json_decode(file_get_contents('php://input'), true);
-            $ids = $input['ids'] ?? [];
-
-            if (empty($ids)) {
-                echo json_encode(['success' => false, 'message' => 'No items selected']);
-                return;
-            }
-
-            try {
-                $this->model->startTransaction();
-                $this->model->bulkDelete($ids);
-                $this->model->commitTransaction();
-                echo json_encode(['success' => true]);
-            } catch (Exception $e) {
-                $this->model->rollBackTransaction();
-                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
-            }
+            // Log the main error
+            error_log("Store error: " . $e->getMessage());
+            // Return user-friendly error
+            echo json_encode(['success' => false, 'message' => 'Failed to add products: ' . $e->getMessage()]);
         }
     }
+
+    private function updateInventory($product)
+    {
+        try {
+            $existingItem = $this->inventoryModel->getInventoryItemByProduct($product['product_name'], $product['category_id']);
+            error_log("Checked inventory for product_name = {$product['product_name']}, category_id = {$product['category_id']}, exists = " . ($existingItem ? 'yes' : 'no'));
+
+            if ($existingItem) {
+                $newQuantity = $existingItem['quantity'] + 0;
+                $barcode = $product['barcode'] !== '' ? $product['barcode'] : ($existingItem['barcode'] ?? null);
+                error_log("Updating inventory ID {$existingItem['id']}: quantity = {$newQuantity}, barcode = " . ($barcode ?: 'empty'));
+                $result = $this->inventoryModel->updateInventory($existingItem['id'], [
+                    'quantity' => $newQuantity,
+                    'barcode' => $barcode
+                ]);
+                if (!$result) {
+                    throw new Exception("Failed to update inventory for ID {$existingItem['id']}.");
+                }
+                error_log("Updated inventory ID {$existingItem['id']} successfully.");
+            } else {
+                $barcode = $product['barcode'] !== '' ? $product['barcode'] : null;
+                error_log("Adding to inventory: product_name = {$product['product_name']}, barcode = " . ($barcode ?: 'empty'));
+                $result = $this->inventoryModel->addToInventory([
+                    'product_name' => $product['product_name'],
+                    'category_id' => $product['category_id'],
+                    'category_name' => $product['category_name'],
+                    'quantity' => 0,
+                    'image' => $product['image'] ?? null,
+                    'barcode' => $barcode
+                ]);
+                if (!$result) {
+                    throw new Exception("Failed to add product {$product['product_name']} to inventory.");
+                }
+                error_log("Added product {$product['product_name']} to inventory successfully.");
+            }
+        } catch (Exception $e) {
+            error_log("Inventory update error for product {$product['product_name']}: " . $e->getMessage());
+            throw new Exception("Inventory error for {$product['product_name']}: " . $e->getMessage());
+        }
+    }
+
+    private function processProductData()
+    {
+        $products = [];
+        if (!isset($_POST['product_name']) || !is_array($_POST['product_name'])) {
+            error_log("No product data provided in POST.");
+            echo json_encode(['success' => false, 'message' => 'No product data provided.']);
+            return [];
+        }
+
+        foreach ($_POST['product_name'] as $key => $productName) {
+            $categoryId = $_POST['category_id'][$key] ?? null;
+            $categoryName = $this->getCategoryNameById($categoryId);
+
+            if (!$categoryName) {
+                error_log("Category with ID $categoryId not found.");
+                echo json_encode(['success' => false, 'message' => "Category with ID $categoryId not found."]);
+                return [];
+            }
+
+            $productName = htmlspecialchars(trim($productName));
+            if (empty($productName)) {
+                error_log("Product name is empty at index $key.");
+                echo json_encode(['success' => false, 'message' => 'Product name is required.']);
+                return [];
+            }
+
+            $barcode = isset($_POST['barcode'][$key]) ? htmlspecialchars(trim($_POST['barcode'][$key])) : '';
+            error_log("Received barcode for product {$productName}: " . ($barcode ?: 'empty'));
+
+            $image = $this->handleImageUpload($key);
+
+            $products[] = [
+                'product_name' => $productName,
+                'category_id' => $categoryId,
+                'category_name' => $categoryName,
+                'image' => $image,
+                'barcode' => $barcode
+            ];
+        }
+        error_log("Processed " . count($products) . " products successfully.");
+        return $products;
+    }
+
+    private function getCategoryNameById($categoryId)
+    {
+        $category = $this->categoryModel->getCategoryById($categoryId);
+        return $category ? $category['name'] : null;
+    }
+
+    private function handleImageUpload($key)
+    {
+        if (isset($_FILES['image']['tmp_name'][$key]) && $_FILES['image']['error'][$key] == UPLOAD_ERR_OK) {
+            $uploadDirectory = './Uploads/images/';
+            if (!is_dir($uploadDirectory)) {
+                mkdir($uploadDirectory, 0755, true);
+            }
+
+            $fileName = uniqid('image_') . '.' . pathinfo($_FILES['image']['name'][$key], PATHINFO_EXTENSION);
+            $filePath = $uploadDirectory . $fileName;
+
+            if (move_uploaded_file($_FILES['image']['tmp_name'][$key], $filePath)) {
+                error_log("Uploaded image for product at index $key to $filePath.");
+                return $filePath;
+            }
+            error_log("Failed to upload image at index $key.");
+        }
+        return null;
+    }
+
+    public function edit($id)
+    {
+        $purchase = $this->model->getPurchase($id);
+        if (!$purchase) {
+            $this->redirect('/purchase', 'Purchase not found.');
+            return;
+        }
+        $categories = $this->categoryModel->getCategory();
+        $this->views('purchase/edit', ['purchase' => $purchase, 'categories' => $categories]);
+    }
+
+    public function update($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect("/purchase/edit/$id", 'Invalid request method.');
+            return;
+        }
+        $purchase = $this->model->getPurchase($id);
+        if (!$purchase) {
+            $this->redirect('/purchase', 'Purchase not found.');
+            return;
+        }
+        $data = $this->preparePurchaseData();
+        $this->model->updatePurchase($id, $data);
+        $this->redirect('/purchase', 'Purchase updated successfully.');
+    }
+
+    private function preparePurchaseData()
+    {
+        $data = [
+            'product_name' => htmlspecialchars(trim($_POST['product_name'])),
+            'category_id' => intval($_POST['category_id']),
+            'barcode' => htmlspecialchars(trim($_POST['barcode'] ?? ''))
+        ];
+
+        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            $uploadDirectory = './Uploads/images/';
+            if (!is_dir($uploadDirectory)) {
+                mkdir($uploadDirectory, 0755, true);
+            }
+            $fileName = uniqid('image_') . '.' . pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+            $filePath = $uploadDirectory . $fileName;
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $filePath)) {
+                $data['image'] = $filePath;
+            }
+        }
+
+        return $data;
+    }
+
+    public function destroy($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect('/purchase', 'Invalid request method.');
+            return;
+        }
+        if ($this->model->deletePurchase($id)) {
+            $this->redirect('/purchase', 'Purchase deleted successfully.');
+        } else {
+            $this->redirect('/purchase', 'Failed to delete purchase.');
+        }
+    }
+
+    public function bulkDestroy()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
+            return;
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true);
+        $ids = $input['ids'] ?? [];
+
+        if (empty($ids)) {
+            echo json_encode(['success' => false, 'message' => 'No items selected.']);
+            return;
+        }
+
+        try {
+            $this->model->startTransaction();
+            $this->model->bulkDelete($ids);
+            $this->model->commitTransaction();
+            echo json_encode(['success' => true]);
+        } catch (Exception $e) {
+            $this->model->rollBackTransaction();
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+}

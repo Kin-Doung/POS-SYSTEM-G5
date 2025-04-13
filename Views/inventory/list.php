@@ -1,20 +1,19 @@
 <?php require_once './views/layouts/header.php' ?>
 <?php require_once './views/layouts/side.php' ?>
-<?php require_once './views/layouts/nav.php' ?>
 
 <style>
-    .main-content{
+    .main-content {
         margin-left: 270px;
     }
-    .navbar{
-        margin-left: 250px;
-    }
-    .purchase-head{
+
+    .purchase-head {
         font-family: "Poppins", sans-serif;
     }
 </style>
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <!-- Navbar -->
+    <?php require_once './views/layouts/nav.php' ?>
+
     <!-- End Navbar -->
 
     <div class="table-inventory me-4">

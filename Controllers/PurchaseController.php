@@ -89,12 +89,14 @@ class PurchaseController extends BaseController
             error_log("Checked inventory for product_name = {$product['product_name']}, category_id = {$product['category_id']}, exists = " . ($existingItem ? 'yes' : 'no'));
 
             if ($existingItem) {
-                $newQuantity = $existingItem['quantity'] + 0;
+                $newQuantity = $existingItem['quantity'] + ($product['quantity'] ?? 0); // Increment quantity, default to 1 if not provided
                 $barcode = $product['barcode'] !== '' ? $product['barcode'] : ($existingItem['barcode'] ?? null);
-                error_log("Updating inventory ID {$existingItem['id']}: quantity = {$newQuantity}, barcode = " . ($barcode ?: 'empty'));
+                $image = $product['image'] ?? $existingItem['image']; // Use new image if provided, else keep existing
+                error_log("Updating inventory ID {$existingItem['id']}: quantity = {$newQuantity}, barcode = " . ($barcode ?: 'empty') . ", image = " . ($image ?: 'empty'));
                 $result = $this->inventoryModel->updateInventory($existingItem['id'], [
                     'quantity' => $newQuantity,
-                    'barcode' => $barcode
+                    'barcode' => $barcode,
+                    'image' => $image
                 ]);
                 if (!$result) {
                     throw new Exception("Failed to update inventory for ID {$existingItem['id']}.");
@@ -102,12 +104,12 @@ class PurchaseController extends BaseController
                 error_log("Updated inventory ID {$existingItem['id']} successfully.");
             } else {
                 $barcode = $product['barcode'] !== '' ? $product['barcode'] : null;
-                error_log("Adding to inventory: product_name = {$product['product_name']}, barcode = " . ($barcode ?: 'empty'));
+                error_log("Adding to inventory: product_name = {$product['product_name']}, barcode = " . ($barcode ?: 'empty') . ", image = " . ($product['image'] ?: 'empty'));
                 $result = $this->inventoryModel->addToInventory([
                     'product_name' => $product['product_name'],
                     'category_id' => $product['category_id'],
                     'category_name' => $product['category_name'],
-                    'quantity' => 0,
+                    'quantity' => $product['quantity'] ??0, // Default to 1 if not provided
                     'image' => $product['image'] ?? null,
                     'barcode' => $barcode
                 ]);
@@ -158,7 +160,8 @@ class PurchaseController extends BaseController
                 'category_id' => $categoryId,
                 'category_name' => $categoryName,
                 'image' => $image,
-                'barcode' => $barcode
+                'barcode' => $barcode,
+                'quantity' => isset($_POST['quantity'][$key]) ? intval($_POST['quantity'][$key]) : 0 // Include quantity
             ];
         }
         error_log("Processed " . count($products) . " products successfully.");

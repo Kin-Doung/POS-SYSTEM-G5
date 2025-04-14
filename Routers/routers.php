@@ -33,24 +33,16 @@ $routes->delete('/settings/destroy', [SettingController::class, 'destroy']);
 
 
 
-//inventory
-$routes->get('/inventory', [InventoryController::class, 'index']); // Display all inventory
-
-$routes->get('/inventory/create', [InventoryController::class, 'create']); // Show create page
-
-$routes->post('/inventory/store', [InventoryController::class, 'store']); // Store new inventory item
-
-// Edit route should accept an 'id' parameter
-$routes->get('/inventory/edit', [InventoryController::class, 'edit']); // Show edit page for a specific inventory item
-
-// Update route should also accept an 'id' parameter
-$routes->put('/inventory/update', [InventoryController::class, 'update']); // Update a specific inventory item
-
-// Delete route should accept an 'id' parameter
-// Assuming you're using some kind of routing library
-$routes->get('/inventory/delete', [InventoryController::class, 'destroy']);
-
-$routes->get('/inventory/view', [InventoryController::class, 'view']); // View an inventory item
+// Inventory
+$routes->get('/inventory', [InventoryController::class, 'index']);
+$routes->get('/inventory/getProductByBarcode', [InventoryController::class, 'getProductByBarcode']);
+$routes->get('/inventory/create', [InventoryController::class, 'create']);
+$routes->post('/inventory/store', [InventoryController::class, 'store']);
+$routes->get('/inventory/edit/(:num)', [InventoryController::class, 'edit']);
+$routes->post('/inventory/update/(:num)', [InventoryController::class, 'update']);
+$routes->post('/inventory/destroy', [InventoryController::class, 'destroy']);
+$routes->get('/inventory/view/(:num)', [InventoryController::class, 'view']);
+$routes->post('/inventory/bulkDestroy', [InventoryController::class, 'bulkDestroy']);
 
 
 // Stock tracking

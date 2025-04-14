@@ -498,8 +498,6 @@ require_once './views/layouts/side.php';
         </div>
     </div>
     <style>
-
-
         .pagination {
             display: flex;
             gap: 10px;
@@ -514,8 +512,8 @@ require_once './views/layouts/side.php';
             color: white;
             cursor: pointer;
             transition: background-color 0.3s;
-          
-          
+
+
         }
 
         .page-btn:hover {

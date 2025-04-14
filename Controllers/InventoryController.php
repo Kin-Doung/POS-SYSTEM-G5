@@ -1,4 +1,5 @@
 <?php
+ob_start(); // Catch stray output
 require_once './Models/InventoryModel.php';
 require_once './Models/CategoryModel.php';
 
@@ -9,6 +10,7 @@ class InventoryController extends BaseController
 
     public function __construct()
     {
+        ini_set('display_errors', '0');
         $this->model = new InventoryModel();
         $this->categories = new CategoryModel();
     }
@@ -16,12 +18,9 @@ class InventoryController extends BaseController
     public function index()
     {
         $inventory = $this->model->getInventory();
-        $categories = $this->model->getCategory();
+        $categories = $this->categories->getCategory();
         foreach ($inventory as &$item) {
-            if ($item['image']) {
-                $item['image_base64'] = 'data:image/jpeg;base64,' . base64_encode(file_get_contents($item['image']));
-            }
-            $item['selling_price'] = isset($item['selling_price']) ? $item['selling_price'] : 0.00;
+            $item['selling_price'] = isset($item['selling_price']) ? floatval($item['selling_price']) : 0.00;
         }
         unset($item);
         $this->views('inventory/list', compact('inventory', 'categories'));
@@ -41,92 +40,61 @@ class InventoryController extends BaseController
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             error_log("Invalid request method for store.");
-            die("Invalid request method.");
+            header('Content-Type: application/json', true, 405);
+            echo json_encode(['error' => 'Invalid request method']);
+            exit();
         }
 
-        $categoryIds = $_POST['category_id'] ?? [];
-        $productIds = $_POST['product_name'] ?? [];
+        $productIds = $_POST['product_id'] ?? [];
+        $productNames = $_POST['product_name_text'] ?? $_POST['product_name'] ?? [];
         $quantities = $_POST['quantity'] ?? [];
-        $prices = $_POST['amount'] ?? [];
+        $amounts = $_POST['amount'] ?? [];
         $sellingPrices = $_POST['selling_price'] ?? [];
+        $barcodes = $_POST['barcode'] ?? [];
+        $categoryIds = $_POST['category_id'] ?? [];
+        $categoryNames = $_POST['category_name'] ?? [];
+        $expirationDates = $_POST['expiration_date'] ?? [];
+        $images = $_FILES['image'] ?? [];
 
-        if (empty($productIds) || count($productIds) !== count($quantities)) {
-            error_log("Invalid form data: " . print_r($_POST, true));
-            die("Error: Please fill all required fields.");
-        }
+        $errors = [];
+        $successIds = [];
 
-        foreach ($productIds as $index => $productId) {
-            if (empty($productId) || !is_numeric($productId)) {
-                error_log("Invalid product_id at index $index: " . ($productId ?? 'null'));
-                continue;
-            }
-            $quantity = isset($quantities[$index]) ? (int)$quantities[$index] : 0;
-            if ($quantity <= 0) {
-                error_log("Invalid quantity at index $index: $quantity");
-                continue;
-            }
-
-            $categoryId = $categoryIds[$index] ?? null;
-            $amount = isset($prices[$index]) ? (float)$prices[$index] : 0.00;
-            $sellingPrice = isset($sellingPrices[$index]) ? (float)$sellingPrices[$index] : 0.00;
-
-            $category = $this->categories->getCategoryById($categoryId);
-            if (!$category) {
-                error_log("Invalid category_id at index $index: " . ($categoryId ?? 'null'));
+        foreach ($productNames as $index => $productName) {
+            if (empty($productName) && empty($productIds[$index])) {
+                $errors[] = "Product name or ID missing at index $index";
                 continue;
             }
 
             $imagePath = $this->handleImageUpload($index);
-
-            $existingInventory = $this->model->getInventoryById($productId);
-            if ($existingInventory === false) {
-                error_log("Failed to fetch inventory for product_id $productId");
-                continue;
-            }
-
-            if ($existingInventory) {
-                $newQuantity = $existingInventory['quantity'] + $quantity;
-                $data = [
-                    'product_name' => $existingInventory['product_name'],
-                    'category_id' => $categoryId,
-                    'category_name' => $category['name'],
-                    'quantity' => $newQuantity,
-                    'amount' => $amount,
-                    'selling_price' => $sellingPrice,
-                    'total_price' => $this->calculateTotalPrice($newQuantity, $amount),
-                    'expiration_date' => $existingInventory['expiration_date'] ?? null,
-                    'image' => $imagePath ?: $existingInventory['image'],
-                ];
-                if ($this->model->updateInventory($productId, $data)) {
-                    error_log("Updated product_id $productId: new quantity = $newQuantity");
-                } else {
-                    error_log("Failed to update product_id $productId");
-                }
+            $quantity = isset($quantities[$index]) ? (int)$quantities[$index] : 0;
+            $amount = isset($amounts[$index]) ? (float)$amounts[$index] : 0;
+            $data = [
+                'image' => $imagePath,
+                'product_id' => $productIds[$index] ?? null,
+                'product_name' => $productName,
+                'quantity' => $quantity,
+                'amount' => $amount,
+                'selling_price' => isset($sellingPrices[$index]) ? (float)$sellingPrices[$index] : 0,
+                'total_price' => $quantity * $amount,
+                'category_id' => $categoryIds[$index] ?? null,
+                'category_name' => $categoryNames[$index] ?? null,
+                'barcode' => $barcodes[$index] ?? null,
+                'expiration_date' => $expirationDates[$index] ?? null
+            ];
+            $result = $this->model->store($data);
+            if (isset($result['error'])) {
+                $errors[] = "Failed to update stock for $productName: {$result['error']}";
             } else {
-                $inventory = $this->model->getInventory();
-                $product = array_filter($inventory, fn($p) => $p['id'] == $productId);
-                $productName = $product ? reset($product)['product_name'] : 'Unknown Product';
-
-                $data = [
-                    'product_name' => $productName,
-                    'category_id' => $categoryId,
-                    'category_name' => $category['name'],
-                    'quantity' => $quantity,
-                    'amount' => $amount,
-                    'selling_price' => $sellingPrice,
-                    'total_price' => $this->calculateTotalPrice($quantity, $amount),
-                    'expiration_date' => null,
-                    'image' => $imagePath,
-                ];
-                try {
-                    $newId = $this->model->createInventory($data);
-                    error_log("Created new product: id = $newId, name = $productName");
-                } catch (Exception $e) {
-                    error_log("Failed to create product at index $index: " . $e->getMessage());
-                }
+                $successIds[] = $result['id'];
+                error_log("Updated stock for $productName (ID: {$result['id']}), added quantity: $quantity");
             }
         }
 
+        if (empty($errors)) {
+            $_SESSION['success'] = "Items added/updated successfully.";
+        } else {
+            $_SESSION['error'] = implode(", ", $errors);
+        }
         $this->redirect('/inventory');
     }
 
@@ -136,77 +104,213 @@ class InventoryController extends BaseController
         $categories = $this->categories->getCategory();
         if (!$inventory) {
             error_log("Inventory item not found for edit: id = $id");
-            die("Inventory item not found.");
+            $_SESSION['error'] = "Inventory item not found.";
+            $this->redirect('/inventory');
         }
+        $inventory['selling_price'] = isset($inventory['selling_price']) ? floatval($inventory['selling_price']) : 0.00;
+        $inventory['amount'] = isset($inventory['amount']) ? floatval($inventory['amount']) : 0.00;
         $this->views('inventory/edit', compact('inventory', 'categories'));
     }
-
-    public function update($id)
+    public function update()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Detect AJAX request
+        $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+
+        error_log("Entering update: isAjax=$isAjax");
+
+        // Clear output buffer to prevent stray output
+        ob_clean();
+
+        // Set JSON header early
+        header('Content-Type: application/json', true);
+
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                error_log("Invalid request method for update: " . $_SERVER['REQUEST_METHOD']);
+                http_response_code(405);
+                echo json_encode(['error' => 'Invalid request method.']);
+                exit;
+            }
+
+            error_log("Update POST: " . print_r($_POST, true));
+            error_log("Update FILES: " . print_r($_FILES, true));
+            error_log("Session CSRF Token: " . ($_SESSION['csrf_token'] ?? 'none'));
+            error_log("Received CSRF Token: " . ($_POST['_token'] ?? 'none'));
+
+            $id = $_POST['id'] ?? null;
+            if (!$id || !is_numeric($id)) {
+                error_log("Invalid or missing ID for update: " . ($id ?? 'null'));
+                http_response_code(400);
+                echo json_encode(['error' => 'Invalid item ID.']);
+                exit;
+            }
+
+            if (!isset($_POST['_token']) || $_POST['_token'] !== ($_SESSION['csrf_token'] ?? '')) {
+                error_log("CSRF token validation failed for update id $id");
+                http_response_code(403);
+                echo json_encode(['error' => 'Invalid CSRF token.']);
+                exit;
+            }
+
             $inventory = $this->model->getInventoryById($id);
             if (!$inventory) {
                 error_log("Inventory item not found for update: id = $id");
-                die("Inventory item not found.");
+                http_response_code(404);
+                echo json_encode(['error' => 'Inventory item not found.']);
+                exit;
             }
-            $imagePath = $this->handleImageUpload(null, $inventory['image']);
+
+            $productName = trim($_POST['product_name'] ?? '');
+            if (empty($productName)) {
+                error_log("Product name is empty for update id $id");
+                http_response_code(400);
+                echo json_encode(['error' => 'Product name is required.']);
+                exit;
+            }
 
             $categoryId = $_POST['category_id'] ?? null;
-            $category = $this->categories->getCategoryById($categoryId);
-            if (!$category) {
+            $category = $categoryId ? $this->categories->getCategoryById($categoryId) : null;
+            if ($categoryId && !$category) {
                 error_log("Invalid category_id for update: " . ($categoryId ?? 'null'));
-                die("Invalid category selected.");
+                http_response_code(400);
+                echo json_encode(['error' => 'Invalid category selected.']);
+                exit;
             }
+            if (!$categoryId) {
+                error_log("Category ID is required for update id $id");
+                http_response_code(400);
+                echo json_encode(['error' => 'Category is required.']);
+                exit;
+            }
+
+            $quantity = isset($_POST['quantity']) ? (int)$_POST['quantity'] : $inventory['quantity'];
+            if ($quantity < 0) {
+                error_log("Invalid quantity for update id $id: $quantity");
+                http_response_code(400);
+                echo json_encode(['error' => 'Quantity cannot be negative.']);
+                exit;
+            }
+
+            $amount = isset($_POST['amount']) ? (float)$_POST['amount'] : $inventory['amount'];
+            if ($amount < 0) {
+                error_log("Invalid amount for update id $id: $amount");
+                http_response_code(400);
+                echo json_encode(['error' => 'Amount cannot be negative.']);
+                exit;
+            }
+
+            $sellingPrice = isset($_POST['selling_price']) ? (float)$_POST['selling_price'] : $inventory['selling_price'];
+            if ($sellingPrice < 0) {
+                error_log("Invalid selling price for update id $id: $sellingPrice");
+                http_response_code(400);
+                echo json_encode(['error' => 'Selling price cannot be negative.']);
+                exit;
+            }
+
+            $imagePath = $inventory['image'];
+            if (isset($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $allowedTypes = ['image/jpeg', 'image/png'];
+                $maxSize = 2 * 1024 * 1024;
+                if (!in_array($_FILES['image']['type'], $allowedTypes)) {
+                    error_log("Invalid image type for update id $id: {$_FILES['image']['type']}");
+                    http_response_code(400);
+                    echo json_encode(['error' => 'Only JPEG or PNG images allowed.']);
+                    exit;
+                }
+                if ($_FILES['image']['size'] > $maxSize) {
+                    error_log("Image size exceeds 2MB for update id $id: {$_FILES['image']['size']}");
+                    http_response_code(400);
+                    echo json_encode(['error' => 'Image size must not exceed 2MB.']);
+                    exit;
+                }
+                $imagePath = $this->handleImageUpload(null, $inventory['image']);
+                if (!$imagePath) {
+                    error_log("Image upload failed for update id $id");
+                    http_response_code(400);
+                    echo json_encode(['error' => 'Failed to upload image.']);
+                    exit;
+                }
+            }
+            error_log("Image path: " . ($imagePath ?? 'none'));
 
             $data = [
                 'category_id' => $categoryId,
-                'category_name' => $category['name'],
-                'product_name' => $_POST['product_name'] ?? $inventory['product_name'],
-                'quantity' => isset($_POST['quantity']) ? (int)$_POST['quantity'] : $inventory['quantity'],
-                'amount' => isset($_POST['amount']) ? (float)$_POST['amount'] : $inventory['amount'],
-                'selling_price' => isset($_POST['selling_price']) ? (float)$_POST['selling_price'] : $inventory['selling_price'],
-                'total_price' => $this->calculateTotalPrice(
-                    isset($_POST['quantity']) ? $_POST['quantity'] : $inventory['quantity'],
-                    isset($_POST['amount']) ? $_POST['amount'] : $inventory['amount']
-                ),
+                'category_name' => $category['name'] ?? null,
+                'product_name' => $productName,
+                'quantity' => $quantity,
+                'amount' => $amount,
+                'selling_price' => $sellingPrice,
+                'total_price' => $this->calculateTotalPrice($quantity, $amount),
                 'expiration_date' => $_POST['expiration_date'] ?? $inventory['expiration_date'],
                 'image' => $imagePath,
+                'barcode' => $_POST['barcode'] ?? $inventory['barcode']
             ];
-            if ($this->model->updateInventory($id, $data)) {
+
+            error_log("Attempting to update inventory id=$id with data: " . json_encode($data));
+            $updateResult = $this->model->updateInventory($id, $data);
+            error_log("Update result for id=$id: " . json_encode($updateResult));
+
+            if (isset($updateResult['success']) && $updateResult['success']) {
                 error_log("Updated inventory id $id successfully.");
-            } else {
-                error_log("Failed to update inventory id $id.");
+                http_response_code(200);
+                echo json_encode(['success' => true, 'message' => 'Inventory updated successfully.']);
+                exit;
             }
-            $this->redirect('/inventory');
+
+            $errorMessage = $updateResult['error'] ?? 'Failed to update inventory. Please try again.';
+            error_log("Failed to update inventory id $id: $errorMessage");
+            http_response_code(400);
+            echo json_encode(['error' => $errorMessage]);
+            exit;
+        } catch (Exception $e) {
+            error_log("Unexpected error in update id $id: " . $e->getMessage() . " at " . $e->getFile() . ":" . $e->getLine());
+            http_response_code(500);
+            echo json_encode(['error' => 'Server error occurred. Please try again later.']);
+            exit;
         }
     }
-
     public function destroy()
     {
-        if (isset($_GET['id']) && is_numeric($_GET['id'])) {
-            $id = $_GET['id'];
-            if ($this->model->deleteItem($id)) {
-                error_log("Deleted inventory id $id successfully.");
-            } else {
-                error_log("Failed to delete inventory id $id.");
-            }
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            error_log("Invalid request method: " . $_SERVER['REQUEST_METHOD']);
+            $_SESSION['error'] = "Invalid request method.";
             $this->redirect('/inventory');
-        } else {
-            error_log("Invalid ID for destroy.");
-            die("Invalid ID");
         }
+
+        if (!isset($_POST['_token']) || $_POST['_token'] !== ($_SESSION['csrf_token'] ?? '')) {
+            error_log("CSRF token validation failed for destroy");
+            $_SESSION['error'] = "Invalid CSRF token.";
+            $this->redirect('/inventory');
+        }
+
+        $id = $_POST['id'] ?? null;
+        if (!$id || !is_numeric($id)) {
+            error_log("Invalid or missing ID: " . var_export($id, true));
+            $_SESSION['error'] = "Invalid item ID.";
+            $this->redirect('/inventory');
+        }
+
+        $result = $this->model->destroy((int)$id);
+        if (isset($result['error'])) {
+            $_SESSION['error'] = $result['error'];
+        } else {
+            $_SESSION['success'] = "Item deleted successfully.";
+        }
+        $this->redirect('/inventory');
     }
 
     public function view()
     {
         if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
             error_log("Invalid ID for view.");
-            die("Invalid ID provided.");
+            $_SESSION['error'] = "Invalid ID provided.";
+            $this->redirect('/inventory');
         }
         $inventory = $this->model->viewInventory($_GET['id']);
         if (!$inventory) {
             error_log("Inventory item not found for view: id = " . $_GET['id']);
-            die("Inventory item not found.");
+            $_SESSION['error'] = "Inventory item not found.";
+            $this->redirect('/inventory');
         }
         $this->views('inventory/view', compact('inventory'));
     }
@@ -215,12 +319,29 @@ class InventoryController extends BaseController
     {
         if (isset($_GET['id']) && is_numeric($_GET['id'])) {
             $inventory = $this->model->getInventoryById($_GET['id']);
-            header('Content-Type: application/json');
+            header('Content-Type: application/json', true, 200);
             echo json_encode($inventory ?: ['error' => 'Product not found']);
             exit();
         }
         error_log("Invalid ID for getProductDetails.");
+        header('Content-Type: application/json', true, 400);
         echo json_encode(['error' => 'Invalid ID']);
+        exit();
+    }
+
+    public function getProductByBarcode()
+    {
+        error_log("Received request for barcode: " . ($_GET['barcode'] ?? 'none'));
+        if (isset($_GET['barcode']) && !empty($_GET['barcode'])) {
+            $barcode = trim($_GET['barcode']);
+            $inventory = $this->model->getProductByBarcode($barcode);
+            header('Content-Type: application/json', true, 200);
+            echo json_encode($inventory);
+            exit();
+        }
+        error_log("Invalid barcode for getProductByBarcode.");
+        header('Content-Type: application/json', true, 400);
+        echo json_encode(['error' => 'Invalid barcode']);
         exit();
     }
 
@@ -231,29 +352,68 @@ class InventoryController extends BaseController
 
     private function handleImageUpload($index = null, $existingImage = null)
     {
+        $allowedTypes = ['image/jpeg', 'image/png'];
+        $maxSize = 2 * 1024 * 1024; // 2MB
+        $targetDir = "Uploads/";
+
+        // Ensure directory exists and is writable
+        if (!is_dir($targetDir)) {
+            if (!mkdir($targetDir, 0755, true)) {
+                error_log("Failed to create Uploads directory");
+                return $existingImage;
+            }
+        }
+        if (!is_writable($targetDir)) {
+            error_log("Uploads directory is not writable");
+            return $existingImage;
+        }
+
         if ($index !== null && isset($_FILES['image']['name'][$index]) && $_FILES['image']['error'][$index] === UPLOAD_ERR_OK) {
-            $targetDir = "Uploads/";
-            if (!is_dir($targetDir)) {
-                mkdir($targetDir, 0755, true);
+            if (!in_array($_FILES['image']['type'][$index], $allowedTypes) || $_FILES['image']['size'][$index] > $maxSize) {
+                error_log("Invalid file type or size at index $index");
+                return $existingImage;
             }
             $imagePath = $targetDir . uniqid() . '-' . basename($_FILES['image']['name'][$index]);
             if (move_uploaded_file($_FILES['image']['tmp_name'][$index], $imagePath)) {
+                if ($existingImage && file_exists($existingImage)) {
+                    unlink($existingImage);
+                }
                 return $imagePath;
             } else {
                 error_log("Failed to move uploaded file to $imagePath");
             }
         } elseif ($index === null && isset($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-            $targetDir = "Uploads/";
-            if (!is_dir($targetDir)) {
-                mkdir($targetDir, 0755, true);
+            if (!in_array($_FILES['image']['type'], $allowedTypes) || $_FILES['image']['size'] > $maxSize) {
+                error_log("Invalid file type or size for single upload");
+                return $existingImage;
             }
             $imagePath = $targetDir . uniqid() . '-' . basename($_FILES['image']['name']);
             if (move_uploaded_file($_FILES['image']['tmp_name'], $imagePath)) {
+                if ($existingImage && file_exists($existingImage)) {
+                    unlink($existingImage);
+                }
                 return $imagePath;
             } else {
                 error_log("Failed to move uploaded file to $imagePath");
             }
         }
         return $existingImage;
+    }
+
+    private function sendResponse($isAjax, $response, $redirectUrl, $statusCode = 200)
+    {
+        error_log("Sending response: status=$statusCode, response=" . json_encode($response));
+        if ($isAjax) {
+            header('Content-Type: application/json', true, $statusCode);
+            echo json_encode($response);
+            ob_end_flush();
+            exit();
+        }
+        if (isset($response['error'])) {
+            $_SESSION['error'] = $response['error'];
+        } elseif (isset($response['message'])) {
+            $_SESSION['success'] = $response['message'];
+        }
+        $this->redirect($redirectUrl);
     }
 }

@@ -33,6 +33,7 @@ class ProductModel
                 i.total_price,
                 i.expiration_date,
                 i.image,
+                i.barcode,
                 c.name AS category_name
             FROM inventory i
             LEFT JOIN categories c ON i.category_id = c.id
@@ -572,5 +573,73 @@ class ProductModel
             error_log("Error deleting inventory: " . $e->getMessage());
             throw $e;
         }
+    }
+
+    public function getInventoryByBarcode($barcode)
+    {
+        $query = "
+            SELECT 
+                id AS inventory_id,
+                product_name AS inventory_product_name,
+                quantity,
+                amount,
+                selling_price,
+                total_price,
+                expiration_date,
+                image,
+                barcode
+            FROM inventory 
+            WHERE barcode = :barcode 
+            LIMIT 1
+        ";
+        return $this->fetchOne($query, ['barcode' => $barcode]);
+    }
+
+    public function getProductPageByBarcode($barcode, $perPage = 4)
+    {
+        // Get the position of the item in the ordered list
+        $query = "
+            SELECT 
+                (SELECT COUNT(*) + 1 
+                 FROM inventory i2 
+                 WHERE i2.id > i1.id 
+                 ORDER BY i2.id DESC) AS position,
+                i1.id AS inventory_id,
+                i1.product_name AS inventory_product_name,
+                i1.quantity,
+                i1.amount,
+                i1.selling_price,
+                i1.total_price,
+                i1.expiration_date,
+                i1.image,
+                i1.barcode
+            FROM inventory i1
+            WHERE i1.barcode = :barcode
+            LIMIT 1
+        ";
+        $item = $this->fetchOne($query, ['barcode' => $barcode]);
+
+        if (!$item) {
+            return null;
+        }
+
+        // Calculate the page
+        $position = $item['position'];
+        $page = ceil($position / $perPage);
+
+        return [
+            'page' => $page,
+            'item' => [
+                'inventory_id' => $item['inventory_id'],
+                'inventory_product_name' => $item['inventory_product_name'],
+                'quantity' => $item['quantity'],
+                'amount' => $item['amount'],
+                'selling_price' => $item['selling_price'],
+                'total_price' => $item['total_price'],
+                'expiration_date' => $item['expiration_date'],
+                'image' => $item['image'],
+                'barcode' => $item['barcode']
+            ]
+        ];
     }
 }

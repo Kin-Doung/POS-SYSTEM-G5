@@ -44,6 +44,36 @@ require_once './views/layouts/side.php';
         color: #000;
         font-family: "Poppins", sans-serif;
     }
+
+    #inputMode {
+        border-radius: 5px;
+        padding: 5px;
+    }
+
+    .is-invalid {
+        border-color: #dc3545;
+    }
+
+    .invalid-feedback {
+        display: none;
+        color: #dc3545;
+        font-size: 0.875em;
+    }
+
+    .is-invalid~.invalid-feedback {
+        display: block;
+    }
+
+    .manual-only,
+    .barcode-only {
+        display: none;
+    }
+
+    .product-name-input,
+    .category-name-input {
+        border-radius: 5px;
+        padding: 5px;
+    }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
@@ -56,80 +86,140 @@ require_once './views/layouts/side.php';
     <!-- Body -->
     <div class="add-stock mr-2">
         <h2 class="text-center head-add" style="padding-top: 10px;">Add Stock Products</h2>
-        <div class="d-flex justify-content-end align-items-center me-3">
-            <button type="button" id="previewInvoice" class="btn btn-preview" data-bs-toggle="modal" data-bs-target="#invoiceModal">Preview Invoice</button>
-        </div>
-        <div class="col-md-12 mt-5 mx-auto">
-            <div class="card p-3" style="box-shadow: none; border: none">
-                <form id="productForm" action="/inventory/store" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
-                    <div id="productFields" class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Product Image</th>
-                                    <th style="display: none;">Category</th>
-                                    <th>Product Name</th>
-                                    <th>Quantity</th>
-                                    <th>Price ($)</th>
-                                    <th>Selling Price ($)</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="productTableBody">
-                                <tr class="product-row">
-                                    <td>
-                                        <input type="file" name="image[]" class="form-control image-input" accept="image/*" style="display: none;">
-                                        <img src="" alt="Product Image" class="img-preview" style="display: none; width: 50px; height: 50px; margin: 0 auto;">
-                                    </td>
-                                    <td style="display: none;">
-                                        <select name="category_id[]" class="form-control category-select" required>
-                                            <option value="">Select Category</option>
-                                            <?php foreach ($categories as $category): ?>
-                                                <option value="<?= htmlspecialchars($category['id']) ?>">
-                                                    <?= htmlspecialchars($category['name']) ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select name="product_name[]" class="form-control product-select" required>
-                                            <option value="">Select Product</option>
-                                            <?php if (!empty($inventory)): ?>
-                                                <?php foreach ($inventory as $product): ?>
-                                                    <option value="<?= htmlspecialchars($product['id']) ?>">
-                                                        <?= htmlspecialchars($product['product_name']) ?>
+        <style>
+            body {
+                background-color: #f8f9fa;
+            }
+
+            .modal-header {
+                background-color: #007bff;
+                color: white;
+            }
+
+            .custom-width {
+                width: 200px;
+                /* Set the desired width */
+            }
+        </style>
+        </head>
+
+        <body>
+
+            <div class="container mt-5">
+                <div class="d-flex justify-content-end flex-column align-items-end gap-2 p-3 bg-light rounded shadow-sm">
+                    <!-- Preview Invoice Button -->
+                    <button type="button" id="previewInvoice" class="btn btn-primary custom-width" data-bs-toggle="modal" data-bs-target="#invoiceModal">
+                        <i class="bi bi-eye-fill me-1"></i> Preview Invoice
+                    </button>
+
+                    <!-- Input Mode Selection -->
+                    <select id="inputMode" class="form-select custom-width">
+                        <option value="manual">Manual Input</option>
+                        <option value="barcode">Barcode Scan</option>
+                    </select>
+                </div>
+
+                <!-- Invoice Modal -->
+                <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="invoiceModalLabel">Invoice Preview</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Your invoice details will be displayed here.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 mt-5 mx-auto">
+                <div class="card p-3" style="box-shadow: none; border: none">
+                    <form id="productForm" action="/inventory/store" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        <input type="hidden" name="input_mode" id="inputModeHidden" value="manual">
+                        <div id="productFields" class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="image-field">Product Image</th>
+                                        <th class="product-name-field">Product Name</th>
+                                        <th class="category-name-field">Category Name</th>
+                                        <th class="barcode-field">Barcode</th>
+                                        <th>Quantity</th>
+                                        <th>Price ($)</th>
+                                        <th>Selling Price ($)</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productTableBody">
+                                    <tr class="product-row">
+                                        <td class="image-field">
+                                            <input type="file" name="image[]" class="form-control image-input" accept="image/*">
+                                            <img src="" alt="Product Image" class="img-preview" style="display: none; width: 50px; height: 50px; margin: 0 auto;">
+                                        </td>
+                                        <td class="product-name-field">
+                                            <input type="hidden" name="product_id[]" class="product-id-input">
+                                            <select name="product_name[]" class="form-control product-select manual-only" required>
+                                                <option value="">Select Product</option>
+                                                <?php if (!empty($inventory)): ?>
+                                                    <?php foreach ($inventory as $product): ?>
+                                                        <option value="<?= htmlspecialchars($product['id']) ?>">
+                                                            <?= htmlspecialchars($product['product_name']) ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                <?php else: ?>
+                                                    <option disabled>No Products Found</option>
+                                                <?php endif; ?>
+                                            </select>
+                                            <input type="text" name="product_name_text[]" class="form-control product-name-input barcode-only" placeholder="Product Name">
+                                        </td>
+                                        <td class="category-name-field">
+                                            <select name="category_id[]" class="form-control category-select manual-only" required>
+                                                <option value="">Select Category</option>
+                                                <?php foreach ($categories as $category): ?>
+                                                    <option value="<?= htmlspecialchars($category['id']) ?>">
+                                                        <?= htmlspecialchars($category['name']) ?>
                                                     </option>
                                                 <?php endforeach; ?>
-                                            <?php else: ?>
-                                                <option disabled>No Products Found</option>
-                                            <?php endif; ?>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="number" class="form-control quantity-input" name="quantity[]" min="0" required>
-                                    </td>
-                                    <td>
-                                        <input type="number" class="form-control amount-input" name="amount[]" min="0" step="0.01" required>
-                                    </td>
-                                    <td>
-                                        <input type="number" class="form-control selling-price-input" name="selling_price[]" min="0" step="0.01" required>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn removeRow" style="background: none; border: none; color: red; box-shadow: none; text-decoration: underline; font-size: 15px;">
-                                            <i class="fa-solid fa-trash"></i> remove
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="d-flex justify-content-end align-items-center">
-                        <button type="button" id="addMore" class="add-moree">Add more</button>
-                        <button type="submit" class="btn btn-submit">Submit</button>
-                    </div>
-                </form>
+                                            </select>
+                                            <input type="text" name="category_name[]" class="form-control category-name-input barcode-only" placeholder="Category Name">
+                                        </td>
+                                        <td class="barcode-field">
+                                            <input type="text" name="barcode[]" class="form-control barcode-input" placeholder="Scan or enter barcode">
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control quantity-input" name="quantity[]" min="1" value="1" required>
+                                            <div class="invalid-feedback">Please enter a valid quantity (1 or more).</div>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control amount-input" name="amount[]" min="0" step="0.01" required>
+                                            <div class="invalid-feedback">Please enter a valid price.</div>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control selling-price-input" name="selling_price[]" min="0" step="0.01" required>
+                                            <div class="invalid-feedback">Please enter a valid selling price.</div>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn removeRow" style="background: none; border: none; color: red; box-shadow: none; text-decoration: underline; font-size: 15px;">
+                                                <i class="fa-solid fa-trash"></i> remove
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="d-flex justify-content-end align-items-center">
+                            <button type="button" id="addMore" class="add-moree">Add more</button>
+                            <button type="submit" class="btn btn-submit">Submit</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
     </div>
 
     <!-- Invoice Preview Modal -->
@@ -172,15 +262,64 @@ require_once './views/layouts/side.php';
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     $(document).ready(function() {
+        const baseUrl = window.location.pathname.includes('myapp') ? '/myapp' : '';
+
+        // Toggle input mode
+        function toggleInputMode() {
+            const mode = $('#inputMode').val();
+            if (mode === 'manual') {
+                $('.manual-only').show();
+                $('.barcode-only').hide();
+                $('.barcode-field').hide();
+                $('.image-field, .product-name-field, .category-name-field').show();
+                $('.product-select').prop('required', true);
+                $('.category-select').prop('required', true);
+                $('.barcode-input').prop('required', false);
+                $('.product-name-input, .category-name-input').prop('required', false);
+            } else {
+                $('.manual-only').hide();
+                $('.barcode-only').show();
+                $('.barcode-field').show();
+                $('.image-field, .product-name-field, .category-name-field').show();
+                $('.product-select').prop('required', false);
+                $('.category-select').prop('required', false);
+                $('.barcode-input').prop('required', true);
+                $('.product-name-input, .category-name-input').prop('required', true);
+                $('.barcode-input').each(function() {
+                    if (this.value.trim()) {
+                        handleBarcodeInput(this, false);
+                    }
+                });
+                $('.barcode-input:first').focus();
+            }
+        }
+
+        $('#inputMode').on('change', function() {
+            $('#inputModeHidden').val(this.value);
+            toggleInputMode();
+        });
+        toggleInputMode();
+
         // Add more rows
         $("#addMore").click(function() {
             var newRow = $(".product-row:first").clone();
             newRow.find("select").val("");
             newRow.find("input").val("");
+            newRow.find(".quantity-input").val("1");
             newRow.find("img.img-preview").attr("src", "").hide();
+            newRow.find("input").removeClass("is-invalid");
 
             newRow.find('.product-select').off('change').on('change', function() {
                 handleProductSelect(this);
+            });
+
+            newRow.find('.barcode-input').off('input keypress').on('input', function() {
+                handleBarcodeInput(this, false);
+            }).on('keypress', function(e) {
+                if (e.which === 13) {
+                    handleBarcodeInput(this, true);
+                    e.preventDefault();
+                }
             });
 
             newRow.find('.removeRow').off('click').on('click', function() {
@@ -192,6 +331,7 @@ require_once './views/layouts/side.php';
             });
 
             $("#productTableBody").append(newRow);
+            toggleInputMode();
         });
 
         // Remove row
@@ -203,43 +343,133 @@ require_once './views/layouts/side.php';
             }
         });
 
-        // Handle product selection
+        // Handle product selection (manual mode)
         function handleProductSelect(selectElement) {
             const productId = selectElement.value;
-            const row = selectElement.closest('tr');
+            const row = $(selectElement).closest('tr');
 
             if (productId) {
-                fetch('/inventory/getProductDetails?id=' + productId)
-                    .then(response => response.json())
-                    .then(data => {
+                $.get(baseUrl + '/inventory/getProductDetails?id=' + productId)
+                    .done(function(data) {
                         if (!data.error && data) {
-                            row.querySelector('.category-select').value = data.category_id || '';
-                            const imgPreview = row.querySelector('.img-preview');
+                            row.find('.product-id-input').val(data.id || '');
+                            row.find('.category-select').val(data.category_id || '');
+                            row.find('.product-name-input').val(data.product_name || '');
+                            row.find('.category-name-input').val(data.category_name || '');
+                            const imgPreview = row.find('.img-preview');
                             if (data.image) {
-                                imgPreview.src = '/' + data.image;
-                                imgPreview.style.display = 'block';
+                                imgPreview.attr('src', '/' + data.image).show();
                             } else {
-                                imgPreview.src = '';
-                                imgPreview.style.display = 'none';
+                                imgPreview.attr('src', '').hide();
                             }
-                            row.querySelector('.quantity-input').value = '';
-                            row.querySelector('.amount-input').value = data.amount || 0;
-                            row.querySelector('.selling-price-input').value = data.selling_price || 0;
+                            row.find('.quantity-input').val(data.quantity || '1').removeClass('is-invalid');
+                            row.find('.amount-input').val(data.amount || 0);
+                            row.find('.selling-price-input').val(data.selling_price || 0);
+                            row.find('.barcode-input').val(data.barcode || '');
                         } else {
-                            row.querySelector('.category-select').value = '';
-                            row.querySelector('.img-preview').src = '';
-                            row.querySelector('.img-preview').style.display = 'none';
-                            row.querySelector('.quantity-input').value = '';
-                            row.querySelector('.amount-input').value = '';
-                            row.querySelector('.selling-price-input').value = '';
+                            clearRowFields(row);
                         }
                     })
-                    .catch(error => console.error('Fetch error:', error));
+                    .fail(function(error) {
+                        console.error('Fetch error for product ID ' + productId + ':', error);
+                        clearRowFields(row);
+                        alert('Error fetching product details.');
+                    });
             }
         }
 
+        // Handle barcode input (barcode mode)
+        function handleBarcodeInput(inputElement, isScanner = false) {
+            const barcode = inputElement.value.trim();
+            const row = $(inputElement).closest('tr');
+
+            if (barcode) {
+                row.find('.barcode-input').prop('disabled', true).after('<span class="spinner-border spinner-border-sm"></span>');
+                $.get(baseUrl + '/inventory/getProductByBarcode?barcode=' + encodeURIComponent(barcode))
+                    .done(function(data) {
+                        row.find('.spinner-border').remove();
+                        row.find('.barcode-input').prop('disabled', false);
+                        if (!data.error && data) {
+                            row.find('.product-id-input').val(data.id || '');
+                            row.find('.product-select').val(data.id || '');
+                            row.find('.product-name-input').val(data.product_name || '');
+                            row.find('.category-select').val(data.category_id || '');
+                            row.find('.category-name-input').val(data.category_name || '');
+                            const imgPreview = row.find('.img-preview');
+                            if (data.image) {
+                                imgPreview.attr('src', '/' + data.image).show();
+                            } else {
+                                imgPreview.attr('src', '').hide();
+                            }
+                            row.find('.quantity-input').val(data.quantity || '1').removeClass('is-invalid');
+                            row.find('.amount-input').val(data.amount || 0);
+                            row.find('.selling-price-input').val(data.selling_price || 0);
+                            if (isScanner) {
+                                inputElement.value = '';
+                                inputElement.focus();
+                                if (row.is(':last-child')) {
+                                    $("#addMore").click();
+                                }
+                            }
+                        } else {
+                            clearRowFields(row);
+                            row.find('.barcode-input').val(barcode);
+                            alert('Product not found for barcode: ' + barcode);
+                            inputElement.focus();
+                        }
+                    })
+                    .fail(function(jqXHR, textStatus, errorThrown) {
+                        row.find('.spinner-border').remove();
+                        row.find('.barcode-input').prop('disabled', false);
+                        console.error('Barcode fetch error for ' + barcode + ':', {
+                            status: jqXHR.status,
+                            statusText: textStatus,
+                            error: errorThrown,
+                            response: jqXHR.responseText
+                        });
+                        clearRowFields(row);
+                        row.find('.barcode-input').val(barcode);
+                        if (jqXHR.status === 404) {
+                            alert('Barcode endpoint not found. Please check server routing for ' + barcode);
+                        } else {
+                            alert('Error fetching product for barcode ' + barcode + '. Status: ' + jqXHR.status + ' ' + textStatus);
+                        }
+                        inputElement.focus();
+                    });
+            }
+        }
+
+        // Clear row fields
+        function clearRowFields(row) {
+            row.find('.product-id-input').val('');
+            row.find('.category-select').val('');
+            row.find('.product-select').val('');
+            row.find('.product-name-input').val('');
+            row.find('.category-name-input').val('');
+            row.find('.img-preview').attr('src', '').hide();
+            row.find('.quantity-input').val('1').removeClass('is-invalid');
+            row.find('.amount-input').val('');
+            row.find('.selling-price-input').val('');
+            row.find('.barcode-input').val('');
+        }
+
         $(document).on("change", ".product-select", function() {
-            handleProductSelect(this);
+            if ($('#inputMode').val() === 'manual') {
+                handleProductSelect(this);
+            }
+        });
+
+        $(document).on("input", ".barcode-input", function() {
+            if ($('#inputMode').val() === 'barcode') {
+                handleBarcodeInput(this, false);
+            }
+        });
+
+        $(document).on("keypress", ".barcode-input", function(e) {
+            if ($('#inputMode').val() === 'barcode' && e.which === 13) {
+                handleBarcodeInput(this, true);
+                e.preventDefault();
+            }
         });
 
         // Image preview
@@ -268,19 +498,27 @@ require_once './views/layouts/side.php';
 
             tableBody.find('.product-row').each(function() {
                 const imageSrc = $(this).find('.img-preview').attr('src');
-                const productName = $(this).find('.product-select option:selected').text().trim();
+                const mode = $('#inputMode').val();
+                let productName;
+
+                if (mode === 'manual') {
+                    productName = $(this).find('.product-select option:selected').text().trim();
+                } else {
+                    productName = $(this).find('.product-name-input').val() || 'Barcode: ' + ($(this).find('.barcode-input').val() || 'Unknown');
+                }
+
                 const quantity = $(this).find('.quantity-input').val();
                 const price = $(this).find('.amount-input').val();
 
                 if (productName && quantity && price) {
                     const row = `
-                        <tr>
-                            <td><img src="${imageSrc || ''}" alt="Product Image" style="width: 50px; height: 50px; object-fit: cover;"></td>
-                            <td>${productName}</td>
-                            <td>${quantity}</td>
-                            <td>${price}</td>
-                        </tr>
-                    `;
+                    <tr>
+                        <td><img src="${imageSrc || ''}" alt="Product Image" style="width: 50px; height: 50px; object-fit: cover;"></td>
+                        <td>${productName}</td>
+                        <td>${quantity}</td>
+                        <td>${price}</td>
+                    </tr>
+                `;
                     invoiceTableBody.append(row);
                     totalPrice += parseFloat(price) * parseFloat(quantity);
                 }
@@ -296,7 +534,9 @@ require_once './views/layouts/side.php';
         // Export to PDF
         $('#exportPDF').on('click', function() {
             try {
-                const { jsPDF } = window.jspdf;
+                const {
+                    jsPDF
+                } = window.jspdf;
                 const doc = new jsPDF({
                     orientation: 'portrait',
                     unit: 'mm',
@@ -305,7 +545,9 @@ require_once './views/layouts/side.php';
 
                 doc.setFontSize(16);
                 doc.setFont('helvetica', 'bold');
-                doc.text('Engrty Alone', 105, 20, { align: 'center' });
+                doc.text('Engrty Alone', 105, 20, {
+                    align: 'center'
+                });
 
                 doc.setFontSize(10);
                 doc.setFont('helvetica', 'normal');
@@ -338,7 +580,9 @@ require_once './views/layouts/side.php';
                 });
 
                 doc.autoTable({
-                    head: [['Image', 'Product Name', 'Quantity', 'Price ($)']],
+                    head: [
+                        ['Image', 'Product Name', 'Quantity', 'Price ($)']
+                    ],
                     body: tableData,
                     startY: 50,
                     theme: 'grid',
@@ -354,12 +598,26 @@ require_once './views/layouts/side.php';
                         fillColor: [255, 255, 255]
                     },
                     columnStyles: {
-                        0: { cellWidth: 30 },
-                        1: { cellWidth: 70, halign: 'left' },
-                        2: { cellWidth: 40, halign: 'left' },
-                        3: { cellWidth: 40, halign: 'left' }
+                        0: {
+                            cellWidth: 30
+                        },
+                        1: {
+                            cellWidth: 70,
+                            halign: 'left'
+                        },
+                        2: {
+                            cellWidth: 40,
+                            halign: 'left'
+                        },
+                        3: {
+                            cellWidth: 40,
+                            halign: 'left'
+                        }
                     },
-                    margin: { left: 14, right: 14 },
+                    margin: {
+                        left: 14,
+                        right: 14
+                    },
                     didDrawCell: function(data) {
                         if (data.column.index === 0 && data.row.index >= 0) {
                             const imageSrc = imageData[data.row.index];
@@ -377,7 +635,9 @@ require_once './views/layouts/side.php';
                 const finalY = doc.lastAutoTable.finalY || 50;
                 doc.setFontSize(10);
                 doc.setFont('helvetica', 'bold');
-                doc.text(`Total Price: $${totalPrice.toFixed(2)}`, 196, finalY + 10, { align: 'right' });
+                doc.text(`Total Price: $${totalPrice.toFixed(2)}`, 196, finalY + 10, {
+                    align: 'right'
+                });
                 doc.setFont('helvetica', 'normal');
                 doc.text('Thank you', 14, finalY + 20);
 
@@ -395,25 +655,56 @@ require_once './views/layouts/side.php';
             XLSX.writeFile(wb, 'invoice.xlsx');
         });
 
-        // Warn about quantity summing
+        // Form validation
         $('#productForm').on('submit', function(e) {
-            const productSelects = $('.product-select');
-            const quantities = $('.quantity-input').map((_, input) => input.value).get();
-            if (quantities.some(q => !q || q <= 0)) {
-                alert('Please enter valid quantities for all products.');
+            const mode = $('#inputMode').val();
+            const productInputs = mode === 'manual' ? $('.product-select') : $('.product-name-input');
+            const barcodes = $('.barcode-input').map((_, input) => input.value).get();
+            const quantities = $('.quantity-input');
+            let hasErrors = false;
+
+            quantities.each(function(index) {
+                const q = parseInt(this.value);
+                if (!q || q <= 0) {
+                    $(this).addClass('is-invalid');
+                    hasErrors = true;
+                } else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+
+            if (hasErrors) {
+                alert('Please enter valid quantities (1 or more) for all products.');
                 e.preventDefault();
+                quantities.filter(':invalid').first().focus();
                 return;
             }
-            const selectedProducts = productSelects.map((_, select) => select.value).get().filter(v => v);
-            const uniqueProducts = new Set(selectedProducts);
-            if (uniqueProducts.size < selectedProducts.length) {
-                if (!confirm('You selected the same product multiple times. Quantities will be summed with existing stock. Continue?')) {
+
+            if (mode === 'manual') {
+                const selectedProducts = productInputs.map((_, select) => select.value).get().filter(v => v);
+                if (selectedProducts.length === 0) {
+                    alert('Please select at least one product.');
                     e.preventDefault();
+                    return;
+                }
+                const uniqueProducts = new Set(selectedProducts);
+                if (uniqueProducts.size < selectedProducts.length) {
+                    if (!confirm('You selected the same product multiple times. Quantities will be summed with existing stock. Continue?')) {
+                        e.preventDefault();
+                        return;
+                    }
+                }
+            } else {
+                const validBarcodes = barcodes.filter(b => b);
+                if (validBarcodes.length === 0) {
+                    alert('Please enter at least one valid barcode.');
+                    e.preventDefault();
+                    $('.barcode-input:first').focus();
+                    return;
                 }
             }
         });
 
-        // Bootstrap form validation
         const form = document.getElementById('productForm');
         form.addEventListener('submit', function(event) {
             if (!form.checkValidity()) {

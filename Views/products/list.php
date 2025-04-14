@@ -120,6 +120,11 @@ require_once './views/layouts/side.php';
         width: 33.33%;
     }
 
+    .product-col.highlight {
+        border: 2px solid #007bff;
+        background-color: #e7f1ff;
+    }
+
     .product-card {
         background-color: #fff;
         border-radius: 10px;
@@ -337,6 +342,7 @@ require_once './views/layouts/side.php';
         flex-direction: column;
         align-items: center;
         gap: 12px;
+        overflow: visible; /* Ensure dropdown isn't clipped */
     }
 
     .cart-btn {
@@ -349,6 +355,7 @@ require_once './views/layouts/side.php';
         transition: background-color 0.2s ease, transform 0.1s ease;
         width: 100%;
         max-width: 200px;
+        pointer-events: auto;
     }
 
     .cart-btn-success {
@@ -366,6 +373,7 @@ require_once './views/layouts/side.php';
         position: relative;
         width: 100%;
         max-width: 200px;
+        overflow: visible; /* Ensure dropdown isn't clipped */
     }
 
     .cart-btn-secondary {
@@ -379,13 +387,13 @@ require_once './views/layouts/side.php';
     .options-dropdown {
         display: none;
         position: absolute;
-        bottom: calc(100% + 5px);
+        top: calc(100% + 5px); /* Open downward */
         left: 50%;
         transform: translateX(-50%);
         background-color: #fff;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
         border-radius: 6px;
-        z-index: 1000;
+        z-index: 1001; /* Above cart-section */
         width: 100%;
         max-width: 200px;
         flex-direction: column;
@@ -409,6 +417,8 @@ require_once './views/layouts/side.php';
         border-radius: 4px;
         font-weight: 500;
         letter-spacing: 0.5px;
+        pointer-events: auto;
+        cursor: pointer;
     }
 
     .options-dropdown button:hover {
@@ -504,6 +514,7 @@ require_once './views/layouts/side.php';
             max-width: 100%;
             left: 0;
             transform: none;
+            top: calc(100% + 5px); /* Maintain downward position */
         }
 
         .options-dropdown button {
@@ -524,6 +535,71 @@ require_once './views/layouts/side.php';
         margin-bottom: 10px;
         color: #000;
     }
+
+    .pagination-controls {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        font-family: Arial, sans-serif;
+    }
+
+    .pagination-controls a,
+    .pagination-controls button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .pagination-controls a {
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+    }
+
+    .pagination-controls a:hover {
+        background-color: #0056b3;
+    }
+
+    .pagination-controls button {
+        background-color: #ccc;
+        color: #fff;
+        cursor: not-allowed;
+    }
+
+    .pagination-controls span {
+        font-weight: bold;
+    }
+
+    .barcode-scanner input:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    }
+
+    #toast {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #333;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        z-index: 1000;
+    }
+
+    #toast.success {
+        background: #28a745;
+    }
+
+    #toast.error {
+        background: #dc3545;
+    }
 </style>
 
 <?php require_once './views/layouts/nav.php' ?>
@@ -533,9 +609,13 @@ require_once './views/layouts/side.php';
         <div class="row" id="productRow">
             <div class="product-section">
                 <h3>Order Products</h3>
-                <div class="row">
+                <!-- Barcode Input -->
+                <div class="barcode-scanner" style="margin-bottom: 15px;">
+                    <input type="text" id="barcodeInput" placeholder="Scan or enter barcode" style="padding: 8px; width: 200px; border: 1px solid #ddd; border-radius: 4px;" autofocus />
+                </div>
+                <div class="row" id="productGrid">
                     <?php foreach ($inventory as $item): ?>
-                        <div class="product-col">
+                        <div class="product-col" data-barcode="<?= htmlspecialchars($item['barcode'] ?? '') ?>" data-inventory-id="<?= htmlspecialchars($item['inventory_id']) ?>">
                             <div class="product-card">
                                 <i class="fa-solid fa-ellipsis-vertical kebab-menu"></i>
                                 <div class="dropdown-menu">
@@ -543,24 +623,21 @@ require_once './views/layouts/side.php';
                                 </div>
                                 <div class="image-wrapper">
                                     <?php if (!empty($item['image'])): ?>
-                                        <img src="<?= htmlspecialchars($item['image']) ?>"
-                                             alt="<?= htmlspecialchars($item['inventory_product_name']) ?>"
-                                             onerror="this.src='/views/assets/images/default-product.jpg'">
+                                        <img src="<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['inventory_product_name']) ?>" onerror="this.src='/views/assets/images/default-product.jpg'">
                                     <?php else: ?>
-                                        <img src="/views/assets/images/default-product.jpg"
-                                             alt="Default Product Image">
+                                        <img src="/views/assets/images/default-product.jpg" alt="Default Product Image">
                                     <?php endif; ?>
                                 </div>
                                 <div class="card-body">
                                     <h6 class="card-title"><?= htmlspecialchars($item['inventory_product_name']) ?></h6>
                                     <p class="price" data-id="<?= htmlspecialchars($item['inventory_id']) ?>">
-                                        Selling Price: $<?= htmlspecialchars($item['selling_price'] ?? $item['amount']) ?>
+                                        $<?= htmlspecialchars($item['selling_price'] ?? $item['amount']) ?>
                                     </p>
                                     <p class="quantity" data-id="<?= htmlspecialchars($item['inventory_id']) ?>" style="display: none;">
                                         Qty: <?= htmlspecialchars($item['quantity']) ?>
                                     </p>
                                     <input type="hidden" name="inventory_id" value="<?= htmlspecialchars($item['inventory_id']) ?>" />
-                                    <button class="buy">Add to Cart</button>
+                                    <button class="buy" data-inventory-id="<?= htmlspecialchars($item['inventory_id']) ?>">Add to Cart</button>
                                 </div>
                             </div>
                         </div>
@@ -582,46 +659,6 @@ require_once './views/layouts/side.php';
                         <button disabled><i class="fa-solid fa-greater-than"></i></button>
                     <?php endif; ?>
                 </div>
-                <style>
-                    .pagination-controls {
-                        margin-top: 20px;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        gap: 15px;
-                        font-family: Arial, sans-serif;
-                    }
-
-                    .pagination-controls a,
-                    .pagination-controls button {
-                        padding: 8px 16px;
-                        border: none;
-                        border-radius: 6px;
-                        font-size: 14px;
-                        cursor: pointer;
-                        transition: background-color 0.3s ease;
-                    }
-
-                    .pagination-controls a {
-                        background-color: #007bff;
-                        color: white;
-                        text-decoration: none;
-                    }
-
-                    .pagination-controls a:hover {
-                        background-color: #0056b3;
-                    }
-
-                    .pagination-controls button {
-                        background-color: #ccc;
-                        color: #fff;
-                        cursor: not-allowed;
-                    }
-
-                    .pagination-controls span {
-                        font-weight: bold;
-                    }
-                </style>
             </div>
         </div>
         <div class="cart-section" id="cartSection">
@@ -664,7 +701,409 @@ require_once './views/layouts/side.php';
             </div>
         </div>
     </div>
-    <?php require_once 'views/layouts/footer.php'; ?>
+    <!-- Toast Notification -->
+    <div id="toast"></div>
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const barcodeInput = document.getElementById('barcodeInput');
+    const cartSection = document.getElementById('cartSection');
+    const cartBody = document.getElementById('cartBody');
+    const grandTotal = document.getElementById('grandTotal');
+    const submitCartBtn = document.getElementById('submitCart');
+    const moreOptionsBtn = document.getElementById('moreOptionsBtn');
+    const optionsDropdown = document.getElementById('optionsDropdown');
+    const savePdfBtn = document.getElementById('savePdf');
+    const completeCartBtn = document.getElementById('completeCart');
+    const clearCartBtn = document.getElementById('clearCart');
+    const productGrid = document.getElementById('productGrid');
+    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+
+    // Initialize cart UI from localStorage
+    updateCartUI();
+
+    // Show toast notification
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = type;
+        toast.style.display = 'block';
+        setTimeout(() => {
+            toast.style.display = 'none';
+            toast.className = '';
+        }, 3000);
+    }
+
+    // Clear UI state and localStorage
+    function clearUIState() {
+        // Clear highlights
+        document.querySelectorAll('.product-col').forEach(col => {
+            col.classList.remove('highlight');
+        });
+        // Reset barcode input
+        barcodeInput.value = '';
+        barcodeInput.focus();
+        // Clean URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const page = urlParams.get('page') || '1';
+        window.history.replaceState({}, document.title, `?page=${page}`);
+        // Close cart
+        toggleCart(false);
+        // Reset cart and localStorage
+        cartItems = [];
+        localStorage.removeItem('cartItems');
+        updateCartUI();
+    }
+
+    // Handle barcode input and page switching
+    function handleBarcodeScan(barcode) {
+        if (!barcode) {
+            return;
+        }
+
+        // Check if barcode is on current page
+        const productCols = document.querySelectorAll('.product-col');
+        let found = false;
+
+        // Reset previous highlights
+        productCols.forEach(col => {
+            col.classList.remove('highlight');
+        });
+
+        const productCol = document.querySelector(`.product-col[data-barcode="${barcode}"]`);
+        if (productCol) {
+            found = true;
+            productCol.classList.add('highlight');
+            const buyButton = productCol.querySelector('.buy');
+            if (buyButton) {
+                buyButton.click(); // Add to cart
+                resetBarcodeInput();
+                return;
+            }
+        }
+
+        // If not found, fetch product page
+        fetch('/products/getProductPageByBarcode', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ barcode: barcode })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                if (data.page) {
+                    // Navigate to the correct page
+                    const currentPage = new URLSearchParams(window.location.search).get('page') || '1';
+                    if (data.page !== currentPage) {
+                        window.location.href = `?page=${data.page}&barcode=${encodeURIComponent(barcode)}`;
+                    } else {
+                        // Product found but not rendered, add to cart
+                        addToCart(data.item);
+                        resetBarcodeInput();
+                    }
+                } else {
+                    // Product found, add directly
+                    addToCart(data.item);
+                    resetBarcodeInput();
+                }
+            } else {
+                showToast(data.message || 'Product not found.', 'error');
+                resetBarcodeInput();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast('An error occurred while scanning.', 'error');
+            resetBarcodeInput();
+        });
+    }
+
+    // Reset barcode input
+    function resetBarcodeInput() {
+        barcodeInput.value = '';
+        barcodeInput.focus();
+    }
+
+    // Add to cart
+    function addToCart(item) {
+        const existingItem = cartItems.find(cartItem => cartItem.inventory_id === item.inventory_id);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cartItems.push({
+                inventory_id: item.inventory_id,
+                name: item.inventory_product_name,
+                price: parseFloat(item.selling_price || item.amount),
+                quantity: 1,
+                image: item.image
+            });
+        }
+
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        updateCartUI();
+        toggleCart(true);
+    }
+
+    // Update cart UI
+    function updateCartUI() {
+        cartBody.innerHTML = '';
+        let total = 0;
+
+        cartItems.forEach((item, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.name}</td>
+                <td><input type="number" class="cart-qty" value="${item.quantity}" min="1" data-index="${index}"></td>
+                <td><input type="number" class="cart-price" value="${item.price.toFixed(2)}" step="0.01" data-index="${index}"></td>
+                <td><span class="remove-item" data-index="${index}"><i class="fa-solid fa-trash"></i></span></td>
+            `;
+            cartBody.appendChild(row);
+            total += item.quantity * item.price;
+        });
+
+        grandTotal.textContent = total.toFixed(2);
+
+        document.querySelectorAll('.cart-qty').forEach(input => {
+            input.addEventListener('change', function() {
+                const index = this.dataset.index;
+                const newQty = parseInt(this.value);
+                if (newQty > 0) {
+                    cartItems[index].quantity = newQty;
+                    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                    updateCartUI();
+                }
+            });
+        });
+
+        document.querySelectorAll('.cart-price').forEach(input => {
+            input.addEventListener('change', function() {
+                const index = this.dataset.index;
+                const newPrice = parseFloat(this.value);
+                if (newPrice >= 0) {
+                    cartItems[index].price = newPrice;
+                    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                    updateCartUI();
+                }
+            });
+        });
+
+        document.querySelectorAll('.remove-item').forEach(button => {
+            button.addEventListener('click', function() {
+                const index = this.dataset.index;
+                cartItems.splice(index, 1);
+                localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                updateCartUI();
+            });
+        });
+    }
+
+    // Toggle cart visibility
+    function toggleCart(show) {
+        if (show) {
+            cartSection.classList.add('visible');
+            document.querySelector('.main-content').classList.add('cart-visible');
+        } else {
+            cartSection.classList.remove('visible');
+            document.querySelector('.main-content').classList.remove('cart-visible');
+        }
+    }
+
+    // Barcode input handling
+    barcodeInput.addEventListener('input', function(e) {
+        const barcode = e.target.value.trim();
+        if (barcode.length >= 3) { // Adjust based on barcode length
+            handleBarcodeScan(barcode);
+        }
+    });
+
+    barcodeInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            const barcode = e.target.value.trim();
+            handleBarcodeScan(barcode);
+        }
+    });
+
+    // Auto-focus input
+    barcodeInput.focus();
+
+    // Check for barcode in URL (post-page-load)
+    const urlParams = new URLSearchParams(window.location.search);
+    const scannedBarcode = urlParams.get('barcode');
+    if (scannedBarcode) {
+        const productCol = document.querySelector(`.product-col[data-barcode="${scannedBarcode}"]`);
+        if (productCol) {
+            productCol.classList.add('highlight');
+            const buyButton = productCol.querySelector('.buy');
+            if (buyButton) {
+                buyButton.click();
+                resetBarcodeInput();
+                // Clean URL
+                window.history.replaceState({}, document.title, `?page=${urlParams.get('page') || '1'}`);
+            }
+        }
+    }
+
+    // Add to cart buttons
+    document.querySelectorAll('.buy').forEach(button => {
+        button.addEventListener('click', function() {
+            const inventoryId = this.dataset.inventoryId;
+            const productCol = this.closest('.product-col');
+            const item = {
+                inventory_id: inventoryId,
+                inventory_product_name: productCol.querySelector('.card-title').textContent,
+                selling_price: parseFloat(productCol.querySelector('.price').textContent.replace('$', '')),
+                image: productCol.querySelector('img').src,
+                quantity: 1
+            };
+            addToCart(item);
+        });
+    });
+
+    // Submit cart
+    submitCartBtn.addEventListener('click', function() {
+        if (cartItems.length === 0) {
+            showToast('Cart is empty.', 'error');
+            return;
+        }
+
+        fetch('/products/submitCart', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ cartItems: cartItems.map(item => ({
+                inventoryId: item.inventory_id,
+                quantity: item.quantity,
+                price: item.price
+            })) })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showToast('Order completed successfully!', 'success');
+                clearUIState();
+            } else {
+                showToast(data.message || 'Failed to process order.', 'error');
+                barcodeInput.focus();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast('An error occurred while processing the order.', 'error');
+            barcodeInput.focus();
+        });
+    });
+
+    // More options dropdown
+    moreOptionsBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        console.log('Toggling dropdown');
+        optionsDropdown.classList.toggle('visible');
+        moreOptionsBtn.classList.toggle('active');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!moreOptionsBtn.contains(e.target) && !optionsDropdown.contains(e.target)) {
+            optionsDropdown.classList.remove('visible');
+            moreOptionsBtn.classList.remove('active');
+        }
+    });
+
+    // Prevent dropdown clicks from closing
+    optionsDropdown.addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
+
+    // Save PDF
+    savePdfBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        console.log('Save PDF clicked');
+        if (cartItems.length === 0) {
+            showToast('Cart is empty.', 'error');
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.text('Cart Receipt', 10, 10);
+        let y = 20;
+        cartItems.forEach(item => {
+            doc.text(`${item.name}: ${item.quantity} x $${item.price.toFixed(2)}`, 10, y);
+            y += 10;
+        });
+        doc.text(`Total: $${grandTotal.textContent}`, 10, y);
+        doc.save('cart-receipt.pdf');
+        barcodeInput.focus();
+        optionsDropdown.classList.remove('visible');
+        moreOptionsBtn.classList.remove('active');
+    });
+
+    // Complete cart
+    completeCartBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        console.log('Complete Cart clicked');
+        submitCartBtn.click();
+        optionsDropdown.classList.remove('visible');
+        moreOptionsBtn.classList.remove('active');
+    });
+
+    // Clear cart
+    clearCartBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        console.log('Clear Cart clicked');
+        cartItems = [];
+        localStorage.removeItem('cartItems');
+        updateCartUI();
+        toggleCart(false);
+        barcodeInput.focus();
+        optionsDropdown.classList.remove('visible');
+        moreOptionsBtn.classList.remove('active');
+    });
+
+    // Close cart
+    document.getElementById('closeCart').addEventListener('click', () => {
+        toggleCart(false);
+        barcodeInput.focus();
+    });
+
+    // Kebab menu toggle
+    document.querySelectorAll('.kebab-menu').forEach(menu => {
+        menu.addEventListener('click', function() {
+            const dropdown = this.nextElementSibling;
+            dropdown.classList.toggle('visible');
+        });
+    });
+
+    // Delete item
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const inventoryId = this.dataset.id;
+            if (confirm('Are you sure you want to delete this item?')) {
+                fetch('/products/deleteInventory', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ inventoryId: inventoryId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        this.closest('.product-col').remove();
+                        showToast('Item deleted successfully.', 'success');
+                    } else {
+                        showToast(data.message || 'Failed to delete item.', 'error');
+                    }
+                    barcodeInput.focus();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast('An error occurred while deleting the item.', 'error');
+                    barcodeInput.focus();
+                });
+            }
+        });
+    });
+});
+</script>
+
+<?php require_once 'views/layouts/footer.php'; ?>

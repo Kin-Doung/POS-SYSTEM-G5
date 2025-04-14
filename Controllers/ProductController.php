@@ -12,24 +12,23 @@ class ProductController extends BaseController
         $this->model = new ProductModel();
     }
 
-// In ProductController.php
-public function index()
-{
-    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-    $perPage = 4;
-    
-    $inventory = $this->model->getInventoryWithProductDetails($page, $perPage);
-    $totalItems = $this->model->getInventoryCount();
-    $totalPages = ceil($totalItems / $perPage);
+    public function index()
+    {
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $perPage = 4;
+        
+        $inventory = $this->model->getInventoryWithProductDetails($page, $perPage);
+        $totalItems = $this->model->getInventoryCount();
+        $totalPages = ceil($totalItems / $perPage);
 
-    $this->views('products/list', [
-        'inventory' => $inventory,
-        'categories' => $this->model->getCategories(),
-        'products' => $this->model->getProducts(),
-        'currentPage' => $page,
-        'totalPages' => $totalPages
-    ]);
-}
+        $this->views('products/list', [
+            'inventory' => $inventory,
+            'categories' => $this->model->getCategories(),
+            'products' => $this->model->getProducts(),
+            'currentPage' => $page,
+            'totalPages' => $totalPages
+        ]);
+    }
 
     public function updatePrice()
     {
@@ -122,7 +121,6 @@ public function index()
         $this->views('products/price_history', ['history' => $this->model->getPriceHistory($productId)]);
     }
 
-    // In ProductController.php (unchanged)
     public function submitCart()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -173,6 +171,68 @@ public function index()
         try {
             $success = $this->model->syncProductQuantityFromInventory($inventoryId, $quantity);
             echo json_encode(['success' => $success, 'message' => $success ? 'Quantity synced successfully' : 'Failed to sync quantity']);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+        }
+    }
+
+    public function getProductByBarcode()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+            exit;
+        }
+
+        $data = json_decode(file_get_contents('php://input'), true);
+        $barcode = $data['barcode'] ?? '';
+
+        if (empty($barcode)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Barcode is required']);
+            exit;
+        }
+
+        try {
+            $item = $this->model->getInventoryByBarcode($barcode);
+            if ($item) {
+                echo json_encode(['success' => true, 'item' => $item]);
+            } else {
+                http_response_code(404);
+                echo json_encode(['success' => false, 'message' => 'Product not found']);
+            }
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+        }
+    }
+
+    public function getProductPageByBarcode()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+            exit;
+        }
+
+        $data = json_decode(file_get_contents('php://input'), true);
+        $barcode = $data['barcode'] ?? '';
+
+        if (empty($barcode)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Barcode is required']);
+            exit;
+        }
+
+        try {
+            $result = $this->model->getProductPageByBarcode($barcode);
+            if ($result) {
+                echo json_encode(['success' => true, 'page' => $result['page'], 'item' => $result['item']]);
+            } else {
+                http_response_code(404);
+                echo json_encode(['success' => false, 'message' => 'Product not found']);
+            }
         } catch (Exception $e) {
             http_response_code(500);
             echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);

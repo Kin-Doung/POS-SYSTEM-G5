@@ -155,7 +155,7 @@ class InventoryController extends BaseController
             $inventory = $this->model->getInventoryById($id);
             if (!$inventory) {
                 error_log("Inventory item not found for update: id = $id");
-                http_response_code(404);
+              
                 echo json_encode(['error' => 'Inventory item not found.']);
                 exit;
             }

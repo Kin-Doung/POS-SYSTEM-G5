@@ -18,9 +18,9 @@ require_once './Controllers/Profit_LossController.php';
 
 $routes = new Router();
 // login
-$routes->get('/', [LoginController::class, 'showLogin']); // Corrected the function name
-$routes->post('/login', [LoginController::class, 'processLogin']); // Handle login processing
-$routes->get('/dashboard', [DashboardController::class, 'index']); // Redirect to dashboard after successful login
+$routes->get('/', [LoginController::class, 'showLogin']);
+$routes->post('/login', [LoginController::class, 'processLogin']);
+$routes->get('/dashboard', [DashboardController::class, 'index']);
 $routes->get('/profit_loss/get_data', [DashboardController::class, 'get_data']);
 
 // setting

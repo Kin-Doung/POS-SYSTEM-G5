@@ -20,6 +20,7 @@ class HistoryModel
         ]);
         return $stmt->fetchAll();
     }
+
     function createHistories($data)
     {
         $this->pdo->query("INSERT INTO reports (image, product_id, product_name, quantity, price, total_price, created_at) VALUES (:image, :product_id, :product_name, :quantity, :price, :total_price, :created_at)", [
@@ -57,15 +58,16 @@ class HistoryModel
     {
         try {
             $record = $this->getHistory($id);
-            if ($record && $record['image'] && file_exists($record['image'])) {
+            if ($record && !empty($record['image']) && file_exists($record['image'])) {
                 unlink($record['image']);
             }
             $this->pdo->query("DELETE FROM reports WHERE id = :id", ['id' => $id]);
         } catch (Exception $e) {
             error_log('Delete Error: ' . $e->getMessage());
-            throw $e; // Let the controller handle it
+            throw $e;
         }
     }
+
     function getFilteredHistories($filter, $startDate, $endDate, $search, $page = 1, $perPage = 25)
     {
         $offset = ($page - 1) * $perPage;
@@ -108,6 +110,7 @@ class HistoryModel
         $stmt = $this->pdo->query($query, $params);
         return $stmt->fetchAll();
     }
+
     function getTotalHistories($filter, $startDate, $endDate, $search)
     {
         $query = "SELECT COUNT(*) as total FROM reports WHERE 1=1";
@@ -145,7 +148,7 @@ class HistoryModel
         $stmt = $this->pdo->query($query, $params);
         return $stmt->fetch()['total'];
     }
-    // In Profit_LossModel
+
     function getProfit_Loss($page = 1, $itemsPerPage = 25)
     {
         $offset = ($page - 1) * $itemsPerPage;
@@ -157,7 +160,6 @@ class HistoryModel
         return $stmt->fetchAll();
     }
 
-    // Add this to get total count
     function getProfit_Loss_Count()
     {
         $stmt = $this->pdo->query("SELECT COUNT(*) FROM sales_data");

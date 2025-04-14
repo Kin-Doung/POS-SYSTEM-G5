@@ -79,16 +79,25 @@ class HistoryController extends BaseController
     function destroy()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+            // Verify CSRF token
+            $headers = getallheaders();
+            $csrfToken = $headers['X-CSRF-Token'] ?? '';
+            if ($csrfToken !== ($_SESSION['csrf_token'] ?? '')) {
+                header('Content-Type: application/json', true, 403);
+                echo json_encode(['success' => false, 'error' => 'Invalid CSRF token']);
+                exit;
+            }
+    
             $input = file_get_contents('php://input');
             $data = json_decode($input, true);
             $ids = $data['ids'] ?? [];
-
+    
             if (empty($ids)) {
                 header('Content-Type: application/json');
                 echo json_encode(['success' => false, 'error' => 'No IDs provided']);
                 exit;
             }
-
+    
             try {
                 foreach ($ids as $id) {
                     $record = $this->model->getHistory($id);

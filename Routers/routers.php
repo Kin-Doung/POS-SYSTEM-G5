@@ -1,6 +1,16 @@
 <?php
-require 'Router.php';
+// Set session ini settings before starting session
+ini_set('session.cookie_secure', 1); // Enforce HTTPS in production
+ini_set('session.use_only_cookies', 1);
+ini_set('session.cookie_httponly', 1);
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+require_once './Routers/Router.php';
 require_once './Controllers/BaseController.php';
+require_once './Controllers/LoginController.php';
 require_once './Controllers/DashboardController.php';
 require_once './Controllers/ProductController.php';
 require_once './Controllers/PurchaseController.php';
@@ -10,109 +20,66 @@ require_once './Controllers/NotificationController.php';
 require_once './Controllers/SettingController.php';
 require_once './Controllers/LogoutController.php';
 require_once './Controllers/LanguageController.php';
-require_once './Controllers/LoginController.php';
 require_once './Controllers/HistoryController.php';
 require_once './Controllers/Profit_LossController.php';
+require_once './Controllers/TrackingController.php';
 
+$router = new Router();
 
+// Public routes
+$router->get('/', [LoginController::class, 'showLogin']);
+$router->post('/login', [LoginController::class, 'processLogin']);
 
-$routes = new Router();
-// login
-$routes->get('/', [LoginController::class, 'showLogin']);
-$routes->post('/login', [LoginController::class, 'processLogin']);
-$routes->get('/dashboard', [DashboardController::class, 'index']);
-$routes->get('/profit_loss/get_data', [DashboardController::class, 'get_data']);
+// Protected routes
+$router->get('/dashboard', [DashboardController::class, 'index'], true);
+$router->get('/profit_loss/get_data', [DashboardController::class, 'get_data'], true);
+$router->get('/settings', [SettingController::class, 'index'], true);
+$router->get('/settings/create', [SettingController::class, 'create'], true);
+$router->post('/settings/store', [SettingController::class, 'store'], true);
+$router->get('/settings/edit', [SettingController::class, 'edit'], true);
+$router->put('/settings/update', [SettingController::class, 'update'], true);
+$router->delete('/settings/destroy', [SettingController::class, 'destroy'], true);
+$router->get('/inventory', [InventoryController::class, 'index'], true);
+$router->get('/inventory/getProductByBarcode', [InventoryController::class, 'getProductByBarcode'], true);
+$router->get('/inventory/create', [InventoryController::class, 'create'], true);
+$router->post('/inventory/store', [InventoryController::class, 'store'], true);
+$router->get('/inventory/edit/(:num)', [InventoryController::class, 'edit'], true);
+$router->post('/inventory/update/(:num)', [InventoryController::class, 'update'], true);
+$router->post('/inventory/destroy', [InventoryController::class, 'destroy'], true);
+$router->get('/inventory/view/(:num)', [InventoryController::class, 'view'], true);
+$router->post('/inventory/bulkDestroy', [InventoryController::class, 'bulkDestroy'], true);
+$router->get('/inventory/getProductDetails', [InventoryController::class, 'getProductDetails'], true);
+$router->get('/notifications', [NotificationController::class, 'index'], true);
+$router->post('/products/submitCart', [ProductController::class, 'submitCart'], true);
+$router->post('/products/syncQuantity', [ProductController::class, 'syncQuantity'], true);
+$router->get('/products', [ProductController::class, 'index'], true);
+$router->post('/products/store', [ProductController::class, 'store'], true);
+$router->post('/products/delete/{id}', [ProductController::class, 'destroy'], true);
+$router->post('/products/updatePrice', [ProductController::class, 'updatePrice'], true);
+$router->get('/category', [CategoryController::class, 'index'], true);
+$router->get('/category/create', [CategoryController::class, 'create'], true);
+$router->post('/category/store', [CategoryController::class, 'store'], true);
+$router->get('/category/edit', [CategoryController::class, 'edit'], true);
+$router->put('/category/update', [CategoryController::class, 'update'], true);
+$router->get('/category/delete', [CategoryController::class, 'delete'], true);
+$router->get('/purchase', [PurchaseController::class, 'index'], true);
+$router->get('/purchase/create', [PurchaseController::class, 'create'], true);
+$router->post('/purchase/store', [PurchaseController::class, 'store'], true);
+$router->get('/purchase/edit/{id}', [PurchaseController::class, 'edit'], true);
+$router->post('/purchase/update/{id}', [PurchaseController::class, 'update'], true);
+$router->post('/purchase/destroy/{id}', [PurchaseController::class, 'destroy'], true);
+$router->post('/purchase/bulk-destroy', [PurchaseController::class, 'bulkDestroy'], true);
+$router->get('/history', [HistoryController::class, 'index'], true);
+$router->post('/history/store', [HistoryController::class, 'store'], true);
+$router->delete('/history/destroy', [HistoryController::class, 'destroy'], true);
+$router->post('/history/fetchFilteredHistories', [HistoryController::class, 'fetchFilteredHistories'], true);
+$router->get('/profit_loss', [Profit_LossController::class, 'index'], true);
+$router->post('/profit_loss/store', [Profit_LossController::class, 'store'], true);
+$router->get('/profit_loss/delete', [Profit_LossController::class, 'delete'], true);
+$router->post('/profit_loss/destroy_multiple', [Profit_LossController::class, 'destroy_multiple'], true);
+$router->get('/logout', [LogoutController::class, 'index'], true);
+$router->get('/language', [LanguageController::class, 'index'], true);
+$router->get('/tracking', [TrackingController::class, 'index'], true);
 
-// setting
-$routes->get('/settings', [SettingController::class, 'index']);
-$routes->get('/settings/create', [SettingController::class, 'create']);
-$routes->post('/settings/store', [SettingController::class, 'store']);
-$routes->get('/settings/edit', [SettingController::class, 'edit']);
-$routes->put('/settings/update', [SettingController::class, 'update']);
-$routes->delete('/settings/destroy', [SettingController::class, 'destroy']);
-
-
-
-// Inventory
-$routes->get('/inventory', [InventoryController::class, 'index']);
-$routes->get('/inventory/getProductByBarcode', [InventoryController::class, 'getProductByBarcode']);
-$routes->get('/inventory/create', [InventoryController::class, 'create']);
-$routes->post('/inventory/store', [InventoryController::class, 'store']);
-$routes->get('/inventory/edit/(:num)', [InventoryController::class, 'edit']);
-$routes->post('/inventory/update/(:num)', [InventoryController::class, 'update']);
-$routes->post('/inventory/destroy', [InventoryController::class, 'destroy']);
-$routes->get('/inventory/view/(:num)', [InventoryController::class, 'view']);
-$routes->post('/inventory/bulkDestroy', [InventoryController::class, 'bulkDestroy']);
-
-
-// Stock tracking
-$routes->get('/tracking', [TrackingController::class, 'index']);
-// $routes->get('/stock', [TrackingController::class, 'index']);
-// $routes->get('/stock', [TrackingController::class, 'index']);
-// $routes->get('/stock', [TrackingController::class, 'index']);
-// $routes->get('/stock', [TrackingController::class, 'index']);
-// $routes->get('/stock', [TrackingController::class, 'index']);
-// $routes->get('/stock', [TrackingController::class, 'index']);
-
-$routes->get('/inventory/getProductDetails', [InventoryController::class, 'getProductDetails']);
-
-
-
-// $routes->delete('/inventory/delete', [InventoryController::class, 'destroy']); // Delete a specific inventory item
-
-
-//Notifications
-$routes->get('/notifications', [NotificationController::class, 'index']);
-$routes->post('/products/submitCart', [ProductController::class, 'submitCart']); // Process cart submission
-$routes->post('/products/syncQuantity', [ProductController::class, 'syncQuantity']); // Sync quantity
-
-$routes->get('/products', [ProductController::class, 'index']); // Show all products
-$routes->post('/products/store', [ProductController::class, 'store']); // Store a new product
-$routes->get('/purchase/edit/{id}', [PurchaseController::class, 'edit']);
-$routes->post('/purchase/update/{id}', [PurchaseController::class, 'update']);
-$routes->post('/products/delete/{id}', [ProductController::class, 'destroy']); // Delete a specific product
-$routes->post('/products/updatePrice', [ProductController::class, 'updatePrice']); // Update product price
-
-// categories
-$routes->get('/category', [CategoryController::class, 'index']);
-$routes->get('/category/create', [CategoryController::class, 'create']);
-$routes->post('/category/store', [CategoryController::class, 'store']);
-$routes->get('/category/edit', [CategoryController::class, 'edit']);
-$routes->put('/category/update', [CategoryController::class, 'update']);
-$routes->get('/category/delete', [CategoryController::class, 'delete']);  // Change from POST to GET
-
-
-
-// Purchase Order Routes
-$routes->get('/purchase', [PurchaseController::class, 'index']);
-$routes->get('/purchase/create', [PurchaseController::class, 'create']);
-$routes->post('/purchase/store', [PurchaseController::class, 'store']);
-$routes->get('/purchase/edit/{id}', [PurchaseController::class, 'edit']);
-$routes->post('/purchase/update/{id}', [PurchaseController::class, 'update']);;
-$routes->post('/purchase/destroy/{id}', [PurchaseController::class, 'destroy']);
-$routes->post('/purchase/bulk-destroy', [PurchaseController::class, 'bulkDestroy']);
-
-
-
-// Router of the history product
-$routes->get('/history', [HistoryController::class, 'index']);              // List all history entries
-$routes->post('/history/store', [HistoryController::class, 'store']);       // Store a new history entry
-$routes->delete('/history/destroy', [HistoryController::class, 'destroy']); // Delete a specific history entry (renamed from 'delete' to 'destroy')
-$routes->post('/history/fetchFilteredHistories', [HistoryController::class, 'fetchFilteredHistories']); // Fetch filtered history entries
-
-// Profit_Loss
-$routes->get('/profit_loss', [Profit_LossController::class, 'index']);
-$routes->post('/profit_loss/store', [Profit_LossController::class, 'store']);
-$routes->get('/profit_loss/delete', [Profit_LossController::class, 'delete']); // Note: This seems unused
-$routes->post('/profit_loss/destroy_multiple', [Profit_LossController::class, 'destroy_multiple']); // Add this
-
-
-// logout
-$routes->get('/logout', [LogoutController::class, 'index']);
-
-// language
-$routes->get('/language', [LanguageController::class, 'index']);
-
-
-// dispatch
-$routes->dispatch();
+$router->dispatch();
+?>

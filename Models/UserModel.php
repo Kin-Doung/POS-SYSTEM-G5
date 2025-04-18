@@ -1,17 +1,21 @@
 <?php
-require_once './Databases/database.php';
-
 class UserModel {
-    private $pdo;
+    private $db;
 
     public function __construct() {
-        $this->pdo = (new Database())->getConnection();  // Ensure we get the PDO instance
+        try {
+            $this->db = new PDO('mysql:host=localhost;dbname=vc1_pos_system', 'root', '');
+            $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            error_log("Database connection failed: " . $e->getMessage());
+            die("Database connection error. Please check logs.");
+        }
     }
 
     public function getUserByUsername($username) {
-        $stmt = $this->pdo->prepare("SELECT * FROM admin WHERE username = :username");  // Ensure the table is correct
+        $stmt = $this->db->prepare('SELECT * FROM admin WHERE username = :username');
         $stmt->execute(['username' => $username]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);  // Fetch result as an associative array
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
 ?>

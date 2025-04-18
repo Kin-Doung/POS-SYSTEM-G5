@@ -67,6 +67,7 @@ class ProductModel
             $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($product === false) {
+                $this->pdo->rollBack();
                 return false;
             }
 
@@ -96,7 +97,6 @@ class ProductModel
             return true;
         } catch (Exception $e) {
             $this->pdo->rollBack();
-            error_log("Error updating product price: " . $e->getMessage());
             return false;
         }
     }
@@ -174,7 +174,6 @@ class ProductModel
             return true;
         } catch (Exception $e) {
             $this->pdo->rollBack();
-            error_log("Error in deductInventoryAndUpdateProduct: " . $e->getMessage());
             return false;
         }
     }
@@ -193,7 +192,8 @@ class ProductModel
                 $product = $productStmt->fetch(PDO::FETCH_ASSOC);
 
                 if (!$product) {
-                    throw new Exception("Product not found: ID $productId");
+                    $this->pdo->rollBack();
+                    return false;
                 }
 
                 $inventoryStmt = $this->pdo->prepare("SELECT quantity FROM inventory WHERE product_id = :product_id FOR UPDATE");
@@ -201,14 +201,13 @@ class ProductModel
                 $inventory = $inventoryStmt->fetch(PDO::FETCH_ASSOC);
 
                 if (!$inventory) {
-                    throw new Exception("No inventory record for product ID: $productId");
+                    $this->pdo->rollBack();
+                    return false;
                 }
 
-                if ($product['quantity'] < $quantityToBuy) {
-                    throw new Exception("Insufficient product stock for ID: $productId. Available: {$product['quantity']}");
-                }
-                if ($inventory['quantity'] < $quantityToBuy) {
-                    throw new Exception("Insufficient inventory stock for ID: $productId. Available: {$inventory['quantity']}");
+                if ($product['quantity'] < $quantityToBuy || $inventory['quantity'] < $quantityToBuy) {
+                    $this->pdo->rollBack();
+                    return false;
                 }
 
                 $newProductQty = $product['quantity'] - $quantityToBuy;
@@ -221,7 +220,8 @@ class ProductModel
                 ]);
 
                 if (!$productSuccess) {
-                    throw new Exception("Failed to update product quantity for ID: $productId");
+                    $this->pdo->rollBack();
+                    return false;
                 }
 
                 $inventoryUpdate = $this->pdo->prepare("UPDATE inventory SET quantity = :quantity WHERE product_id = :product_id");
@@ -231,7 +231,8 @@ class ProductModel
                 ]);
 
                 if (!$inventorySuccess) {
-                    throw new Exception("Failed to update inventory quantity for ID: $productId");
+                    $this->pdo->rollBack();
+                    return false;
                 }
 
                 $this->logTransaction($productId, $quantityToBuy);
@@ -241,8 +242,7 @@ class ProductModel
             return true;
         } catch (Exception $e) {
             $this->pdo->rollBack();
-            error_log("Cart processing failed: " . $e->getMessage());
-            throw $e;
+            return false;
         }
     }
 
@@ -257,7 +257,6 @@ class ProductModel
                 ':quantity' => $quantity
             ]);
         } catch (Exception $e) {
-            error_log("Error logging transaction: " . $e->getMessage());
         }
     }
 
@@ -296,7 +295,8 @@ class ProductModel
             $inventory = $inventoryStmt->fetch(PDO::FETCH_ASSOC);
 
             if (!$inventory) {
-                throw new Exception("Inventory item not found: ID $inventoryId");
+                $this->pdo->rollBack();
+                return false;
             }
 
             $productStmt = $this->pdo->prepare("SELECT id FROM products WHERE name = :name LIMIT 1");
@@ -326,8 +326,7 @@ class ProductModel
             return true;
         } catch (Exception $e) {
             $this->pdo->rollBack();
-            error_log("Error syncing quantity: " . $e->getMessage());
-            throw $e;
+            return false;
         }
     }
 
@@ -347,7 +346,6 @@ class ProductModel
             ]);
             return true;
         } catch (Exception $e) {
-            error_log("Error saving to reports: " . $e->getMessage());
             return false;
         }
     }
@@ -367,7 +365,8 @@ class ProductModel
                 $inventory = $inventoryStmt->fetch(PDO::FETCH_ASSOC);
 
                 if (!$inventory) {
-                    throw new Exception("Inventory not found: ID $inventoryId");
+                    $this->pdo->rollBack();
+                    return false;
                 }
 
                 $productStmt = $this->pdo->prepare("SELECT id, quantity FROM products WHERE name = :name FOR UPDATE");
@@ -375,11 +374,13 @@ class ProductModel
                 $product = $productStmt->fetch(PDO::FETCH_ASSOC);
 
                 if (!$product) {
-                    throw new Exception("Product not found for inventory ID: $inventoryId");
+                    $this->pdo->rollBack();
+                    return false;
                 }
 
                 if ($inventory['quantity'] < $quantityToBuy || $product['quantity'] < $quantityToBuy) {
-                    throw new Exception("Insufficient stock for ID: $inventoryId");
+                    $this->pdo->rollBack();
+                    return false;
                 }
 
                 $newQty = $inventory['quantity'] - $quantityToBuy;
@@ -402,7 +403,8 @@ class ProductModel
                 );
 
                 if (!$reportSuccess) {
-                    throw new Exception("Failed to save report for inventory ID: $inventoryId");
+                    $this->pdo->rollBack();
+                    return false;
                 }
 
                 $this->logTransaction($product['id'], $quantityToBuy);
@@ -412,8 +414,7 @@ class ProductModel
             return true;
         } catch (Exception $e) {
             $this->pdo->rollBack();
-            error_log("Cart processing failed: " . $e->getMessage());
-            throw $e;
+            return false;
         }
     }
 
@@ -437,11 +438,13 @@ class ProductModel
                 $inventory = $inventoryStmt->fetch(PDO::FETCH_ASSOC);
 
                 if (!$inventory) {
-                    throw new Exception("Inventory not found: ID $inventoryId");
+                    $this->pdo->rollBack();
+                    return false;
                 }
 
                 if (abs($cartSellingPrice - $inventory['selling_price']) > 0.01) {
-                    throw new Exception("Invalid selling price for ID: $inventoryId");
+                    $this->pdo->rollBack();
+                    return false;
                 }
 
                 $productStmt = $this->pdo->prepare("
@@ -454,11 +457,13 @@ class ProductModel
                 $product = $productStmt->fetch(PDO::FETCH_ASSOC);
 
                 if (!$product) {
-                    throw new Exception("Product not found for inventory ID: $inventoryId");
+                    $this->pdo->rollBack();
+                    return false;
                 }
 
                 if ($inventory['quantity'] < $quantityToBuy || $product['quantity'] < $quantityToBuy) {
-                    throw new Exception("Insufficient stock for ID: $inventoryId");
+                    $this->pdo->rollBack();
+                    return false;
                 }
 
                 $newQty = $inventory['quantity'] - $quantityToBuy;
@@ -532,8 +537,7 @@ class ProductModel
             return true;
         } catch (Exception $e) {
             $this->pdo->rollBack();
-            error_log("Cart processing with sales data failed: " . $e->getMessage());
-            throw $e;
+            return false;
         }
     }
 
@@ -547,14 +551,16 @@ class ProductModel
             $inventory = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if (!$inventory) {
-                throw new Exception("Inventory item not found: ID $inventoryId");
+                $this->pdo->rollBack();
+                return false;
             }
 
             $deleteStmt = $this->pdo->prepare("DELETE FROM inventory WHERE id = :id");
             $success = $deleteStmt->execute([':id' => $inventoryId]);
 
             if (!$success) {
-                throw new Exception("Failed to delete inventory item: ID $inventoryId");
+                $this->pdo->rollBack();
+                return false;
             }
 
             $productStmt = $this->pdo->prepare("SELECT id FROM products WHERE name = :name LIMIT 1");
@@ -570,8 +576,7 @@ class ProductModel
             return true;
         } catch (Exception $e) {
             $this->pdo->rollBack();
-            error_log("Error deleting inventory: " . $e->getMessage());
-            throw $e;
+            return false;
         }
     }
 
@@ -597,7 +602,6 @@ class ProductModel
 
     public function getProductPageByBarcode($barcode, $perPage = 4)
     {
-        // Get the position of the item in the ordered list
         $query = "
             SELECT 
                 (SELECT COUNT(*) + 1 
@@ -623,7 +627,6 @@ class ProductModel
             return null;
         }
 
-        // Calculate the page
         $position = $item['position'];
         $page = ceil($position / $perPage);
 

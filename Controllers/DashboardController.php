@@ -1,5 +1,4 @@
 <?php
-require_once './Controllers/BaseController.php';
 require_once './Models/DashboardModel.php';
 
 class DashboardController extends BaseController

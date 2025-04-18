@@ -218,7 +218,7 @@ class InventoryController extends BaseController
                     exit;
                 }
                 if ($_FILES['image']['size'] > $maxSize) {
-                    error_log("Image size exceeds 2MB for update id $id: {$_FILES['image']['size']}");
+                    error_log( "Image size exceeds 2MB for update id $id: {$_FILES['image']['size']}");
                     http_response_code(400);
                     echo json_encode(['error' => 'Image size must not exceed 2MB.']);
                     exit;

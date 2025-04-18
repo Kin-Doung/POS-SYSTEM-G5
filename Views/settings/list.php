@@ -112,8 +112,6 @@
             </div>
         </div>
     </div>
-<<<<<<< HEAD
+
 </main>
-=======
     <script src="../../views/assets/js/demo/chart-area-demo.js"></script>
->>>>>>> stock/tracking

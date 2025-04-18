@@ -67,7 +67,7 @@
                     </a>
                 </div>
             </div>
-            <div class="input-group">
+            <div class="input-group" style="margin-left: 0px;">
                 <select id="categorySelect" class="ms-2 selected" onchange="filterTable()">
                     <option value="">Select Category</option>
                     <?php if (!empty($categories)): ?>

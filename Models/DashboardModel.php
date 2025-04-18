@@ -1,4 +1,5 @@
 <?php
+// models/DashboardModel.php
 require_once './Databases/database.php';
 
 class DashboardModel
@@ -10,7 +11,76 @@ class DashboardModel
         $this->pdo = new Database();
     }
 
-    // Your existing methods (unchanged)
+    /**
+     * Fetch stock status counts and percentages (Low, Medium, High) for all or filtered inventory
+     * @param string|null $categoryId Optional category ID to filter inventory
+     * @return array Stock status data
+     */
+    function getStockStatus($categoryId = null)
+    {
+        try {
+            $query = "SELECT id, product_name, quantity, category_id FROM inventory";
+            if ($categoryId !== null && $categoryId !== '') {
+                $query .= " WHERE category_id = :category_id";
+            }
+            $query .= " ORDER BY id DESC";
+
+            $stmt = $this->pdo->getConnection()->prepare($query);
+            if ($categoryId !== null && $categoryId !== '') {
+                $stmt->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
+            }
+            $stmt->execute();
+            $tracking = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Initialize counters
+            $lowCount = 0;
+            $mediumCount = 0;
+            $highCount = 0;
+            $totalFiltered = 0;
+
+            // Calculate stock status counts
+            foreach ($tracking as $item) {
+                $quantity = $item['quantity'];
+                if ($quantity < 0) continue;
+                $totalFiltered++;
+                if ($quantity >= 50) {
+                    $highCount++;
+                } elseif ($quantity >= 10) {
+                    $mediumCount++;
+                } else {
+                    $lowCount++;
+                }
+            }
+
+            // Calculate percentages
+            $lowPercent = $totalFiltered > 0 ? ($lowCount / $totalFiltered) * 100 : 0;
+            $mediumPercent = $totalFiltered > 0 ? ($mediumCount / $totalFiltered) * 100 : 0;
+            $highPercent = $totalFiltered > 0 ? ($highCount / $totalFiltered) * 100 : 0;
+
+            return [
+                'lowCount' => $lowCount,
+                'mediumCount' => $mediumCount,
+                'highCount' => $highCount,
+                'totalFiltered' => $totalFiltered,
+                'lowPercent' => round($lowPercent),
+                'mediumPercent' => round($mediumPercent),
+                'highPercent' => round($highPercent)
+            ];
+        } catch (PDOException $e) {
+            error_log("Error fetching stock status: " . $e->getMessage());
+            return [
+                'lowCount' => 0,
+                'mediumCount' => 0,
+                'highCount' => 0,
+                'totalFiltered' => 0,
+                'lowPercent' => 0,
+                'mediumPercent' => 0,
+                'highPercent' => 0,
+                'error' => 'Failed to fetch stock status'
+            ];
+        }
+    }
+
     function getProfit_Loss()
     {
         $stmt = $this->pdo->query("SELECT * FROM sales_data ORDER BY id DESC");
@@ -96,7 +166,6 @@ class DashboardModel
         }
     }
 
-    // New methods for reports table (added, not changing existing code)
     function getAllReports()
     {
         try {

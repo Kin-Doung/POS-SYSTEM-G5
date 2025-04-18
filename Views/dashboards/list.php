@@ -687,12 +687,7 @@
 
       <script src="../../views/assets/js/demo/chart-area-demo.js"></script>
     </div>
-<<<<<<< HEAD
   </div>
-=======
-</div>
-</div>
->>>>>>> feature/dashboard
 </body>
 </div>
 

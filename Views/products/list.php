@@ -2,10 +2,8 @@
 require_once './views/layouts/header.php';
 require_once './views/layouts/side.php';
 ?>
-
-<!-- Add Font Awesome for the ellipsis icon -->
+<!-- Add Font Awesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
 <style>
     /* Sidebar */
     .sidebar {
@@ -103,7 +101,6 @@ require_once './views/layouts/side.php';
         content: "\f0d8";
     }
 
-
     .product-col {
         width: 25%;
         padding: 0 5px;
@@ -121,6 +118,11 @@ require_once './views/layouts/side.php';
         width: 33.33%;
     }
 
+    .product-col.highlight {
+        border: 2px solid #007bff;
+        background-color: #e7f1ff;
+    }
+
     .product-card {
         background-color: #fff;
         border-radius: 10px;
@@ -129,9 +131,7 @@ require_once './views/layouts/side.php';
         height: 100%;
         transition: transform 0.2s ease;
         position: relative;
-        /* Added for kebab menu positioning */
         z-index: 1;
-        /* Base z-index for cards */
     }
 
     .product-card:hover {
@@ -195,7 +195,7 @@ require_once './views/layouts/side.php';
         background-color: #0056b3;
     }
 
-    /* New Kebab Menu Styles */
+    /* Kebab Menu Styles */
     .kebab-menu {
         position: absolute;
         top: 5px;
@@ -220,14 +220,13 @@ require_once './views/layouts/side.php';
         border-radius: 5px;
         padding: 5px 0;
         z-index: 1002;
-        /* Highest z-index to ensure it's in front */
     }
 
     .dropdown-menu.visible {
         display: block;
     }
 
-    .dropdown-menu {
+    .dropdown-menu p {
         width: 100%;
         padding: 8px 15px;
         border: none;
@@ -238,7 +237,7 @@ require_once './views/layouts/side.php';
         font-size: 14px;
     }
 
-    .dropdown-menu:hover {
+    .dropdown-menu p:hover {
         background-color: #f8f9fa;
     }
 
@@ -341,6 +340,7 @@ require_once './views/layouts/side.php';
         flex-direction: column;
         align-items: center;
         gap: 12px;
+        overflow: visible;
     }
 
     .cart-btn {
@@ -353,6 +353,12 @@ require_once './views/layouts/side.php';
         transition: background-color 0.2s ease, transform 0.1s ease;
         width: 100%;
         max-width: 200px;
+        pointer-events: auto;
+    }
+
+    .cart-btn:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
     }
 
     .cart-btn-success {
@@ -362,7 +368,7 @@ require_once './views/layouts/side.php';
         background-color: #28a745;
     }
 
-    .cart-btn-success:hover {
+    .cart-btn-success:hover:not(:disabled) {
         background-color: #218838;
     }
 
@@ -370,6 +376,7 @@ require_once './views/layouts/side.php';
         position: relative;
         width: 100%;
         max-width: 200px;
+        overflow: visible;
     }
 
     .cart-btn-secondary {
@@ -383,13 +390,13 @@ require_once './views/layouts/side.php';
     .options-dropdown {
         display: none;
         position: absolute;
-        bottom: calc(100% + 5px);
+        top: calc(100% + 5px);
         left: 50%;
         transform: translateX(-50%);
         background-color: #fff;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
         border-radius: 6px;
-        z-index: 1000;
+        z-index: 1001;
         width: 100%;
         max-width: 200px;
         flex-direction: column;
@@ -413,9 +420,11 @@ require_once './views/layouts/side.php';
         border-radius: 4px;
         font-weight: 500;
         letter-spacing: 0.5px;
+        pointer-events: auto;
+        cursor: pointer;
     }
 
-    .options-dropdown button:hover {
+    .options-dropdown button:hover:not(:disabled) {
         transform: translateY(-1px);
         opacity: 0.95;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -429,7 +438,7 @@ require_once './views/layouts/side.php';
         background-color: #17a2b8;
     }
 
-    .cart-btn-info:hover {
+    .cart-btn-info:hover:not(:disabled) {
         background-color: #138496;
     }
 
@@ -437,7 +446,7 @@ require_once './views/layouts/side.php';
         background-color: #dc3545;
     }
 
-    .cart-btn-danger:hover {
+    .cart-btn-danger:hover:not(:disabled) {
         background-color: #c82333;
     }
 
@@ -445,11 +454,11 @@ require_once './views/layouts/side.php';
         background-color: #007bff;
     }
 
-    .cart-btn-primary:hover {
+    .cart-btn-primary:hover:not(:disabled) {
         background-color: #0056b3;
     }
 
-    .cart-btn:hover {
+    .cart-btn:hover:not(:disabled) {
         transform: scale(1.05);
     }
 
@@ -508,6 +517,7 @@ require_once './views/layouts/side.php';
             max-width: 100%;
             left: 0;
             transform: none;
+            top: calc(100% + 5px);
         }
 
         .options-dropdown button {
@@ -528,19 +538,190 @@ require_once './views/layouts/side.php';
         margin-bottom: 10px;
         color: #000;
     }
+
+    .pagination-controls {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        font-family: Arial, sans-serif;
+    }
+
+    .pagination-controls a,
+    .pagination-controls button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .pagination-controls a {
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+    }
+
+    .pagination-controls a:hover {
+        background-color: #0056b3;
+    }
+
+    .pagination-controls button {
+        background-color: #ccc;
+        color: #fff;
+        cursor: not-allowed;
+    }
+
+    .pagination-controls span {
+        font-weight: bold;
+    }
+
+    .barcode-scanner input:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    }
+
+    #toast {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #28a745;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        z-index: 1000;
+    }
+
+    .more-options {
+        position: relative;
+        width: 100%;
+        max-width: 200px;
+    }
+
+    .cart-btn-secondary {
+        background-color: #6c757d;
+    }
+
+    .cart-btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+    .options-dropdown {
+        display: none;
+        position: absolute;
+        top: 100%;
+        /* Position directly below the button */
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #fff;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        width: 100%;
+        max-width: 200px;
+        padding: 5px;
+        z-index: 2000;
+        /* Increased to ensure it’s above other elements */
+    }
+
+    .options-dropdown.visible {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .options-dropdown button {
+        width: 100%;
+        border: none;
+        margin: 2px 0;
+        padding: 10px;
+        font-size: 0.95rem;
+        color: #fff;
+        text-align: center;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+    .options-dropdown button:hover:not(:disabled) {
+        opacity: 0.9;
+    }
+
+    .cart-btn-info {
+        background-color: #17a2b8;
+    }
+
+    .cart-btn-info:hover:not(:disabled) {
+        background-color: #138496;
+    }
+
+    .cart-btn-primary {
+        background-color: #007bff;
+    }
+
+    .cart-btn-primary:hover:not(:disabled) {
+        background-color: #0056b3;
+    }
+
+    .cart-btn-danger {
+        background-color: #dc3545;
+    }
+
+    .cart-btn-danger:hover:not(:disabled) {
+        background-color: #c82333;
+    }
+
+    /* Ensure cart-footer doesn’t interfere */
+    .cart-footer {
+        padding: 15px;
+        background-color: #f8f9fa;
+        text-align: center;
+        border-top: 1px solid #ddd;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        position: relative;
+        z-index: 900;
+        /* Lower than options-dropdown */
+    }
+
+    /* Media query for responsiveness */
+    @media (max-width: 767px) {
+        .more-options {
+            max-width: 100%;
+        }
+
+        .options-dropdown {
+            max-width: 100%;
+            left: 0;
+            transform: none;
+        }
+
+        .options-dropdown button {
+            padding: 10px;
+            font-size: 1rem;
+        }
+    }
 </style>
 
 <?php require_once './views/layouts/nav.php' ?>
-
 
 <main class="main-content">
     <div class="container-fluid">
         <div class="row" id="productRow">
             <div class="product-section">
                 <h3>Order Products</h3>
-                <div class="row">
+                <!-- Barcode Input -->
+                <div class="barcode-scanner" style="margin-bottom: 15px;">
+                    <input type="text" id="barcodeInput" placeholder="Scan or enter barcode" style="padding: 8px; width: 200px; border: 1px solid #ddd; border-radius: 4px;" autofocus />
+                </div>
+                <div class="row" id="productGrid">
                     <?php foreach ($inventory as $item): ?>
-                        <div class="product-col">
+                        <div class="product-col" data-barcode="<?= htmlspecialchars($item['barcode'] ?? '') ?>" data-inventory-id="<?= htmlspecialchars($item['inventory_id']) ?>">
                             <div class="product-card">
                                 <i class="fa-solid fa-ellipsis-vertical kebab-menu"></i>
                                 <div class="dropdown-menu">
@@ -548,24 +729,21 @@ require_once './views/layouts/side.php';
                                 </div>
                                 <div class="image-wrapper">
                                     <?php if (!empty($item['image'])): ?>
-                                        <img src="<?= htmlspecialchars($item['image']) ?>"
-                                            alt="<?= htmlspecialchars($item['inventory_product_name']) ?>"
-                                            onerror="this.src='/views/assets/images/default-product.jpg'">
+                                        <img src="<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['inventory_product_name']) ?>" onerror="this.src='/views/assets/images/default-product.jpg'">
                                     <?php else: ?>
-                                        <img src="/views/assets/images/default-product.jpg"
-                                            alt="Default Product Image">
+                                        <img src="/views/assets/images/default-product.jpg" alt="Default Product Image">
                                     <?php endif; ?>
                                 </div>
                                 <div class="card-body">
                                     <h6 class="card-title"><?= htmlspecialchars($item['inventory_product_name']) ?></h6>
                                     <p class="price" data-id="<?= htmlspecialchars($item['inventory_id']) ?>">
-                                        $<?= htmlspecialchars($item['amount']) ?>
+                                        $<?= htmlspecialchars($item['selling_price'] ?? $item['amount']) ?>
                                     </p>
                                     <p class="quantity" data-id="<?= htmlspecialchars($item['inventory_id']) ?>" style="display: none;">
                                         Qty: <?= htmlspecialchars($item['quantity']) ?>
                                     </p>
                                     <input type="hidden" name="inventory_id" value="<?= htmlspecialchars($item['inventory_id']) ?>" />
-                                    <button class="buy">Add to Cart</button>
+                                    <button class="buy" data-inventory-id="<?= htmlspecialchars($item['inventory_id']) ?>">Add to Cart</button>
                                 </div>
                             </div>
                         </div>
@@ -587,50 +765,9 @@ require_once './views/layouts/side.php';
                         <button disabled><i class="fa-solid fa-greater-than"></i></button>
                     <?php endif; ?>
                 </div>
-                <style>
-                    .pagination-controls {
-                        margin-top: 20px;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        gap: 15px;
-                        font-family: Arial, sans-serif;
-                    }
-
-                    .pagination-controls a,
-                    .pagination-controls button {
-                        padding: 8px 16px;
-                        border: none;
-                        border-radius: 6px;
-                        font-size: 14px;
-                        cursor: pointer;
-                        transition: background-color 0.3s ease;
-                    }
-
-                    .pagination-controls a {
-                        background-color: #007bff;
-                        color: white;
-                        text-decoration: none;
-                    }
-
-                    .pagination-controls a:hover {
-                        background-color: #0056b3;
-                    }
-
-                    .pagination-controls button {
-                        background-color: #ccc;
-                        color: #fff;
-                        cursor: not-allowed;
-                    }
-
-                    .pagination-controls span {
-                        font-weight: bold;
-                    }
-                </style>
             </div>
         </div>
         <div class="cart-section" id="cartSection">
-
             <div class="cart-card">
                 <div class="cart-header">
                     <h4>POS Payout</h4>
@@ -668,555 +805,497 @@ require_once './views/layouts/side.php';
                     <button class="cart-btn cart-btn-success" id="submitCart">Complete order</button>
                 </div>
             </div>
+
         </div>
     </div>
-    <?php require_once 'views/layouts/footer.php'; ?>
+    <!-- Toast Notification (Success Only) -->
+    <div id="toast"></div>
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-    const cartSection = document.getElementById('cartSection');
-    const cartToggle = document.getElementById('cartToggle');
-    const closeCart = document.getElementById('closeCart');
-    const cartCount = document.getElementById('cartCount');
-
-    const TELEGRAM_BOT_TOKEN = '7914523767:AAEJxRARlS6nn4Qggt3lw8pOYWKdjAT3FaY';
-    const TELEGRAM_CHAT_ID = '@engly_system_telegram';
-
     document.addEventListener('DOMContentLoaded', function() {
-        loadCartFromLocalStorage();
-    });
+        const barcodeInput = document.getElementById('barcodeInput');
+        const cartSection = document.getElementById('cartSection');
+        const cartBody = document.getElementById('cartBody');
+        const grandTotal = document.getElementById('grandTotal');
+        const submitCartBtn = document.getElementById('submitCart');
+        const moreOptionsBtn = document.getElementById('moreOptionsBtn');
+        const optionsDropdown = document.getElementById('optionsDropdown');
+        const savePdfBtn = document.getElementById('savePdf');
+        const completeCartBtn = document.getElementById('completeCart');
+        const clearCartBtn = document.getElementById('clearCart');
+        const productGrid = document.getElementById('productGrid');
+        let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
-    function showCart() {
-        cartSection.classList.add('visible');
-        document.body.classList.add('cart-visible');
-    }
+        let toastTimeout = null;
 
-    function hideCart() {
-        cartSection.classList.remove('visible');
-        document.body.classList.remove('cart-visible');
-    }
+        // Initialize cart UI from localStorage
+        updateCartUI();
 
-    function updateCard(inventoryId, newQuantity) {
-        const qtyElement = document.querySelector(`.quantity[data-id="${inventoryId}"]`);
-        if (qtyElement) qtyElement.textContent = `Qty: ${newQuantity}`;
-    }
-
-    function updateGrandTotal() {
-        const total = Array.from(document.querySelectorAll('#cartBody tr'))
-            .reduce((sum, row) => {
-                const qty = parseInt(row.querySelector('.cart-qty').value) || 1;
-                const price = parseFloat(row.querySelector('.cart-price').value) || 0;
-                return sum + (qty * price);
-            }, 0);
-        document.getElementById('grandTotal').textContent = total.toFixed(2);
-        return total;
-    }
-
-    function updateCartCount() {
-        const itemCount = document.querySelectorAll('#cartBody tr').length;
-        const cartCountElement = document.getElementById('cartCount');
-        cartCountElement.textContent = itemCount;
-        if (itemCount > 0) {
-            cartCountElement.classList.add('visible');
-        } else {
-            cartCountElement.classList.remove('visible');
-        }
-        updateGrandTotal();
-    }
-
-    function saveCartToLocalStorage() {
-        const cartItems = [];
-        document.querySelectorAll('#cartBody tr').forEach(row => {
-            cartItems.push({
-                inventoryId: row.dataset.id,
-                productName: row.cells[0].textContent,
-                quantity: parseInt(row.querySelector('.cart-qty').value),
-                price: parseFloat(row.querySelector('.cart-price').value),
-                maxQty: parseInt(row.querySelector('.cart-qty').max)
-            });
-        });
-        localStorage.setItem('cartItems', JSON.stringify(cartItems));
-    }
-
-    function loadCartFromLocalStorage() {
-        const savedItems = localStorage.getItem('cartItems');
-        if (savedItems) {
-            const cartItems = JSON.parse(savedItems);
-            cartItems.forEach(item => {
-                const row = document.createElement('tr');
-                row.dataset.id = item.inventoryId;
-                row.innerHTML = `
-                    <td style="vertical-align: middle;">${item.productName}</td>
-                    <td><input type="number" class="cart-qty" min="1" max="${item.maxQty}" value="${item.quantity}"></td>
-                    <td><input type="number" class="cart-price" min="0" step="0.01" value="${item.price.toFixed(2)}"></td>
-                    <td><span class="remove-item">✖</span></td>
-                `;
-                document.getElementById('cartBody').appendChild(row);
-            });
-            updateCartCount();
-        }
-    }
-
-    async function sendToTelegram(message) {
-        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-        try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    chat_id: TELEGRAM_CHAT_ID,
-                    text: message,
-                    parse_mode: 'Markdown'
-                })
-            });
-            const data = await response.json();
-            if (!data.ok) {
-                throw new Error(`Telegram API error: ${data.description}`);
+        // Show toast notification (success only)
+        function showToast(message, duration = 2000) {
+            const toast = document.getElementById('toast');
+            if (toastTimeout) {
+                clearTimeout(toastTimeout);
             }
-            return true;
-        } catch (error) {
-            console.error('Failed to send message to Telegram:', error);
-            return false;
+            toast.textContent = message;
+            toast.style.display = 'block';
+            toastTimeout = setTimeout(() => {
+                toast.style.display = 'none';
+                toastTimeout = null;
+            }, duration);
         }
-    }
 
-    cartToggle.addEventListener('click', () => {
-        if (cartSection.classList.contains('visible')) {
-            hideCart();
-        } else {
-            showCart();
+        // Clear UI state and localStorage
+        function clearUIState() {
+            document.querySelectorAll('.product-col').forEach(col => {
+                col.classList.remove('highlight');
+            });
+            barcodeInput.value = '';
+            barcodeInput.focus();
+            const urlParams = new URLSearchParams(window.location.search);
+            const page = urlParams.get('page') || '1';
+            window.history.replaceState({}, document.title, `?page=${page}`);
+            toggleCart(false);
+            cartItems = [];
+            localStorage.removeItem('cartItems');
+            updateCartUI();
         }
-    });
 
-    closeCart.addEventListener('click', hideCart);
-
-    document.querySelectorAll('.buy').forEach(button => {
-        button.addEventListener('click', async function() {
-            const card = this.closest('.product-card');
-            const inventoryId = card.querySelector('input[name="inventory_id"]').value;
-            const productName = card.querySelector('.card-title').textContent.trim();
-            const price = parseFloat(card.querySelector('.price').textContent.replace('$', ''));
-            const quantity = parseInt(card.querySelector('.quantity').textContent.replace('Qty: ', ''));
-            const existingRow = document.querySelector(`#cartBody tr[data-id="${inventoryId}"]`);
-
-            if (existingRow) {
-                const qtyInput = existingRow.querySelector('.cart-qty');
-                qtyInput.value = parseInt(qtyInput.value) + 1;
-                qtyInput.dispatchEvent(new Event('input'));
-                updateCartCount();
-                saveCartToLocalStorage();
-                showCart();
+        // Handle barcode input and page switching
+        function handleBarcodeScan(barcode) {
+            if (!barcode) {
                 return;
             }
 
-            try {
-                const response = await fetch('/products/syncQuantity', {
+            const productCols = document.querySelectorAll('.product-col');
+            productCols.forEach(col => {
+                col.classList.remove('highlight');
+            });
+
+            const productCol = document.querySelector(`.product-col[data-barcode="${barcode}"]`);
+            if (productCol) {
+                productCol.classList.add('highlight');
+                const buyButton = productCol.querySelector('.buy');
+                if (buyButton) {
+                    buyButton.click();
+                    resetBarcodeInput();
+                    return;
+                }
+            }
+
+            fetch('/products/getProductPageByBarcode', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        inventoryId,
-                        quantity
+                        barcode: barcode
                     })
-                });
-                if (!response.ok) throw new Error(`Server error: ${response.status}`);
-                const data = await response.json();
-                if (data.success) {
-                    const row = document.createElement('tr');
-                    row.dataset.id = inventoryId;
-                    row.innerHTML = `
-                        <td style="vertical-align: middle;">${productName}</td>
-                        <td><input type="number" class="cart-qty" min="1" max="${quantity}" value="1"></td>
-                        <td><input type="number" class="cart-price" min="0" step="0.01" value="${price.toFixed(2)}"></td>
-                        <td><span class="remove-item">✖</span></td>
-                    `;
-                    document.getElementById('cartBody').appendChild(row);
-                    updateCartCount();
-                    saveCartToLocalStorage();
-                    showCart();
-                } else {
-                    alert(`Error syncing quantity: ${data.message}`);
-                }
-            } catch (error) {
-                console.error('Add to cart failed:', error);
-                alert(`Failed to add item: ${error.message}`);
-            }
-        });
-    });
-
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('remove-item')) {
-            e.target.closest('tr').remove();
-            updateCartCount();
-            saveCartToLocalStorage();
-        }
-    });
-
-    document.addEventListener('input', function(e) {
-        if (e.target.classList.contains('cart-qty') || e.target.classList.contains('cart-price')) {
-            updateGrandTotal();
-            saveCartToLocalStorage();
-        }
-    });
-
-    document.getElementById('submitCart').addEventListener('click', async function() {
-        const cartItems = [];
-        let valid = true;
-        const itemsData = [];
-
-        document.querySelectorAll('#cartBody tr').forEach(row => {
-            const inventoryId = row.dataset.id;
-            const productName = row.cells[0].textContent.trim();
-            const quantityInput = row.querySelector('.cart-qty');
-            const priceInput = row.querySelector('.cart-price');
-            const quantity = parseInt(quantityInput.value) || 0;
-            const price = parseFloat(priceInput.value) || 0;
-            const maxQty = parseInt(quantityInput.max);
-
-            if (quantity > 0) {
-                if (quantity > maxQty) {
-                    alert(`Quantity for ${productName} exceeds available stock (${maxQty})`);
-                    valid = false;
-                    return;
-                }
-                cartItems.push({
-                    inventoryId,
-                    quantity,
-                    price
-                });
-                itemsData.push({
-                    productName,
-                    quantity,
-                    price
-                });
-            }
-        });
-
-        if (!valid || cartItems.length === 0) {
-            if (cartItems.length === 0) alert('Cart is empty! Please add items to proceed.');
-            return;
-        }
-
-        this.disabled = true;
-        this.textContent = 'Processing...';
-
-        const now = new Date();
-        const date = now.toLocaleDateString('en-GB', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-        }).split('/').join('/');
-        const time = now.toLocaleTimeString('en-US', {
-            hour: 'numeric',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: true
-        });
-
-        let telegramMessage = `*Engly_Store Receipt*\n\n`;
-        telegramMessage += `Date: ${date}\n`;
-        telegramMessage += `Time: ${time}\n\n`;
-        telegramMessage += "```\n";
-        telegramMessage += `item             Qty    Price       Total\n`;
-        telegramMessage += `-------------------------------------\n`;
-
-        itemsData.forEach(item => {
-            const productName = item.productName.padEnd(16, ' ').substring(0, 16);
-            const quantity = `x${item.quantity}`.padEnd(6, ' ');
-            const price = `$${item.price.toFixed(2)}`.padEnd(10, ' ');
-            const total = `= $${(item.quantity * item.price).toFixed(2)}`;
-            telegramMessage += `${productName} ${quantity} ${price} ${total}\n`;
-        });
-
-        telegramMessage += `-------------------------------------\n`;
-        const total = updateGrandTotal();
-        const totalPrice = `$${total.toFixed(2)}`;
-        telegramMessage += `Total: ${' '.repeat(30 - totalPrice.length)}${totalPrice}\n`;
-        telegramMessage += `-------------------------------------\n`;
-        telegramMessage += "```\n";
-        telegramMessage += `✅ Thank you!`;
-
-        const telegramSuccess = await sendToTelegram(telegramMessage);
-        if (!telegramSuccess) {
-            alert('Failed to send checkout details to Telegram. Proceeding with checkout anyway.');
-        }
-
-        fetch('/products/submitCart', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    cartItems
                 })
-            })
-            .then(response => {
-                if (!response.ok) throw new Error('Server error: ' + response.status);
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    cartItems.forEach(item => {
-                        const qtyElement = document.querySelector(`.quantity[data-id="${item.inventoryId}"]`);
-                        const currentQty = parseInt(qtyElement.textContent.replace('Qty: ', ''));
-                        updateCard(item.inventoryId, currentQty - item.quantity);
-                    });
-                    document.getElementById('cartBody').innerHTML = '';
-                    localStorage.removeItem('cartItems');
-                    hideCart();
-                    updateCartCount();
-                    alert('Checkout completed successfully! Inventory updated.');
-                } else {
-                    alert('Error: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to submit cart: ' + error.message);
-            })
-            .finally(() => {
-                this.disabled = false;
-                this.textContent = 'Checkout';
-            });
-    });
-
-    document.getElementById('clearCart').addEventListener('click', function() {
-        if (confirm('Are you sure you want to clear the cart?')) {
-            document.getElementById('cartBody').innerHTML = '';
-            document.getElementById('grandTotal').textContent = '0.00';
-            document.getElementById('qr-container').style.display = 'none';
-            localStorage.removeItem('cartItems');
-            updateCartCount();
-            hideCart();
-            document.getElementById('moreOptionsContainer').style.display = 'block';
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (data.page) {
+                            const currentPage = new URLSearchParams(window.location.search).get('page') || '1';
+                            if (data.page !== currentPage) {
+                                window.location.href = `?page=${data.page}&barcode=${encodeURIComponent(barcode)}`;
+                            } else {
+                                addToCart(data.item);
+                                resetBarcodeInput();
+                            }
+                        } else {
+                            addToCart(data.item);
+                            resetBarcodeInput();
+                        }
+                    } else {
+                        resetBarcodeInput(); // Silent failure
+                    }
+                })
+                .catch(error => {
+                    resetBarcodeInput(); // Silent failure
+                });
         }
-    });
 
-    const {
-        jsPDF
-    } = window.jspdf;
+        // Reset barcode input
+        function resetBarcodeInput() {
+            barcodeInput.value = '';
+            barcodeInput.focus();
+        }
 
-    document.getElementById('savePdf').addEventListener('click', function() {
-        const doc = new jsPDF();
-        doc.setFont("helvetica", "bold");
-        doc.setTextColor(0, 0, 0);
-        doc.setFontSize(20);
-        doc.text('Engly Store', 105, 15, {
-            align: 'center'
-        });
-        doc.setFontSize(10);
-        doc.setFont("helvetica", "normal");
-        doc.text('Phum TropeagnChhuk, Sangkat Tekla, Khan SenSok, Phnom Penh City', 105, 23, {
-            align: 'center'
-        });
-        doc.text('Phone: (+855) 97 45 67 89', 105, 28, {
-            align: 'center'
-        });
-        doc.text(`Date: ${new Date().toLocaleString()}`, 10, 35);
-        doc.text(`Cashier`, 180, 35, {
-            align: 'right'
-        });
-        doc.setLineWidth(0.5);
-        doc.line(10, 40, 200, 40);
-        let y = 50;
-        doc.setFontSize(12);
-        doc.setFont("helvetica", "bold");
-        doc.text('Item', 10, y);
-        doc.text('Qty', 100, y, {
-            align: 'right'
-        });
-        doc.text('Price', 140, y, {
-            align: 'right'
-        });
-        doc.text('Total', 180, y, {
-            align: 'right'
-        });
-        y += 5;
-        doc.setLineWidth(0.2);
-        doc.line(10, y, 200, y);
-        y += 5;
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(10);
-        let totalItems = 0;
-        document.querySelectorAll('#cartBody tr').forEach(row => {
-            const product = row.cells[0].textContent.trim().substring(0, 20);
-            const qty = row.querySelector('.cart-qty').value;
-            const price = parseFloat(row.querySelector('.cart-price').value).toFixed(2);
-            const total = (qty * price).toFixed(2);
-            doc.text(product, 10, y);
-            doc.text(qty, 100, y, {
-                align: 'right'
-            });
-            doc.text(`$${price}`, 140, y, {
-                align: 'right'
-            });
-            doc.text(`$${total}`, 180, y, {
-                align: 'right'
-            });
-            totalItems += parseInt(qty);
-            y += 8;
-        });
-        doc.setLineWidth(0.2);
-        doc.line(10, y, 200, y);
-        y += 10;
-        doc.setFontSize(12);
-        doc.setFont("helvetica", "bold");
-        const grandTotal = document.getElementById('grandTotal').textContent;
-        doc.text(`Total Items: ${totalItems}`, 10, y);
-        doc.text(`Subtotal: $${grandTotal}`, 180, y, {
-            align: 'right'
-        });
-        y += 10;
-        doc.setLineWidth(0.5);
-        doc.line(10, y, 200, y);
-        y += 10;
-        doc.setFontSize(12);
-        doc.setFont("helvetica", "bold");
-        doc.text('THANK YOU FOR SHOPPING WITH US!', 105, y, {
-            align: 'center'
-        });
-        y += 8;
-        doc.setFontSize(8);
-        doc.setFont("helvetica", "normal");
-        doc.text('engly@gmail.com', 105, y, {
-            align: 'center'
-        });
-        y += 9;
-        const qrImage = new Image();
-        qrImage.src = '../../views/assets/images/QR-code.png';
-        qrImage.crossOrigin = 'Anonymous';
-        qrImage.onload = function() {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = qrImage.width;
-            canvas.height = qrImage.height;
-            ctx.drawImage(qrImage, 0, 0);
-            const qrDataURL = canvas.toDataURL('image/png');
-            doc.addImage(qrDataURL, 'PNG', 95, y, 20, 20);
-            doc.save('pos-receipt.pdf');
-        };
-        qrImage.onerror = function() {
-            console.error('Failed to load QR code image.');
-            doc.text('[QR Code Failed to Load]', 105, y, {
-                align: 'center'
-            });
-            doc.save('pos-receipt.pdf');
-        };
-    });
-
-    document.getElementById('completeCart').addEventListener('click', function() {
-        const qrContainer = document.getElementById('qr-container');
-        const moreOptionsBtn = document.getElementById('moreOptionsBtn');
-        const optionsDropdown = document.getElementById('optionsDropdown');
-        const moreOptionsContainer = document.getElementById('moreOptionsContainer');
-        qrContainer.style.display = 'block';
-        moreOptionsContainer.style.display = 'none';
-        qrContainer.innerHTML = `
-            <img id="qr-code-img" src="../../views/assets/images/QR-code.png" alt="QR Code" style="width: 80px; height: 80px; margin-bottom: 15px;" />
-            <input type="text" id="inputField" placeholder="Enter your details" style="margin-bottom: 15px;" />
-            <button class="cart-btn cart-btn-info" id="savePdf2">Save PDF</button>
-            <button class="cart-btn cart-btn-primary" id="completeCart2">Complete</button>
-            <button class="cart-btn cart-btn-danger" id="clearCart2">Clear</button>
-        `;
-        document.getElementById('savePdf2').addEventListener('click', function() {
-            document.getElementById('savePdf').click();
-        });
-        document.getElementById('completeCart2').addEventListener('click', function() {
-            alert('Order completed!');
-            qrContainer.style.display = 'none';
-            moreOptionsContainer.style.display = 'block';
-        });
-        document.getElementById('clearCart2').addEventListener('click', function() {
-            document.getElementById('clearCart').click();
-        });
-        optionsDropdown.classList.remove('visible');
-        showCart();
-    });
-
-    const searchInput = document.querySelector('.search-container input');
-    const productCards = document.querySelectorAll('.product-col');
-
-    searchInput.addEventListener('input', function() {
-        const searchTerm = this.value.trim().toLowerCase();
-        productCards.forEach(card => {
-            const productName = card.querySelector('.card-title').textContent.trim().toLowerCase();
-            if (productName.includes(searchTerm)) {
-                card.classList.remove('hidden');
+        // Add to cart
+        function addToCart(item) {
+            const existingItem = cartItems.find(cartItem => cartItem.inventory_id === item.inventory_id);
+            if (existingItem) {
+                existingItem.quantity += 1;
             } else {
-                card.classList.add('hidden');
+                cartItems.push({
+                    inventory_id: item.inventory_id,
+                    name: item.inventory_product_name,
+                    price: parseFloat(item.selling_price || item.amount),
+                    quantity: 1,
+                    image: item.image
+                });
+            }
+
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            updateCartUI();
+            toggleCart(true);
+        }
+
+        // Update cart UI
+        function updateCartUI() {
+            cartBody.innerHTML = '';
+            let total = 0;
+
+            cartItems.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                <td>${item.name}</td>
+                <td><input type="number" class="cart-qty" value="${item.quantity}" min="1" data-index="${index}"></td>
+                <td><input type="number" class="cart-price" value="${item.price.toFixed(2)}" step="0.01" data-index="${index}"></td>
+                <td><span class="remove-item" data-index="${index}"><i class="fa-solid fa-trash"></i></span></td>
+            `;
+                cartBody.appendChild(row);
+                total += item.quantity * item.price;
+            });
+
+            grandTotal.textContent = total.toFixed(2);
+
+            savePdfBtn.disabled = cartItems.length === 0;
+            submitCartBtn.disabled = cartItems.length === 0;
+            completeCartBtn.disabled = cartItems.length === 0;
+
+            document.querySelectorAll('.cart-qty').forEach(input => {
+                input.addEventListener('change', function() {
+                    const index = this.dataset.index;
+                    const newQty = parseInt(this.value);
+                    if (newQty > 0) {
+                        cartItems[index].quantity = newQty;
+                        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                        updateCartUI();
+                    }
+                });
+            });
+
+            document.querySelectorAll('.cart-price').forEach(input => {
+                input.addEventListener('change', function() {
+                    const index = this.dataset.index;
+                    const newPrice = parseFloat(this.value);
+                    if (newPrice >= 0) {
+                        cartItems[index].price = newPrice;
+                        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                        updateCartUI();
+                    }
+                });
+            });
+
+            document.querySelectorAll('.remove-item').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = this.dataset.index;
+                    cartItems.splice(index, 1);
+                    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                    updateCartUI();
+                });
+            });
+        }
+
+        // Toggle cart visibility
+        function toggleCart(show) {
+            if (show) {
+                cartSection.classList.add('visible');
+                document.querySelector('.main-content').classList.add('cart-visible');
+            } else {
+                cartSection.classList.remove('visible');
+                document.querySelector('.main-content').classList.remove('cart-visible');
+            }
+        }
+
+        // Barcode input handling
+        barcodeInput.addEventListener('input', function(e) {
+            const barcode = e.target.value.trim();
+            if (barcode.length >= 3) {
+                handleBarcodeScan(barcode);
             }
         });
-    });
 
-    const moreOptionsBtn = document.getElementById('moreOptionsBtn');
-    const optionsDropdown = document.getElementById('optionsDropdown');
+        barcodeInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const barcode = e.target.value.trim();
+                handleBarcodeScan(barcode);
+            }
+        });
 
-    moreOptionsBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        optionsDropdown.classList.toggle('visible');
-        moreOptionsBtn.classList.toggle('active');
-    });
+        barcodeInput.focus();
 
-    document.addEventListener('click', function(e) {
-        if (!moreOptionsBtn.contains(e.target) && !optionsDropdown.contains(e.target)) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const scannedBarcode = urlParams.get('barcode');
+        if (scannedBarcode) {
+            const productCol = document.querySelector(`.product-col[data-barcode="${scannedBarcode}"]`);
+            if (productCol) {
+                productCol.classList.add('highlight');
+                const buyButton = productCol.querySelector('.buy');
+                if (buyButton) {
+                    buyButton.click();
+                    resetBarcodeInput();
+                    window.history.replaceState({}, document.title, `?page=${urlParams.get('page') || '1'}`);
+                }
+            }
+        }
+
+        document.querySelectorAll('.buy').forEach(button => {
+            button.addEventListener('click', function() {
+                const inventoryId = this.dataset.inventoryId;
+                const productCol = this.closest('.product-col');
+                const item = {
+                    inventory_id: inventoryId,
+                    inventory_product_name: productCol.querySelector('.card-title').textContent,
+                    selling_price: parseFloat(productCol.querySelector('.price').textContent.replace('$', '')),
+                    image: productCol.querySelector('img').src,
+                    quantity: 1
+                };
+                addToCart(item);
+            });
+        });
+
+        submitCartBtn.addEventListener('click', function() {
+            if (cartItems.length === 0) {
+                return; // Silent failure
+            }
+
+            fetch('/products/submitCart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        cartItems: cartItems.map(item => ({
+                            inventoryId: item.inventory_id,
+                            quantity: item.quantity,
+                            price: item.price
+                        }))
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast('Order completed successfully!');
+                        clearUIState();
+                    }
+                    barcodeInput.focus();
+                })
+                .catch(error => {
+                    barcodeInput.focus(); // Silent failure
+                });
+        });
+
+        // Toggle dropdown visibility
+        moreOptionsBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const isVisible = optionsDropdown.classList.contains('visible');
+            optionsDropdown.classList.toggle('visible', !isVisible);
+            moreOptionsBtn.classList.toggle('active', !isVisible);
+            // Debugging: Log toggle state
+            console.log('Dropdown toggled:', optionsDropdown.classList.contains('visible'));
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!moreOptionsBtn.contains(e.target) && !optionsDropdown.contains(e.target)) {
+                optionsDropdown.classList.remove('visible');
+                moreOptionsBtn.classList.remove('active');
+            }
+        });
+
+        // Prevent dropdown from closing when clicking inside
+        optionsDropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        savePdfBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (cartItems.length === 0) {
+                return; // Silent failure
+            }
+
+            const {
+                jsPDF
+            } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text('Cart Receipt', 10, 10);
+            let y = 20;
+            cartItems.forEach(item => {
+                doc.text(`${item.name}: ${item.quantity} x $${item.price.toFixed(2)}`, 10, y);
+                y += 10;
+            });
+            doc.text(`Total: $${grandTotal.textContent}`, 10, y);
+            doc.save('cart-receipt.pdf');
+            barcodeInput.focus();
             optionsDropdown.classList.remove('visible');
             moreOptionsBtn.classList.remove('active');
-        }
-    });
-
-    // New Kebab Menu Functionality
-    document.querySelectorAll('.kebab-menu').forEach(menu => {
-        menu.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const dropdown = this.nextElementSibling;
-            document.querySelectorAll('.dropdown-menu').forEach(d => {
-                if (d !== dropdown) d.classList.remove('visible');
-            });
-            dropdown.classList.toggle('visible');
         });
-    });
 
-    document.querySelectorAll('.delete-btn').forEach(button => {
-        button.addEventListener('click', async function(e) {
+        completeCartBtn.addEventListener('click', function(e) {
             e.stopPropagation();
-            const inventoryId = this.dataset.id;
-            if (confirm('Are you sure you want to delete this product?')) {
-                try {
-                    const response = await fetch('/products/delete', {
+            submitCartBtn.click();
+            optionsDropdown.classList.remove('visible');
+            moreOptionsBtn.classList.remove('active');
+        });
+
+        clearCartBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            cartItems = [];
+            localStorage.removeItem('cartItems');
+            updateCartUI();
+            toggleCart(false);
+            barcodeInput.focus();
+            optionsDropdown.classList.remove('visible');
+            moreOptionsBtn.classList.remove('active');
+        });
+
+        document.getElementById('closeCart').addEventListener('click', () => {
+            toggleCart(false);
+            barcodeInput.focus();
+        });
+
+        document.querySelectorAll('.kebab-menu').forEach(menu => {
+            menu.addEventListener('click', function() {
+                const dropdown = this.nextElementSibling;
+                dropdown.classList.toggle('visible');
+            });
+        });
+
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const inventoryId = this.dataset.id;
+                fetch('/products/deleteInventory', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            inventoryId
+                            inventoryId: inventoryId
                         })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            this.closest('.product-col').remove();
+                            showToast('Item deleted successfully.');
+                        }
+                        barcodeInput.focus();
+                    })
+                    .catch(error => {
+                        barcodeInput.focus(); // Silent failure
                     });
-                    if (!response.ok) throw new Error(`Server error: ${response.status}`);
-                    const data = await response.json();
-                    if (data.success) {
-                        this.closest('.product-col').remove();
-                        alert('Product deleted successfully!');
-                    } else {
-                        alert(`Error: ${data.message}`);
-                    }
-                } catch (error) {
-                    console.error('Delete failed:', error);
-                    alert(`Failed to delete product: ${error.message}`);
-                }
-            }
-            this.closest('.dropdown-menu').classList.remove('visible');
+            });
         });
     });
+    document.addEventListener('DOMContentLoaded', function() {
+        const moreOptionsBtn = document.getElementById('moreOptionsBtn');
+        const optionsDropdown = document.getElementById('optionsDropdown');
+        const savePdfBtn = document.getElementById('savePdf');
+        const completeCartBtn = document.getElementById('completeCart');
+        const clearCartBtn = document.getElementById('clearCart');
+        const submitCartBtn = document.getElementById('submitCart');
+        let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.kebab-menu') && !e.target.closest('.dropdown-menu')) {
-            document.querySelectorAll('.dropdown-menu').forEach(dropdown => {
-                dropdown.classList.remove('visible');
+        // Toggle dropdown visibility
+        moreOptionsBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const isVisible = optionsDropdown.classList.contains('visible');
+            optionsDropdown.classList.toggle('visible', !isVisible);
+            moreOptionsBtn.classList.toggle('active', !isVisible);
+            console.log('Dropdown toggled:', optionsDropdown.classList.contains('visible')); // Debugging
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!moreOptionsBtn.contains(e.target) && !optionsDropdown.contains(e.target)) {
+                optionsDropdown.classList.remove('visible');
+                moreOptionsBtn.classList.remove('active');
+                console.log('Dropdown closed (clicked outside)'); // Debugging
+            }
+        });
+
+        // Prevent dropdown from closing when clicking inside
+        optionsDropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
+            console.log('Clicked inside dropdown'); // Debugging
+        });
+
+        // Save PDF button
+        savePdfBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (cartItems.length === 0) {
+                console.log('Save PDF: Cart is empty'); // Debugging
+                return;
+            }
+            const {
+                jsPDF
+            } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text('Cart Receipt', 10, 10);
+            let y = 20;
+            cartItems.forEach(item => {
+                doc.text(`${item.name}: ${item.quantity} x $${item.price.toFixed(2)}`, 10, y);
+                y += 10;
             });
+            doc.text(`Total: $${document.getElementById('grandTotal').textContent}`, 10, y);
+            doc.save('cart-receipt.pdf');
+            optionsDropdown.classList.remove('visible');
+            moreOptionsBtn.classList.remove('active');
+            console.log('PDF saved'); // Debugging
+        });
+
+        // Payout button (triggers submitCart)
+        completeCartBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            submitCartBtn.click();
+            optionsDropdown.classList.remove('visible');
+            moreOptionsBtn.classList.remove('active');
+            console.log('Payout triggered'); // Debugging
+        });
+
+        // Clear cart button
+        clearCartBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            cartItems = [];
+            localStorage.removeItem('cartItems');
+            updateCartUI();
+            toggleCart(false);
+            optionsDropdown.classList.remove('visible');
+            moreOptionsBtn.classList.remove('active');
+            console.log('Cart cleared'); // Debugging
+        });
+
+        // Placeholder for updateCartUI and toggleCart (assumed defined elsewhere)
+        function updateCartUI() {
+            // Simplified for brevity; include your original updateCartUI logic here
+            document.getElementById('cartBody').innerHTML = '';
+            let total = 0;
+            cartItems.forEach((item, index) => {
+                total += item.quantity * item.price;
+            });
+            document.getElementById('grandTotal').textContent = total.toFixed(2);
+            savePdfBtn.disabled = cartItems.length === 0;
+            completeCartBtn.disabled = cartItems.length === 0;
+            submitCartBtn.disabled = cartItems.length === 0;
+        }
+
+        function toggleCart(show) {
+            const cartSection = document.getElementById('cartSection');
+            if (show) {
+                cartSection.classList.add('visible');
+                document.querySelector('.main-content').classList.add('cart-visible');
+            } else {
+                cartSection.classList.remove('visible');
+                document.querySelector('.main-content').classList.remove('cart-visible');
+            }
         }
     });
+    
 </script>
+
+<?php require_once 'views/layouts/footer.php'; ?>

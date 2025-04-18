@@ -110,5 +110,11 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
     <script src="../../views/assets/js/demo/chart-area-demo.js"></script>
 
+=======
+
+</main>
+    <script src="../../views/assets/js/demo/chart-area-demo.js"></script>
+>>>>>>> feature/purchase-order

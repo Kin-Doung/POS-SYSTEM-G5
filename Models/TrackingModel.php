@@ -56,4 +56,5 @@ class TrackingModel
             throw new Exception("Failed to create tracking record: " . $e->getMessage());
         }
     }
+    
 }

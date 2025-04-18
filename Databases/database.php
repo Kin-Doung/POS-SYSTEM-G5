@@ -1,5 +1,3 @@
-
-
 <?php
 class Database
 {
@@ -10,62 +8,61 @@ class Database
         $servername = "localhost";
         $username = "root";
         $password = "";
-        $dbname = "vc1_pos_system";  // Change the DB name if needed
+        $dbname = "vc1_pos_system";
 
         try {
-            // Set up the PDO connection
             $this->pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  // Set error mode to exception
+            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            error_log("Database connection established to $dbname");
         } catch (PDOException $e) {
-            die("Database connection failed: " . $e->getMessage());
+            error_log("Database connection failed: " . $e->getMessage());
+            http_response_code(500);
+            echo "Database connection failed. Please check server logs.";
+            exit();
         }
     }
 
-    // Method to return the PDO instance
     public function getConnection()
     {
         return $this->pdo;
     }
+
     public function prepare($sql)
     {
-        return $this->pdo->prepare($sql); // For parameterized queries
+        return $this->pdo->prepare($sql);
     }
 
-    // General query execution method
-    // In Databases/database.php
     public function query($sql, $params = [])
     {
-        $stmt = $this->pdo->prepare($sql);
+        try {
+            $stmt = $this->pdo->prepare($sql);
 
-        foreach ($params as $key => $value) {
-            if (is_int($value)) {
-                $stmt->bindValue(is_numeric($key) ? $key + 1 : $key, $value, PDO::PARAM_INT);
-            } else {
-                $stmt->bindValue(is_numeric($key) ? $key + 1 : $key, $value, PDO::PARAM_STR);
+            foreach ($params as $key => $value) {
+                if (is_int($value)) {
+                    $stmt->bindValue(is_numeric($key) ? $key + 1 : $key, $value, PDO::PARAM_INT);
+                } else {
+                    $stmt->bindValue(is_numeric($key) ? $key + 1 : $key, $value, PDO::PARAM_STR);
+                }
             }
-        }
 
-        $stmt->execute();
-        return $stmt;
+            $stmt->execute();
+            return $stmt;
+        } catch (PDOException $e) {
+            error_log("Query failed: $sql - " . $e->getMessage());
+            throw $e;
+        }
     }
 
-
-
-
-
-    // Start a transaction
     public function beginTransaction()
     {
         $this->pdo->beginTransaction();
     }
 
-    // Commit the transaction
     public function commit()
     {
         $this->pdo->commit();
     }
 
-    // Rollback the transaction
     public function rollBack()
     {
         $this->pdo->rollBack();

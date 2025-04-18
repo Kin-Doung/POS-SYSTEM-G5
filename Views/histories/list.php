@@ -27,13 +27,11 @@ require_once './views/layouts/side.php';
         padding: 15px;
         text-align: left;
         border: none;
-        /* Remove default borders */
         transition: background-color 0.3s ease;
     }
 
     th {
         background-color: #5cbacc;
-        /* Simple solid color instead of gradient */
         color: white;
         font-weight: 600;
         text-transform: uppercase;
@@ -64,12 +62,10 @@ require_once './views/layouts/side.php';
 
     tr:nth-child(even) td {
         background-color: #f9fafb;
-        /* Subtle zebra striping */
     }
 
     tr:hover td {
         background-color: #eef2ff;
-        /* Light hover effect */
         cursor: pointer;
     }
 
@@ -80,12 +76,10 @@ require_once './views/layouts/side.php';
 
     .remove-btn {
         background: linear-gradient(45deg, #ff4d4d, #ff7878);
-        /* Gradient button */
         color: white;
         border: none;
         padding: 8px 15px;
         border-radius: 25px;
-        /* Rounded pill shape */
         cursor: pointer;
         font-size: 13px;
         font-weight: 500;
@@ -96,7 +90,6 @@ require_once './views/layouts/side.php';
     .remove-btn:hover {
         background: linear-gradient(45deg, #cc0000, #ff4d4d);
         transform: translateY(-2px);
-        /* Lift effect */
         box-shadow: 0 4px 10px rgba(255, 77, 77, 0.4);
     }
 
@@ -112,7 +105,6 @@ require_once './views/layouts/side.php';
         box-shadow: 0 2px 5px rgba(255, 77, 77, 0.3);
         transition: all 0.3s ease;
         display: none;
-        /* Hidden by default */
         margin-top: 10px;
     }
 
@@ -143,7 +135,6 @@ require_once './views/layouts/side.php';
 
     .total-price span {
         color: #16a34a;
-        /* Green for the total value */
         font-size: 18px;
     }
 
@@ -151,7 +142,6 @@ require_once './views/layouts/side.php';
     .filter-search-container {
         display: flex;
         flex-direction: column;
-        /* Stack filter-date-wrapper and search vertically */
         gap: 15px;
         margin-bottom: 20px;
     }
@@ -159,20 +149,15 @@ require_once './views/layouts/side.php';
     .filter-date-wrapper {
         display: flex;
         flex-wrap: nowrap;
-        /* Prevent wrapping to ensure one line */
         align-items: center;
         gap: 15px;
-        /* Space between filter buttons and date filters */
         overflow-x: auto;
-        /* Allow horizontal scrolling if content overflows */
         white-space: nowrap;
-        /* Prevent text wrapping */
     }
 
     .filter-buttons {
         display: flex;
         gap: 10px;
-        /* Space between buttons */
     }
 
     .filter-buttons button {
@@ -222,7 +207,6 @@ require_once './views/layouts/side.php';
 
     .search-container {
         width: 400px;
-        /* Fixed width for consistency */
         background: none;
         margin-left: 665px;
         margin-top: -10px;
@@ -258,7 +242,6 @@ require_once './views/layouts/side.php';
         top: 20px;
         right: 20px;
         background-color: #16a34a;
-        /* Green background for success */
         color: white;
         padding: 10px 20px;
         border-radius: 5px;
@@ -275,14 +258,12 @@ require_once './views/layouts/side.php';
     /* Custom Confirmation Modal Styles */
     .confirm-modal {
         display: none;
-        /* Hidden by default */
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
         background-color: rgba(0, 0, 0, 0.5);
-        /* Semi-transparent overlay */
         z-index: 1000;
         justify-content: center;
         align-items: center;
@@ -290,7 +271,6 @@ require_once './views/layouts/side.php';
 
     .confirm-modal.show {
         display: flex;
-        /* Show when active */
     }
 
     .confirm-modal-content {
@@ -328,20 +308,17 @@ require_once './views/layouts/side.php';
 
     .confirm-modal-buttons #confirm-yes {
         background: #5cbacc;
-        /* Match filter button color */
         color: white;
     }
 
     .confirm-modal-buttons #confirm-yes:hover {
         background: #4a9bb0;
-        /* Slightly darker shade on hover */
         transform: translateY(-2px);
         box-shadow: 0 2px 5px rgba(92, 186, 204, 0.3);
     }
 
     .confirm-modal-buttons #confirm-no {
         background: linear-gradient(45deg, #ff4d4d, #ff7878);
-        /* Match delete button gradient */
         color: white;
     }
 
@@ -351,11 +328,63 @@ require_once './views/layouts/side.php';
         box-shadow: 0 2px 5px rgba(255, 77, 77, 0.3);
     }
 
+    /* Pagination Styles */
+    .pagination {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .page-btn {
+        padding: 5px 15px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .page-btn:hover {
+        background-color: #0056b3;
+    }
+
+    .page-btn.active {
+        background-color: #0056b3;
+        font-weight: bold;
+    }
+
+    /* Loading State */
+    .loading {
+        position: relative;
+        opacity: 0.7;
+        pointer-events: none;
+    }
+
+    .loading::after {
+        content: 'Loading...';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 16px;
+        font-weight: 500;
+        color: #1e293b;
+    }
+
+    /* Empty Table State */
+    tbody tr td[colspan="8"] {
+        text-align: center;
+        padding: 20px;
+        color: #6b7280;
+        font-style: italic;
+    }
+
     /* Responsive adjustments */
     @media (max-width: 768px) {
         .main-content {
             margin-left: 0;
-            /* Collapse sidebar on small screens */
         }
 
         .table-container {
@@ -381,21 +410,17 @@ require_once './views/layouts/side.php';
 
         .filter-date-wrapper {
             flex-wrap: nowrap;
-            /* Keep nowrap for horizontal scrolling */
             gap: 10px;
         }
 
         .date-filter {
             flex-direction: row;
-            /* Keep date inputs in a row */
             gap: 10px;
         }
 
         .search-container {
             width: 100%;
-            /* Full width on small screens */
             margin-left: 0;
-            /* Reset margin for small screens */
             margin-top: 10px;
         }
 
@@ -419,6 +444,10 @@ require_once './views/layouts/side.php';
             padding: 6px 15px;
             font-size: 13px;
         }
+
+        .page-btn {
+            padding: 8px 12px;
+        }
     }
 </style>
 
@@ -426,9 +455,6 @@ require_once './views/layouts/side.php';
     <?php require_once './views/layouts/nav.php' ?>
 </div>
 <div class="main-content">
-
-
-
     <!-- Filter Buttons, Date Range, and Search Bar -->
     <div class="filter-search-container">
         <div class="filter-date-wrapper">
@@ -443,10 +469,10 @@ require_once './views/layouts/side.php';
             <div class="date-filter">
                 <div>
                     <label for="start-date">Choose date:</label>
-                    <input type="date" id="start-date" value="2000-01-01">
+                    <input type="date" id="start-date" value="<?= date('Y-m-d', strtotime('-1 month')) ?>">
                 </div>
                 <div>
-                    <input type="date" id="end-date" value="2099-12-31">
+                    <input type="date" id="end-date" value="<?= date('Y-m-d') ?>">
                 </div>
             </div>
         </div>
@@ -474,7 +500,7 @@ require_once './views/layouts/side.php';
                 <?php foreach ($reports as $report) : ?>
                     <tr data-date="<?= $report['created_at'] ? date('Y-m-d', strtotime($report['created_at'])) : 'N/A' ?>">
                         <td><input type="checkbox" class="select-item" data-id="<?= $report['id'] ?>"></td>
-                        <td><img src="<?= $report['image'] ?>" alt="Product Image" width="50"></td>
+                        <td><img src="<?= $report['image'] ?>" alt="Product Image" width="50" loading="lazy"></td>
                         <td><?= htmlspecialchars($report['product_name']) ?></td>
                         <td><?= $report['quantity'] ?></td>
                         <td><?= $report['price'] ?>$</td>
@@ -497,52 +523,12 @@ require_once './views/layouts/side.php';
             <?php endif; ?>
         </div>
     </div>
-    <style>
-
-
-        .pagination {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .page-btn {
-            padding: 5px 15px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s;
-          
-          
-        }
-
-        .page-btn:hover {
-            background-color: #0056b3;
-        }
-
-        .page-btn.active {
-            background-color: #0056b3;
-            font-weight: bold;
-        }
-
-        @media (max-width: 600px) {
-            .page-btn {
-                padding: 8px 12px;
-            }
-        }
-    </style>
-
-
-
-    <div class="message" id="delete-message">Your product is deleted</div>
-
 
     <!-- Delete Button (Hidden by Default) -->
     <button class="delete-btn" id="delete-selected">Delete Selected</button>
+
     <!-- Custom Message Element -->
-    <div class="message" id="delete-message">Your product is deleted</div>
+    <div class="message" id="delete-message">Item deleted</div>
 
     <!-- Custom Confirmation Modal -->
     <div class="confirm-modal" id="confirm-modal">
@@ -561,9 +547,8 @@ require_once './views/layouts/side.php';
     </div>
 </div>
 
-
 <script>
-    // Select All Checkbox and UI Elements
+    // UI Elements
     const selectAll = document.getElementById('select-all');
     const deleteBtn = document.getElementById('delete-selected');
     const deleteMessage = document.getElementById('delete-message');
@@ -578,76 +563,123 @@ require_once './views/layouts/side.php';
     const confirmNo = document.getElementById('confirm-no');
     const paginationContainer = document.querySelector('.pagination');
 
+    // Base URL for AJAX requests (adjust if app is in a subdirectory)
+    const baseUrl = window.location.origin;
+    // CSRF Token (Adjust based on your setup)
+    const csrfToken = '<?= isset($_SESSION["csrf_token"]) ? $_SESSION["csrf_token"] : "" ?>';
     let currentPage = <?= $currentPage ?: 1 ?>;
 
-    // Function to Show Custom Message
-    function showMessage() {
+    // Show Message with Dynamic Text
+    function showMessage(text) {
+        deleteMessage.textContent = text;
         deleteMessage.classList.add('show');
         setTimeout(() => deleteMessage.classList.remove('show'), 3000);
     }
 
-    // Show/Hide Delete Button Based on Checkbox Selection
+    // Toggle Delete Button Visibility
     function updateDeleteButtonVisibility() {
         const checkboxes = document.querySelectorAll('.select-item');
         const anyChecked = [...checkboxes].some(checkbox => checkbox.checked);
         deleteBtn.style.display = anyChecked ? 'block' : 'none';
     }
 
-    // Original Fetch and Update Table (Unchanged)
-    function fetchAndUpdateTable(filter = 'all', startDate = null, endDate = null, search = '') {
-        const payload = {
-            filter: filter,
-            search: search
-        };
+    // Fetch Table Data
+    function fetchTableData({ filter = 'all', startDate = null, endDate = null, search = '', page = currentPage } = {}) {
+        tableBody.classList.add('loading');
+        const payload = { filter, search, page };
         if (filter === 'all' && startDate && endDate) {
             payload.start_date = startDate;
             payload.end_date = endDate;
         }
-        console.log('Sending payload:', payload);
+        console.log('Fetching with payload:', payload);
 
-        fetch('/history/fetchFilteredHistories', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams(payload)
-            })
-            .then(response => {
-                console.log('Fetch Status:', response.status);
-                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                return response.json();
-            })
-            .then(data => {
-                console.log('Received data:', data);
-                if (data.success) {
-                    console.log('Reports count:', data.reports.length);
-                    tableBody.innerHTML = data.reports.length > 0 ? data.reports.map(report => `
+        return fetch(`${baseUrl}/history/fetchFilteredHistories`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRF-Token': csrfToken
+            },
+            body: new URLSearchParams(payload)
+        })
+        .then(response => {
+            console.log('Fetch Status:', response.status);
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            tableBody.classList.remove('loading');
+            console.log('Received data:', data);
+            if (data.success) {
+                tableBody.innerHTML = data.reports.length > 0 ? data.reports.map(report => `
                     <tr data-date="${report.created_at}">
                         <td><input type="checkbox" class="select-item" data-id="${report.id}"></td>
-                        <td><img src="${report.image}" alt="Product Image" width="50"></td>
+                        <td><img src="${report.image}" alt="Product Image" width="50" loading="lazy"></td>
                         <td>${report.product_name}</td>
                         <td>${report.quantity}</td>
                         <td>${report.price}$</td>
                         <td>${report.total_price}$</td>
-                        <td>${report.created_at}</td>
+                        <td>${new Date(report.created_at).toISOString().split('T')[0]}</td>
                         <td><button class="remove-btn" data-id="${report.id}">Remove</button></td>
                     </tr>
-                `).join('') : '<tr><td colspan="8">No=No records found for this filter</td></tr>';
-                    totalPriceSpan.textContent = `$${data.total_price}`;
-                    attachRemoveListeners();
-                    attachCheckboxListeners();
-                } else {
-                    console.log('Server error:', data.error);
-                    alert('Failed to fetch data: ' + (data.error || 'Unknown error'));
-                }
-            })
-            .catch(error => {
-                console.error('Fetch Error:', error);
-                alert('Error fetching data: ' + error.message);
-            });
+                `).join('') : '<tr><td colspan="8">No records found</td></tr>';
+                totalPriceSpan.textContent = `$${data.total_price}`;
+                currentPage = data.currentPage;
+                updatePagination(data.currentPage, data.totalPages);
+                attachRemoveListeners();
+                attachCheckboxListeners();
+            } else {
+                console.log('Server error:', data.error);
+                alert('Failed to fetch data: ' + (data.error || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            tableBody.classList.remove('loading');
+            console.error('Fetch Error:', error);
+            alert('Error fetching data: ' + error.message);
+        });
     }
 
-    // Handle Remove Button Clicks
+    // Update Pagination
+    function updatePagination(currentPage, totalPages) {
+        let paginationHTML = '';
+        if (currentPage > 1) {
+            paginationHTML += `<button class="page-btn" data-page="${currentPage - 1}"><i class="fa-solid fa-less-than"></i></button>`;
+        }
+        for (let i = 1; i <= totalPages; i++) {
+            paginationHTML += `<button class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+        }
+        if (currentPage < totalPages) {
+            paginationHTML += `<button class="page-btn" data-page="${currentPage + 1}"><i class="fa-solid fa-greater-than"></i></button>`;
+        }
+        paginationContainer.innerHTML = paginationHTML;
+        attachPageListeners();
+    }
+
+    // Attach Page Listeners
+    function attachPageListeners() {
+        const pageButtons = document.querySelectorAll('.page-btn');
+        console.log('Attaching listeners to', pageButtons.length, 'buttons');
+        pageButtons.forEach(button => {
+            button.removeEventListener('click', handlePageClick);
+            button.addEventListener('click', handlePageClick);
+        });
+    }
+
+    function handlePageClick() {
+        const page = parseInt(this.getAttribute('data-page'));
+        console.log('Page clicked:', page);
+        if (!isNaN(page)) {
+            fetchTableData({
+                filter: document.querySelector('.filter-btn.active')?.getAttribute('data-filter') || 'all',
+                startDate: startDateInput.value,
+                endDate: endDateInput.value,
+                search: searchInput.value,
+                page
+            });
+        }
+    }
+
+    // Handle Single Delete
     function attachRemoveListeners() {
         document.querySelectorAll('.remove-btn').forEach(button => {
             button.removeEventListener('click', handleRemoveClick);
@@ -658,46 +690,97 @@ require_once './views/layouts/side.php';
     function handleRemoveClick() {
         const id = this.getAttribute('data-id');
         const row = this.closest('tr');
-
+        modal.querySelector('p').textContent = 'Are you sure you want to delete this item?';
         modal.classList.add('show');
         confirmYes.onclick = () => {
-            fetch(`/history/destroy/${id}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: new URLSearchParams({})
-                })
-                .then(response => {
-                    console.log('Delete Status:', response.status);
-                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Delete Data:', data);
-                    if (data.success) {
-                        row.remove();
-                        showMessage();
-                        modal.classList.remove('show');
-                        fetchAndUpdateTable(); // Refresh table to update total price
-                    } else {
-                        alert('Failed to delete: ' + (data.error || 'Unknown error'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Delete Error:', error);
-                    alert('Error deleting item: ' + error.message);
-                });
+            tableBody.classList.add('loading');
+            console.log('Sending DELETE request for ID:', id);
+            fetch(`${baseUrl}/history/destroy`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrfToken
+                },
+                body: JSON.stringify({ ids: [id] })
+            })
+            .then(response => {
+                console.log('Delete Status:', response.status);
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                return response.json();
+            })
+            .then(data => {
+                tableBody.classList.remove('loading');
+                console.log('Delete Data:', data);
+                if (data.success) {
+                    row.remove();
+                    showMessage('Product deleted successfully');
+                    modal.classList.remove('show');
+                    fetchTableData({ page: currentPage });
+                } else {
+                    alert('Failed to delete: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                tableBody.classList.remove('loading');
+                console.error('Delete Error:', error);
+                alert('Error deleting item: ' + error.message);
+            });
         };
         confirmNo.onclick = () => modal.classList.remove('show');
     }
 
-    // Handle Checkbox Listeners
+    // Handle Bulk Delete
+    deleteBtn.addEventListener('click', () => {
+        const checkboxes = document.querySelectorAll('.select-item:checked');
+        const ids = [...checkboxes].map(cb => cb.getAttribute('data-id'));
+        if (ids.length === 0) {
+            alert('Please select at least one item to delete.');
+            return;
+        }
+        modal.querySelector('p').textContent = `Are you sure you want to delete ${ids.length} item${ids.length > 1 ? 's' : ''}?`;
+        modal.classList.add('show');
+        confirmYes.onclick = () => {
+            tableBody.classList.add('loading');
+            console.log('Sending bulk DELETE request for IDs:', ids);
+            fetch(`${baseUrl}/history/destroy`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrfToken
+                },
+                body: JSON.stringify({ ids })
+            })
+            .then(response => {
+                console.log('Bulk Delete Status:', response.status);
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                return response.json();
+            })
+            .then(data => {
+                tableBody.classList.remove('loading');
+                console.log('Bulk Delete Data:', data);
+                if (data.success) {
+                    checkboxes.forEach(cb => cb.closest('tr').remove());
+                    showMessage(`${ids.length} item${ids.length > 1 ? 's' : ''} deleted successfully`);
+                    modal.classList.remove('show');
+                    fetchTableData({ page: currentPage });
+                } else {
+                    alert('Failed to delete: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                tableBody.classList.remove('loading');
+                console.error('Bulk Delete Error:', error);
+                alert('Error deleting items: ' + error.message);
+            });
+        };
+        confirmNo.onclick = () => modal.classList.remove('show');
+    });
+
+    // Checkbox Listeners
     function attachCheckboxListeners() {
         const checkboxes = document.querySelectorAll('.select-item');
         selectAll.removeEventListener('change', handleSelectAllChange);
         selectAll.addEventListener('change', handleSelectAllChange);
-
         checkboxes.forEach(checkbox => {
             checkbox.removeEventListener('change', handleCheckboxChange);
             checkbox.addEventListener('change', handleCheckboxChange);
@@ -716,128 +799,57 @@ require_once './views/layouts/side.php';
         updateDeleteButtonVisibility();
     }
 
-    // New Pagination Functions (Added)
-    function fetchAndUpdateTableWithPagination(filter = 'all', startDate = null, endDate = null, search = '', page = currentPage) {
-        const payload = {
-            filter: filter,
-            search: search,
-            page: page
-        };
-        if (filter === 'all' && startDate && endDate) {
-            payload.start_date = startDate;
-            payload.end_date = endDate;
-        }
-        console.log('Sending payload with page:', payload);
-
-        fetch('/history/fetchFilteredHistories', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams(payload)
-            })
-            .then(response => {
-                console.log('Fetch Status:', response.status);
-                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                return response.json();
-            })
-            .then(data => {
-                console.log('Received data:', data);
-                if (data.success) {
-                    console.log('Reports count:', data.reports.length);
-                    tableBody.innerHTML = data.reports.length > 0 ? data.reports.map(report => `
-                    <tr data-date="${report.created_at}">
-                        <td><input type="checkbox" class="select-item" data-id="${report.id}"></td>
-                        <td><img src="${report.image}" alt="Product Image" width="50"></td>
-                        <td>${report.product_name}</td>
-                        <td>${report.quantity}</td>
-                        <td>${report.price}$</td>
-                        <td>${report.total_price}$</td>
-                        <td>${report.created_at}</td>
-                        <td><button class="remove-btn" data-id="${report.id}">Remove</button></td>
-                    </tr>
-                `).join('') : '<tr><td colspan="8">No records found for this filter</td></tr>';
-                    totalPriceSpan.textContent = `$${data.total_price}`;
-                    currentPage = data.currentPage;
-                    updatePagination(data.currentPage, data.totalPages);
-                    attachRemoveListeners();
-                    attachCheckboxListeners();
-                } else {
-                    console.log('Server error:', data.error);
-                    alert('Failed to fetch data: ' + (data.error || 'Unknown error'));
-                }
-            })
-            .catch(error => {
-                console.error('Fetch Error:', error);
-                alert('Error fetching data: ' + error.message);
-            });
-    }
-
-    function updatePagination(currentPage, totalPages) {
-        let paginationHTML = '';
-        if (currentPage > 1) {
-            paginationHTML += `<button class="page-btn" data-page="${currentPage - 1}"><i class="fa-solid fa-less-than"></i></button>`;
-        }
-        for (let i = 1; i <= totalPages; i++) {
-            paginationHTML += `<button class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
-        }
-        if (currentPage < totalPages) {
-            paginationHTML += `<button class="page-btn" data-page="${currentPage + 1}"><i class="fa-solid fa-greater-than"></i></button>`;
-        }
-        paginationContainer.innerHTML = paginationHTML;
-        attachPageListeners();
-    }
-
-    function attachPageListeners() {
-        const pageButtons = document.querySelectorAll('.page-btn');
-        console.log('Attaching listeners to', pageButtons.length, 'buttons');
-        pageButtons.forEach(button => {
-            button.removeEventListener('click', handlePageClick);
-            button.addEventListener('click', handlePageClick);
-        });
-    }
-
-    function handlePageClick() {
-        const page = parseInt(this.getAttribute('data-page'));
-        console.log('Page clicked:', page);
-        if (!isNaN(page)) {
-            fetchAndUpdateTableWithPagination(
-                document.querySelector('.filter-btn.active')?.getAttribute('data-filter') || 'all',
-                startDateInput.value,
-                endDateInput.value,
-                searchInput.value,
-                page
-            );
-        }
-    }
-
     // Filter Button Clicks
     filterButtons.forEach(button => {
         button.addEventListener('click', function() {
             filterButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
-            const filter = this.getAttribute('data-filter');
-            console.log('Filter clicked:', filter);
-            fetchAndUpdateTableWithPagination(filter, null, null, searchInput.value, 1);
+            fetchTableData({
+                filter: this.getAttribute('data-filter'),
+                search: searchInput.value,
+                page: 1
+            });
         });
     });
 
     // Date Input Changes
     startDateInput.addEventListener('change', () => {
-        fetchAndUpdateTableWithPagination('all', startDateInput.value, endDateInput.value, searchInput.value, 1);
+        fetchTableData({
+            filter: 'all',
+            startDate: startDateInput.value,
+            endDate: endDateInput.value,
+            search: searchInput.value,
+            page: 1
+        });
     });
 
     endDateInput.addEventListener('change', () => {
-        fetchAndUpdateTableWithPagination('all', startDateInput.value, endDateInput.value, searchInput.value, 1);
+        fetchTableData({
+            filter: 'all',
+            startDate: startDateInput.value,
+            endDate: endDateInput.value,
+            search: searchInput.value,
+            page: 1
+        });
     });
 
-    // Search Input
+    // Search Input (Debounced)
+    let searchTimeout;
     searchInput.addEventListener('input', () => {
-        fetchAndUpdateTableWithPagination('all', startDateInput.value, endDateInput.value, searchInput.value, 1);
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            fetchTableData({
+                filter: 'all',
+                startDate: startDateInput.value,
+                endDate: endDateInput.value,
+                search: searchInput.value,
+                page: 1
+            });
+        }, 300);
     });
 
-    // Initial Load with Pagination
-    fetchAndUpdateTableWithPagination();
+    // Initial Load
+    fetchTableData();
     attachPageListeners();
 </script>
 

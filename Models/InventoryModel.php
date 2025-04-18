@@ -1,11 +1,13 @@
 <?php
 require_once './Databases/database.php';
+
 class InventoryModel
 {
     private $pdo;
 
     function __construct()
     {
+        error_log("InventoryModel initialized");
         $this->pdo = new Database();
     }
 
@@ -13,8 +15,8 @@ class InventoryModel
     {
         return $this->pdo->getConnection();
     }
-    // Get all inventory items
-    function getInventory()
+
+    public function getInventory()
     {
         try {
             $inventory = $this->pdo->query("SELECT * FROM inventory ORDER BY id DESC");
@@ -29,29 +31,38 @@ class InventoryModel
         }
     }
 
-    function getCategory()
+    public function getCategory()
     {
-        $inventory = $this->pdo->query("SELECT * FROM categories ORDER BY id DESC");
-        return $inventory->fetchAll();
+        try {
+            $inventory = $this->pdo->query("SELECT * FROM categories ORDER BY id DESC");
+            return $inventory->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error fetching categories: " . $e->getMessage());
+            return [];
+        }
     }
 
-    // In InventoryModel.php
-    function getInventoryWithCategory()
+    public function getInventoryWithCategory()
     {
-        $query = "
-        SELECT inventory.*, categories.name AS category_name
-        FROM inventory
-        LEFT JOIN categories ON inventory.category_id = categories.id
-        ORDER BY inventory.id DESC
-    ";
-        $inventory = $this->pdo->query($query);
-        return $inventory->fetchAll();
+        try {
+            $query = "
+                SELECT inventory.*, categories.name AS category_name
+                FROM inventory
+                LEFT JOIN categories ON inventory.category_id = categories.id
+                ORDER BY inventory.id DESC
+            ";
+            $inventory = $this->pdo->query($query);
+            return $inventory->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error fetching inventory with category: " . $e->getMessage());
+            return [];
+        }
     }
 
     public function getInventoryById($id)
     {
         try {
-            $stmt = $this->pdo->getConnection()->prepare("SELECT * FROM inventory WHERE id = :id");
+            $stmt = $this->getConnection()->prepare("SELECT * FROM inventory WHERE id = :id");
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -65,199 +76,121 @@ class InventoryModel
         }
     }
 
-    public function insertInventory($data)
+    public function getProductByBarcode($barcode)
     {
-        $stmt = $this->pdo->getConnection()->prepare("
-            INSERT INTO inventory (product_name, category_id, quantity, amount, category_name, expiration_date, total_price, image)
-            VALUES (:product_name, :category_id, :quantity, :amount, :category_name, :expiration_date, :total_price, :image)
-        ");
-        $stmt->bindParam(':product_name', $data['product_name']);
-        $stmt->bindParam(':category_id', $data['category_id'], PDO::PARAM_INT);
-        $stmt->bindParam(':quantity', $data['quantity'], PDO::PARAM_INT);
-        $stmt->bindParam(':amount', $data['amount']);
-        $stmt->bindParam(':category_name', $data['category_name']);
-        $stmt->bindParam(':expiration_date', $data['expiration_date']);
-        $stmt->bindParam(':total_price', $data['total_price']);
-        $stmt->bindParam(':image', $data['image']); // Optional, only if image is provided
-        $stmt->execute();
-    }
-
-    public function createInventory(array $data): int
-    {
-        $defaults = [
-            'image' => null,
-            'product_name' => '',
-            'category_id' => null,
-            'quantity' => 0,
-            'amount' => 0,
-            'category_name' => '',
-            'expiration_date' => null,
-            'total_price' => 0
-        ];
-        $data = array_merge($defaults, $data);
-
-
         try {
-            $stmt = $this->pdo->getConnection()->prepare("
-                INSERT INTO inventory (image, product_name, category_id, quantity, amount, category_name, expiration_date, total_price)
-                VALUES (:image, :product_name, :category_id, :quantity, :amount, :category_name, :expiration_date, :total_price)
-            ");
-            $stmt->bindParam(':image', $data['image']); // String path
-            $stmt->bindParam(':product_name', $data['product_name']);
-            $stmt->bindParam(':category_id', $data['category_id'], PDO::PARAM_INT);
-            $stmt->bindParam(':quantity', $data['quantity'], PDO::PARAM_INT);
-            $stmt->bindParam(':amount', $data['amount']);
-            $stmt->bindParam(':category_name', $data['category_name']);
-            $stmt->bindParam(':expiration_date', $data['expiration_date']);
-            $stmt->bindParam(':total_price', $data['total_price']);
-
+            $stmt = $this->getConnection()->prepare("SELECT * FROM inventory WHERE barcode = :barcode");
+            $stmt->bindParam(':barcode', $barcode, PDO::PARAM_STR);
             $stmt->execute();
-            return (int)$this->pdo->getConnection()->lastInsertId();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$result) {
+                error_log("No product found for barcode: $barcode");
+                return ['error' => 'Product not found'];
+            }
+            return $result;
         } catch (PDOException $e) {
-            error_log("Insert error: " . $e->getMessage());
-            throw new Exception("Failed to create inventory: " . $e->getMessage());
+            error_log("Error fetching product by barcode $barcode: " . $e->getMessage());
+            return ['error' => 'Database error: ' . $e->getMessage()];
         }
     }
 
-
-
-    // Function to insert multiple inventory items at once
-    public function createMultipleInventory($items)
+    public function store($data)
     {
         try {
-            $this->pdo->beginTransaction(); // Start the transaction
+            $stmt = $this->getConnection()->prepare("SELECT id, quantity FROM inventory WHERE product_name = :product_name");
+            $stmt->execute([':product_name' => $data['product_name']]);
+            $existing = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $stmt = $this->pdo->query("INSERT INTO inventory (image, product_name, quantity, amount, category_id, category_name, expiration_date) 
-                                         VALUES (:image, :product_name, :quantity, :amount, :category_id, :category_name, :expiration_date)");
-
-            // Loop through each item and execute the prepared statement
-            foreach ($items as $item) {
+            if (!$existing) {
+                $query = "
+                    INSERT INTO inventory (
+                        product_name, category_id, category_name, quantity, amount, 
+                        selling_price, total_price, barcode, expiration_date, image
+                    ) VALUES (
+                        :product_name, :category_id, :category_name, :quantity, :amount,
+                        :selling_price, :total_price, :barcode, :expiration_date, :image
+                    )
+                ";
+                $stmt = $this->getConnection()->prepare($query);
+                $totalPrice = ($data['quantity'] ?? 1) * ($data['amount'] ?? 0);
                 $stmt->execute([
-                    ':image' => $item['image'],
-                    ':product_name' => $item['product_name'],
-                    ':quantity' => $item['quantity'],
-                    ':amount' => $item['amount'],
-                    ':category_id' => $item['category_id'],
-                    ':category_name' => $item['category_name'],
-                    ':expiration_date' => $item['expiration_date']
+                    ':product_name' => $data['product_name'],
+                    ':category_id' => $data['category_id'] ?? null,
+                    ':category_name' => $data['category_name'] ?? null,
+                    ':quantity' => $data['quantity'] ?? 0,
+                    ':amount' => $data['amount'] ?? 0,
+                    ':selling_price' => $data['selling_price'] ?? 0,
+                    ':total_price' => $totalPrice,
+                    ':barcode' => $data['barcode'] ?? null,
+                    ':expiration_date' => $data['expiration_date'] ?? null,
+                    ':image' => $data['image'] ?? null
                 ]);
+                $id = $this->getConnection()->lastInsertId();
+                error_log("Inserted new product {$data['product_name']} with ID $id");
+                return ['success' => true, 'id' => $id];
             }
 
-            $this->pdo->commit(); // Commit the transaction
-            return true; // Return true if everything went well
-        } catch (Exception $e) {
-            $this->pdo->rollBack(); // Rollback the transaction if there's an error
-            echo "Error: " . $e->getMessage(); // Show error message
-            return false; // Return false if there was an error
+            $newQuantity = $existing['quantity'] + ($data['quantity'] ?? 0);
+            $newTotalPrice = $newQuantity * ($data['amount'] ?? 0);
+            $stmt = $this->getConnection()->prepare("
+                UPDATE inventory 
+                SET quantity = :quantity,
+                    amount = :amount,
+                    selling_price = :selling_price,
+                    total_price = :total_price,
+                    category_name = :category_name,
+                    category_id = :category_id,
+                    barcode = :barcode,
+                    expiration_date = :expiration_date,
+                    image = :image
+                WHERE id = :id
+            ");
+            $stmt->execute([
+                ':quantity' => $newQuantity,
+                ':amount' => $data['amount'] ?? 0,
+                ':selling_price' => $data['selling_price'] ?? 0,
+                ':total_price' => $newTotalPrice,
+                ':category_name' => $data['category_name'] ?? null,
+                ':category_id' => $data['category_id'] ?? null,
+                ':barcode' => $data['barcode'] ?? null,
+                ':expiration_date' => $data['expiration_date'] ?? null,
+                ':image' => $data['image'] ?? null,
+                ':id' => $existing['id']
+            ]);
+            error_log("Updated product {$data['product_name']} with ID {$existing['id']}, new quantity: $newQuantity");
+            return ['success' => true, 'id' => $existing['id']];
+        } catch (PDOException $e) {
+            error_log("Error storing inventory: " . $e->getMessage());
+            return ['error' => 'Database error: ' . $e->getMessage()];
         }
-    }
-
-
-
-    // Get product by name and category from the inventory table
-    public function getProductByName($productName, $categoryId)
-    {
-        $stmt = $this->pdo->query("SELECT * FROM inventory WHERE product_name = :product_name AND category_id = :category_id");
-        $stmt->execute([':product_name' => $productName, ':category_id' => $categoryId]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function updateInventoryQuantity($id, $quantity, $amount = null)
-    {
-        $sql = "UPDATE inventory SET quantity = :quantity";
-        $params = [':quantity' => $quantity, ':id' => $id];
-        if ($amount !== null) {
-            $sql .= ", amount = :amount";
-            $params[':amount'] = $amount;
-        }
-        $sql .= " WHERE id = :id";
-
-
-        $stmt = $this->pdo->getConnection()->prepare($sql);
-        $stmt->execute($params);
-    }
-    // Insert a new product into the inventory table if it's not already there
-    public function addNewProductToInventory($productName, $categoryId, $quantity, $amount, $type)
-    {
-        $stmt = $this->pdo->query("INSERT INTO inventory (product_name, category_id, quantity, amount, type) VALUES (:product_name, :category_id, :quantity, :amount, :type)");
-        $stmt->execute([
-            ':product_name' => $productName,
-            ':category_id' => $categoryId,
-            ':quantity' => $quantity,
-            ':amount' => $amount,
-            ':type' => $type
-        ]);
-    }
-
-
-    private function executeQuery($query, $params)
-    {
-        try {
-            $stmt = $this->pdo->query($query);
-            $stmt->execute($params);
-            return $stmt;
-        } catch (Exception $e) {
-            echo "Error executing query: " . $e->getMessage(); // 👈 Add this
-            echo "<br>Query: " . $query; // 👈 Add this
-            return null;
-        }
-    }
-
-
-    public function insertProductsFromInventory()
-    {
-        $query = "
-        INSERT INTO products (name, category_id, price, quantity, image)
-        SELECT 
-            i.product_name, 
-            c.id AS category_id, 
-            i.amount AS price, 
-            i.quantity, 
-            i.image
-        FROM inventory i
-        JOIN categories c ON i.category_name = c.name;
-    ";
-
-        $stmt = $this->executeQuery($query, []);
-        return $stmt ? $stmt->rowCount() : 0;
-    }
-
-    // Edit a category name
-    public function updateCategory($categoryId, $newCategoryName)
-    {
-        $sql = "UPDATE categories SET name = :new_category_name WHERE id = :category_id";
-
-        $params = [
-            ':new_category_name' => $newCategoryName,
-            ':category_id' => $categoryId
-        ];
-
-        $this->pdo->query($sql, $params);
-    }
-
-    // Get a single inventory item by ID
-    function getInventorys($id)
-    {
-        $stmt = $this->pdo->query("SELECT * FROM inventory WHERE id = :id", ['id' => $id]);
-        return $stmt->fetch();
-    }
-
-    // ✅ New function to fetch an inventory item with category name
-    function viewInventory($id)
-    {
-        $stmt = $this->pdo->query("
-            SELECT inventory.*, categories.name
-            FROM inventory 
-            LEFT JOIN categories ON inventory.category_id = categories.id 
-            WHERE inventory.id = :id
-        ", ['id' => $id]);
-
-        return $stmt->fetch(); // Fetch only one row
     }
 
     public function updateInventory($id, $data)
     {
+        error_log("Starting updateInventory for ID $id with data: " . print_r($data, true));
         try {
+            // Validate required fields
+            if (empty($data['product_name'])) {
+                error_log("Product name is required for ID $id");
+                return ['error' => 'Product name is required'];
+            }
+            if (empty($data['category_id'])) {
+                error_log("Category ID is required for ID $id");
+                return ['error' => 'Category ID is required'];
+            }
+            if ($data['quantity'] < 0) {
+                error_log("Invalid quantity for ID $id: {$data['quantity']}");
+                return ['error' => 'Quantity cannot be negative'];
+            }
+            if ($data['amount'] < 0) {
+                error_log("Invalid amount for ID $id: {$data['amount']}");
+                return ['error' => 'Amount cannot be negative'];
+            }
+            if (isset($data['selling_price']) && $data['selling_price'] < 0) {
+                error_log("Invalid selling price for ID $id: {$data['selling_price']}");
+                return ['error' => 'Selling price cannot be negative'];
+            }
+
             $stmt = $this->getConnection()->prepare("
                 UPDATE inventory 
                 SET product_name = :product_name,
@@ -265,99 +198,159 @@ class InventoryModel
                     category_name = :category_name,
                     quantity = :quantity,
                     amount = :amount,
+                    selling_price = :selling_price,
                     total_price = :total_price,
                     expiration_date = :expiration_date,
-                    image = :image
+                    image = :image,
+                    barcode = :barcode
                 WHERE id = :id
             ");
-            $stmt->execute([
+            $params = [
                 ':product_name' => $data['product_name'],
-                ':category_id' => $data['category_id'],
-                ':category_name' => $data['category_name'],
+                ':category_id' => $data['category_id'] ?: null,
+                ':category_name' => $data['category_name'] ?: null,
                 ':quantity' => $data['quantity'],
                 ':amount' => $data['amount'],
+                ':selling_price' => $data['selling_price'] ?? 0,
                 ':total_price' => $data['total_price'],
-                ':expiration_date' => $data['expiration_date'],
-                ':image' => $data['image'], // This should save the correct path
+                ':expiration_date' => $data['expiration_date'] ?: null,
+                ':image' => $data['image'] ?: null,
+                ':barcode' => $data['barcode'] ?: null,
                 ':id' => $id
-            ]);
-            return true;
+            ];
+            error_log("Executing update query with params: " . print_r($params, true));
+            $stmt->execute($params);
+            $rowCount = $stmt->rowCount();
+            error_log("Update query affected $rowCount rows for ID $id");
+            if ($rowCount === 0) {
+                error_log("No item found with ID $id for update.");
+                return ['error' => 'Item not found'];
+            }
+            error_log("Successfully updated item with ID $id");
+            return ['success' => true];
         } catch (PDOException $e) {
-            error_log("Update error: " . $e->getMessage());
+            error_log("Update error for ID $id: " . $e->getMessage() . " | SQLSTATE: " . $e->getCode());
+            return ['error' => 'Database error: ' . $e->getMessage()];
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $stmt = $this->getConnection()->prepare("DELETE FROM inventory WHERE id = :id");
+            $stmt->execute([':id' => $id]);
+            $rowCount = $stmt->rowCount();
+            if ($rowCount === 0) {
+                error_log("No item deleted with ID $id.");
+                return ['error' => 'Item not found'];
+            }
+            error_log("Deleted item with ID $id.");
+            return ['success' => true];
+        } catch (PDOException $e) {
+            error_log("Error deleting item ID $id: " . $e->getMessage());
+            return ['error' => 'Cannot delete item: It is referenced by other records'];
+        }
+    }
+
+    public function viewInventory($id)
+    {
+        try {
+            $stmt = $this->getConnection()->prepare("
+                SELECT inventory.*, categories.name
+                FROM inventory 
+                LEFT JOIN categories ON inventory.category_id = categories.id 
+                WHERE inventory.id = :id
+            ");
+            $stmt->execute(['id' => $id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error viewing inventory id $id: " . $e->getMessage());
             return false;
         }
     }
 
-
-    // Get a category by its ID
     public function getCategoryById($categoryId)
     {
-        $stmt = $this->pdo->query("SELECT * FROM categories WHERE id = :category_id", ['category_id' => $categoryId]);
-        return $stmt->fetch(); // Fetch the category
-    }
-
-
-    public function deleteItem($id)
-    {
         try {
-            // Ensure that the ID is numeric
-            if (is_numeric($id)) {
-                // Use query() method directly without query
-                $sql = "DELETE FROM inventory WHERE id = $id"; // Use the ID directly in the SQL
-                $this->pdo->query($sql);  // Execute the query
-            } else {
-                throw new Exception("Invalid ID"); // Throw error if ID is not valid
-            }
-        } catch (Exception $e) {
-            // Handle the error if it occurs
-            echo "Error deleting item: " . $e->getMessage();
+            $stmt = $this->getConnection()->prepare("SELECT * FROM categories WHERE id = :category_id");
+            $stmt->execute(['category_id' => $categoryId]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error fetching category by id $categoryId: " . $e->getMessage());
+            return false;
         }
     }
 
     public function getInventoryItemByProduct($productName, $categoryId)
     {
-        $stmt = $this->getConnection()->prepare("SELECT * FROM inventory WHERE product_name = :product_name AND category_id = :category_id");
-        $stmt->execute([
-            ':product_name' => $productName,
-            ':category_id' => $categoryId
-        ]);
-        return $stmt->fetch();
+        try {
+            $stmt = $this->getConnection()->prepare("
+                SELECT * FROM inventory WHERE product_name = :product_name AND category_id = :category_id
+            ");
+            $stmt->execute([
+                ':product_name' => $productName,
+                ':category_id' => $categoryId
+            ]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error fetching inventory item by product: " . $e->getMessage());
+            return false;
+        }
     }
-    public function addToInventory($data)
-    {
-        $stmt = $this->getConnection()->prepare(
-            "INSERT INTO inventory (product_name, category_id, quantity, image) 
-             VALUES (:product_name, :category_id, :quantity, :image)"
-        );
-        return $stmt->execute([
-            ':product_name' => $data['product_name'],
-            ':category_id' => $data['category_id'],
-            ':quantity' => $data['quantity'],
-            ':image' => $data['image']
-        ]);
-    }
-
-
 
     public function getProductById($id)
     {
-        $stmt = $this->pdo->query("SELECT p.*, c.name as category_name 
-                                    FROM products p
-                                    LEFT JOIN categories c ON p.category_id = c.id
-                                    WHERE p.id = :id");
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        try {
+            $stmt = $this->getConnection()->prepare("
+                SELECT p.*, c.name as category_name 
+                FROM products p
+                LEFT JOIN categories c ON p.category_id = c.id
+                WHERE p.id = :id
+            ");
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error fetching product by id $id: " . $e->getMessage());
+            return false;
+        }
     }
 
+    public function addToInventory($data)
+    {
+        try {
+            $query = "INSERT INTO inventory (product_name, category_id, category_name, quantity, image, barcode) 
+                      VALUES (:product_name, :category_id, :category_name, :quantity, :image, :barcode)";
+            $stmt = $this->pdo->prepare($query);
+            $result = $stmt->execute([
+                'product_name' => $data['product_name'],
+                'category_id' => $data['category_id'],
+                'category_name' => $data['category_name'],
+                'quantity' => $data['quantity'],
+                'image' => $data['image'],
+                'barcode' => $data['barcode']
+            ]);
+            if ($result) {
+                error_log("Added new item to inventory: {$data['product_name']}");
+            }
+            return $result;
+        } catch (PDOException $e) {
+            error_log("Error adding to inventory: " . $e->getMessage());
+            return false;
+        }
+    }
 
     public function getPurchaseByProductId($productId)
     {
-        $stmt = $this->pdo->getConnection()->prepare("
-            SELECT * FROM purchases WHERE product_id = :id
-        ");
-        $stmt->execute([':id' => $productId]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        try {
+            $stmt = $this->getConnection()->prepare("
+                SELECT * FROM purchases WHERE product_id = :id
+            ");
+            $stmt->execute([':id' => $productId]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error fetching purchase by product id $productId: " . $e->getMessage());
+            return false;
+        }
     }
 }

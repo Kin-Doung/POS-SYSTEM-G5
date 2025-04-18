@@ -525,17 +525,16 @@ require_once './views/layouts/side.php';
                                 <span class="<?= $class ?>"><?= number_format($profit_loss_value, 2) ?></span>
                                 <span class="numeric-value" style="display: none;"><?= $profit_loss_value ?></span>
                             </td>
-                            <td>
-                                <span class="<?= $class ?>"><?= htmlspecialchars($result_type) ?></span>
-                            </td>
+                            <td><span class="<?= $class ?>"><?= htmlspecialchars($result_type) ?></span></td>
                             <td>
                                 <?= isset($profit_loss['Sale_Date']) && strtotime($profit_loss['Sale_Date']) !== false ? date('Y-m-d', strtotime($profit_loss['Sale_Date'])) : 'N/A' ?>
                             </td>
+                       
                         </tr>
                     <?php endforeach; ?>
                 <?php else : ?>
                     <tr>
-                        <td colspan="6" style="text-align: center;">No profit/loss data found.</td>
+                        <td colspan="7" style="text-align: center;">No profit/loss data found.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
@@ -556,47 +555,6 @@ require_once './views/layouts/side.php';
                 <button disabled><i class="fa-solid fa-greater-than"></i></button>
             <?php endif; ?>
         </div>
-        <style>
-            .pagination-controls {
-                margin-top: 20px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                gap: 15px;
-                font-family: Arial, sans-serif;
-            }
-
-            .pagination-controls a,
-            .pagination-controls button {
-                padding: 8px 16px;
-                border: none;
-                border-radius: 6px;
-                font-size: 14px;
-                cursor: pointer;
-                transition: background-color 0.3s ease;
-            }
-
-            .pagination-controls a {
-                background-color: #007bff;
-                color: white;
-                text-decoration: none;
-            }
-
-            .pagination-controls a:hover {
-                background-color: #0056b3;
-            }
-
-            .pagination-controls button {
-                background-color: #ccc;
-                color: #fff;
-                cursor: not-allowed;
-            }
-
-            .pagination-controls span {
-                font-weight: bold;
-            }
-        </style>
-
     </div>
 
     <!-- Total Displays -->
@@ -609,7 +567,7 @@ require_once './views/layouts/side.php';
     <button class="delete-btn" id="delete-selected">Delete Selected</button>
 
     <!-- Custom Message Element -->
-    <div class="message" id="delete-message">Your product is deleted</div>
+    <div class="message" id="delete-message"></div>
 
     <!-- Custom Confirmation Modal -->
     <div class="confirm-modal" id="confirm-modal">
@@ -622,6 +580,134 @@ require_once './views/layouts/side.php';
         </div>
     </div>
 </div>
+
+<style>
+    .pagination-controls {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        font-family: Arial, sans-serif;
+    }
+
+    .pagination-controls a,
+    .pagination-controls button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .pagination-controls a {
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+    }
+
+    .pagination-controls a:hover {
+        background-color: #0056b3;
+    }
+
+    .pagination-controls button {
+        background-color: #ccc;
+        color: #fff;
+        cursor: not-allowed;
+    }
+
+    .pagination-controls span {
+        font-weight: bold;
+    }
+
+    .profit {
+        color: green;
+    }
+
+    .loss {
+        color: red;
+    }
+
+    .delete-btn,
+    .delete-single {
+        padding: 5px 10px;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        display: none;
+    }
+
+    .delete-btn.show,
+    .delete-single {
+        display: inline-block;
+    }
+
+    .delete-btn:hover,
+    .delete-single:hover {
+        background-color: #c82333;
+    }
+
+    .message {
+        display: none;
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 4px;
+        z-index: 1000;
+    }
+
+    .message.show {
+        display: block;
+    }
+
+    .confirm-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+    }
+
+    .confirm-modal.show {
+        display: block;
+    }
+
+    .confirm-modal-content {
+        background-color: white;
+        margin: 15% auto;
+        padding: 20px;
+        width: 300px;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    .confirm-modal-buttons button {
+        margin: 10px;
+        padding: 5px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    #confirm-yes {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    #confirm-no {
+        background-color: #6c757d;
+        color: white;
+    }
+</style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -648,24 +734,21 @@ require_once './views/layouts/side.php';
 
         function updateDeleteButton() {
             const checkedBoxes = document.querySelectorAll('.select-item:checked');
-            deleteButton.style.display = checkedBoxes.length > 0 ? 'block' : 'none';
+            deleteButton.classList.toggle('show', checkedBoxes.length > 0);
         }
 
         function calculateTotals() {
             let profitTotal = 0;
             let lossTotal = 0;
-
             document.querySelectorAll('#purchase-table tr:not([style*="display: none"])').forEach(row => {
                 const numericValue = parseFloat(row.querySelector('.numeric-value').textContent) || 0;
                 const resultType = row.querySelector('td:nth-child(5) span').textContent.trim();
-
                 if (resultType === 'Profit') {
                     profitTotal += numericValue;
                 } else if (resultType === 'Loss') {
                     lossTotal += numericValue;
                 }
             });
-
             profitTotalSpan.textContent = profitTotal.toFixed(2);
             lossTotalSpan.textContent = lossTotal.toFixed(2);
         }
@@ -673,11 +756,9 @@ require_once './views/layouts/side.php';
         function filterTable(filterType) {
             const today = new Date();
             let startDate, endDate;
-
             switch (filterType) {
                 case 'today':
                     startDate = endDate = today.toISOString().split('T')[0];
-                    console.log('Today Filter - Date:', startDate);
                     break;
                 case 'this-week':
                     startDate = new Date(today);
@@ -686,7 +767,6 @@ require_once './views/layouts/side.php';
                     endDate.setDate(startDate.getDate() + 6);
                     startDate = startDate.toISOString().split('T')[0];
                     endDate = endDate.toISOString().split('T')[0];
-                    console.log('This Week:', startDate, 'to', endDate);
                     break;
                 case 'last-week':
                     startDate = new Date(today);
@@ -695,58 +775,152 @@ require_once './views/layouts/side.php';
                     endDate.setDate(today.getDate() - today.getDay() - 1);
                     startDate = startDate.toISOString().split('T')[0];
                     endDate = endDate.toISOString().split('T')[0];
-                    console.log('Last Week:', startDate, 'to', endDate);
                     break;
                 case 'this-month':
                     startDate = new Date(today.getFullYear(), today.getMonth(), 1);
                     endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
                     startDate = startDate.toISOString().split('T')[0];
                     endDate = endDate.toISOString().split('T')[0];
-                    console.log('This Month:', startDate, 'to', endDate);
                     break;
                 case 'last-month':
                     startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
                     endDate = new Date(today.getFullYear(), today.getMonth(), 0);
                     startDate = startDate.toISOString().split('T')[0];
                     endDate = endDate.toISOString().split('T')[0];
-                    console.log('Last Month:', startDate, 'to', endDate);
                     break;
                 case 'all':
                 default:
                     startDate = '2000-01-01';
                     endDate = '2099-12-31';
-                    console.log('All Data');
                     break;
             }
-
             document.querySelectorAll('#purchase-table tr').forEach(row => {
                 const saleDateRaw = row.getAttribute('data-date');
                 const saleDate = normalizeDate(saleDateRaw);
-                console.log('Row Sale Date:', saleDateRaw, 'Normalized:', saleDate);
-
-                if (saleDate) {
-                    if (saleDate >= startDate && saleDate <= endDate) {
-                        row.style.display = '';
-                        console.log('Showing row with date:', saleDate);
-                    } else {
-                        row.style.display = 'none';
-                        console.log('Hiding row with date:', saleDate);
-                    }
+                if (saleDate && saleDate >= startDate && saleDate <= endDate) {
+                    row.style.display = '';
                 } else {
                     row.style.display = 'none';
-                    console.log('Invalid or missing date, hiding row:', saleDateRaw);
                 }
             });
-
             calculateTotals();
         }
 
-        filterButtons.forEach(button => {
+        // Bulk delete
+        deleteButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            const checkedBoxes = document.querySelectorAll('.select-item:checked');
+            if (checkedBoxes.length > 0) {
+                confirmModal.classList.add('show');
+                confirmYes.onclick = function() {
+                    const idsToDelete = Array.from(checkedBoxes)
+                        .map(cb => cb.dataset.id)
+                        .filter(id => id && !isNaN(id))
+                        .map(Number);
+                    console.log('Bulk delete IDs:', idsToDelete);
+                    if (idsToDelete.length === 0) {
+                        deleteMessage.textContent = 'No valid items selected';
+                        deleteMessage.classList.add('show');
+                        setTimeout(() => deleteMessage.classList.remove('show'), 3000);
+                        confirmModal.classList.remove('show');
+                        return;
+                    }
+                    fetch('/profit_loss/destroy_multiple', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({
+                                ids: idsToDelete
+                            })
+                        })
+                        .then(response => {
+                            console.log('Bulk delete response status:', response.status);
+                            if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log('Bulk delete response:', data);
+                            if (data.success) {
+                                checkedBoxes.forEach(checkbox => {
+                                    checkbox.closest('tr').remove();
+                                });
+                                deleteMessage.textContent = idsToDelete.length > 1 ? 'Records deleted successfully' : 'Record deleted successfully';
+                                deleteMessage.classList.add('show');
+                                setTimeout(() => deleteMessage.classList.remove('show'), 3000);
+                                calculateTotals();
+                            } else {
+                                deleteMessage.textContent = `Deletion failed: ${data.message || 'Unknown error'}`;
+                                deleteMessage.classList.add('show');
+                                setTimeout(() => deleteMessage.classList.remove('show'), 3000);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Bulk delete error:', error);
+                            deleteMessage.textContent = 'Error occurred while deleting';
+                            deleteMessage.classList.add('show');
+                            setTimeout(() => deleteMessage.classList.remove('show'), 3000);
+                        });
+                    confirmModal.classList.remove('show');
+                    updateDeleteButton();
+                };
+            }
+        });
+
+        // Single delete
+        document.querySelectorAll('.delete-single').forEach(button => {
             button.addEventListener('click', function() {
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                filterTable(this.getAttribute('data-filter'));
+                const id = Number(this.dataset.id);
+                console.log('Single delete ID:', id);
+                if (!id || isNaN(id)) {
+                    deleteMessage.textContent = 'Invalid item selected';
+                    deleteMessage.classList.add('show');
+                    setTimeout(() => deleteMessage.classList.remove('show'), 3000);
+                    return;
+                }
+                confirmModal.classList.add('show');
+                confirmYes.onclick = function() {
+                    fetch(`/profit_loss/destroy/${id}`, {
+                            method: 'POST', // Changed to POST for security
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        })
+                        .then(response => {
+                            console.log('Single delete response status:', response.status);
+                            if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log('Single delete response:', data);
+                            if (data.success) {
+                                button.closest('tr').remove();
+                                deleteMessage.textContent = 'Record deleted successfully';
+                                deleteMessage.classList.add('show');
+                                setTimeout(() => deleteMessage.classList.remove('show'), 3000);
+                                calculateTotals();
+                            } else {
+                                deleteMessage.textContent = `Deletion failed: ${data.message || 'Unknown error'}`;
+                                deleteMessage.classList.add('show');
+                                setTimeout(() => deleteMessage.classList.remove('show'), 3000);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Single delete error:', error);
+                            deleteMessage.textContent = 'Error occurred while deleting';
+                            deleteMessage.classList.add('show');
+                            setTimeout(() => deleteMessage.classList.remove('show'), 3000);
+                        });
+                    confirmModal.classList.remove('show');
+                    updateDeleteButton();
+                };
             });
+        });
+
+        confirmNo.addEventListener('click', function() {
+            confirmModal.classList.remove('show');
         });
 
         selectAllCheckbox.addEventListener('change', function() {
@@ -756,70 +930,20 @@ require_once './views/layouts/side.php';
                 }
             });
             updateDeleteButton();
-            calculateTotals();
         });
 
         selectItemCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                updateDeleteButton();
-                calculateTotals();
+            checkbox.addEventListener('change', updateDeleteButton);
+        });
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                filterTable(this.getAttribute('data-filter'));
             });
         });
 
-        deleteButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            const checkedBoxes = document.querySelectorAll('.select-item:checked');
-            if (checkedBoxes.length > 0) {
-                confirmModal.classList.add('show');
-            }
-        });
-
-        confirmYes.addEventListener('click', function() {
-            const checkedBoxes = document.querySelectorAll('.select-item:checked');
-            const idsToDelete = Array.from(checkedBoxes).map(cb => cb.dataset.id);
-
-            fetch('/profit_loss/destroy_multiple', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: JSON.stringify({
-                        ids: idsToDelete
-                    })
-                })
-                .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        checkedBoxes.forEach(checkbox => {
-                            checkbox.closest('tr').remove();
-                        });
-                        deleteMessage.classList.add('show');
-                        setTimeout(() => {
-                            deleteMessage.classList.remove('show');
-                        }, 3000);
-                        calculateTotals();
-                    } else {
-                        alert('Deletion failed: ' + (data.message || 'Unknown error'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error occurred while deleting');
-                });
-
-            confirmModal.classList.remove('show');
-            updateDeleteButton();
-        });
-
-        confirmNo.addEventListener('click', function() {
-            confirmModal.classList.remove('show');
-        });
-
-        // Initial setup
         updateDeleteButton();
         filterTable('all');
     });

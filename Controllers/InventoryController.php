@@ -65,7 +65,19 @@ class InventoryController extends BaseController
                 continue;
             }
 
-            $imagePath = $this->handleImageUpload($index);
+            // Get existing product details if product_id exists
+            $existingImage = null;
+            if (!empty($productIds[$index])) {
+                $existingProduct = $this->model->getInventoryById($productIds[$index]);
+                $existingImage = $existingProduct['image'] ?? null;
+            }
+
+            // Handle image upload or use existing image
+            $imagePath = $this->handleImageUpload($index, $existingImage);
+            if (!$imagePath && $existingImage) {
+                $imagePath = $existingImage; // Fallback to existing image
+            }
+
             $quantity = isset($quantities[$index]) ? (int)$quantities[$index] : 0;
             $amount = isset($amounts[$index]) ? (float)$amounts[$index] : 0;
             $data = [
@@ -86,7 +98,7 @@ class InventoryController extends BaseController
                 $errors[] = "Failed to update stock for $productName: {$result['error']}";
             } else {
                 $successIds[] = $result['id'];
-                error_log("Updated stock for $productName (ID: {$result['id']}), added quantity: $quantity");
+                error_log("Updated stock for $productName (ID: {$result['id']}), added quantity: $quantity, image: $imagePath");
             }
         }
 
@@ -97,7 +109,6 @@ class InventoryController extends BaseController
         }
         $this->redirect('/inventory');
     }
-
     public function edit($id)
     {
         $inventory = $this->model->getInventoryById($id);
@@ -155,7 +166,7 @@ class InventoryController extends BaseController
             $inventory = $this->model->getInventoryById($id);
             if (!$inventory) {
                 error_log("Inventory item not found for update: id = $id");
-              
+
                 echo json_encode(['error' => 'Inventory item not found.']);
                 exit;
             }
@@ -218,7 +229,7 @@ class InventoryController extends BaseController
                     exit;
                 }
                 if ($_FILES['image']['size'] > $maxSize) {
-                    error_log( "Image size exceeds 2MB for update id $id: {$_FILES['image']['size']}");
+                    error_log("Image size exceeds 2MB for update id $id: {$_FILES['image']['size']}");
                     http_response_code(400);
                     echo json_encode(['error' => 'Image size must not exceed 2MB.']);
                     exit;
@@ -355,7 +366,7 @@ class InventoryController extends BaseController
         $allowedTypes = ['image/jpeg', 'image/png'];
         $maxSize = 2 * 1024 * 1024; // 2MB
         $targetDir = "Uploads/";
-
+    
         // Ensure directory exists and is writable
         if (!is_dir($targetDir)) {
             if (!mkdir($targetDir, 0755, true)) {
@@ -367,7 +378,8 @@ class InventoryController extends BaseController
             error_log("Uploads directory is not writable");
             return $existingImage;
         }
-
+    
+        // Handle array-based image upload (for multiple rows)
         if ($index !== null && isset($_FILES['image']['name'][$index]) && $_FILES['image']['error'][$index] === UPLOAD_ERR_OK) {
             if (!in_array($_FILES['image']['type'][$index], $allowedTypes) || $_FILES['image']['size'][$index] > $maxSize) {
                 error_log("Invalid file type or size at index $index");
@@ -378,9 +390,11 @@ class InventoryController extends BaseController
                 if ($existingImage && file_exists($existingImage)) {
                     unlink($existingImage);
                 }
+                error_log("Successfully uploaded image to $imagePath");
                 return $imagePath;
             } else {
                 error_log("Failed to move uploaded file to $imagePath");
+                return $existingImage;
             }
         } elseif ($index === null && isset($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
             if (!in_array($_FILES['image']['type'], $allowedTypes) || $_FILES['image']['size'] > $maxSize) {
@@ -392,11 +406,15 @@ class InventoryController extends BaseController
                 if ($existingImage && file_exists($existingImage)) {
                     unlink($existingImage);
                 }
+                error_log("Successfully uploaded image to $imagePath");
                 return $imagePath;
             } else {
                 error_log("Failed to move uploaded file to $imagePath");
+                return $existingImage;
             }
         }
+    
+        // Return existing image if no new upload
         return $existingImage;
     }
 

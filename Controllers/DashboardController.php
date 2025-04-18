@@ -1,4 +1,5 @@
 <?php
+// controllers/DashboardController.php
 require_once './Models/DashboardModel.php';
 
 class DashboardController extends BaseController
@@ -22,6 +23,7 @@ class DashboardController extends BaseController
             exit();
         }
 
+        // Profit/loss calculations
         $profit_loss = $this->model->getProfit_Loss();
 
         $todayProfit = 0;
@@ -46,17 +48,24 @@ class DashboardController extends BaseController
 
         error_log("Today Profit: $todayProfit, Expense: $todayExpense, New Client Sales: $todayNewClientSales, Incoming: $todayIncoming%");
 
+        // Inventory data
         $inventoryItems = $this->model->getInventoryItems();
         $totalInventoryValue = $this->model->getTotalInventoryValue();
         $lowStockItems = $this->model->getLowStockItems();
         $inventoryCount = $this->model->getInventoryCount();
 
-        // New reports data (added, not changing existing code)
+        // Reports data
         $reports = $this->model->getAllReports();
         $totalReportsSales = $this->model->getTotalReportsSales();
         $todayReports = $this->model->getReportsByDate(date('Y-m-d'));
         $productSalesSummary = $this->model->getProductSalesSummary();
         $lowQuantityReports = $this->model->getLowQuantityReports();
+
+        // Stock status for initial load
+        $stockStatus = $this->model->getStockStatus();
+
+        // Inventory items for compatibility
+        $tracking = $this->model->getInventoryItems();
 
         $this->views('dashboards/list', [
             'Profit_Loss' => $profit_loss,
@@ -68,12 +77,13 @@ class DashboardController extends BaseController
             'Total_Inventory_Value' => $totalInventoryValue,
             'Low_Stock_Items' => $lowStockItems,
             'Inventory_Count' => $inventoryCount,
-            // New reports data
             'Reports' => $reports,
             'Total_Reports_Sales' => $totalReportsSales,
             'Today_Reports' => $todayReports,
             'Product_Sales_Summary' => $productSalesSummary,
-            'Low_Quantity_Reports' => $lowQuantityReports
+            'Low_Quantity_Reports' => $lowQuantityReports,
+            'Stock_Status' => $stockStatus,
+            'tracking' => $tracking
         ]);
     }
 
@@ -118,9 +128,8 @@ class DashboardController extends BaseController
     {
         header('Content-Type: application/json');
         $inventoryItems = $this->model->getInventoryItems();
-        // Temporarily remove date filtering since 'last_updated' doesn’t exist
         $totalValue = array_reduce($inventoryItems, function ($sum, $item) {
-            return $sum + (floatval($item['quantity']) * floatval($item['unit_price']));
+            return $sum + (floatval($item['quantity']) * floatval($item['amount']));
         }, 0);
 
         echo json_encode([
@@ -128,5 +137,21 @@ class DashboardController extends BaseController
             'inventoryCount' => count($inventoryItems),
             'records' => array_values($inventoryItems)
         ]);
+    }
+
+    public function get_stock_status()
+    {
+        header('Content-Type: application/json');
+        $input = json_decode(file_get_contents('php://input'), true);
+        $categoryId = isset($input['category_id']) ? $input['category_id'] : '';
+
+        $stockStatus = $this->model->getStockStatus($categoryId);
+
+        if (isset($stockStatus['error'])) {
+            echo json_encode(['error' => $stockStatus['error']]);
+            exit;
+        }
+
+        echo json_encode($stockStatus);
     }
 }

@@ -55,14 +55,16 @@
                                                     </button>
                                                 </form>
                                                 <style>
-                                                    .edit-btn{
+                                                    .edit-btn {
                                                         background: none;
                                                     }
-                                                    .delete-btn{
+
+                                                    .delete-btn {
                                                         background: none;
                                                         color: red;
-                                              
+
                                                     }
+
                                                     .action-column {
                                                         text-align: center;
                                                         white-space: nowrap;
@@ -86,7 +88,6 @@
                                                         transition: background-color 0.2s ease-in-out;
                                                         color: white;
                                                     }
-
                                                 </style>
                                             </td>
 
@@ -360,5 +361,5 @@
 
         });
     </script>
-
-    <?php require_once './views/layouts/footer.php'; ?>
+</body>
+<?php require_once './views/layouts/footer.php'; ?>

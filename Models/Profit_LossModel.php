@@ -1,5 +1,5 @@
 <?php
-require_once './Databases/database.php'; // Adjusted to match your likely structure
+require_once './Databases/database.php';
 
 class Profit_LossModel
 {
@@ -108,6 +108,7 @@ class Profit_LossModel
             return false;
         }
     }
+
     function testConnection()
     {
         try {

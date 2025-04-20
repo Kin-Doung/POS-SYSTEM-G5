@@ -13,7 +13,7 @@
                     <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="fas fa-tachometer-alt opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Dashboard</span>
+                    <span class="nav-link-text ms-1" data-translate-key="Dashboard">Dashboard</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -21,7 +21,7 @@
                     <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="fas fa-shopping-cart opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Products</span>
+                    <span class="nav-link-text ms-1" data-translate-key="Products">Products</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -29,7 +29,7 @@
                     <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="fas fa-warehouse opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Inventory</span>
+                    <span class="nav-link-text ms-1" data-translate-key="Inventory">Inventory</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -37,7 +37,7 @@
                     <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="fas fa-tag opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Order</span>
+                    <span class="nav-link-text ms-1" data-translate-key="Order">Order</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -45,7 +45,7 @@
                     <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="fas fa-history opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Report</span>
+                    <span class="nav-link-text ms-1" data-translate-key="Report">Report</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -53,7 +53,7 @@
                     <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="fas fa-balance-scale opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Profit_Loss</span>
+                    <span class="nav-link-text ms-1" data-translate-key="Profit_Loss">Profit & Loss</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -61,7 +61,7 @@
                     <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="fas fa-chart-line opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Stock tracking</span>
+                    <span class="nav-link-text ms-1" data-translate-key="Stock tracking">Stock Tracking</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -69,7 +69,7 @@
                     <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="fas fa-list opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Categories</span>
+                    <span class="nav-link-text ms-1" data-translate-key="Categories">Categories</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -77,7 +77,15 @@
                     <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="fas fa-bell opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Notifications</span>
+                    <span class="nav-link-text ms-1" data-translate-key="Notifications">Notifications</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="/calendar">
+                    <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="material-icons opacity-10">calendar_today</i>
+                    </div>
+                    <span class="nav-link-text ms-1" data-translate-key="Calendar">Calendar</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -85,7 +93,7 @@
                     <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="fas fa-cog opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Account</span>
+                    <span class="nav-link-text ms-1" data-translate-key="Account">Account</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -93,13 +101,13 @@
                     <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="fas fa-sign-out-alt opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Log Out</span>
+                    <span class="nav-link-text ms-1" data-translate-key="Log Out">Log Out</span>
                 </a>
             </li>
         </ul>
     </div>
     <div class="sidenav-footer position-absolute w-100 bottom-0 text-center p-3">
-        <small>Engly POS v1.0 © <?= date('Y') ?></small>
+        <small data-translate-key="Engly POS v1.0">Engly POS v1.0</small> © <?= date('Y') ?>
     </div>
     <link rel="stylesheet" href="/assets/css/settings/aside.css">
 </aside>

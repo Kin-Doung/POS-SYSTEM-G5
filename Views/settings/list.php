@@ -49,7 +49,7 @@
                                         <div class="left">
                                             <div class="aa">
                                                 <h6><strong>Profile:</strong></h6>
-                                                <div class="image">
+                                                 <div class="image">
                                                     <?php if (!empty($admin['store_logo'])) : ?>
                                                         <img src="data:image/jpeg;base64,<?= base64_encode($admin['store_logo']) ?>"
                                                             style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%;">

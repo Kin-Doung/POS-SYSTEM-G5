@@ -86,7 +86,7 @@ class Profit_LossController extends BaseController
             echo json_encode(['success' => false, 'message' => 'Error deleting record']);
         }
         exit;
-    } 
+    }
 
     function destroy_multiple()
     {
@@ -131,6 +131,7 @@ class Profit_LossController extends BaseController
         }
         exit;
     }
+
     function get_totals()
     {
         header('Content-Type: application/json');

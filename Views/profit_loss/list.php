@@ -529,7 +529,7 @@ require_once './views/layouts/side.php';
                             <td>
                                 <?= isset($profit_loss['Sale_Date']) && strtotime($profit_loss['Sale_Date']) !== false ? date('Y-m-d', strtotime($profit_loss['Sale_Date'])) : 'N/A' ?>
                             </td>
-                       
+
                         </tr>
                     <?php endforeach; ?>
                 <?php else : ?>
@@ -948,8 +948,6 @@ require_once './views/layouts/side.php';
         filterTable('all');
     });
 </script>
-
-
 <?php
 require_once './views/layouts/footer.php';
 ?>

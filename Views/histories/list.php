@@ -93,6 +93,26 @@ require_once './views/layouts/side.php';
         box-shadow: 0 4px 10px rgba(255, 77, 77, 0.4);
     }
 
+    .edit-btn {
+        background: linear-gradient(45deg, #4a90e2, #63b8ff);
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 500;
+        box-shadow: 0 2px 5px rgba(74, 144, 226, 0.3);
+        transition: all 0.3s ease;
+        margin-right: 5px;
+    }
+
+    .edit-btn:hover {
+        background: linear-gradient(45deg, #357abd, #4a90e2);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(74, 144, 226, 0.4);
+    }
+
     .delete-btn {
         background: linear-gradient(45deg, #ff4d4d, #ff7878);
         color: white;
@@ -208,7 +228,7 @@ require_once './views/layouts/side.php';
     .search-container {
         width: 400px;
         background: none;
-        margin-left: 665px;
+        margin-left: auto;
         margin-top: -10px;
         margin-bottom: 10px;
     }
@@ -290,6 +310,28 @@ require_once './views/layouts/side.php';
         margin-bottom: 20px;
     }
 
+    .confirm-modal-content form div {
+        margin-bottom: 15px;
+        text-align: left;
+    }
+
+    .confirm-modal-content label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        color: #1e293b;
+        margin-bottom: 5px;
+    }
+
+    .confirm-modal-content input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+    }
+
     .confirm-modal-buttons {
         display: flex;
         justify-content: center;
@@ -306,23 +348,27 @@ require_once './views/layouts/side.php';
         transition: all 0.3s ease;
     }
 
-    .confirm-modal-buttons #confirm-yes {
+    .confirm-modal-buttons #confirm-yes,
+    .confirm-modal-buttons #save-edit {
         background: #5cbacc;
         color: white;
     }
 
-    .confirm-modal-buttons #confirm-yes:hover {
+    .confirm-modal-buttons #confirm-yes:hover,
+    .confirm-modal-buttons #save-edit:hover {
         background: #4a9bb0;
         transform: translateY(-2px);
         box-shadow: 0 2px 5px rgba(92, 186, 204, 0.3);
     }
 
-    .confirm-modal-buttons #confirm-no {
+    .confirm-modal-buttons #confirm-no,
+    .confirm-modal-buttons #cancel-edit {
         background: linear-gradient(45deg, #ff4d4d, #ff7878);
         color: white;
     }
 
-    .confirm-modal-buttons #confirm-no:hover {
+    .confirm-modal-buttons #confirm-no:hover,
+    .confirm-modal-buttons #cancel-edit:hover {
         background: linear-gradient(45deg, #cc0000, #ff4d4d);
         transform: translateY(-2px);
         box-shadow: 0 2px 5px rgba(255, 77, 77, 0.3);
@@ -363,22 +409,32 @@ require_once './views/layouts/side.php';
     }
 
     .loading::after {
-        content: 'Loading...';
+        content: '';
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #5cbacc;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        animation: spin 1s linear infinite;
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        font-size: 16px;
-        font-weight: 500;
-        color: #1e293b;
+    }
+
+    @keyframes spin {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
 
     /* Empty Table State */
     tbody tr td[colspan="8"] {
         text-align: center;
-        padding: 20px;
+        padding: 40px;
         color: #6b7280;
+        font-size: 16px;
         font-style: italic;
+        background-color: #f8f9fa;
     }
 
     /* Responsive adjustments */
@@ -398,6 +454,7 @@ require_once './views/layouts/side.php';
         }
 
         .remove-btn,
+        .edit-btn,
         .delete-btn {
             padding: 6px 10px;
             font-size: 12px;
@@ -486,7 +543,7 @@ require_once './views/layouts/side.php';
         <table>
             <thead>
                 <tr>
-                    <th><input type="checkbox" id="select-all" title="Select All"></th>
+                    <th><input type="checkbox" id="select-all" title="Select All" aria-label="Select all items"></th>
                     <th>Image</th>
                     <th>Product Name</th>
                     <th>Quantity</th>
@@ -503,10 +560,13 @@ require_once './views/layouts/side.php';
                         <td><img src="<?= $report['image'] ?>" alt="Product Image" width="50" loading="lazy"></td>
                         <td><?= htmlspecialchars($report['product_name']) ?></td>
                         <td><?= $report['quantity'] ?></td>
-                        <td><?= $report['price'] ?>$</td>
-                        <td><?= $report['total_price'] ?>$</td>
+                        <td><?= number_format($report['price'], 2) ?>$</td>
+                        <td><?= number_format($report['total_price'], 2) ?>$</td>
                         <td><?= $report['created_at'] ? date('Y-m-d', strtotime($report['created_at'])) : 'N/A' ?></td>
-                        <td><button class="remove-btn" data-id="<?= $report['id'] ?>">Remove</button></td>
+                        <td>
+                            <button class="edit-btn" data-id="<?= $report['id'] ?>">Edit</button>
+                            <button class="remove-btn" data-id="<?= $report['id'] ?>">Remove</button>
+                        </td>
                     </tr>
                 <?php endforeach ?>
             </tbody>
@@ -530,7 +590,7 @@ require_once './views/layouts/side.php';
     <!-- Custom Message Element -->
     <div class="message" id="delete-message">Item deleted</div>
 
-    <!-- Custom Confirmation Modal -->
+    <!-- Custom Confirmation Modal for Deletion -->
     <div class="confirm-modal" id="confirm-modal">
         <div class="confirm-modal-content">
             <p>Are you sure you want to delete the selected items?</p>
@@ -538,6 +598,40 @@ require_once './views/layouts/side.php';
                 <button id="confirm-yes">Yes</button>
                 <button id="confirm-no">No</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Custom Edit Modal -->
+    <div class="confirm-modal" id="edit-modal">
+        <div class="confirm-modal-content">
+            <p>Edit Product</p>
+            <form id="edit-form">
+                <input type="hidden" name="id" id="edit-id">
+                <div>
+                    <label>Product Name:</label>
+                    <input type="text" name="product_name" id="edit-product-name" required>
+                </div>
+                <div>
+                    <label>Quantity:</label>
+                    <input type="number" name="quantity" id="edit-quantity" min="1" required>
+                </div>
+                <div>
+                    <label>Price:</label>
+                    <input type="number" name="price" id="edit-price" step="0.01" min="0" required>
+                </div>
+                <div>
+                    <label>Date:</label>
+                    <input type="date" name="created_at" id="edit-created-at" required>
+                </div>
+                <div>
+                    <label>Image:</label>
+                    <input type="file" name="image" id="edit-image" accept="image/*">
+                </div>
+                <div class="confirm-modal-buttons">
+                    <button type="submit" id="save-edit">Save</button>
+                    <button type="button" id="cancel-edit">Cancel</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -561,11 +655,13 @@ require_once './views/layouts/side.php';
     const modal = document.getElementById('confirm-modal');
     const confirmYes = document.getElementById('confirm-yes');
     const confirmNo = document.getElementById('confirm-no');
+    const editModal = document.getElementById('edit-modal');
+    const editForm = document.getElementById('edit-form');
+    const cancelEdit = document.getElementById('cancel-edit');
     const paginationContainer = document.querySelector('.pagination');
 
-    // Base URL for AJAX requests (adjust if app is in a subdirectory)
-    const baseUrl = window.location.origin;
-    // CSRF Token (Adjust based on your setup)
+    // Base URL for AJAX requests
+    const baseUrl = '<?= defined('BASE_URL') ?>';
     const csrfToken = '<?= isset($_SESSION["csrf_token"]) ? $_SESSION["csrf_token"] : "" ?>';
     let currentPage = <?= $currentPage ?: 1 ?>;
 
@@ -591,7 +687,6 @@ require_once './views/layouts/side.php';
             payload.start_date = startDate;
             payload.end_date = endDate;
         }
-        console.log('Fetching with payload:', payload);
 
         return fetch(`${baseUrl}/history/fetchFilteredHistories`, {
             method: 'POST',
@@ -602,13 +697,11 @@ require_once './views/layouts/side.php';
             body: new URLSearchParams(payload)
         })
         .then(response => {
-            console.log('Fetch Status:', response.status);
             if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
             return response.json();
         })
         .then(data => {
             tableBody.classList.remove('loading');
-            console.log('Received data:', data);
             if (data.success) {
                 tableBody.innerHTML = data.reports.length > 0 ? data.reports.map(report => `
                     <tr data-date="${report.created_at}">
@@ -616,25 +709,27 @@ require_once './views/layouts/side.php';
                         <td><img src="${report.image}" alt="Product Image" width="50" loading="lazy"></td>
                         <td>${report.product_name}</td>
                         <td>${report.quantity}</td>
-                        <td>${report.price}$</td>
-                        <td>${report.total_price}$</td>
+                        <td>${parseFloat(report.price).toFixed(2)}$</td>
+                        <td>${parseFloat(report.total_price).toFixed(2)}$</td>
                         <td>${new Date(report.created_at).toISOString().split('T')[0]}</td>
-                        <td><button class="remove-btn" data-id="${report.id}">Remove</button></td>
+                        <td>
+                            <button class="edit-btn" data-id="${report.id}">Edit</button>
+                            <button class="remove-btn" data-id="${report.id}">Remove</button>
+                        </td>
                     </tr>
                 `).join('') : '<tr><td colspan="8">No records found</td></tr>';
-                totalPriceSpan.textContent = `$${data.total_price}`;
+                totalPriceSpan.textContent = `$${parseFloat(data.total_price).toFixed(2)}`;
                 currentPage = data.currentPage;
                 updatePagination(data.currentPage, data.totalPages);
                 attachRemoveListeners();
+                attachEditListeners();
                 attachCheckboxListeners();
             } else {
-                console.log('Server error:', data.error);
                 alert('Failed to fetch data: ' + (data.error || 'Unknown error'));
             }
         })
         .catch(error => {
             tableBody.classList.remove('loading');
-            console.error('Fetch Error:', error);
             alert('Error fetching data: ' + error.message);
         });
     }
@@ -658,7 +753,6 @@ require_once './views/layouts/side.php';
     // Attach Page Listeners
     function attachPageListeners() {
         const pageButtons = document.querySelectorAll('.page-btn');
-        console.log('Attaching listeners to', pageButtons.length, 'buttons');
         pageButtons.forEach(button => {
             button.removeEventListener('click', handlePageClick);
             button.addEventListener('click', handlePageClick);
@@ -667,7 +761,6 @@ require_once './views/layouts/side.php';
 
     function handlePageClick() {
         const page = parseInt(this.getAttribute('data-page'));
-        console.log('Page clicked:', page);
         if (!isNaN(page)) {
             fetchTableData({
                 filter: document.querySelector('.filter-btn.active')?.getAttribute('data-filter') || 'all',
@@ -694,7 +787,6 @@ require_once './views/layouts/side.php';
         modal.classList.add('show');
         confirmYes.onclick = () => {
             tableBody.classList.add('loading');
-            console.log('Sending DELETE request for ID:', id);
             fetch(`${baseUrl}/history/destroy`, {
                 method: 'DELETE',
                 headers: {
@@ -704,13 +796,11 @@ require_once './views/layouts/side.php';
                 body: JSON.stringify({ ids: [id] })
             })
             .then(response => {
-                console.log('Delete Status:', response.status);
                 if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
                 return response.json();
             })
             .then(data => {
                 tableBody.classList.remove('loading');
-                console.log('Delete Data:', data);
                 if (data.success) {
                     row.remove();
                     showMessage('Product deleted successfully');
@@ -722,12 +812,68 @@ require_once './views/layouts/side.php';
             })
             .catch(error => {
                 tableBody.classList.remove('loading');
-                console.error('Delete Error:', error);
                 alert('Error deleting item: ' + error.message);
             });
         };
         confirmNo.onclick = () => modal.classList.remove('show');
     }
+
+    // Handle Edit
+    function attachEditListeners() {
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.removeEventListener('click', handleEditClick);
+            button.addEventListener('click', handleEditClick);
+        });
+    }
+
+    function handleEditClick() {
+        const id = this.getAttribute('data-id');
+        fetch(`${baseUrl}/history/edit/${id}`, {
+            method: 'GET',
+            headers: { 'X-CSRF-Token': csrfToken }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('edit-id').value = data.report.id;
+                document.getElementById('edit-product-name').value = data.report.product_name;
+                document.getElementById('edit-quantity').value = data.report.quantity;
+                document.getElementById('edit-price').value = parseFloat(data.report.price).toFixed(2);
+                document.getElementById('edit-created-at').value = data.report.created_at.split(' ')[0];
+                document.getElementById('edit-image').value = ''; // Reset file input
+                editModal.classList.add('show');
+            } else {
+                alert('Failed to fetch record: ' + (data.error || 'Unknown error'));
+            }
+        })
+        .catch(error => alert('Error: ' + error.message));
+    }
+
+    editForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const id = document.getElementById('edit-id').value;
+        const formData = new FormData(this);
+        fetch(`${baseUrl}/history/update/${id}`, {
+            method: 'POST',
+            headers: { 'X-CSRF-Token': csrfToken },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showMessage('Product updated successfully');
+                editModal.classList.remove('show');
+                fetchTableData({ page: currentPage });
+            } else {
+                alert('Failed to update: ' + (data.error || 'Unknown error'));
+            }
+        })
+        .catch(error => alert('Error: ' + error.message));
+    });
+
+    cancelEdit.addEventListener('click', () => {
+        editModal.classList.remove('show');
+    });
 
     // Handle Bulk Delete
     deleteBtn.addEventListener('click', () => {
@@ -741,7 +887,6 @@ require_once './views/layouts/side.php';
         modal.classList.add('show');
         confirmYes.onclick = () => {
             tableBody.classList.add('loading');
-            console.log('Sending bulk DELETE request for IDs:', ids);
             fetch(`${baseUrl}/history/destroy`, {
                 method: 'DELETE',
                 headers: {
@@ -751,13 +896,11 @@ require_once './views/layouts/side.php';
                 body: JSON.stringify({ ids })
             })
             .then(response => {
-                console.log('Bulk Delete Status:', response.status);
                 if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
                 return response.json();
             })
             .then(data => {
                 tableBody.classList.remove('loading');
-                console.log('Bulk Delete Data:', data);
                 if (data.success) {
                     checkboxes.forEach(cb => cb.closest('tr').remove());
                     showMessage(`${ids.length} item${ids.length > 1 ? 's' : ''} deleted successfully`);
@@ -769,7 +912,6 @@ require_once './views/layouts/side.php';
             })
             .catch(error => {
                 tableBody.classList.remove('loading');
-                console.error('Bulk Delete Error:', error);
                 alert('Error deleting items: ' + error.message);
             });
         };
@@ -814,6 +956,10 @@ require_once './views/layouts/side.php';
 
     // Date Input Changes
     startDateInput.addEventListener('change', () => {
+        if (startDateInput.value > endDateInput.value) {
+            alert('Start date cannot be after end date.');
+            startDateInput.value = endDateInput.value;
+        }
         fetchTableData({
             filter: 'all',
             startDate: startDateInput.value,
@@ -824,6 +970,10 @@ require_once './views/layouts/side.php';
     });
 
     endDateInput.addEventListener('change', () => {
+        if (startDateInput.value > endDateInput.value) {
+            alert('Start date cannot be after end date.');
+            endDateInput.value = startDateInput.value;
+        }
         fetchTableData({
             filter: 'all',
             startDate: startDateInput.value,
@@ -849,8 +999,10 @@ require_once './views/layouts/side.php';
     });
 
     // Initial Load
-    fetchTableData();
-    attachPageListeners();
+    fetchTableData().then(() => {
+        attachEditListeners();
+        attachPageListeners();
+    });
 </script>
 
 <?php

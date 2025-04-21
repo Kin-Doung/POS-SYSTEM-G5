@@ -23,6 +23,7 @@ class HistoryModel
 
     function createHistories($data)
     {
+        // Note: Ensure reports.total_price is DECIMAL(10,2) in the database
         $this->pdo->query("INSERT INTO reports (image, product_id, product_name, quantity, price, total_price, created_at) VALUES (:image, :product_id, :product_name, :quantity, :price, :total_price, :created_at)", [
             'image' => $data['image'],
             'product_id' => $data['product_id'],
@@ -152,8 +153,8 @@ class HistoryModel
     function getProfit_Loss($page = 1, $itemsPerPage = 25)
     {
         $offset = ($page - 1) * $itemsPerPage;
-        $stmt = $this->pdo->query("SELECT * FROM sales_data ORDER BY id DESC LIMIT :limit OFFSET :offset");
-        $stmt->execute([
+        $query = "SELECT * FROM sales_data ORDER BY id DESC LIMIT :limit OFFSET :offset";
+        $stmt = $this->pdo->query($query, [
             'limit' => $itemsPerPage,
             'offset' => $offset
         ]);

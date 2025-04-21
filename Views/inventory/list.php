@@ -220,49 +220,6 @@
                             deleteModal.querySelector('#deleteProductId').textContent = id;
                             deleteModal.querySelector('#deleteId').value = id;
                             const csrfToken = document.getElementById('csrfToken').value;
-                            console.log('Delete modal opened - ID:', id, 'CSRF Token:', csrfToken || 'empty');
-                        } catch (error) {
-                            console.error('Error in delete modal show event:', error);
-                        }
-                    });
-
-                    const deleteForm = document.getElementById('deleteForm');
-                    if (deleteForm) {
-                        deleteForm.addEventListener('submit', function(event) {
-                            const id = document.getElementById('deleteId').value;
-                            const csrfToken = document.getElementById('csrfToken').value;
-                            console.log('Submitting delete form - ID:', id, 'CSRF Token:', csrfToken || 'empty');
-                        });
-                    } else {
-                        console.error('Delete form not found in DOM');
-                    }
-                });
-            </script>
-
-            <!-- JavaScript for Delete Modal -->
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const deleteModal = document.getElementById('deleteModal');
-                    if (!deleteModal) {
-                        console.error('Delete modal not found in DOM');
-                        return;
-                    }
-                    deleteModal.addEventListener('show.bs.modal', function(event) {
-                        try {
-                            const button = event.relatedTarget;
-                            const id = button.getAttribute('data-id');
-                            const productName = button.getAttribute('data-product_name');
-                            if (!id || !productName) {
-                                console.error('Missing data-id or data-product_name:', {
-                                    id,
-                                    productName
-                                });
-                                return;
-                            }
-                            deleteModal.querySelector('#deleteProductName').textContent = productName;
-                            deleteModal.querySelector('#deleteProductId').textContent = id;
-                            deleteModal.querySelector('#deleteId').value = id;
-                            const csrfToken = document.getElementById('csrfToken').value;
                             console.log('Delete modal opened - ID:', id, 'CSRF Token:', csrfToken);
                         } catch (error) {
                             console.error('Error in delete modal show event:', error);

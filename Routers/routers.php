@@ -24,6 +24,7 @@ require_once './Controllers/HistoryController.php';
 require_once './Controllers/Profit_LossController.php';
 require_once './Controllers/TrackingController.php';
 require_once './Controllers/CalendarController.php';
+require_once './Controllers/NavController.php';
 
 $router = new Router();
 
@@ -34,6 +35,11 @@ $router->post('/login', [LoginController::class, 'processLogin']);
 // Protected routes
 $router->get('/dashboard', [DashboardController::class, 'index'], true);
 $router->get('/profit_loss/get_data', [DashboardController::class, 'get_data'], true);
+
+// navbar
+
+$router->get('/nav', [NavController::class, 'index'], true);
+
 
 // settings
 $router->get('/settings', [SettingController::class, 'index'], true);

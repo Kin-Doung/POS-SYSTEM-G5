@@ -7,35 +7,75 @@ class Profit_LossModel
 
     function __construct()
     {
-        $this->pdo = new Database();
+        try {
+            $this->pdo = new Database();
+            if (!$this->pdo->getConnection()) {
+                error_log("Model: Failed to get PDO connection");
+                throw new Exception("Database connection unavailable");
+            }
+        } catch (Exception $e) {
+            error_log("Model: Constructor error: " . $e->getMessage());
+            throw $e;
+        }
     }
 
     function getProfit_Loss($page = 1, $perPage = 25)
     {
-        $offset = ($page - 1) * $perPage;
-        $stmt = $this->pdo->prepare("SELECT * FROM sales_data ORDER BY id DESC LIMIT :limit OFFSET :offset");
-        $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
-        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $offset = ($page - 1) * $perPage;
+            $stmt = $this->pdo->prepare("SELECT * FROM sales_data ORDER BY ID DESC LIMIT :limit OFFSET :offset");
+            $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            error_log("Model: Fetched " . count($results) . " profit/loss records");
+            return $results;
+        } catch (PDOException $e) {
+            error_log("Model: Fetch profit/loss error: " . $e->getMessage());
+            return [];
+        }
     }
 
     function getTotalRecords()
     {
-        $stmt = $this->pdo->query("SELECT COUNT(*) FROM sales_data");
-        return $stmt->fetchColumn();
+        try {
+            $stmt = $this->pdo->query("SELECT COUNT(*) FROM sales_data");
+            $count = $stmt->fetchColumn();
+            error_log("Model: Total records: $count");
+            return $count;
+        } catch (PDOException $e) {
+            error_log("Model: Count records error: " . $e->getMessage());
+            return 0;
+        }
     }
 
     function createProfit_Loss($data)
     {
         try {
+            // Validation
+            if (!in_array($data['Result_Type'] ?? '', ['', 'Profit', 'Loss'])) {
+                error_log("Model: Invalid Result_Type: " . ($data['Result_Type'] ?? ''));
+                return false;
+            }
+            if (!is_numeric($data['quantity']) || $data['quantity'] < 0) {
+                error_log("Model: Invalid quantity: " . ($data['quantity'] ?? ''));
+                return false;
+            }
+            if (!is_numeric($data['Cost_Price']) || !is_numeric($data['Selling_Price']) || !is_numeric($data['Profit_Loss'])) {
+                error_log("Model: Invalid numeric fields: Cost_Price=" . ($data['Cost_Price'] ?? '') . ", Selling_Price=" . ($data['Selling_Price'] ?? '') . ", Profit_Loss=" . ($data['Profit_Loss'] ?? ''));
+                return false;
+            }
+            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $data['Sale_Date'] ?? date('Y-m-d'))) {
+                error_log("Model: Invalid Sale_Date: " . ($data['Sale_Date'] ?? ''));
+                return false;
+            }
             $stmt = $this->pdo->prepare("
                 INSERT INTO sales_data (
                     image, Product_Name, quantity, Cost_Price, Selling_Price, 
-                    Profit_Loss, Result_Type, Sale_Date, product_id, inventory_id
+                    Profit_Loss, Result_Type, Sale_Date, product_id, report_id, inventory_id
                 ) VALUES (
                     :image, :Product_Name, :quantity, :Cost_Price, :Selling_Price, 
-                    :Profit_Loss, :Result_Type, :Sale_Date, :product_id, :inventory_id
+                    :Profit_Loss, :Result_Type, :Sale_Date, :product_id, :report_id, :inventory_id
                 )
             ");
             $stmt->execute([
@@ -48,8 +88,10 @@ class Profit_LossModel
                 'Result_Type' => $data['Result_Type'] ?? '',
                 'Sale_Date' => $data['Sale_Date'] ?? date('Y-m-d'),
                 'product_id' => $data['product_id'] ?? 0,
+                'report_id' => $data['report_id'] ?? 0,
                 'inventory_id' => $data['inventory_id'] ?? 0
             ]);
+            error_log("Model: Created record, rows affected: " . $stmt->rowCount());
             return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
             error_log("Model: Create error: " . $e->getMessage());
@@ -60,9 +102,15 @@ class Profit_LossModel
     function getProfit_Loss_By_Id($id)
     {
         try {
-            $stmt = $this->pdo->prepare("SELECT * FROM sales_data WHERE id = :id");
+            if (!is_numeric($id) || $id <= 0) {
+                error_log("Model: Invalid ID for fetch: $id");
+                return false;
+            }
+            $stmt = $this->pdo->prepare("SELECT * FROM sales_data WHERE ID = :id");
             $stmt->execute(['id' => $id]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            error_log("Model: Fetched record for ID $id: " . ($result ? 'Found' : 'Not found'));
+            return $result;
         } catch (PDOException $e) {
             error_log("Model: Fetch by ID error: " . $e->getMessage());
             return false;
@@ -80,12 +128,21 @@ class Profit_LossModel
                 }
                 $id = array_filter($id, fn($val) => is_numeric($val) && $val > 0);
                 if (empty($id)) {
-                    error_log("Model: No valid IDs after filtering");
+                    error_log("Model: No valid IDs after filtering: " . json_encode($id));
                     return false;
                 }
                 error_log("Model: Deleting multiple IDs: " . implode(',', $id));
                 $placeholders = implode(',', array_fill(0, count($id), '?'));
-                $sql = "DELETE FROM sales_data WHERE id IN ($placeholders)";
+                $checkStmt = $this->pdo->prepare("SELECT ID FROM sales_data WHERE ID IN ($placeholders)");
+                $checkStmt->execute($id);
+                $existingIds = $checkStmt->fetchAll(PDO::FETCH_COLUMN);
+                error_log("Model: Existing IDs: " . implode(',', $existingIds));
+                if (empty($existingIds)) {
+                    error_log("Model: No matching records found for deletion");
+                    $this->pdo->commit();
+                    return false;
+                }
+                $sql = "DELETE FROM sales_data WHERE ID IN ($placeholders)";
                 $stmt = $this->pdo->prepare($sql);
                 $stmt->execute($id);
             } else {
@@ -94,7 +151,14 @@ class Profit_LossModel
                     return false;
                 }
                 error_log("Model: Deleting single ID: " . $id);
-                $sql = "DELETE FROM sales_data WHERE id = ?";
+                $checkStmt = $this->pdo->prepare("SELECT ID FROM sales_data WHERE ID = ?");
+                $checkStmt->execute([$id]);
+                if (!$checkStmt->fetch()) {
+                    error_log("Model: ID $id not found in sales_data");
+                    $this->pdo->commit();
+                    return false;
+                }
+                $sql = "DELETE FROM sales_data WHERE ID = ?";
                 $stmt = $this->pdo->prepare($sql);
                 $stmt->execute([$id]);
             }
@@ -113,9 +177,11 @@ class Profit_LossModel
     {
         try {
             $stmt = $this->pdo->query("SELECT 1");
-            return $stmt !== false;
+            $result = $stmt !== false;
+            error_log("Model: Connection test: " . ($result ? 'Success' : 'Failed'));
+            return $result;
         } catch (PDOException $e) {
-            error_log("Connection test failed: " . $e->getMessage());
+            error_log("Model: Connection test failed: " . $e->getMessage());
             return false;
         }
     }
@@ -131,10 +197,12 @@ class Profit_LossModel
             ");
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            return [
+            $totals = [
                 'total_profit' => floatval($result['total_profit'] ?? 0),
                 'total_loss' => floatval($result['total_loss'] ?? 0)
             ];
+            error_log("Model: Totals: " . json_encode($totals));
+            return $totals;
         } catch (PDOException $e) {
             error_log("Model: Totals error: " . $e->getMessage());
             return ['total_profit' => 0, 'total_loss' => 0];

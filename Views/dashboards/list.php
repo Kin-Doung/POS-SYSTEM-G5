@@ -152,12 +152,65 @@ require_once './views/layouts/side.php';
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800 total-expense">$<?php echo number_format($Total_Inventory_Value ?? 0, 2); ?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800 total-expense">$<?php echo number_format($Max_Expense ?? 0, 2); ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-comments fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cart Section -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Shopping Cart</h6>
+                                </div>
+                                <div class="card-body">
+                                    <?php if (empty($Cart)): ?>
+                                        <p>Your cart is empty.</p>
+                                    <?php else: ?>
+                                        <table class="table table-bordered" id="cartTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Product Name</th>
+                                                    <th>Unit Price</th>
+                                                    <th>Quantity</th>
+                                                    <th>Total Price</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($Cart as $item): ?>
+                                                    <tr data-product-id="<?php echo $item['product_id']; ?>">
+                                                        <td><?php echo htmlspecialchars($item['product_name']); ?></td>
+                                                        <td>$<?php echo number_format($item['unit_price'], 2); ?></td>
+                                                        <td>
+                                                            <input type="number" class="form-control quantity-input" 
+                                                                   value="<?php echo $item['quantity']; ?>" 
+                                                                   min="0" style="width: 100px;">
+                                                        </td>
+                                                        <td class="item-total">$<?php echo number_format($item['total_price'], 2); ?></td>
+                                                        <td>
+                                                            <button class="btn btn-danger btn-sm remove-item">Remove</button>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="3" class="text-right font-weight-bold">Total:</td>
+                                                    <td class="font-weight-bold" id="cart-total">$<?php echo number_format($Cart_Total, 2); ?></td>
+                                                    <td></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                        <button class="btn btn-primary" id="checkout-btn">Proceed to Checkout</button>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -375,10 +428,10 @@ require_once './views/layouts/side.php';
         }
 
         function filterExpense(period) {
-            fetch(`/dashboard/get_data?period=${period}`)
+            fetch(`/dashboard/get_inventory_data?period=${period}`)
                 .then(response => response.json())
                 .then(data => {
-                    document.querySelector('.total-expense').textContent = `$${data.totalExpense}`;
+                    document.querySelector('.total-expense').textContent = `$${data.maxExpense}`;
                 })
                 .catch(error => console.error('Error fetching expenses:', error));
         }
@@ -455,6 +508,87 @@ require_once './views/layouts/side.php';
                     .then(data => updateStockStatus(data))
                     .catch(error => console.error('Error fetching stock status:', error));
             }
+
+            // Cart JavaScript
+            $('.quantity-input').on('change', function() {
+                const $row = $(this).closest('tr');
+                const productId = $row.data('product-id');
+                const quantity = parseInt($(this).val());
+
+                if (isNaN(quantity) || quantity < 0) {
+                    alert('Please enter a valid quantity');
+                    $(this).val(0);
+                    return;
+                }
+
+                $.ajax({
+                    url: '/dashboard/update_cart',
+                    method: 'POST',
+                    data: { product_id: productId, quantity: quantity },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            $('#cart-total').text('$' + response.cart_total);
+                            if (quantity === 0) {
+                                $row.remove();
+                            }
+                            if ($('#cartTable tbody tr').length === 0) {
+                                $('#cartTable').replaceWith('<p>Your cart is empty.</p>');
+                            }
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Error updating cart');
+                    }
+                });
+            });
+
+            $('.remove-item').on('click', function() {
+                const $row = $(this).closest('tr');
+                const productId = $row.data('product-id');
+
+                $.ajax({
+                    url: '/dashboard/update_cart',
+                    method: 'POST',
+                    data: { product_id: productId, quantity: 0 },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            $row.remove();
+                            $('#cart-total').text('$' + response.cart_total);
+                            if ($('#cartTable tbody tr').length === 0) {
+                                $('#cartTable').replaceWith('<p>Your cart is empty.</p>');
+                            }
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Error removing item');
+                    }
+                });
+            });
+
+            $('#checkout-btn').on('click', function() {
+                $.ajax({
+                    url: '/dashboard/checkout',
+                    method: 'POST',
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.message);
+                            window.location.reload();
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Error processing order');
+                    }
+                });
+            });
         });
 
         function updateStockStatus(data) {

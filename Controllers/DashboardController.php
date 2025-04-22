@@ -51,6 +51,7 @@ class DashboardController extends BaseController
         // Inventory data
         $inventoryItems = $this->model->getInventoryItems();
         $totalInventoryValue = $this->model->getTotalInventoryValue();
+        $maxExpense = $this->model->getMaxExpense();
         $lowStockItems = $this->model->getLowStockItems();
         $inventoryCount = $this->model->getInventoryCount();
 
@@ -64,6 +65,10 @@ class DashboardController extends BaseController
         // Stock status for initial load
         $stockStatus = $this->model->getStockStatus();
 
+        // Cart data
+        $cart = $this->model->getCart();
+        $cartTotal = $this->model->getCartTotal();
+
         // Inventory items for compatibility
         $tracking = $this->model->getInventoryItems();
 
@@ -75,6 +80,7 @@ class DashboardController extends BaseController
             'Today_Incoming' => $todayIncoming,
             'Inventory_Items' => $inventoryItems,
             'Total_Inventory_Value' => $totalInventoryValue,
+            'Max_Expense' => $maxExpense,
             'Low_Stock_Items' => $lowStockItems,
             'Inventory_Count' => $inventoryCount,
             'Reports' => $reports,
@@ -83,7 +89,9 @@ class DashboardController extends BaseController
             'Product_Sales_Summary' => $productSalesSummary,
             'Low_Quantity_Reports' => $lowQuantityReports,
             'Stock_Status' => $stockStatus,
-            'tracking' => $tracking
+            'tracking' => $tracking,
+            'Cart' => $cart,
+            'Cart_Total' => $cartTotal
         ]);
     }
 
@@ -131,9 +139,11 @@ class DashboardController extends BaseController
         $totalValue = array_reduce($inventoryItems, function ($sum, $item) {
             return $sum + (floatval($item['quantity']) * floatval($item['amount']));
         }, 0);
+        $maxExpense = $this->model->getMaxExpense();
 
         echo json_encode([
             'totalInventoryValue' => number_format($totalValue, 2, '.', ''),
+            'maxExpense' => number_format($maxExpense, 2, '.', ''),
             'inventoryCount' => count($inventoryItems),
             'records' => array_values($inventoryItems)
         ]);
@@ -153,5 +163,80 @@ class DashboardController extends BaseController
         }
 
         echo json_encode($stockStatus);
+    }
+
+    public function add_to_cart()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $productId = filter_input(INPUT_POST, 'product_id', FILTER_VALIDATE_INT);
+            $quantity = filter_input(INPUT_POST, 'quantity', FILTER_VALIDATE_INT);
+
+            if ($productId === false || $quantity === false || $quantity <= 0) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Invalid input']);
+                exit;
+            }
+
+            $product = $this->model->getProductById($productId);
+            if (!$product || $product['quantity'] < $quantity) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Product not available or insufficient stock']);
+                exit;
+            }
+
+            $this->model->addToCart(
+                $productId,
+                $product['product_name'],
+                $product['unit_price'],
+                $quantity
+            );
+
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'message' => 'Item added to cart']);
+            exit;
+        }
+    }
+
+    public function update_cart()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $productId = filter_input(INPUT_POST, 'product_id', FILTER_VALIDATE_INT);
+            $quantity = filter_input(INPUT_POST, 'quantity', FILTER_VALIDATE_INT);
+
+            if ($productId === false || $quantity === false || $quantity < 0) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Invalid input']);
+                exit;
+            }
+
+            $success = $this->model->updateCart($productId, $quantity);
+            if ($success) {
+                $cartTotal = $this->model->getCartTotal();
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => true,
+                    'cart_total' => number_format($cartTotal, 2),
+                    'message' => 'Cart updated'
+                ]);
+            } else {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Failed to update cart']);
+            }
+            exit;
+        }
+    }
+
+    public function checkout()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $success = $this->model->processOrder();
+            header('Content-Type: application/json');
+            if ($success) {
+                echo json_encode(['success' => true, 'message' => 'Order processed successfully']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to process order']);
+            }
+            exit;
+        }
     }
 }

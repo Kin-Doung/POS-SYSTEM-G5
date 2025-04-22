@@ -564,7 +564,7 @@ require_once './views/layouts/side.php';
                         <td><?= number_format($report['total_price'], 2) ?>$</td>
                         <td><?= $report['created_at'] ? date('Y-m-d', strtotime($report['created_at'])) : 'N/A' ?></td>
                         <td>
-                            <button class="edit-btn" data-id="<?= $report['id'] ?>">Edit</button>
+                            <button style="display: none;" class="edit-btn" data-id="<?= $report['id'] ?>">Edit</button>
                             <button class="remove-btn" data-id="<?= $report['id'] ?>">Remove</button>
                         </td>
                     </tr>
@@ -713,8 +713,8 @@ require_once './views/layouts/side.php';
                         <td>${parseFloat(report.total_price).toFixed(2)}$</td>
                         <td>${new Date(report.created_at).toISOString().split('T')[0]}</td>
                         <td>
-                            <button class="edit-btn" data-id="${report.id}">Edit</button>
-                            <button class="remove-btn" data-id="${report.id}">Remove</button>
+                            <button style = "display:none;" class="edit-btn" data-id="${report.id}">Edit</button>
+                            <button class="remove-btn" data-id="${report.id}"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `).join('') : '<tr><td colspan="8">No records found</td></tr>';

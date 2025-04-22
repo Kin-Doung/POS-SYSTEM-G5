@@ -530,7 +530,7 @@ require_once './views/layouts/side.php';
                                 <?= isset($profit_loss['Sale_Date']) && strtotime($profit_loss['Sale_Date']) !== false ? date('Y-m-d', strtotime($profit_loss['Sale_Date'])) : 'N/A' ?>
                             </td>
                             <td>
-                                <button class="delete-single" data-id="<?= isset($profit_loss['ID']) ? htmlspecialchars($profit_loss['ID']) : '' ?>">Delete</button>
+                                <button class="delete-single" data-id="<?= isset($profit_loss['ID']) ? htmlspecialchars($profit_loss['ID']) : '' ?>"><i class="fa-solid fa-trash"></i></button>
                             </td>
                         </tr>
                     <?php

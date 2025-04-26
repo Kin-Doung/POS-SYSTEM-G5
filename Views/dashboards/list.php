@@ -167,12 +167,8 @@ require_once './views/layouts/side.php';
                     <div class="row">
                         <div class="col-12">
                             <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Shopping Cart</h6>
-                                </div>
                                 <div class="card-body">
                                     <?php if (empty($Cart)): ?>
-                                        <p>Your cart is empty.</p>
                                     <?php else: ?>
                                         <table class="table table-bordered" id="cartTable">
                                             <thead>

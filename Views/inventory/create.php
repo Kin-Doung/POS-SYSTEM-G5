@@ -74,7 +74,29 @@ require_once './views/layouts/side.php';
         border-radius: 5px;
         padding: 5px;
     }
+
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .modal-header {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .custom-width {
+        width: 200px;
+    }
+
+    .barcode-input {
+        transition: background-color 0.3s;
+    }
+
+    .barcode-input.scanned {
+        background-color: #e6ffe6;
+    }
 </style>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -86,172 +108,137 @@ require_once './views/layouts/side.php';
     <!-- Body -->
     <div class="add-stock mr-2">
         <h2 class="text-center head-add" style="padding-top: 10px;">Add Stock Products</h2>
-        <style>
-            body {
-                background-color: #f8f9fa;
-            }
 
-            .modal-header {
-                background-color: #007bff;
-                color: white;
-            }
+        <div class="container mt-5">
+            <div class="d-flex justify-content-end flex-column align-items-end gap-2 p-3 bg-light rounded shadow-sm">
+                <!-- Preview Invoice Button -->
+                <button type="button" id="previewInvoice" class="btn btn-primary custom-width" data-bs-toggle="modal" data-bs-target="#invoiceModal">
+                    <i class="bi bi-eye-fill me-1"></i> Preview Invoice
+                </button>
 
-            .custom-width {
-                width: 200px;
-                /* Set the desired width */
-            }
-        </style>
-        </head>
-
-        <body>
-
-            <div class="container mt-5">
-                <div class="d-flex justify-content-end flex-column align-items-end gap-2 p-3 bg-light rounded shadow-sm">
-                    <!-- Preview Invoice Button -->
-                    <button type="button" id="previewInvoice" class="btn btn-primary custom-width" data-bs-toggle="modal" data-bs-target="#invoiceModal">
-                        <i class="bi bi-eye-fill me-1"></i> Preview Invoice
-                    </button>
-
-                    <!-- Input Mode Selection -->
-                    <select id="inputMode" class="form-select custom-width">
-                        <option value="manual">Manual Input</option>
-                        <option value="barcode">Barcode Scan</option>
-                    </select>
-                </div>
-
-                <!-- Invoice Modal -->
-                <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="invoiceModalLabel">Invoice Preview</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <p>Your invoice details will be displayed here.</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!-- Input Mode Selection -->
+                <select id="inputMode" class="form-select custom-width">
+                    <option value="manual">Manual Input</option>
+                    <option value="barcode">Barcode Scan</option>
+                </select>
             </div>
+        </div>
 
-            <div class="col-md-12 mt-5 mx-auto">
-                <div class="card p-3" style="box-shadow: none; border: none">
-                    <form id="productForm" action="/inventory/store" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
-                        <input type="hidden" name="input_mode" id="inputModeHidden" value="manual">
-                        <div id="productFields" class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th class="image-field">Product Image</th>
-                                        <th class="product-name-field">Product Name</th>
-                                        <th class="category-name-field">Category Name</th>
-                                        <th class="barcode-field">Barcode</th>
-                                        <th>Quantity</th>
-                                        <th>Price ($)</th>
-                                        <th>Selling Price ($)</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="productTableBody">
-                                    <tr class="product-row">
-                                        <td class="image-field">
-                                            <input type="file" name="image[]" class="form-control image-input" accept="image/*">
-                                            <img src="" alt="Product Image" class="img-preview" style="display: none; width: 50px; height: 50px; margin: 0 auto;">
-                                        </td>
-                                        <td class="product-name-field">
-                                            <input type="hidden" name="product_id[]" class="product-id-input">
-                                            <select name="product_name[]" class="form-control product-select manual-only" required>
-                                                <option value="">Select Product</option>
-                                                <?php if (!empty($inventory)): ?>
-                                                    <?php foreach ($inventory as $product): ?>
-                                                        <option value="<?= htmlspecialchars($product['id']) ?>">
-                                                            <?= htmlspecialchars($product['product_name']) ?>
-                                                        </option>
-                                                    <?php endforeach; ?>
-                                                <?php else: ?>
-                                                    <option disabled>No Products Found</option>
-                                                <?php endif; ?>
-                                            </select>
-                                            <input type="text" name="product_name_text[]" class="form-control product-name-input barcode-only" placeholder="Product Name">
-                                        </td>
-                                        <td class="category-name-field">
-                                            <select name="category_id[]" class="form-control category-select manual-only" required>
-                                                <option value="">Select Category</option>
-                                                <?php foreach ($categories as $category): ?>
-                                                    <option value="<?= htmlspecialchars($category['id']) ?>">
-                                                        <?= htmlspecialchars($category['name']) ?>
+        <div class="col-md-12 mt-5 mx-auto">
+            <div class="card p-3" style="box-shadow: none; border: none">
+                <form id="productForm" action="/inventory/store" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    <input type="hidden" name="_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
+                    <input type="hidden" name="input_mode" id="inputModeHidden" value="manual">
+                    <div id="productFields" class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="image-field">Product Image</th>
+                                    <th class="product-name-field">Product Name</th>
+                                    <th class="category-name-field">Category Name</th>
+                                    <th class="barcode-field">Barcode</th>
+                                    <th>Quantity</th>
+                                    <th>Price ($)</th>
+                                    <th>Selling Price ($)</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productTableBody">
+                                <tr class="product-row">
+                                    <td class="image-field">
+                                        <input type="file" name="image[]" class="form-control image-input" accept="image/*">
+                                        <img src="" alt="Product Image" class="img-preview" style="display: none; width: 50px; height: 50px; margin: 0 auto;">
+                                    </td>
+                                    <td class="product-name-field">
+                                        <input type="hidden" name="product_id[]" class="product-id-input">
+                                        <select name="product_name[]" class="form-control product-select manual-only" required>
+                                            <option value="">Select Product</option>
+                                            <?php if (!empty($inventory)): ?>
+                                                <?php foreach ($inventory as $product): ?>
+                                                    <option value="<?= htmlspecialchars($product['id']) ?>">
+                                                        <?= htmlspecialchars($product['product_name']) ?>
                                                     </option>
                                                 <?php endforeach; ?>
-                                            </select>
-                                            <input type="text" name="category_name[]" class="form-control category-name-input barcode-only" placeholder="Category Name">
-                                        </td>
-                                        <td class="barcode-field">
-                                            <input type="text" name="barcode[]" class="form-control barcode-input" placeholder="Scan or enter barcode">
-                                        </td>
-                                        <td>
-                                            <input type="number" class="form-control quantity-input" name="quantity[]" min="1" value="1" required>
-                                            <div class="invalid-feedback">Please enter a valid quantity (1 or more).</div>
-                                        </td>
-                                        <td>
-                                            <input type="number" class="form-control amount-input" name="amount[]" min="0" step="0.01" required>
-                                            <div class="invalid-feedback">Please enter a valid price.</div>
-                                        </td>
-                                        <td>
-                                            <input type="number" class="form-control selling-price-input" name="selling_price[]" min="0" step="0.01" required>
-                                            <div class="invalid-feedback">Please enter a valid selling price.</div>
-                                        </td>
-                                        <td>
-                                            <button type="button" class="btn removeRow" style="background: none; border: none; color: red; box-shadow: none; text-decoration: underline; font-size: 15px;">
-                                                <i class="fa-solid fa-trash"></i> remove
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="d-flex justify-content-end align-items-center">
-                            <button type="button" id="addMore" class="add-moree">Add more</button>
-                            <button type="submit" class="btn btn-submit">Submit</button>
-                        </div>
-                    </form>
-                </div>
+                                            <?php else: ?>
+                                                <option disabled>No Products Found</option>
+                                            <?php endif; ?>
+                                        </select>
+                                        <input type="text" name="product_name_text[]" class="form-control product-name-input barcode-only" placeholder="Product Name">
+                                    </td>
+                                    <td class="category-name-field">
+                                        <select name="category_id[]" class="form-control category-select manual-only" required>
+                                            <option value="">Select Category</option>
+                                            <?php foreach ($categories as $category): ?>
+                                                <option value="<?= htmlspecialchars($category['id']) ?>">
+                                                    <?= htmlspecialchars($category['name']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <input type="text" name="category_name[]" class="form-control category-name-input barcode-only" placeholder="Category Name">
+                                    </td>
+                                    <td class="barcode-field">
+                                        <input type="text" name="barcode[]" class="form-control barcode-input" placeholder="Scan or enter barcode">
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control quantity-input" name="quantity[]" min="1" value="1" required>
+                                        <div class="invalid-feedback">Please enter a valid quantity (1 or more).</div>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control amount-input" name="amount[]" min="0" step="0.01" required>
+                                        <div class="invalid-feedback">Please enter a valid price.</div>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control selling-price-input" name="selling_price[]" min="0" step="0.01" required>
+                                        <div class="invalid-feedback">Please enter a valid selling price.</div>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn removeRow" style="background: none; border: none; color: red; box-shadow: none; text-decoration: underline; font-size: 15px;">
+                                            <i class="fa-solid fa-trash"></i> remove
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-end align-items-center">
+                        <button type="button" id="addMore" class="add-moree">Add more</button>
+                        <button type="submit" class="btn btn-submit">Submit</button>
+                    </div>
+                </form>
             </div>
-    </div>
+        </div>
 
-    <!-- Invoice Preview Modal -->
-    <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header" style="background: #0096FF;">
-                    <h5 class="modal-title" id="invoiceModalLabel">Invoice Preview</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Image</th>
-                                <th>Product Name</th>
-                                <th>Quantity</th>
-                                <th>Price ($)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="invoiceTableBody"></tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="3" style="text-align: right; font-weight: bold;">Total Price:</td>
-                                <td id="totalPrice" style="font-weight: bold;">$0.00</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="exportPDF" class="btn btn-primary" style="background: #F88379;">Export to PDF</button>
-                    <button type="button" id="exportExcel" class="btn btn-primary" style="background: #4CBB17;">Export to Excel</button>
+        <!-- Invoice Preview Modal -->
+        <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header" style="background: #0096FF;">
+                        <h5 class="modal-title" id="invoiceModalLabel">Invoice Preview</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Product Name</th>
+                                    <th>Quantity</th>
+                                    <th>Price ($)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoiceTableBody"></tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3" style="text-align: right; font-weight: bold;">Total Price:</td>
+                                    <td id="totalPrice" style="font-weight: bold;">$0.00</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="exportPDF" class="btn btn-primary" style="background: #F88379;">Export to PDF</button>
+                        <button type="button" id="exportExcel" class="btn btn-primary" style="background: #4CBB17;">Export to Excel</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -263,6 +250,9 @@ require_once './views/layouts/side.php';
 <script>
     $(document).ready(function() {
         const baseUrl = window.location.pathname.includes('myapp') ? '/myapp' : '';
+        let barcodeBuffer = '';
+        let lastInputTime = 0;
+        const debounceDelay = 50; // Adjust based on scanner speed (ms)
 
         // Toggle input mode
         function toggleInputMode() {
@@ -285,11 +275,6 @@ require_once './views/layouts/side.php';
                 $('.category-select').prop('required', false);
                 $('.barcode-input').prop('required', true);
                 $('.product-name-input, .category-name-input').prop('required', true);
-                $('.barcode-input').each(function() {
-                    if (this.value.trim()) {
-                        handleBarcodeInput(this, false);
-                    }
-                });
                 $('.barcode-input:first').focus();
             }
         }
@@ -313,14 +298,7 @@ require_once './views/layouts/side.php';
                 handleProductSelect(this);
             });
 
-            newRow.find('.barcode-input').off('input keypress').on('input', function() {
-                handleBarcodeInput(this, false);
-            }).on('keypress', function(e) {
-                if (e.which === 13) {
-                    handleBarcodeInput(this, true);
-                    e.preventDefault();
-                }
-            });
+            newRow.find('.barcode-input').off('input keypress'); // Handled by document-level keypress
 
             newRow.find('.removeRow').off('click').on('click', function() {
                 if ($(".product-row").length > 1) {
@@ -332,6 +310,7 @@ require_once './views/layouts/side.php';
 
             $("#productTableBody").append(newRow);
             toggleInputMode();
+            $('.barcode-input:last').focus(); // Focus new row's barcode input
         });
 
         // Remove row
@@ -341,6 +320,31 @@ require_once './views/layouts/side.php';
             } else {
                 alert("At least one product row is required!");
             }
+        });
+
+        // Handle scanner input
+        $(document).on('keypress', '.barcode-input', function(e) {
+            const currentTime = new Date().getTime();
+            const input = $(this);
+            const char = String.fromCharCode(e.which);
+
+            if (currentTime - lastInputTime > debounceDelay) {
+                barcodeBuffer = '';
+            }
+
+            if (e.which === 13) { // Enter key
+                if (barcodeBuffer) {
+                    input.val(barcodeBuffer); // Store barcode in input
+                    input.addClass('scanned');
+                    setTimeout(() => input.removeClass('scanned'), 500); // Visual feedback
+                    handleBarcodeInput(input, barcodeBuffer);
+                    barcodeBuffer = '';
+                }
+                e.preventDefault();
+            } else if (e.which >= 32 && e.which <= 126) { // Printable ASCII characters
+                barcodeBuffer += char;
+            }
+            lastInputTime = currentTime;
         });
 
         // Handle product selection (manual mode)
@@ -378,17 +382,20 @@ require_once './views/layouts/side.php';
             }
         }
 
-        // Handle barcode input (barcode mode)
-        function handleBarcodeInput(inputElement, isScanner = false) {
-            const barcode = inputElement.value.trim();
+        // Handle barcode input
+        function handleBarcodeInput(inputElement, barcode) {
             const row = $(inputElement).closest('tr');
+            barcode = barcode.trim().replace(/[^0-9]/g, ''); // Clean non-numeric characters
+            console.log('Processing barcode:', barcode); // Debug
 
             if (barcode) {
-                row.find('.barcode-input').prop('disabled', true).after('<span class="spinner-border spinner-border-sm"></span>');
+                inputElement.val(barcode); // Ensure barcode stays in input
+                inputElement.prop('disabled', true).after('<span class="spinner-border spinner-border-sm"></span>');
                 $.get(baseUrl + '/inventory/getProductByBarcode?barcode=' + encodeURIComponent(barcode))
                     .done(function(data) {
                         row.find('.spinner-border').remove();
-                        row.find('.barcode-input').prop('disabled', false);
+                        inputElement.prop('disabled', false);
+                        console.log('AJAX response:', data); // Debug
                         if (!data.error && data) {
                             row.find('.product-id-input').val(data.id || '');
                             row.find('.product-select').val(data.id || '');
@@ -404,23 +411,26 @@ require_once './views/layouts/side.php';
                             row.find('.quantity-input').val(data.quantity || '1').removeClass('is-invalid');
                             row.find('.amount-input').val(data.amount || 0);
                             row.find('.selling-price-input').val(data.selling_price || 0);
-                            if (isScanner) {
-                                inputElement.value = '';
-                                inputElement.focus();
-                                if (row.is(':last-child')) {
-                                    $("#addMore").click();
+                            inputElement.val(barcode); // Keep barcode in input
+                            if (row.is(':last-child')) {
+                                $("#addMore").click();
+                            } else {
+                                // Focus next row's barcode input if available
+                                const nextRow = row.next('.product-row');
+                                if (nextRow.length) {
+                                    nextRow.find('.barcode-input').focus();
                                 }
                             }
                         } else {
                             clearRowFields(row);
-                            row.find('.barcode-input').val(barcode);
+                            inputElement.val(barcode); // Keep barcode on failure
                             alert('Product not found for barcode: ' + barcode);
                             inputElement.focus();
                         }
                     })
                     .fail(function(jqXHR, textStatus, errorThrown) {
                         row.find('.spinner-border').remove();
-                        row.find('.barcode-input').prop('disabled', false);
+                        inputElement.prop('disabled', false);
                         console.error('Barcode fetch error for ' + barcode + ':', {
                             status: jqXHR.status,
                             statusText: textStatus,
@@ -428,11 +438,11 @@ require_once './views/layouts/side.php';
                             response: jqXHR.responseText
                         });
                         clearRowFields(row);
-                        row.find('.barcode-input').val(barcode);
+                        inputElement.val(barcode); // Keep barcode on error
                         if (jqXHR.status === 404) {
-                            alert('Barcode endpoint not found. Please check server routing for ' + barcode);
+                            alert('Barcode endpoint not found. Please check server routing.');
                         } else {
-                            alert('Error fetching product for barcode ' + barcode + '. Status: ' + jqXHR.status + ' ' + textStatus);
+                            alert('Error fetching product for barcode ' + barcode + '. Status: ' + jqXHR.status);
                         }
                         inputElement.focus();
                     });
@@ -450,25 +460,12 @@ require_once './views/layouts/side.php';
             row.find('.quantity-input').val('1').removeClass('is-invalid');
             row.find('.amount-input').val('');
             row.find('.selling-price-input').val('');
-            row.find('.barcode-input').val('');
+            // Note: barcode-input is not cleared to preserve scanned barcode
         }
 
         $(document).on("change", ".product-select", function() {
             if ($('#inputMode').val() === 'manual') {
                 handleProductSelect(this);
-            }
-        });
-
-        $(document).on("input", ".barcode-input", function() {
-            if ($('#inputMode').val() === 'barcode') {
-                handleBarcodeInput(this, false);
-            }
-        });
-
-        $(document).on("keypress", ".barcode-input", function(e) {
-            if ($('#inputMode').val() === 'barcode' && e.which === 13) {
-                handleBarcodeInput(this, true);
-                e.preventDefault();
             }
         });
 
@@ -512,13 +509,13 @@ require_once './views/layouts/side.php';
 
                 if (productName && quantity && price) {
                     const row = `
-                    <tr>
-                        <td><img src="${imageSrc || ''}" alt="Product Image" style="width: 50px; height: 50px; object-fit: cover;"></td>
-                        <td>${productName}</td>
-                        <td>${quantity}</td>
-                        <td>${price}</td>
-                    </tr>
-                `;
+                <tr>
+                    <td><img src="${imageSrc || ''}" alt="Product Image" style="width: 50px; height: 50px; object-fit: cover;"></td>
+                    <td>${productName}</td>
+                    <td>${quantity}</td>
+                    <td>${price}</td>
+                </tr>
+            `;
                     invoiceTableBody.append(row);
                     totalPrice += parseFloat(price) * parseFloat(quantity);
                 }

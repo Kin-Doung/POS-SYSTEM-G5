@@ -79,18 +79,21 @@ class InventoryModel
     public function getProductByBarcode($barcode)
     {
         try {
-            $stmt = $this->getConnection()->prepare("SELECT * FROM inventory WHERE barcode = :barcode");
+            $stmt = $this->pdo->prepare("
+                SELECT i.id, i.product_name, i.category_id, c.name as category_name, 
+                       i.quantity, i.amount, i.selling_price, i.barcode, i.image
+                FROM inventory i
+                LEFT JOIN categories c ON i.category_id = c.id
+                WHERE i.barcode = :barcode
+                LIMIT 1
+            ");
             $stmt->bindParam(':barcode', $barcode, PDO::PARAM_STR);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            if (!$result) {
-                error_log("No product found for barcode: $barcode");
-                return ['error' => 'Product not found'];
-            }
-            return $result;
+            return $result ?: null;
         } catch (PDOException $e) {
-            error_log("Error fetching product by barcode $barcode: " . $e->getMessage());
-            return ['error' => 'Database error: ' . $e->getMessage()];
+            error_log("Error in getProductByBarcode: " . $e->getMessage());
+            throw new Exception("Database error");
         }
     }
 
@@ -298,21 +301,23 @@ class InventoryModel
         }
     }
 
-    public function getProductById($id)
-    {
+    public function getProductById($id) {
         try {
-            $stmt = $this->getConnection()->prepare("
-                SELECT p.*, c.name as category_name 
-                FROM products p
-                LEFT JOIN categories c ON p.category_id = c.id
-                WHERE p.id = :id
+            $stmt = $this->pdo->prepare("
+                SELECT i.id, i.product_name, i.category_id, c.name as category_name, 
+                       i.quantity, i.amount, i.selling_price, i.barcode, i.image
+                FROM inventory i
+                LEFT JOIN categories c ON i.category_id = c.id
+                WHERE i.id = :id
+                LIMIT 1
             ");
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result ?: null;
         } catch (PDOException $e) {
-            error_log("Error fetching product by id $id: " . $e->getMessage());
-            return false;
+            error_log("Error in getProductById: " . $e->getMessage());
+            throw new Exception("Database error");
         }
     }
 

@@ -36,9 +36,7 @@
                                     <?php foreach ($purchases as $index => $item): ?>
                                         <tr data-category-id="<?= htmlspecialchars($item['category_id']); ?>">
                                             <td><input type="checkbox" class="selectItem" value="<?= htmlspecialchars($item['id']); ?>"></td>
-                                            <td>
-                                                <img src="<?= htmlspecialchars($item['image']) ?>" alt="Image of <?= htmlspecialchars($item['product_name']) ?>" style="width: 40px; height:auto;">
-                                            </td>
+                                            <td><img src="<?= $item['image'] ?>" alt="Product Image" width="50" loading="lazy"></td>
                                             <td>
                                                 <span class="editable" data-field="product_name" data-id="<?= htmlspecialchars($item['id']); ?>">
                                                     <?= htmlspecialchars($item['product_name']); ?>
@@ -264,7 +262,7 @@
             </div>
         </div>
     </div>
-    
+
     <script src="../../views/assets/js/demo/chart-area-demo.js"></script>
 
 

@@ -62,11 +62,8 @@ require_once './views/layouts/side.php';
                                 ?>
                                     <tr data-category-id="<?= htmlspecialchars($item['category_id']) ?>">
                                         <td><?= $index + 1 ?></td>
-                                        <td>
-                                            <img src="<?= htmlspecialchars($item['image']) ?>"
-                                                alt="Image of <?= htmlspecialchars($item['product_name']) ?>"
-                                                style="width: 40px; height: 40px; border-radius: 100%;">
-                                        </td>
+                                        <td><img src="<?= $item['image'] ?>" alt="Product Image" width="50" loading="lazy"></td>
+
                                         <td><?= htmlspecialchars($item['product_name']) ?></td>
                                         <td><span class="quantity"><?= htmlspecialchars($quantity) ?></span></td>
                                         <td>
@@ -142,7 +139,8 @@ require_once './views/layouts/side.php';
                         width: 22px;
                         height: 22px;
                         border-radius: 50%;
-                        background-color: #dc3545; /* Bootstrap danger red */
+                        background-color: #dc3545;
+                        /* Bootstrap danger red */
                         color: white;
                         font-size: 12px;
                         font-weight: bold;
@@ -150,15 +148,26 @@ require_once './views/layouts/side.php';
                         align-items: center;
                         justify-content: center;
                         border: 2px solid white;
-                        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
                         animation: ring 1.5s infinite;
                         z-index: 10;
                     }
 
                     @keyframes ring {
-                        0% { transform: scale(1); opacity: 1; }
-                        50% { transform: scale(1.2); opacity: 0.7; }
-                        100% { transform: scale(1); opacity: 1; }
+                        0% {
+                            transform: scale(1);
+                            opacity: 1;
+                        }
+
+                        50% {
+                            transform: scale(1.2);
+                            opacity: 0.7;
+                        }
+
+                        100% {
+                            transform: scale(1);
+                            opacity: 1;
+                        }
                     }
 
                     .low-stock-item {

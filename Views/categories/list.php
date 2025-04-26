@@ -1,26 +1,20 @@
-<?php require_once './views/layouts/side.php'; ?>
+<?php
+// File: views/categories/list.php
+require_once './views/layouts/side.php';
+?>
+
+<div style="margin-left: 250px;">
+<?php require_once './views/layouts/nav.php' ?>
+</div>
 
 <style>
-    body {
-        overflow: hidden;
-    }
-    .main-content {
+    .main-content{
         margin-left: 250px;
-    }
-    .nav, .navbar {
-        box-shadow: none;
-    }
-    th, td {
-        text-align: center;
-    }
-    #deleteSelectedBtn {
-        display: none;
     }
 </style>
 
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <!-- Navbar -->
-    <?php require_once './views/layouts/nav.php' ?>
     <!-- End Navbar -->
 
     <div>
@@ -32,11 +26,6 @@
                         <i class="bi-plus-lg"></i> Add New Categories
                     </a>
 
-                    <!-- Delete selected button -->
-                    <form id="bulkDeleteForm" action="/category/bulk-delete" method="POST">
-                        <input type="hidden" name="ids" id="selectedIds">
-                        <button type="button" class="btn btn-danger" id="deleteSelectedBtn" onclick="confirmBulkDelete();">Delete Selected</button>
-                    </form>
                 </div>
 
                 <!-- Modal to Create New Category -->
@@ -50,8 +39,8 @@
                             <div class="modal-body">
                                 <form action="/category/store" method="POST">
                                     <div class="form-group">
-                                        <label for="categoryName" class="form-label">Category Name:</label>
-                                        <input type="text" name="name" id="categoryName" class="form-control" required>
+                                        <label for="createCategoryName" class="form-label">Category Name:</label>
+                                        <input type="text" name="name" id="createCategoryName" class="form-control" required>
                                     </div>
                                     <button type="submit" class="add-categories mt-3 btn btn-primary">Add category</button>
                                 </form>
@@ -66,7 +55,7 @@
                         <thead>
                             <tr>
                                 <th>
-                                    <input type="checkbox" id="selectAllCheckbox">
+                                    #
                                 </th>
                                 <th>Category Names</th>
                                 <th>Action</th>
@@ -75,13 +64,11 @@
                         <tbody>
                             <?php foreach ($categories as $index => $category): ?>
                                 <tr>
-                                    <td>
-                                        <input type="checkbox" class="category-checkbox" value="<?= $category['id'] ?>">
-                                    </td>
-                                    <td><?= $category['name'] ?></td>
+                                <td><?= $index + 1 ?></td>
+                                    <td><?= htmlspecialchars($category['name']) ?></td>
                                     <td class="text-center">
                                         <a href="javascript:void(0);" class="icon edit-icon" data-tooltip="Edit"
-                                           onclick="openEditModal(<?= $category['id'] ?>, '<?= $category['name'] ?>')">
+                                           onclick="openEditModal(<?= $category['id'] ?>, '<?= addslashes($category['name']) ?>')">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </a>
                                         <a href="javascript:void(0);" class="icon delete-icon" data-tooltip="Delete"
@@ -110,9 +97,10 @@
                 <div class="modal-body">
                     <form action="/category/update" method="POST" id="editCategoryForm">
                         <div class="form-group">
-                            <label for="categoryName" class="form-label">Categories Name:</label>
-                            <input type="text" id="categoryName" name="name" class="form-control" required>
+                            <label for="editCategoryName" class="form-label">Category Name:</label>
+                            <input type="text" id="editCategoryName" name="name" class="form-control" required>
                         </div>
+                        <input type="hidden" id="editCategoryId" name="id">
                         <button type="submit" class="update-categories mt-4 btn btn-primary">Update</button>
                     </form>
                 </div>
@@ -124,10 +112,15 @@
     <script>
         // Open edit modal
         function openEditModal(categoryId, categoryName) {
-            document.getElementById('categoryName').value = categoryName;
-            document.getElementById('editCategoryForm').action = '/category/update?id=' + categoryId;
-            var myModal = new bootstrap.Modal(document.getElementById('editCategoryModal'));
-            myModal.show();
+            console.log('Opening edit modal - ID:', categoryId, 'Name:', categoryName); // Debug
+            document.getElementById('editCategoryName').value = categoryName;
+            document.getElementById('editCategoryId').value = categoryId;
+            try {
+                var myModal = new bootstrap.Modal(document.getElementById('editCategoryModal'));
+                myModal.show();
+            } catch (e) {
+                console.error('Modal error:', e);
+            }
         }
 
         // Confirm delete
@@ -161,19 +154,15 @@
             selectedIdsInput.value = selected.map(cb => cb.value).join(',');
         }
 
-        // Select all
         selectAllCheckbox.addEventListener('change', () => {
             checkboxes.forEach(cb => cb.checked = selectAllCheckbox.checked);
             updateDeleteButtonVisibility();
         });
 
-        // Individual checkbox
         checkboxes.forEach(cb => {
             cb.addEventListener('change', () => {
                 updateDeleteButtonVisibility();
             });
         });
-
-
     </script>
 </main>

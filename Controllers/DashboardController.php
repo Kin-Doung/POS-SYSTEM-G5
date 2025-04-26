@@ -1,5 +1,5 @@
 <?php
-require_once './Controllers/BaseController.php';
+// controllers/DashboardController.php
 require_once './Models/DashboardModel.php';
 
 class DashboardController extends BaseController
@@ -23,6 +23,7 @@ class DashboardController extends BaseController
             exit();
         }
 
+        // Profit/loss calculations
         $profit_loss = $this->model->getProfit_Loss();
 
         $todayProfit = 0;
@@ -47,17 +48,29 @@ class DashboardController extends BaseController
 
         error_log("Today Profit: $todayProfit, Expense: $todayExpense, New Client Sales: $todayNewClientSales, Incoming: $todayIncoming%");
 
+        // Inventory data
         $inventoryItems = $this->model->getInventoryItems();
         $totalInventoryValue = $this->model->getTotalInventoryValue();
+        $maxExpense = $this->model->getMaxExpense();
         $lowStockItems = $this->model->getLowStockItems();
         $inventoryCount = $this->model->getInventoryCount();
 
-        // New reports data (added, not changing existing code)
+        // Reports data
         $reports = $this->model->getAllReports();
         $totalReportsSales = $this->model->getTotalReportsSales();
         $todayReports = $this->model->getReportsByDate(date('Y-m-d'));
         $productSalesSummary = $this->model->getProductSalesSummary();
         $lowQuantityReports = $this->model->getLowQuantityReports();
+
+        // Stock status for initial load
+        $stockStatus = $this->model->getStockStatus();
+
+        // Cart data
+        $cart = $this->model->getCart();
+        $cartTotal = $this->model->getCartTotal();
+
+        // Inventory items for compatibility
+        $tracking = $this->model->getInventoryItems();
 
         $this->views('dashboards/list', [
             'Profit_Loss' => $profit_loss,
@@ -67,14 +80,18 @@ class DashboardController extends BaseController
             'Today_Incoming' => $todayIncoming,
             'Inventory_Items' => $inventoryItems,
             'Total_Inventory_Value' => $totalInventoryValue,
+            'Max_Expense' => $maxExpense,
             'Low_Stock_Items' => $lowStockItems,
             'Inventory_Count' => $inventoryCount,
-            // New reports data
             'Reports' => $reports,
             'Total_Reports_Sales' => $totalReportsSales,
             'Today_Reports' => $todayReports,
             'Product_Sales_Summary' => $productSalesSummary,
-            'Low_Quantity_Reports' => $lowQuantityReports
+            'Low_Quantity_Reports' => $lowQuantityReports,
+            'Stock_Status' => $stockStatus,
+            'tracking' => $tracking,
+            'Cart' => $cart,
+            'Cart_Total' => $cartTotal
         ]);
     }
 
@@ -119,15 +136,107 @@ class DashboardController extends BaseController
     {
         header('Content-Type: application/json');
         $inventoryItems = $this->model->getInventoryItems();
-        // Temporarily remove date filtering since 'last_updated' doesn’t exist
         $totalValue = array_reduce($inventoryItems, function ($sum, $item) {
-            return $sum + (floatval($item['quantity']) * floatval($item['unit_price']));
+            return $sum + (floatval($item['quantity']) * floatval($item['amount']));
         }, 0);
+        $maxExpense = $this->model->getMaxExpense();
 
         echo json_encode([
             'totalInventoryValue' => number_format($totalValue, 2, '.', ''),
+            'maxExpense' => number_format($maxExpense, 2, '.', ''),
             'inventoryCount' => count($inventoryItems),
             'records' => array_values($inventoryItems)
         ]);
+    }
+
+    public function get_stock_status()
+    {
+        header('Content-Type: application/json');
+        $input = json_decode(file_get_contents('php://input'), true);
+        $categoryId = isset($input['category_id']) ? $input['category_id'] : '';
+
+        $stockStatus = $this->model->getStockStatus($categoryId);
+
+        if (isset($stockStatus['error'])) {
+            echo json_encode(['error' => $stockStatus['error']]);
+            exit;
+        }
+
+        echo json_encode($stockStatus);
+    }
+
+    public function add_to_cart()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $productId = filter_input(INPUT_POST, 'product_id', FILTER_VALIDATE_INT);
+            $quantity = filter_input(INPUT_POST, 'quantity', FILTER_VALIDATE_INT);
+
+            if ($productId === false || $quantity === false || $quantity <= 0) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Invalid input']);
+                exit;
+            }
+
+            $product = $this->model->getProductById($productId);
+            if (!$product || $product['quantity'] < $quantity) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Product not available or insufficient stock']);
+                exit;
+            }
+
+            $this->model->addToCart(
+                $productId,
+                $product['product_name'],
+                $product['unit_price'],
+                $quantity
+            );
+
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'message' => 'Item added to cart']);
+            exit;
+        }
+    }
+
+    public function update_cart()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $productId = filter_input(INPUT_POST, 'product_id', FILTER_VALIDATE_INT);
+            $quantity = filter_input(INPUT_POST, 'quantity', FILTER_VALIDATE_INT);
+
+            if ($productId === false || $quantity === false || $quantity < 0) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Invalid input']);
+                exit;
+            }
+
+            $success = $this->model->updateCart($productId, $quantity);
+            if ($success) {
+                $cartTotal = $this->model->getCartTotal();
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => true,
+                    'cart_total' => number_format($cartTotal, 2),
+                    'message' => 'Cart updated'
+                ]);
+            } else {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Failed to update cart']);
+            }
+            exit;
+        }
+    }
+
+    public function checkout()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $success = $this->model->processOrder();
+            header('Content-Type: application/json');
+            if ($success) {
+                echo json_encode(['success' => true, 'message' => 'Order processed successfully']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to process order']);
+            }
+            exit;
+        }
     }
 }

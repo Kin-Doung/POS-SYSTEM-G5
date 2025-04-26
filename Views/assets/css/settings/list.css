@@ -1,73 +1,3 @@
-nav {
-  background: white;
-  height: 11.3vh;
-  position: relative;
-  right: 25px;
-  display: flex;
-  width: 100%;
-  padding-right: 30px;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-
-  .search-container {
-    width: 60%;
-  }
-
-  .icons {
-    margin-right: 100px;
-  }
-
-  .profile {
-    margin-right: 100px;
-
-    img {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      margin: 10px;
-    }
-
-    .profile-info {
-      display: flex;
-      flex-direction: column;
-
-      #profile-name {
-        font-size: 16px;
-        font-weight: bold;
-        color: rgb(88, 85, 85);
-      }
-    }
-
-    .menu {
-      display: none;
-      position: absolute;
-      top: 80px;
-      right: 50px;
-      background: #fff;
-      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-      border-radius: 8px;
-      padding: 10px;
-      list-style: none;
-      min-width: 140px;
-
-      li {
-        padding: 10px;
-
-        a {
-          text-decoration: none;
-          color: black;
-          display: block;
-        }
-      }
-
-      li:hover {
-        background: #f2f2f2;
-      }
-    }
-  }
-}
-
 .container {
   width: 100%;
   margin-left: 0px;
@@ -226,6 +156,75 @@ nav {
             height: 40px;
           }
         }
+      }
+    }
+  }
+}
+nav {
+  background: white;
+  height: 11.3vh;
+  position: relative;
+  right: 25px;
+  display: flex;
+  width: 100%;
+  padding-right: 30px;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+
+  .search-container {
+    width: 60%;
+  }
+
+  .icons {
+    margin-right: 100px;
+  }
+
+  .profile {
+    margin-right: 100px;
+
+    img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin: 10px;
+    }
+
+    .profile-info {
+      display: flex;
+      flex-direction: column;
+
+      #profile-name {
+        font-size: 16px;
+        font-weight: bold;
+        color: rgb(88, 85, 85);
+      }
+    }
+
+    .menu {
+      display: none;
+      position: absolute;
+      top: 80px;
+      right: 50px;
+      background: #fff;
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      padding: 10px;
+      list-style: none;
+      min-width: 140px;
+
+      li {
+        padding: 10px;
+
+        a {
+          text-decoration: none;
+          color: black;
+          display: block;
+        }
+      }
+
+      li:hover {
+        background: #f2f2f2;
       }
     }
   }

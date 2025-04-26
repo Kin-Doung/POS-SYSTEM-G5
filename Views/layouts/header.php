@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 
+
   <!-- CSS Files -->
   <link id="pagestyle" href="../../views/assets/css/material-dashboard.css?v=3.0.0" rel="stylesheet" />
   <link rel="stylesheet" href="../../views/assets/css/style/dashbaord.css" />
@@ -74,8 +75,12 @@
 
   <link href="../../views/assets/css/sb-admin-2.css" rel="stylesheet">
   <script src="../../views/assets/js/sciptJS/vendor/chart.js/Chart.min.js"></script>
+  <!-- translate  -->
+  <script src="../../views/assets/js/translations.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  
+
+
 
 </head>
 

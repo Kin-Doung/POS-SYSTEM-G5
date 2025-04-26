@@ -1,106 +1,145 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-};
-$error = isset($_SESSION['error']) ? $_SESSION['error'] : '';
-unset($_SESSION['error']); // Remove error after showing
+$error = $_SESSION['error'] ?? '';
+unset($_SESSION['error']);
 ?>
+<?php require_once './views/layouts/header.php' ?>
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Login & Registration Form</title>
-    <link rel="stylesheet" href="../views/assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../views/assets/css/style/from.css">
-</head>
 <style>
-    body{
-        background:#ebf5fb;
-        display: block;
-    }
-    h1{
+    .container {
+        background: #fff;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         text-align: center;
+        width: 100%;
+        max-width: 400px;
+        margin: 50px auto;
+    }
+
+    .logo img {
+        width: 80px;
         margin-bottom: 20px;
     }
+
+    .title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .subtitle {
+        font-size: 14px;
+        color: #777;
+        margin-bottom: 30px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .input-box {
+        position: relative;
+    }
+
+    .input-box i {
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        transform: translateY(-50%);
+        color: #888;
+    }
+
+    .input-box input {
+        width: 100%;
+        padding: 10px 10px 10px 35px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+        outline: none;
+        transition: 0.3s;
+    }
+
+    .input-box input:focus {
+        border-color: #007bff;
+    }
+
+    .error {
+        color: #e74c3c;
+        font-size: 13px;
+        background: #ffecec;
+        padding: 8px;
+        border-radius: 6px;
+    }
+
+    .button input[type="submit"] {
+        padding: 10px;
+        background: #007bff;
+        color: white;
+        font-size: 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .button input[type="submit"]:hover {
+        background: #0056b3;
+    }
+
+    .footer {
+        margin-top: 30px;
+        font-size: 12px;
+        color: #aaa;
+    }
+
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+    }
+
 </style>
-<body>
 
-<h1>Welcome to POS system</h1>
-
-    <div class="container">
-        <input type="checkbox" id="flip">
-
-        <!-- Cover Image -->
-        <div class="cover">
-            <div class="front">
-                <img src="../views/assets/images/poster.png" alt="Cover Image">
-            </div>
-            <div class="back">
-                <img src="../views/assets/images/poster.png" alt="Cover Image">
-            </div>
-        </div>
-
-        <!-- Forms for Login and Signup -->
-        <div class="forms">
-            <!-- Login Form -->
-            <div class="form-content">
-                <div class="login-form">
-                    <div class="title">Login</div>
-
-                    <form action="/login" method="POST">
-                        <div class="input-boxes">
-                            <div class="input-box">
-                                <i class="fas fa-user"></i>
-                                <input type="text" name="username" placeholder="Username" required>
-                            </div>
-                            <div class="input-box">
-                                <i class="fas fa-lock"></i>
-                                <input type="password" name="password" placeholder="Password" required>
-                            </div>
-                            <?php if ($error): ?>
-                                <p class="error" style="color: red; text-align: center"><?= $error; ?></p>
-                            <?php endif; ?> <br>
-                            <div class="text"><a href="#">Forgot password?</a></div>
-                            <div class="button input-box">
-                                <input type="submit" value="Login" style=" background: rgb(73, 73, 253);">
-                            </div>
-                            <div class="text sign-up-text">Don't have an account? <label for="flip">Sign up now</label></div>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Signup Form -->
-                <div class="signup-form">
-                    <div class="title">Sign Up</div>
-                    <form method="POST" action="/login">
-                        <div class="input-boxes">
-                            <div class="input-box">
-                                <i class="fas fa-user"></i>
-                                <input type="text" name="username" placeholder="Enter your username" required>
-                            </div>
-                            <div class="input-box">
-                                <i class="fas fa-envelope"></i>
-                                <input type="text" name="email" placeholder="Enter your email" required>
-                            </div>
-                            <div class="input-box">
-                                <i class="fas fa-lock"></i>
-                                <input type="password" name="password" placeholder="Enter your password" required>
-                            </div>
-                            <div class="button input-box">
-                                <input type="submit" value="Sign up" style="background-color: rgb(73, 73, 253);">
-                            </div>
-                            <div class="text sign-up-text">Already have an account? <label for="flip">Login now</label></div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+<div class="container">
+    <div class="logo">
+        <img src="../views/assets/img/logos/Engly-Logo.png" alt="POS System Logo" onerror="this.src='/assets/img/fallback.png'">
     </div>
+    <div class="title">POS System</div>
+    <div class="subtitle">Please login to your account</div>
 
-</body>
+    <form action="/login" method="POST">
+        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
 
-</html>
+        <div class="input-box">
+            <label for="username" class="sr-only">Username</label>
+            <i class="fas fa-user"></i>
+            <input type="text" id="username" name="username" placeholder="Username" required>
+        </div>
+
+        <div class="input-box">
+            <label for="password" class="sr-only">Password</label>
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+        </div>
+
+        <?php if ($error): ?>
+            <div class="error"><?= htmlspecialchars($error) ?></div>
+        <?php endif; ?>
+
+        <div class="button">
+            <input type="submit" value="Login">
+        </div>
+    </form>
+
+    <div class="footer">
+        © <?= date('Y') ?> POS System. All rights reserved.
+    </div>
+</div>

@@ -40,61 +40,53 @@
                 </nav>
                 <!-- Modal structure -->
                 <div class="container mt-5">
-                    <div class="card">
-                        <h2>Personal Account</h2>
+                    <div class="account-card">
+                        <div class="account-card-header">
+                            <h2>Personal Account</h2>
+                        </div>
                         <div class="account-details">
                             <?php if (!empty($admins)) : ?>
                                 <?php foreach ($admins as $admin) : ?>
                                     <div class="account-row">
-                                        <div class="left">
-                                            <div class="aa">
+                                        <div class="account-left">
+                                            <div class="account-field">
                                                 <h6><strong>Profile:</strong></h6>
-                                                <div class="image">
+                                                <div>
                                                     <?php if (!empty($admin['store_logo'])) : ?>
                                                         <img src="data:image/jpeg;base64,<?= base64_encode($admin['store_logo']) ?>"
-                                                            style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%;">
+                                                            class="profile-img" alt="Store Logo">
                                                     <?php else: ?>
                                                         <span class="no-logo">No Logo</span>
                                                     <?php endif; ?>
                                                 </div>
                                             </div>
-                                            <div class="aa-1">
+                                            <div class="account-field">
                                                 <h6><strong>Language:</strong></h6>
-                                                <div class="a-1">
-                                                    <p><?= htmlspecialchars($admin['language']) ?></p>
-                                                </div>
+                                                <p><?= htmlspecialchars($admin['language']) ?></p>
                                             </div>
                                         </div>
-                                        <div class="right">
-                                            <div class="bb">
+                                        <div class="account-right">
+                                            <div class="account-field">
                                                 <h6><strong>Username:</strong></h6>
-                                                <div class="bb-1">
-                                                    <p><?= htmlspecialchars($admin['username']) ?></p>
-                                                </div>
+                                                <p><?= htmlspecialchars($admin['username']) ?></p>
                                             </div>
-                                            <div class="bb">
+                                            <div class="account-field">
                                                 <h6><strong>Store Name:</strong></h6>
-                                                <div class="bb-2">
-                                                    <p><?= htmlspecialchars($admin['store_name']) ?></p>
-                                                </div>
+                                                <p><?= htmlspecialchars($admin['store_name']) ?></p>
                                             </div>
-
-                                            <div class="bb">
+                                            <div class="account-field">
                                                 <h6><strong>Password:</strong></h6>
-                                                <div class="bb-3">
-                                                    <p><?= substr($admin['password'], 0, 2) . '****' ?></p>
-                                                </div>
+                                                <p>********</p>
                                             </div>
-
                                         </div>
                                     </div>
-                                    <div class="buttom">
+                                    <div class="account-field">
                                         <h6><strong>Email:</strong></h6>
-                                        <div class="bt-1">
-                                            <p><?= htmlspecialchars($admin['email']) ?></p>
-                                        </div>
+                                        <p><?= htmlspecialchars($admin['email']) ?></p>
                                     </div>
-
+                                    <div class="edit text-end mt-3">
+                                        <a href="settings/edit?id=<?= $admin['id'] ?>" class="edit-button">Edit</a>
+                                    </div>
                                 <?php endforeach; ?>
                             <?php else : ?>
                                 <div class="no-admin">
@@ -102,13 +94,118 @@
                                 </div>
                             <?php endif; ?>
                         </div>
-                        <div class="edit">
-                            <a href="settings/edit?id=<?= $admin['id'] ?>" class="edit-button">Edit</a>
-                        </div>
                     </div>
                 </div>
+
+                <style>
+                    .account-card {
+                        max-width: 800px;
+                        margin: 0 auto;
+                        border: none;
+                        border-radius: 15px;
+                        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                        background: #ffffff;
+                    }
+
+                    .account-card-header {
+                        background: linear-gradient(135deg, #007bff, #0056b3);
+                        color: white;
+                        padding: 20px;
+                        text-align: center;
+                        border-radius: 15px 15px 0 0;
+                    }
+
+                    .account-details {
+                        padding: 30px;
+                    }
+
+                    .account-row {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 20px;
+                        align-items: flex-start;
+                    }
+
+                    .account-left,
+                    .account-right {
+                        flex: 1;
+                        min-width: 250px;
+                    }
+
+                    .profile-img {
+                        width: 150px;
+                        height: 150px;
+                        object-fit: cover;
+                        border-radius: 50%;
+                        border: 3px solid #e9ecef;
+                        transition: transform 0.3s ease;
+                    }
+
+                    .profile-img:hover {
+                        transform: scale(1.05);
+                    }
+
+                    .no-logo {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 150px;
+                        height: 150px;
+                        background: #e9ecef;
+                        border-radius: 50%;
+                        color: #6c757d;
+                        font-size: 16px;
+                        text-align: center;
+                    }
+
+                    .account-field {
+                        margin-bottom: 20px;
+                    }
+
+                    .account-field h6 {
+                        margin-bottom: 5px;
+                        color: #343a40;
+                        font-weight: 600;
+                    }
+
+                    .account-field p {
+                        margin: 0;
+                        color: #495057;
+                        background: #f8f9fa;
+                        padding: 10px;
+                        border-radius: 5px;
+                        font-size: 16px;
+                    }
+
+                    .edit-button {
+                        display: inline-block;
+                        padding: 10px 20px;
+                        background: #28a745;
+                        color: white;
+                        text-decoration: none;
+                        border-radius: 5px;
+                        transition: background 0.3s ease;
+                    }
+
+                    .edit-button:hover {
+                        background: #218838;
+                    }
+
+                    .no-admin {
+                        text-align: center;
+                        padding: 20px;
+                        color: #6c757d;
+                    }
+
+                    @media (max-width: 576px) {
+                        .account-row {
+                            flex-direction: column;
+                        }
+                    }
+                </style>
             </div>
         </div>
     </div>
     <script src="../../views/assets/js/demo/chart-area-demo.js"></script>
 
+</body>

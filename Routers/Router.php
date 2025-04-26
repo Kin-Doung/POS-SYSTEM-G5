@@ -1,54 +1,70 @@
 <?php
-require_once __DIR__ . '/../Controllers/TrackingController.php';
-
-class Router
-{
+class Router {
     private $routes = [];
 
-    public function get($uri, $action)
-    {
-        $this->routes['GET'][$uri] = $action;
+    public function get($path, $callback, $protected = false) {
+        $this->routes['GET'][$path] = ['callback' => $callback, 'protected' => $protected];
     }
 
-    public function post($uri, $action)
-    {
-        $this->routes['POST'][$uri] = $action;
+    public function post($path, $callback, $protected = false) {
+        $this->routes['POST'][$path] = ['callback' => $callback, 'protected' => $protected];
     }
 
-    public function put($uri, $action)
-    {
-        $this->routes['POST'][$uri] = $action;
+    public function put($path, $callback, $protected = false) {
+        $this->routes['PUT'][$path] = ['callback' => $callback, 'protected' => $protected];
     }
 
-    public function delete($uri, $action)
-    {
-        $this->routes['POST'][$uri] = $action;
+    public function delete($path, $callback, $protected = false) {
+        $this->routes['DELETE'][$path] = ['callback' => $callback, 'protected' => $protected];
     }
 
-    public function dispatch()
-    {
-        $request_method = $_SERVER['REQUEST_METHOD'];
-        $uri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+    public function dispatch() {
+        $method = $_SERVER['REQUEST_METHOD'];
+        $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-        // Debugging output (remove after testing)
-        // echo "Method: $request_method, URI: $uri<br>";
-        // var_dump($this->routes);
+        // Prevent redirect loop
+        if ($uri === '/' && isset($_SESSION['redirect_count']) && $_SESSION['redirect_count'] > 3) {
+            error_log("Redirect loop detected for /, clearing session");
+            $_SESSION = [];
+            session_destroy();
+            header('Location: /');
+            exit();
+        }
 
-        foreach ($this->routes[$request_method] ?? [] as $route => $action) {
-            $route = trim($route, '/'); // Normalize route
-            $pattern = preg_replace('#\{id\}#', '([^/]+)', $route);
-            $pattern = "#^" . $pattern . "$#";
-            if (preg_match($pattern, $uri, $matches)) {
-                array_shift($matches); // Remove full match, keep captured groups
-                $controller = $action[0];
-                $method = $action[1];
-                $objectController = new $controller;
-                call_user_func_array([$objectController, $method], $matches);
+        // Track redirects
+        $_SESSION['redirect_count'] = ($_SESSION['redirect_count'] ?? 0) + 1;
+
+        foreach ($this->routes[$method] ?? [] as $path => $route) {
+            $pattern = preg_replace('/\{id\}|\(:num\)/', '([0-9]+)', $path);
+            $pattern = str_replace('/', '\/', $pattern);
+            if (preg_match("/^$pattern$/", $uri, $matches)) {
+                array_shift($matches);
+
+                // Check if route is protected
+                if ($route['protected'] && !$this->isAuthenticated()) {
+                    $_SESSION['error'] = 'Please log in to access this page.';
+                    error_log("Unauthenticated access to $uri, redirecting to /");
+                    header('Location: /');
+                    exit();
+                }
+
+                // Reset redirect count on successful route match
+                $_SESSION['redirect_count'] = 0;
+
+                $callback = $route['callback'];
+                $controller = new $callback[0]();
+                call_user_func_array([$controller, $callback[1]], $matches);
                 return;
             }
         }
 
+        error_log("404 Not Found for $uri");
         http_response_code(404);
-        require_once "views/errors/404.php";
+        echo "404 Not Found";
+    }
+
+    private function isAuthenticated() {
+        return isset($_SESSION['username']);
     }
 }
+?>

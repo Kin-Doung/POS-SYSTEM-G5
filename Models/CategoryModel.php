@@ -1,62 +1,93 @@
 <?php
+// File: CategoryModel.php
 require_once './Databases/database.php';
 
 class CategoryModel
 {
     private $pdo;
+
     function __construct()
     {
         $this->pdo = new Database();
     }
+
     function getCategory()
     {
-        $category = $this->pdo->query("SELECT * FROM categories ORDER BY id DESC");
-        return $category->fetchAll();
+        try {
+            $stmt = $this->pdo->getConnection()->prepare("SELECT * FROM categories ORDER BY id DESC");
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log('Get categories error: ' . $e->getMessage());
+            return [];
+        }
     }
 
     function createCategory($data)
     {
-        $this->pdo->query("INSERT INTO categories (name) VALUES (:name)", [
-            'name' => $data['name'],
-        ]);
+        try {
+            $stmt = $this->pdo->getConnection()->prepare("INSERT INTO categories (name) VALUES (:name)");
+            $stmt->execute(['name' => $data['name']]);
+        } catch (PDOException $e) {
+            error_log('Create category error: ' . $e->getMessage());
+        }
     }
 
     public function getCategoryById($categoryId)
     {
-        $stmt = $this->pdo->getConnection()->prepare("SELECT * FROM categories WHERE id = :id");
-        $stmt->execute([':id' => $categoryId]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-    public function getCategoryByName($name)
-    {
-        $query = "SELECT * FROM categories WHERE name = :name LIMIT 1";
-        $stmt = $this->pdo->getConnection()->prepare($query);
-        $stmt->execute(['name' => $name]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        try {
+            $stmt = $this->pdo->getConnection()->prepare("SELECT * FROM categories WHERE id = :id");
+            $stmt->execute(['id' => $categoryId]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log('Get category by ID error: ' . $e->getMessage());
+            return false;
+        }
     }
 
-    function getCategorys($id)
+    public function getCategoryByName($name)
     {
-        $stmt = $this->pdo->query("SELECT * FROM categories WHERE id = :id", ['id' => $id]);
-        $category = $stmt->fetch();
-        return $category;
+        try {
+            $stmt = $this->pdo->getConnection()->prepare("SELECT * FROM categories WHERE name = :name LIMIT 1");
+            $stmt->execute(['name' => $name]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log('Get category by name error: ' . $e->getMessage());
+            return false;
+        }
     }
 
     function updateCategory($id, $data)
     {
-        $this->pdo->query("UPDATE categories SET name = :name WHERE id = :id", [
-            'name' => $data['name'],
-            'id' => $id
-        ]);
+        try {
+            $stmt = $this->pdo->getConnection()->prepare("UPDATE categories SET name = :name WHERE id = :id");
+            $stmt->execute([
+                'name' => $data['name'],
+                'id' => $id
+            ]);
+            $success = $stmt->rowCount() > 0;
+            if (!$success) {
+                error_log('No rows updated for category ID: ' . $id);
+            }
+            return $success;
+        } catch (PDOException $e) {
+            error_log('Update category error: ' . $e->getMessage());
+            return false;
+        }
     }
-
 
     public function hasProducts($categoryId)
     {
-        $stmt = $this->pdo->getConnection()->prepare("SELECT COUNT(*) FROM products WHERE category_id = :id");
-        $stmt->execute(['id' => (int)$categoryId]);
-        return $stmt->fetchColumn() > 0;
+        try {
+            $stmt = $this->pdo->getConnection()->prepare("SELECT COUNT(*) FROM products WHERE category_id = :id");
+            $stmt->execute(['id' => (int)$categoryId]);
+            return $stmt->fetchColumn() > 0;
+        } catch (PDOException $e) {
+            error_log('Check products error: ' . $e->getMessage());
+            return false;
+        }
     }
+
     public function deleteCategory($id)
     {
         $id = (int)$id;
@@ -64,15 +95,12 @@ class CategoryModel
         try {
             $pdo->beginTransaction();
 
-            // Delete reports linked to products in this category
             $stmt1 = $pdo->prepare("DELETE r FROM reports r INNER JOIN products p ON r.product_id = p.id WHERE p.category_id = :id");
             $stmt1->execute(['id' => $id]);
 
-            // Delete products in this category
             $stmt2 = $pdo->prepare("DELETE FROM products WHERE category_id = :id");
             $stmt2->execute(['id' => $id]);
 
-            // Delete the category
             $stmt3 = $pdo->prepare("DELETE FROM categories WHERE id = :id");
             $stmt3->execute(['id' => $id]);
 
@@ -80,7 +108,7 @@ class CategoryModel
             return true;
         } catch (PDOException $e) {
             $pdo->rollBack();
-            error_log("Delete failed: " . $e->getMessage());
+            error_log('Delete category error: ' . $e->getMessage());
             return false;
         }
     }

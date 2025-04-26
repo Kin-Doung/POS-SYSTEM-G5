@@ -1,12 +1,16 @@
 <?php
+// File: CategoryController.php
 require_once 'Models/CategoryModel.php';
+
 class CategoryController extends BaseController
 {
     private $model;
+
     function __construct()
     {
-        $this->model =  new CategoryModel();
+        $this->model = new CategoryModel();
     }
+
     function index()
     {
         $category = $this->model->getCategory();
@@ -22,7 +26,7 @@ class CategoryController extends BaseController
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $data = [
-                'name' => $_POST['name'],
+                'name' => htmlspecialchars(trim($_POST['name'])),
             ];
             $this->model->createCategory($data);
             $this->redirect('/category');
@@ -31,29 +35,42 @@ class CategoryController extends BaseController
 
     function edit($id)
     {
-        $category = $this->model->getCategorys($id);
-        $this->views('categories/edit', ['category' => $category]);
+        $category = $this->model->getCategoryById($id);
+        if ($category) {
+            $this->views('categories/edit', ['category' => $category]);
+        } else {
+            die('Category not found');
+        }
     }
 
-
-    function update($id)
+    function update()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            error_log('Update POST: ' . print_r($_POST, true)); // Debug
+            if (!isset($_POST['id']) || !isset($_POST['name'])) {
+                error_log('Missing id or name in POST');
+                die('Invalid form data: ID or name missing');
+            }
+            $id = (int)$_POST['id'];
             $data = [
-                'name' => $_POST['name'],
-                'category_id' => $_POST['category_id'],
+                'name' => htmlspecialchars(trim($_POST['name'])),
             ];
-            $this->model->updateCategory($id, $data);
-            $this->redirect('/category');
+            if ($this->model->updateCategory($id, $data)) {
+                $this->redirect('/category?updated=true');
+            } else {
+                error_log('Update failed for ID: ' . $id);
+                die('Failed to update category ID: ' . $id);
+            }
+        } else {
+            die('Invalid request method');
         }
     }
 
     public function delete()
     {
         if (isset($_GET['id'])) {
-            $categoryId = $_GET['id'];
-            $categoryModel = new CategoryModel();
-            if ($categoryModel->deleteCategory($categoryId)) {
+            $categoryId = (int)$_GET['id'];
+            if ($this->model->deleteCategory($categoryId)) {
                 header('Location: /category?deleted=true');
                 exit();
             } else {

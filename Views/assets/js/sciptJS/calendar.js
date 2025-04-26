@@ -24,6 +24,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const closeModal = document.getElementById('closeModal');
   const detailCard = document.getElementById('detailCard');
   const closeDetail = document.getElementById('closeDetail');
+  const eventList = document.getElementById('eventList');
+
+  let notificationTimeouts = new Map();
 
   closeModal.onclick = function() {
     hideModal(modal);
@@ -43,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const date = document.getElementById('eventDate').value;
 
     const event = {
+      id: Date.now().toString(),
       title: title,
       start: `${date}T${buyTime}`,
       extendedProps: {
@@ -52,13 +56,14 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     };
 
-    calendar.addEvent(event);
+    const newEvent = calendar.addEvent(event);
     updateLocalStorage();
+    updateEventList();
     
     hideModal(modal);
     this.reset();
     
-    scheduleNotification(event);
+    scheduleNotification(newEvent);
   };
 
   function showEventModal(date) {
@@ -79,6 +84,11 @@ document.addEventListener('DOMContentLoaded', function() {
       const newAlertTime = document.getElementById('detailAlertTime').value;
       const date = event.start.toISOString().split('T')[0];
 
+      if (notificationTimeouts.has(event.id)) {
+        clearTimeout(notificationTimeouts.get(event.id));
+        notificationTimeouts.delete(event.id);
+      }
+
       event.setProp('title', newTitle);
       event.setStart(`${date}T${newBuyTime}`);
       event.setExtendedProp('product', newProduct);
@@ -86,14 +96,20 @@ document.addEventListener('DOMContentLoaded', function() {
       event.setExtendedProp('alertTime', `${date}T${newAlertTime}`);
 
       updateLocalStorage();
+      updateEventList();
       scheduleNotification(event);
       hideModal(detailCard);
     };
 
     document.getElementById('deleteEvent').onclick = function() {
       if (confirm('Do you want to delete this event?')) {
+        if (notificationTimeouts.has(event.id)) {
+          clearTimeout(notificationTimeouts.get(event.id));
+          notificationTimeouts.delete(event.id);
+        }
         event.remove();
         updateLocalStorage();
+        updateEventList();
         hideModal(detailCard);
       }
     };
@@ -117,11 +133,53 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function updateLocalStorage() {
     const currentEvents = calendar.getEvents().map(event => ({
+      id: event.id,
       title: event.title,
       start: event.start.toISOString(),
       extendedProps: event.extendedProps
     }));
     localStorage.setItem('shopEvents', JSON.stringify(currentEvents));
+  }
+
+  function updateEventList() {
+    const events = calendar.getEvents();
+    eventList.innerHTML = '<h2>Scheduled Events</h2>';
+    if (events.length === 0) {
+      eventList.innerHTML += '<p>No events scheduled.</p>';
+      return;
+    }
+    events.forEach(event => {
+      const eventDiv = document.createElement('div');
+      eventDiv.className = 'event-item';
+      const eventDate = event.start.toLocaleDateString();
+      eventDiv.innerHTML = `
+        <div><strong>Title:</strong> ${event.title}</div>
+        <div><strong>Product:</strong> ${event.extendedProps.product}</div>
+        <div><strong>Time to Buy:</strong> ${event.start.toLocaleTimeString()}</div>
+        <div><strong>Alert Time:</strong> ${new Date(event.extendedProps.alertTime).toLocaleTimeString()}</div>
+        <div><strong>Date:</strong> ${eventDate}</div>
+        <button class="delete-btn" data-id="${event.id}">Delete</button>
+        <hr>
+      `;
+      eventList.appendChild(eventDiv);
+    });
+
+    // Add event listeners to delete buttons
+    document.querySelectorAll('.delete-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        const eventId = this.getAttribute('data-id');
+        const eventToDelete = calendar.getEventById(eventId);
+        if (confirm('Do you want to delete this event?')) {
+          if (notificationTimeouts.has(eventId)) {
+            clearTimeout(notificationTimeouts.get(eventId));
+            notificationTimeouts.delete(eventId);
+          }
+          eventToDelete.remove();
+          updateLocalStorage();
+          updateEventList();
+        }
+      });
+    });
   }
 
   const TELEGRAM_BOT_TOKEN = '7914523767:AAEJxRARlS6nn4Qggt3lw8pOYWKdjAT3FaY';
@@ -158,37 +216,34 @@ document.addEventListener('DOMContentLoaded', function() {
   function scheduleNotification(event) {
     const alertTime = new Date(event.extendedProps.alertTime);
     const now = new Date();
-    const timeUntilAlert = alertTime - now;
+    const timeUntilAlert = alertTime.getTime() - now.getTime();
 
     if (timeUntilAlert > 0) {
-      setTimeout(() => {
-        const message = `Reminder: <b>${event.title}</b>\nProduct: ${event.extendedProps.product}\nTime to Buy: ${event.start.toLocaleTimeString()}\nAlert Time: ${new Date(event.extendedProps.alertTime).toLocaleTimeString()}`;
+      const timeoutId = setTimeout(() => {
+        const message = `Reminder: <b>${event.title}</b>\nProduct: ${event.extendedProps.product}\nTime to Buy: ${event.start.toLocaleTimeString()}\nAlert Time: ${alertTime.toLocaleTimeString()}`;
         sendTelegramMessage(message);
+        notificationTimeouts.delete(event.id);
       }, timeUntilAlert);
+      
+      notificationTimeouts.set(event.id, timeoutId);
     }
   }
 
-  // Display current time near Today button
+  calendar.getEvents().forEach(event => {
+    scheduleNotification(event);
+  });
+
   function updateCurrentTime() {
     const now = new Date();
     document.getElementById('currentTime').textContent = now.toLocaleTimeString();
   }
 
-  // Update time every second
   setInterval(updateCurrentTime, 1000);
-  updateCurrentTime(); // Initial call
+  updateCurrentTime();
 
-  // Today button functionality
   document.getElementById('todayButton').onclick = function() {
-    calendar.today(); // Go to today's date in FullCalendar
+    calendar.today();
   };
 
-  // Schedule notifications for existing events
-  events.forEach(event => {
-    const alertTime = new Date(event.extendedProps.alertTime);
-    const now = new Date();
-    if (alertTime > now) {
-      scheduleNotification(event);
-    }
-  });
+  updateEventList();
 });

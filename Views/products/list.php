@@ -758,7 +758,7 @@ require_once './views/layouts/side.php';
 
         // Initialize cart UI from localStorage
         updateCartUI();
-        barcodeInput.focus();
+        // Removed: barcodeInput.focus(); // No focus on page load
 
         // Show toast notification
         function showToast(message, duration = 2000) {
@@ -786,7 +786,7 @@ require_once './views/layouts/side.php';
                 col.classList.remove('highlight');
             });
             barcodeInput.value = '';
-            barcodeInput.focus();
+            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after clearing
             const urlParams = new URLSearchParams(window.location.search);
             const page = urlParams.get('page') || '1';
             window.history.replaceState({}, document.title, `?page=${page}`);
@@ -799,7 +799,7 @@ require_once './views/layouts/side.php';
         // Reset barcode input
         function resetBarcodeInput() {
             barcodeInput.value = '';
-            barcodeInput.focus();
+            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after reset
         }
 
         // Add to cart (debounced to prevent rapid clicks)
@@ -841,7 +841,7 @@ require_once './views/layouts/side.php';
                 total += item.quantity * item.price;
             });
             grandTotal.textContent = total.toFixed(2);
-            savePdfBtn.disabled = cartItems.length === 0;
+            savePdfBtn_DISABLED = cartItems.length === 0;
             submitCartBtn.disabled = cartItems.length === 0;
             completeCartBtn.disabled = cartItems.length === 0;
 
@@ -875,7 +875,7 @@ require_once './views/layouts/side.php';
                     cartItems.splice(index, 1);
                     localStorage.setItem('cartItems', JSON.stringify(cartItems));
                     updateCartUI();
-                    barcodeInput.focus();
+                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after removing item
                 });
             });
         }
@@ -889,7 +889,7 @@ require_once './views/layouts/side.php';
                 cartSection.classList.remove('visible');
                 document.querySelector('.main-content').classList.remove('cart-visible');
             }
-            barcodeInput.focus();
+            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after toggling cart
         }
 
         // Handle barcode scan (debounced)
@@ -924,52 +924,52 @@ require_once './views/layouts/side.php';
                     resetBarcodeInput();
                     isProcessingScan = false;
                     barcodeInput.disabled = false;
-                    barcodeInput.focus();
+                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after scan
                     return;
                 }
             }
 
             // Fetch product from backend (any page)
             fetch('/products/getProductPageByBarcode', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    barcode: barcode
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        barcode: barcode
+                    })
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.item) {
-                    const currentPage = parseInt(new URLSearchParams(window.location.search).get('page') || '1');
-                    if (data.page && data.page !== currentPage) {
-                        // Redirect to the correct page with barcode parameter
-                        window.location.href = `?page=${data.page}&barcode=${encodeURIComponent(barcode)}`;
-                    } else {
-                        // Product is on current page or page info not provided, add to cart
-                        debouncedAddToCart(data.item);
-                        resetBarcodeInput();
-                        const productCol = document.querySelector(`.product-col[data-barcode="${barcode}"]`);
-                        if (productCol) {
-                            productCol.classList.add('highlight');
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.item) {
+                        const currentPage = parseInt(new URLSearchParams(window.location.search).get('page') || '1');
+                        if (data.page && data.page !== currentPage) {
+                            // Redirect to the correct page with barcode parameter
+                            window.location.href = `?page=${data.page}&barcode=${encodeURIComponent(barcode)}`;
+                        } else {
+                            // Product is on current page or page info not provided, add to cart
+                            debouncedAddToCart(data.item);
+                            resetBarcodeInput();
+                            const productCol = document.querySelector(`.product-col[data-barcode="${barcode}"]`);
+                            if (productCol) {
+                                productCol.classList.add('highlight');
+                            }
                         }
+                    } else {
+                        resetBarcodeInput();
+                        showToast(data.message || 'Barcode not found.', 2000);
                     }
-                } else {
+                })
+                .catch(error => {
+                    console.error('Error fetching product:', error);
                     resetBarcodeInput();
-                    showToast(data.message || 'Barcode not found.', 2000);
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching product:', error);
-                resetBarcodeInput();
-                showToast('Error scanning barcode.', 2000);
-            })
-            .finally(() => {
-                isProcessingScan = false;
-                barcodeInput.disabled = false;
-                barcodeInput.focus();
-            });
+                    showToast('Error scanning barcode.', 2000);
+                })
+                .finally(() => {
+                    isProcessingScan = false;
+                    barcodeInput.disabled = false;
+                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after fetch
+                });
         }, 500);
 
         // Barcode input handling
@@ -1014,7 +1014,7 @@ require_once './views/layouts/side.php';
                 };
                 console.log('Button clicked for', item.inventory_product_name);
                 debouncedAddToCart(item);
-                barcodeInput.focus();
+                // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after adding to cart
             });
         });
 
@@ -1022,32 +1022,32 @@ require_once './views/layouts/side.php';
         submitCartBtn.addEventListener('click', function() {
             if (cartItems.length === 0) return;
             fetch('/products/submitCart', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    cartItems: cartItems.map(item => ({
-                        inventoryId: item.inventory_id,
-                        quantity: item.quantity,
-                        price: item.price
-                    }))
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        cartItems: cartItems.map(item => ({
+                            inventoryId: item.inventory_id,
+                            quantity: item.quantity,
+                            price: item.price
+                        }))
+                    })
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showToast('Order completed successfully!');
-                    clearUIState();
-                } else {
-                    showToast(data.message || 'Error submitting order.', 2000);
-                }
-                barcodeInput.focus();
-            })
-            .catch(error => {
-                showToast('Error submitting order.', 2000);
-                barcodeInput.focus();
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast('Order completed successfully!');
+                        clearUIState();
+                    } else {
+                        showToast(data.message || 'Error submitting order.', 2000);
+                    }
+                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after submission
+                })
+                .catch(error => {
+                    showToast('Error submitting order.', 2000);
+                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after error
+                });
         });
 
         // Toggle dropdown
@@ -1056,7 +1056,7 @@ require_once './views/layouts/side.php';
             const isVisible = optionsDropdown.classList.contains('visible');
             optionsDropdown.classList.toggle('visible', !isVisible);
             moreOptionsBtn.classList.toggle('active', !isVisible);
-            barcodeInput.focus();
+            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after toggling dropdown
         });
 
         // Close dropdown on outside click
@@ -1065,7 +1065,7 @@ require_once './views/layouts/side.php';
                 optionsDropdown.classList.remove('visible');
                 moreOptionsBtn.classList.remove('active');
             }
-            barcodeInput.focus();
+            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after closing dropdown
         });
 
         // Prevent dropdown close on inside click
@@ -1077,7 +1077,9 @@ require_once './views/layouts/side.php';
         savePdfBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             if (cartItems.length === 0) return;
-            const { jsPDF } = window.jspdf;
+            const {
+                jsPDF
+            } = window.jspdf;
             const doc = new jsPDF();
             doc.text('Cart Receipt', 10, 10);
             let y = 20;
@@ -1089,7 +1091,7 @@ require_once './views/layouts/side.php';
             doc.save('cart-receipt.pdf');
             optionsDropdown.classList.remove('visible');
             moreOptionsBtn.classList.remove('active');
-            barcodeInput.focus();
+            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after saving PDF
         });
 
         // Payout (triggers submitCart)
@@ -1098,7 +1100,7 @@ require_once './views/layouts/side.php';
             submitCartBtn.click();
             optionsDropdown.classList.remove('visible');
             moreOptionsBtn.classList.remove('active');
-            barcodeInput.focus();
+            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after payout
         });
 
         // Clear cart
@@ -1110,13 +1112,13 @@ require_once './views/layouts/side.php';
             toggleCart(false);
             optionsDropdown.classList.remove('visible');
             moreOptionsBtn.classList.remove('active');
-            barcodeInput.focus();
+            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after clearing cart
         });
 
         // Close cart
         document.getElementById('closeCart').addEventListener('click', () => {
             toggleCart(false);
-            barcodeInput.focus();
+            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after closing cart
         });
 
         // Kebab menu
@@ -1132,28 +1134,28 @@ require_once './views/layouts/side.php';
             button.addEventListener('click', function() {
                 const inventoryId = this.dataset.id;
                 fetch('/products/deleteInventory', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        inventoryId: inventoryId
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            inventoryId: inventoryId
+                        })
                     })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        this.closest('.product-col').remove();
-                        showToast('Item deleted successfully.');
-                    } else {
-                        showToast(data.message || 'Error deleting item.', 2000);
-                    }
-                    barcodeInput.focus();
-                })
-                .catch(error => {
-                    showToast('Error deleting item.', 2000);
-                    barcodeInput.focus();
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            this.closest('.product-col').remove();
+                            showToast('Item deleted successfully.');
+                        } else {
+                            showToast(data.message || 'Error deleting item.', 2000);
+                        }
+                        // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after deleting item
+                    })
+                    .catch(error => {
+                        showToast('Error deleting item.', 2000);
+                        // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after error
+                    });
             });
         });
 
@@ -1178,7 +1180,7 @@ require_once './views/layouts/side.php';
                     console.error(err);
                     showToast('Failed to access webcam.', 2000);
                     webcamScanner.style.display = 'none';
-                    barcodeInput.focus();
+                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after webcam error
                     return;
                 }
                 Quagga.start();
@@ -1191,7 +1193,7 @@ require_once './views/layouts/side.php';
                     debouncedHandleBarcodeScan(barcode);
                     Quagga.stop();
                     webcamScanner.style.display = 'none';
-                    barcodeInput.focus();
+                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after webcam scan
                 }
             });
         });

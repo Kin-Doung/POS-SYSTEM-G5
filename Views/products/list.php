@@ -343,7 +343,7 @@ require_once './views/layouts/side.php';
     }
 
     .cart-btn {
-        padding: 6px 12px;
+        padding: 12px 24px;
         border: none;
         border-radius: 5px;
         color: #fff;
@@ -361,7 +361,8 @@ require_once './views/layouts/side.php';
     }
 
     .cart-btn-success {
-        padding: 12px 24px;
+        padding: 14px 28px;
+        font-size: 1.1rem;
         max-width: 220px;
         background-color: #28a745;
     }
@@ -379,8 +380,6 @@ require_once './views/layouts/side.php';
 
     .cart-btn-secondary {
         background-color: #6c757d;
-        max-width: 100%;
-        width: 160px;
     }
 
     .cart-btn-secondary:hover {
@@ -436,7 +435,6 @@ require_once './views/layouts/side.php';
 
     .cart-btn-info {
         background-color: #17a2b8;
-
     }
 
     .cart-btn-info:hover:not(:disabled) {

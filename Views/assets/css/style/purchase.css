@@ -37,15 +37,8 @@ input {
   padding: 8px;
   margin-bottom: 10px;
 }
-button {
-  padding: 8px 16px;
-  background-color: #4CAF50;
-  color: white;
+button{
   border: none;
-  cursor: pointer;
-}
-button:hover {
-  background-color: #45a049;
 }
 #myModal:target {
   display: block;

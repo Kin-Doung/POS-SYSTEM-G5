@@ -3,11 +3,18 @@
 require_once './views/layouts/side.php';
 ?>
 
+<div style="margin-left: 250px;">
+<?php require_once './views/layouts/nav.php' ?>
+</div>
 
+<style>
+    .main-content{
+        margin-left: 250px;
+    }
+</style>
 
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <!-- Navbar -->
-    <?php require_once './views/layouts/nav.php' ?>
     <!-- End Navbar -->
 
     <div>
@@ -19,11 +26,6 @@ require_once './views/layouts/side.php';
                         <i class="bi-plus-lg"></i> Add New Categories
                     </a>
 
-                    <!-- Delete selected button -->
-                    <form id="bulkDeleteForm" action="/category/bulk-delete" method="POST">
-                        <input type="hidden" name="ids" id="selectedIds">
-                        <button type="button" class="btn btn-danger" id="deleteSelectedBtn" onclick="confirmBulkDelete();">Delete Selected</button>
-                    </form>
                 </div>
 
                 <!-- Modal to Create New Category -->
@@ -53,7 +55,7 @@ require_once './views/layouts/side.php';
                         <thead>
                             <tr>
                                 <th>
-                                    <input type="checkbox" id="selectAllCheckbox">
+                                    #
                                 </th>
                                 <th>Category Names</th>
                                 <th>Action</th>
@@ -62,9 +64,7 @@ require_once './views/layouts/side.php';
                         <tbody>
                             <?php foreach ($categories as $index => $category): ?>
                                 <tr>
-                                    <td>
-                                        <input type="checkbox" class="category-checkbox" value="<?= $category['id'] ?>">
-                                    </td>
+                                <td><?= $index + 1 ?></td>
                                     <td><?= htmlspecialchars($category['name']) ?></td>
                                     <td class="text-center">
                                         <a href="javascript:void(0);" class="icon edit-icon" data-tooltip="Edit"

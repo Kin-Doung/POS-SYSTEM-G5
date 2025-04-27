@@ -2,6 +2,7 @@
 require_once './views/layouts/header.php';
 require_once './views/layouts/side.php';
 ?>
+
 <style>
     /* Main content wrapper to account for sidebar */
     .main-content {
@@ -9,6 +10,7 @@ require_once './views/layouts/side.php';
         padding: 20px;
         background-color: #f8f9fa;
         height: auto;
+        margin-top: -30px;
     }
 
     .table-container {
@@ -75,22 +77,20 @@ require_once './views/layouts/side.php';
     }
 
     .remove-btn {
-        background: linear-gradient(45deg, #ff4d4d, #ff7878);
-        color: white;
+        background: none;
+        color: red;
         border: none;
         padding: 8px 15px;
         border-radius: 25px;
         cursor: pointer;
-        font-size: 13px;
+        font-size: 20px;
         font-weight: 500;
-        box-shadow: 0 2px 5px rgba(255, 77, 77, 0.3);
         transition: all 0.3s ease;
     }
 
     .remove-btn:hover {
-        background: linear-gradient(45deg, #cc0000, #ff4d4d);
+        background: none;
         transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(255, 77, 77, 0.4);
     }
 
     .edit-btn {
@@ -164,44 +164,64 @@ require_once './views/layouts/side.php';
         flex-direction: column;
         gap: 15px;
         margin-bottom: 20px;
+        margin-top: 25px;
     }
 
     .filter-date-wrapper {
         display: flex;
         flex-wrap: nowrap;
         align-items: center;
-        gap: 15px;
+        gap: 135px;
         overflow-x: auto;
         white-space: nowrap;
+        margin-bottom: -30px;
     }
 
-    .filter-buttons {
-        display: flex;
-        gap: 10px;
+    .filter-dropdown-container {
+        position: relative;
     }
 
-    .filter-buttons button {
-        background: #5cbacc;
-        color: white;
-        border: none;
-        padding: 8px 15px;
-        border-radius: 20px;
+    .filter-dropdown {
+        color: #000;
+        border: 1px solid #ccc;
+        padding: 8px 30px 8px 15px;
+        border-radius: 10px;
         font-size: 13px;
         font-weight: 500;
         cursor: pointer;
         transition: all 0.3s ease;
+        outline: none;
+        width: 150px;
+        appearance: none;
+
     }
 
-    .filter-buttons button:hover,
-    .filter-buttons button.active {
-        background: #4a0e8f;
-        transform: translateY(-1px);
+    .filter-dropdown-container::after {
+        content: '\25BC';
+        position: absolute;
+        right: 15px;
+        top: 10px;
+        color: #000;
+        font-size: 12px;
+        pointer-events: none;
+        transition: transform 0.3s ease;
+    }
+
+    .filter-dropdown-container.active::after {
+        transform: rotate(180deg);
+    }
+
+    .filter-dropdown:focus {
+        background: #fff;
+        color: black;
+        border: 1px solid #add8e6;
     }
 
     .date-filter {
         display: flex;
-        gap: 10px;
+        gap: 5px;
         align-items: center;
+        justify-content: center;
     }
 
     .date-filter label {
@@ -209,51 +229,43 @@ require_once './views/layouts/side.php';
         font-weight: 500;
         color: #1e293b;
         margin-right: 5px;
+        margin-top: 5px;
     }
 
-    .date-filter input[type="date"] {
-        padding: 8px 10px;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        font-size: 14px;
+    .date-filter input[type="text"] {
+        background: #f8f9fa;
+        color: #1e293b;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 8px 15px;
+        font-size: 13px;
+        font-weight: 500;
+        transition: all 0.3s ease;
         outline: none;
-        transition: border-color 0.3s ease;
-        width: 180px;
+        width: 250px;
+        cursor: pointer;
     }
 
-    .date-filter input[type="date"]:focus {
-        border-color: #6a11cb;
+    .date-filter input[type="text"]:focus {
+        border: 1px solid #add8e6;
     }
 
-    .search-container {
-        width: 400px;
-        background: none;
-        margin-left: auto;
-        margin-top: -10px;
-        margin-bottom: 10px;
-    }
-
-    .search-container input {
-        padding: 8px 35px 8px 15px;
-        border: 1px solid #e5e7eb;
-        border-radius: 20px;
-        font-size: 14px;
+    .search-containerr {
         width: 100%;
+        max-width: 250px;
+    }
+
+    #search-input {
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        font-size: 14px;
+        height: 38px;
+        margin-left: 55px;
+    }
+
+    #search-input:focus {
         outline: none;
-        transition: border-color 0.3s ease;
-    }
-
-    .search-container input:focus {
-        border-color: #6a11cb;
-    }
-
-    .search-container::after {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 16px;
-        color: #6a11cb;
     }
 
     /* Custom Message Styles */
@@ -423,8 +435,13 @@ require_once './views/layouts/side.php';
     }
 
     @keyframes spin {
-        0% { transform: translate(-50%, -50%) rotate(0deg); }
-        100% { transform: translate(-50%, -50%) rotate(360deg); }
+        0% {
+            transform: translate(-50%, -50%) rotate(0deg);
+        }
+
+        100% {
+            transform: translate(-50%, -50%) rotate(360deg);
+        }
     }
 
     /* Empty Table State */
@@ -466,19 +483,25 @@ require_once './views/layouts/side.php';
         }
 
         .filter-date-wrapper {
-            flex-wrap: nowrap;
+            flex-wrap: wrap;
             gap: 10px;
         }
 
-        .date-filter {
-            flex-direction: row;
-            gap: 10px;
+        .filter-dropdown {
+            width: 120px;
         }
 
-        .search-container {
+        .date-filter input[type="text"] {
+            width: 200px;
+            border-radius: none;
+        }
+
+        .search-containerr {
             width: 100%;
-            margin-left: 0;
-            margin-top: 10px;
+        }
+
+        .search-containerr input {
+            height: 20px;
         }
 
         .message {
@@ -506,37 +529,43 @@ require_once './views/layouts/side.php';
             padding: 8px 12px;
         }
     }
+
+    .flatpickr-monthDropdown-months {
+        font-size: 15px !important;
+        padding: 5px !important;
+        font-weight: 500 !important;
+        text-transform: capitalize !important;
+    }
 </style>
 
-<div style="display: none;">
+<!-- Include Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<div style="margin-left: 250px;">
     <?php require_once './views/layouts/nav.php' ?>
 </div>
 <div class="main-content">
-    <!-- Filter Buttons, Date Range, and Search Bar -->
+    <!-- Filter Dropdown, Date Range, and Search Bar -->
     <div class="filter-search-container">
         <div class="filter-date-wrapper">
-            <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="today">Today</button>
-                <button class="filter-btn" data-filter="this-week">This Week</button>
-                <button class="filter-btn" data-filter="last-week">Last Week</button>
-                <button class="filter-btn" data-filter="this-month">This Month</button>
-                <button class="filter-btn" data-filter="last-month">Last Month</button>
+            <div class="filter-dropdown-container">
+                <select class="filter-dropdown" id="filter-dropdown">
+                    <option value="all" selected>Filter all</option>
+                    <option value="today">Today</option>
+                    <option value="this-week">This Week</option>
+                    <option value="last-week">Last Week</option>
+                    <option value="this-month">This Month</option>
+                    <option value="last-month">Last Month</option>
+                </select>
             </div>
             <div class="date-filter">
-                <div>
-                    <label for="start-date">Choose date:</label>
-                    <input type="date" id="start-date" value="<?= date('Y-m-d', strtotime('-1 month')) ?>">
-                </div>
-                <div>
-                    <input type="date" id="end-date" value="<?= date('Y-m-d') ?>">
-                </div>
+                <label for="date-range">Date Range:</label>
+                <input type="text" id="date-range" placeholder="Select date range...">
+            </div>
+            <div class="search-containerr">
+                <input type="text" id="search-input" placeholder="search...">
             </div>
         </div>
-    </div>
-
-    <div class="search-container">
-        <input type="text" id="search-input" placeholder="Search by Product Name...">
     </div>
 
     <div class="table-container">
@@ -565,7 +594,7 @@ require_once './views/layouts/side.php';
                         <td><?= $report['created_at'] ? date('Y-m-d', strtotime($report['created_at'])) : 'N/A' ?></td>
                         <td>
                             <button style="display: none;" class="edit-btn" data-id="<?= $report['id'] ?>">Edit</button>
-                            <button class="remove-btn" data-id="<?= $report['id'] ?>">Remove</button>
+                            <button class="remove-btn" data-id="<?= $report['id'] ?>"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 <?php endforeach ?>
@@ -641,14 +670,36 @@ require_once './views/layouts/side.php';
     </div>
 </div>
 
+<!-- Include Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
+    // Initialize Flatpickr for date range
+    flatpickr("#date-range", {
+        mode: "range",
+        dateFormat: "Y-m-d",
+        defaultDate: ["<?= date('Y-m-d', strtotime('-1 month')) ?>", "<?= date('Y-m-d') ?>"],
+        minDate: "2025-01-01",
+        onChange: function(selectedDates) {
+            if (selectedDates.length === 2) {
+                const startDate = selectedDates[0].toISOString().split('T')[0];
+                const endDate = selectedDates[1].toISOString().split('T')[0];
+                fetchTableData({
+                    filter: document.getElementById('filter-dropdown').value,
+                    startDate,
+                    endDate,
+                    search: searchInput.value,
+                    page: 1
+                });
+            }
+        }
+    });
+
     // UI Elements
     const selectAll = document.getElementById('select-all');
     const deleteBtn = document.getElementById('delete-selected');
     const deleteMessage = document.getElementById('delete-message');
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const startDateInput = document.getElementById('start-date');
-    const endDateInput = document.getElementById('end-date');
+    const filterDropdown = document.getElementById('filter-dropdown');
+    const filterDropdownContainer = document.querySelector('.filter-dropdown-container');
     const searchInput = document.getElementById('search-input');
     const tableBody = document.getElementById('purchase-table');
     const totalPriceSpan = document.querySelector('.total-price span');
@@ -661,9 +712,17 @@ require_once './views/layouts/side.php';
     const paginationContainer = document.querySelector('.pagination');
 
     // Base URL for AJAX requests
-    const baseUrl = '<?= defined('BASE_URL') ?>';
+    const baseUrl = '<?= defined('BASE_URL') ? BASE_URL : '' ?>';
     const csrfToken = '<?= isset($_SESSION["csrf_token"]) ? $_SESSION["csrf_token"] : "" ?>';
     let currentPage = <?= $currentPage ?: 1 ?>;
+
+    // Add interactivity to dropdown
+    filterDropdown.addEventListener('focus', () => {
+        filterDropdownContainer.classList.add('active');
+    });
+    filterDropdown.addEventListener('blur', () => {
+        filterDropdownContainer.classList.remove('active');
+    });
 
     // Show Message with Dynamic Text
     function showMessage(text) {
@@ -680,30 +739,40 @@ require_once './views/layouts/side.php';
     }
 
     // Fetch Table Data
-    function fetchTableData({ filter = 'all', startDate = null, endDate = null, search = '', page = currentPage } = {}) {
+    function fetchTableData({
+        filter = 'all',
+        startDate = null,
+        endDate = null,
+        search = '',
+        page = currentPage
+    } = {}) {
         tableBody.classList.add('loading');
-        const payload = { filter, search, page };
+        const payload = {
+            filter,
+            search,
+            page
+        };
         if (filter === 'all' && startDate && endDate) {
             payload.start_date = startDate;
             payload.end_date = endDate;
         }
 
         return fetch(`${baseUrl}/history/fetchFilteredHistories`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-CSRF-Token': csrfToken
-            },
-            body: new URLSearchParams(payload)
-        })
-        .then(response => {
-            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-            return response.json();
-        })
-        .then(data => {
-            tableBody.classList.remove('loading');
-            if (data.success) {
-                tableBody.innerHTML = data.reports.length > 0 ? data.reports.map(report => `
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRF-Token': csrfToken
+                },
+                body: new URLSearchParams(payload)
+            })
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                return response.json();
+            })
+            .then(data => {
+                tableBody.classList.remove('loading');
+                if (data.success) {
+                    tableBody.innerHTML = data.reports.length > 0 ? data.reports.map(report => `
                     <tr data-date="${report.created_at}">
                         <td><input type="checkbox" class="select-item" data-id="${report.id}"></td>
                         <td><img src="${report.image}" alt="Product Image" width="50" loading="lazy"></td>
@@ -713,25 +782,25 @@ require_once './views/layouts/side.php';
                         <td>${parseFloat(report.total_price).toFixed(2)}$</td>
                         <td>${new Date(report.created_at).toISOString().split('T')[0]}</td>
                         <td>
-                            <button style = "display:none;" class="edit-btn" data-id="${report.id}">Edit</button>
+                            <button style="display: none;" class="edit-btn" data-id="${report.id}">Edit</button>
                             <button class="remove-btn" data-id="${report.id}"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `).join('') : '<tr><td colspan="8">No records found</td></tr>';
-                totalPriceSpan.textContent = `$${parseFloat(data.total_price).toFixed(2)}`;
-                currentPage = data.currentPage;
-                updatePagination(data.currentPage, data.totalPages);
-                attachRemoveListeners();
-                attachEditListeners();
-                attachCheckboxListeners();
-            } else {
-                alert('Failed to fetch data: ' + (data.error || 'Unknown error'));
-            }
-        })
-        .catch(error => {
-            tableBody.classList.remove('loading');
-            alert('Error fetching data: ' + error.message);
-        });
+                    totalPriceSpan.textContent = `$${parseFloat(data.total_price).toFixed(2)}`;
+                    currentPage = data.currentPage;
+                    updatePagination(data.currentPage, data.totalPages);
+                    attachRemoveListeners();
+                    attachEditListeners();
+                    attachCheckboxListeners();
+                } else {
+                    alert('Failed to fetch data: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                tableBody.classList.remove('loading');
+                alert('Error fetching data: ' + error.message);
+            });
     }
 
     // Update Pagination
@@ -763,9 +832,9 @@ require_once './views/layouts/side.php';
         const page = parseInt(this.getAttribute('data-page'));
         if (!isNaN(page)) {
             fetchTableData({
-                filter: document.querySelector('.filter-btn.active')?.getAttribute('data-filter') || 'all',
-                startDate: startDateInput.value,
-                endDate: endDateInput.value,
+                filter: filterDropdown.value,
+                startDate: document.getElementById('date-range').value.split(' to ')[0],
+                endDate: document.getElementById('date-range').value.split(' to ')[1],
                 search: searchInput.value,
                 page
             });
@@ -788,32 +857,36 @@ require_once './views/layouts/side.php';
         confirmYes.onclick = () => {
             tableBody.classList.add('loading');
             fetch(`${baseUrl}/history/destroy`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-Token': csrfToken
-                },
-                body: JSON.stringify({ ids: [id] })
-            })
-            .then(response => {
-                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                return response.json();
-            })
-            .then(data => {
-                tableBody.classList.remove('loading');
-                if (data.success) {
-                    row.remove();
-                    showMessage('Product deleted successfully');
-                    modal.classList.remove('show');
-                    fetchTableData({ page: currentPage });
-                } else {
-                    alert('Failed to delete: ' + (data.error || 'Unknown error'));
-                }
-            })
-            .catch(error => {
-                tableBody.classList.remove('loading');
-                alert('Error deleting item: ' + error.message);
-            });
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': csrfToken
+                    },
+                    body: JSON.stringify({
+                        ids: [id]
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                    return response.json();
+                })
+                .then(data => {
+                    tableBody.classList.remove('loading');
+                    if (data.success) {
+                        row.remove();
+                        showMessage('Product deleted successfully');
+                        modal.classList.remove('show');
+                        fetchTableData({
+                            page: currentPage
+                        });
+                    } else {
+                        alert('Failed to delete: ' + (data.error || 'Unknown error'));
+                    }
+                })
+                .catch(error => {
+                    tableBody.classList.remove('loading');
+                    alert('Error deleting item: ' + error.message);
+                });
         };
         confirmNo.onclick = () => modal.classList.remove('show');
     }
@@ -829,24 +902,26 @@ require_once './views/layouts/side.php';
     function handleEditClick() {
         const id = this.getAttribute('data-id');
         fetch(`${baseUrl}/history/edit/${id}`, {
-            method: 'GET',
-            headers: { 'X-CSRF-Token': csrfToken }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                document.getElementById('edit-id').value = data.report.id;
-                document.getElementById('edit-product-name').value = data.report.product_name;
-                document.getElementById('edit-quantity').value = data.report.quantity;
-                document.getElementById('edit-price').value = parseFloat(data.report.price).toFixed(2);
-                document.getElementById('edit-created-at').value = data.report.created_at.split(' ')[0];
-                document.getElementById('edit-image').value = ''; // Reset file input
-                editModal.classList.add('show');
-            } else {
-                alert('Failed to fetch record: ' + (data.error || 'Unknown error'));
-            }
-        })
-        .catch(error => alert('Error: ' + error.message));
+                method: 'GET',
+                headers: {
+                    'X-CSRF-Token': csrfToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('edit-id').value = data.report.id;
+                    document.getElementById('edit-product-name').value = data.report.product_name;
+                    document.getElementById('edit-quantity').value = data.report.quantity;
+                    document.getElementById('edit-price').value = parseFloat(data.report.price).toFixed(2);
+                    document.getElementById('edit-created-at').value = data.report.created_at.split(' ')[0];
+                    document.getElementById('edit-image').value = '';
+                    editModal.classList.add('show');
+                } else {
+                    alert('Failed to fetch record: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => alert('Error: ' + error.message));
     }
 
     editForm.addEventListener('submit', function(e) {
@@ -854,21 +929,25 @@ require_once './views/layouts/side.php';
         const id = document.getElementById('edit-id').value;
         const formData = new FormData(this);
         fetch(`${baseUrl}/history/update/${id}`, {
-            method: 'POST',
-            headers: { 'X-CSRF-Token': csrfToken },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showMessage('Product updated successfully');
-                editModal.classList.remove('show');
-                fetchTableData({ page: currentPage });
-            } else {
-                alert('Failed to update: ' + (data.error || 'Unknown error'));
-            }
-        })
-        .catch(error => alert('Error: ' + error.message));
+                method: 'POST',
+                headers: {
+                    'X-CSRF-Token': csrfToken
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showMessage('Product updated successfully');
+                    editModal.classList.remove('show');
+                    fetchTableData({
+                        page: currentPage
+                    });
+                } else {
+                    alert('Failed to update: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => alert('Error: ' + error.message));
     });
 
     cancelEdit.addEventListener('click', () => {
@@ -888,32 +967,36 @@ require_once './views/layouts/side.php';
         confirmYes.onclick = () => {
             tableBody.classList.add('loading');
             fetch(`${baseUrl}/history/destroy`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-Token': csrfToken
-                },
-                body: JSON.stringify({ ids })
-            })
-            .then(response => {
-                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                return response.json();
-            })
-            .then(data => {
-                tableBody.classList.remove('loading');
-                if (data.success) {
-                    checkboxes.forEach(cb => cb.closest('tr').remove());
-                    showMessage(`${ids.length} item${ids.length > 1 ? 's' : ''} deleted successfully`);
-                    modal.classList.remove('show');
-                    fetchTableData({ page: currentPage });
-                } else {
-                    alert('Failed to delete: ' + (data.error || 'Unknown error'));
-                }
-            })
-            .catch(error => {
-                tableBody.classList.remove('loading');
-                alert('Error deleting items: ' + error.message);
-            });
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': csrfToken
+                    },
+                    body: JSON.stringify({
+                        ids
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                    return response.json();
+                })
+                .then(data => {
+                    tableBody.classList.remove('loading');
+                    if (data.success) {
+                        checkboxes.forEach(cb => cb.closest('tr').remove());
+                        showMessage(`${ids.length} item${ids.length > 1 ? 's' : ''} deleted successfully`);
+                        modal.classList.remove('show');
+                        fetchTableData({
+                            page: currentPage
+                        });
+                    } else {
+                        alert('Failed to delete: ' + (data.error || 'Unknown error'));
+                    }
+                })
+                .catch(error => {
+                    tableBody.classList.remove('loading');
+                    alert('Error deleting items: ' + error.message);
+                });
         };
         confirmNo.onclick = () => modal.classList.remove('show');
     });
@@ -941,43 +1024,10 @@ require_once './views/layouts/side.php';
         updateDeleteButtonVisibility();
     }
 
-    // Filter Button Clicks
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            fetchTableData({
-                filter: this.getAttribute('data-filter'),
-                search: searchInput.value,
-                page: 1
-            });
-        });
-    });
-
-    // Date Input Changes
-    startDateInput.addEventListener('change', () => {
-        if (startDateInput.value > endDateInput.value) {
-            alert('Start date cannot be after end date.');
-            startDateInput.value = endDateInput.value;
-        }
+    // Filter Dropdown Change
+    filterDropdown.addEventListener('change', function() {
         fetchTableData({
-            filter: 'all',
-            startDate: startDateInput.value,
-            endDate: endDateInput.value,
-            search: searchInput.value,
-            page: 1
-        });
-    });
-
-    endDateInput.addEventListener('change', () => {
-        if (startDateInput.value > endDateInput.value) {
-            alert('Start date cannot be after end date.');
-            endDateInput.value = startDateInput.value;
-        }
-        fetchTableData({
-            filter: 'all',
-            startDate: startDateInput.value,
-            endDate: endDateInput.value,
+            filter: this.value,
             search: searchInput.value,
             page: 1
         });
@@ -989,9 +1039,9 @@ require_once './views/layouts/side.php';
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => {
             fetchTableData({
-                filter: 'all',
-                startDate: startDateInput.value,
-                endDate: endDateInput.value,
+                filter: filterDropdown.value,
+                startDate: document.getElementById('date-range').value.split(' to ')[0],
+                endDate: document.getElementById('date-range').value.split(' to ')[1],
                 search: searchInput.value,
                 page: 1
             });

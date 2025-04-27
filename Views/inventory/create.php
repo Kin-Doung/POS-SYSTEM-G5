@@ -11,6 +11,7 @@ require_once './views/layouts/side.php';
         background: blue;
         box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
         color: #fff;
+        padding: 8px;
     }
 
     .add-moree:hover {
@@ -95,13 +96,50 @@ require_once './views/layouts/side.php';
     .barcode-input.scanned {
         background-color: #e6ffe6;
     }
+
+    th, td {
+        text-align: center;
+    }
+
+    /* Image Input Styling */
+    .image-input {
+        display: none;
+    }
+
+    .image-label {
+        display: block;
+        padding: 8px 16px;
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        color: #333;
+        text-align: center;
+        transition: background-color 0.3s ease;
+    }
+
+    .image-label:hover {
+        background-color: #e0e0e0;
+    }
+
+    .img-preview {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        display: none;
+        margin: 0 auto;
+    }
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-<main class="main-content create-content position-relative max-height-vh-100 h-100">
+<main class="main-content create-content position-relative min-vh-100">
     <!-- Navbar -->
     <?php require_once './views/layouts/nav.php' ?>
 
@@ -110,9 +148,9 @@ require_once './views/layouts/side.php';
         <h2 class="text-center head-add" style="padding-top: 10px;">Add Stock Products</h2>
 
         <div class="container mt-5">
-            <div class="d-flex justify-content-end flex-column align-items-end gap-2 p-3 bg-light rounded shadow-sm">
+            <div class="d-flex justify-content-end flex-column mt-n5 align-items-end gap-2 p-3 rounded">
                 <!-- Preview Invoice Button -->
-                <button type="button" id="previewInvoice" class="btn btn-primary custom-width" data-bs-toggle="modal" data-bs-target="#invoiceModal">
+                <button type="button" id="previewInvoice" class="btn btn-primary btn-preview custom-width" data-bs-toggle="modal" data-bs-target="#invoiceModal">
                     <i class="bi bi-eye-fill me-1"></i> Preview Invoice
                 </button>
 
@@ -124,7 +162,7 @@ require_once './views/layouts/side.php';
             </div>
         </div>
 
-        <div class="col-md-12 mt-5 mx-auto">
+        <div class="col-md-12 mt-n3 mx-auto">
             <div class="card p-3" style="box-shadow: none; border: none">
                 <form id="productForm" action="/inventory/store" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
                     <input type="hidden" name="_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
@@ -146,8 +184,9 @@ require_once './views/layouts/side.php';
                             <tbody id="productTableBody">
                                 <tr class="product-row">
                                     <td class="image-field">
-                                        <input type="file" name="image[]" class="form-control image-input" accept="image/*">
-                                        <img src="" alt="Product Image" class="img-preview" style="display: none; width: 50px; height: 50px; margin: 0 auto;">
+                                        <label for="image_0" class="image-label">Choose Image</label>
+                                        <input type="file" id="image_0" name="image[]" class="form-control image-input" accept="image/*">
+                                        <img src="" alt="Product Image" class="img-preview">
                                     </td>
                                     <td class="product-name-field">
                                         <input type="hidden" name="product_id[]" class="product-id-input">
@@ -212,7 +251,7 @@ require_once './views/layouts/side.php';
         <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <div class="modal-header" style="background: #0096FF;">
+                    <div class="modal-header" style="background:#fff; color:#000;">
                         <h5 class="modal-title" id="invoiceModalLabel">Invoice Preview</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -236,7 +275,7 @@ require_once './views/layouts/side.php';
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="exportPDF" class="btn btn-primary" style="background: #F88379;">Export to PDF</button>
+                        <button type="button" id="exportPDF" class="btn btn-primary" style="background: blue;">Export to PDF</button>
                         <button type="button" id="exportExcel" class="btn btn-primary" style="background: #4CBB17;">Export to Excel</button>
                     </div>
                 </div>
@@ -253,6 +292,9 @@ require_once './views/layouts/side.php';
         let barcodeBuffer = '';
         let lastInputTime = 0;
         const debounceDelay = 50; // Adjust based on scanner speed (ms)
+
+        // Initialize image handling for existing rows
+        initImageHandling($('.product-row'));
 
         // Toggle input mode
         function toggleInputMode() {
@@ -287,12 +329,18 @@ require_once './views/layouts/side.php';
 
         // Add more rows
         $("#addMore").click(function() {
+            const rowCount = $('.product-row').length;
             var newRow = $(".product-row:first").clone();
             newRow.find("select").val("");
             newRow.find("input").val("");
             newRow.find(".quantity-input").val("1");
             newRow.find("img.img-preview").attr("src", "").hide();
+            newRow.find(".image-label").show();
             newRow.find("input").removeClass("is-invalid");
+
+            // Update the ID of the image input and label
+            newRow.find('.image-input').attr('id', `image_${rowCount}`);
+            newRow.find('.image-label').attr('for', `image_${rowCount}`);
 
             newRow.find('.product-select').off('change').on('change', function() {
                 handleProductSelect(this);
@@ -309,6 +357,7 @@ require_once './views/layouts/side.php';
             });
 
             $("#productTableBody").append(newRow);
+            initImageHandling(newRow);
             toggleInputMode();
             $('.barcode-input:last').focus(); // Focus new row's barcode input
         });
@@ -321,6 +370,33 @@ require_once './views/layouts/side.php';
                 alert("At least one product row is required!");
             }
         });
+
+        // Initialize image handling for a row
+        function initImageHandling(row) {
+            // Handle image selection
+            row.find('.image-input').on('change', function(event) {
+                const file = event.target.files[0];
+                const preview = $(this).siblings('.img-preview');
+                const label = $(this).siblings('.image-label');
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.attr('src', e.target.result).show();
+                        label.hide();
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.attr('src', '').hide();
+                    label.show();
+                }
+            });
+
+            // Handle image click to trigger file input
+            row.find('.img-preview').on('click', function() {
+                const fileInput = $(this).siblings('.image-input');
+                fileInput.click();
+            });
+        }
 
         // Handle scanner input
         $(document).on('keypress', '.barcode-input', function(e) {
@@ -361,10 +437,13 @@ require_once './views/layouts/side.php';
                             row.find('.product-name-input').val(data.product_name || '');
                             row.find('.category-name-input').val(data.category_name || '');
                             const imgPreview = row.find('.img-preview');
+                            const label = row.find('.image-label');
                             if (data.image) {
                                 imgPreview.attr('src', '/' + data.image).show();
+                                label.hide();
                             } else {
                                 imgPreview.attr('src', '').hide();
+                                label.show();
                             }
                             row.find('.quantity-input').val(data.quantity || '1').removeClass('is-invalid');
                             row.find('.amount-input').val(data.amount || 0);
@@ -403,10 +482,13 @@ require_once './views/layouts/side.php';
                             row.find('.category-select').val(data.category_id || '');
                             row.find('.category-name-input').val(data.category_name || '');
                             const imgPreview = row.find('.img-preview');
+                            const label = row.find('.image-label');
                             if (data.image) {
                                 imgPreview.attr('src', '/' + data.image).show();
+                                label.hide();
                             } else {
                                 imgPreview.attr('src', '').hide();
+                                label.show();
                             }
                             row.find('.quantity-input').val(data.quantity || '1').removeClass('is-invalid');
                             row.find('.amount-input').val(data.amount || 0);
@@ -457,6 +539,7 @@ require_once './views/layouts/side.php';
             row.find('.product-name-input').val('');
             row.find('.category-name-input').val('');
             row.find('.img-preview').attr('src', '').hide();
+            row.find('.image-label').show();
             row.find('.quantity-input').val('1').removeClass('is-invalid');
             row.find('.amount-input').val('');
             row.find('.selling-price-input').val('');
@@ -466,23 +549,6 @@ require_once './views/layouts/side.php';
         $(document).on("change", ".product-select", function() {
             if ($('#inputMode').val() === 'manual') {
                 handleProductSelect(this);
-            }
-        });
-
-        // Image preview
-        $(document).on('change', '.image-input', function() {
-            const file = this.files[0];
-            const imgPreview = $(this).siblings('.img-preview')[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    imgPreview.src = e.target.result;
-                    imgPreview.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            } else {
-                imgPreview.src = '';
-                imgPreview.style.display = 'none';
             }
         });
 
@@ -509,13 +575,13 @@ require_once './views/layouts/side.php';
 
                 if (productName && quantity && price) {
                     const row = `
-                <tr>
-                    <td><img src="${imageSrc || ''}" alt="Product Image" style="width: 50px; height: 50px; object-fit: cover;"></td>
-                    <td>${productName}</td>
-                    <td>${quantity}</td>
-                    <td>${price}</td>
-                </tr>
-            `;
+                        <tr>
+                            <td><img src="${imageSrc || ''}" alt="Product Image" style="width: 50px; height: 50px; object-fit: cover;"></td>
+                            <td>${productName}</td>
+                            <td>${quantity}</td>
+                            <td>${price}</td>
+                        </tr>
+                    `;
                     invoiceTableBody.append(row);
                     totalPrice += parseFloat(price) * parseFloat(quantity);
                 }

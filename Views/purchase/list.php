@@ -9,10 +9,9 @@
 
             <!-- Main Content -->
             <div id="content">
-
                 <?php require_once './views/layouts/nav.php' ?>
-                <div class="container table-inventory mt-5">
-                    <div class="orders ml-5">
+                <div class="container table-inventory">
+                    <div class="orders ">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h2 style="font-weight: bold;" class="purchase-head">Purchasing Orders</h2>
                             <div>
@@ -28,7 +27,7 @@
                                     <th><input type="checkbox" id="selectAll"></th>
                                     <th>Image</th>
                                     <th>Product Name</th>
-                                    <th>Action</th> <!-- Change here -->
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody id="purchasesTableBody">
@@ -60,7 +59,6 @@
                                                     .delete-btn {
                                                         background: none;
                                                         color: red;
-
                                                     }
 
                                                     .action-column {
@@ -88,7 +86,6 @@
                                                     }
                                                 </style>
                                             </td>
-
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
@@ -106,15 +103,14 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="bulkDeleteModalLabel">Delete Selected Purchases</h5>
+                                    <h5 class="modal-title" id="bulkDeleteModalLabel">Delete Selected Product</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    Are you sure you want to delete the selected purchases?
+                                    Are you sure that you want to delete the selected all products?
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel harrowing</button>
-                                    <button type="button" id="confirmBulkDelete" class="btn btn-danger">Delete</button>
+                                    <button type="button" id="confirmBulkDelete" class="btn card-btn-delete btn-danger">Delete</button>
                                 </div>
                             </div>
                         </div>
@@ -127,6 +123,7 @@
                         color: #1a3c34;
                         font-size: 24px;
                         margin-bottom: 0;
+                        font-family: "Poppins", sans-serif; 
                     }
 
                     .btn-new-product {
@@ -155,7 +152,6 @@
                         overflow: hidden;
                         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
                     }
-
 
                     .table thead th {
                         background-color: #1a3c34;
@@ -190,7 +186,7 @@
                     }
 
                     .modal-header {
-                        background-color: #1a3c34;
+                        background-color: red;
                         color: white;
                         border-bottom: none;
                     }
@@ -230,8 +226,17 @@
                         transition: all 0.3s ease;
                     }
 
-                    .btn-danger:hover {
-                        background-color: #c82333;
+                    .card-btn-delete {
+                        background: red; /* Updated to red */
+                        border: none;
+                        padding: 8px 20px;
+                        border-radius: 6px;
+                        transition: all 0.3s ease;
+                        color: white; /* Ensure text is white */
+                    }
+
+                    .card-btn-delete:hover {
+                        background: darkred; /* Dark red on hover for consistency */
                         transform: translateY(-1px);
                     }
 
@@ -242,7 +247,13 @@
                         padding: 12px 24px;
                         font-weight: 500;
                         border-radius: 6px;
-                        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+                        background: red;
+                        color: white;
+                    }
+
+                    .pos-btn-danger:hover {
+                        background: darkred;
+                        transform: translateY(-1px);
                     }
 
                     /* Checkbox styling */
@@ -255,7 +266,6 @@
                     /* Image styling */
                     .table td img {
                         object-fit: cover;
-                        border: 1px solid #e9ecef;
                     }
                 </style>
 
@@ -264,9 +274,6 @@
     </div>
 
     <script src="../../views/assets/js/demo/chart-area-demo.js"></script>
-
-
-
     <script>
         // Inline Editing
         document.querySelectorAll('.editable').forEach(function(element) {
@@ -356,8 +363,7 @@
                     } else {
                         alert('Bulk delete failed: ' + data.message);
                     }
-                })
-
+                });
         });
     </script>
 </body>

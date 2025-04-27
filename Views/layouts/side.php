@@ -106,8 +106,5 @@
             </li>
         </ul>
     </div>
-    <div class="sidenav-footer position-absolute w-100 bottom-0 text-center p-3">
-        <small data-translate-key="Engly POS v1.0">Engly POS v1.0</small> © <?= date('Y') ?>
-    </div>
     <link rel="stylesheet" href="/assets/css/settings/aside.css">
 </aside>

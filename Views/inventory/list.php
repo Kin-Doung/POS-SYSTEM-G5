@@ -2,7 +2,9 @@
 <?php require_once './views/layouts/side.php' ?>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
-
+<div style="margin-left: 250px;">
+    <?php require_once './views/layouts/nav.php' ?>
+</div>
 <style>
     .main-content {
         margin-left: 270px;
@@ -37,11 +39,57 @@
         background-color: #f1f1f1;
         border-radius: 4px;
     }
+
+    .modal-title {
+        font-family: "Poppins", sans-serif;
+        font-size: 25px;
+    }
+
+    /* Increase height of View Modal */
+    #viewModal<?= htmlspecialchars($item['id']) ?> .modal-content {
+        min-height: 400px; /* Taller height for view modal */
+    }
+
+    /* Style for Delete Button in Delete Modal */
+    #deleteModal .btn-danger {
+        background: red;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        color: white;
+    }
+
+    #deleteModal .btn-danger:hover {
+        background: darkred;
+        transform: translateY(-1px);
+    }
+
+    /* Increase line height for View Modal details */
+    .text-start.detail p {
+        line-height: 2; /* Increased line height for better spacing */
+    }
+
+    /* Position Edit Modal closer to top */
+    #editModal .modal-dialog {
+        margin-top: -85px;
+    }
+
+    /* Center image in Edit Modal */
+    .image-preview-container {
+        display: flex;
+        align-items: center;
+        min-height: 100px; /* Ensure enough space for centering */
+        margin-top: 10px;
+    }
+
+    #imagePreview {
+        max-width: 100px;
+        height: auto;
+    }
 </style>
 
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-    <!-- Navbar -->
-    <?php require_once './views/layouts/nav.php' ?>
 
     <!-- Feedback Alerts -->
     <?php if (isset($_SESSION['success'])): ?>
@@ -116,9 +164,9 @@
                                         See more...
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item text-dark" href="#" data-bs-toggle="modal" data-bs-target="#viewModal<?= $item['id'] ?>"><i class="fa-solid fa-eye"></i> View</a></li>
+                                        <li><a class="dropdown-item text-primary" href="#" data-bs-toggle="modal" data-bs-target="#viewModal<?= $item['id'] ?>"><i class="fa-solid fa-eye"></i> View</a></li>
                                         <li>
-                                            <a class="dropdown-item text-dark" href="#"
+                                            <a class="dropdown-item text-primary" href="#"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#editModal"
                                                 data-id="<?= $item['id'] ?>"
@@ -132,7 +180,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item text-dark" href="#"
+                                            <a class="dropdown-item text-danger" href="#"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#deleteModal"
                                                 data-id="<?= $item['id'] ?>"
@@ -146,17 +194,17 @@
                                 <div class="modal fade" id="viewModal<?= $item['id'] ?>" tabindex="-1" aria-labelledby="viewModalLabel<?= $item['id'] ?>" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content rounded-4 shadow-lg">
-                                            <div class="modal-header" style="background: #1F51FF;">
+                                            <div class="modal-header" style="background:#add8e6; color:#000;">
                                                 <h2 class="modal-title">View Inventory Item</h2>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body d-flex justify-content-between align-items-center">
                                                 <div class="text-start detail">
-                                                    <p><strong>Product Name:</strong> <?= htmlspecialchars($item['product_name']) ?></p>
-                                                    <p><strong>Category:</strong> <?= !empty($item['category_name']) ? htmlspecialchars($item['category_name']) : '-' ?></p>
-                                                    <p><strong>Quantity:</strong> <?= htmlspecialchars($item['quantity']) ?></p>
-                                                    <p><strong>Price:</strong> $<?= htmlspecialchars(number_format($item['amount'], 2)) ?></p>
-                                                    <p style="display: none;"><strong>Total Price:</strong> $<span class="modal-total-price"><?= htmlspecialchars(number_format($totalPrice, 2)) ?></span></p>
+                                                    <p><b>Product Name:</b> <?= htmlspecialchars($item['product_name']) ?></p>
+                                                    <p><b>Category:</b> <?= !empty($item['category_name']) ? htmlspecialchars($item['category_name']) : '-' ?></p>
+                                                    <p><b>Quantity:</b> <?= htmlspecialchars($item['quantity']) ?></p>
+                                                    <p><b>Price:</b> $<?= htmlspecialchars(number_format($item['amount'], 2)) ?></p>
+                                                    <p style="display: none;"><b>Total Price:</b> $<span class="modal-total-price"><?= htmlspecialchars(number_format($totalPrice, 2)) ?></span></p>
                                                 </div>
                                                 <?php if (!empty($item['image'])): ?>
                                                     <div class="mb-3">
@@ -173,11 +221,11 @@
                 </tbody>
             </table>
 
-            <!-- Replace existing delete modal -->
+            <!-- Delete Modal -->
             <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <div class="modal-header">
+                        <div class="modal-header bg-primary">
                             <h5 class="modal-title" id="deleteModalLabel">Delete Item</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
@@ -189,7 +237,6 @@
                                 <input type="hidden" name="id" id="deleteId">
                                 <input type="hidden" name="_token" id="csrfToken" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
                                 <button type="submit" class="btn btn-danger">Delete</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                             </form>
                         </div>
                     </div>
@@ -243,7 +290,7 @@
             <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
-                        <div class="modal-header" style="background: #1F51FF;">
+                        <div class="modal-header" style="background:#add8e6;color:#000;">
                             <h5 class="modal-title" id="editModalLabel">Edit Product</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
@@ -285,17 +332,11 @@
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Selling Price</label>
-                                    <input type="number" class="form-control" name="selling_price" id="selling_price" step="0.01" min="0">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Barcode</label>
-                                    <input type="text" class="form-control" name="barcode" id="barcode">
-                                </div>
-                                <div class="mb-3">
                                     <label class="form-label">Image</label>
                                     <input type="file" class="form-control" id="imageInput" name="image" accept="image/*">
-                                    <img id="imagePreview" src="" alt="Product Image" class="img-fluid mt-2" style="max-width: 100px; display: none;">
+                                    <div class="image-preview-container">
+                                        <img id="imagePreview" src="" alt="Product Image" class="img-fluid" style="display: none;">
+                                    </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Update</button>
                             </form>
@@ -303,7 +344,6 @@
                     </div>
                 </div>
             </div>
-
 
             <div class="update-quantity" id="updateQuantitySection" style="display: none;">
                 <h3>Update Quantity</h3>
@@ -316,6 +356,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const editModal = document.getElementById('editModal');
             // Edit Modal Population
             editModal.addEventListener('show.bs.modal', function(event) {
                 const button = event.relatedTarget;

@@ -315,6 +315,9 @@ foreach ($tracking as $item) {
 
 <!-- START ADDITION: Modal-specific styles -->
 <style>
+    #currentLanguage{
+        font-size: 15px;
+    }
     .modal-lg {
         max-width: 800px;
     }

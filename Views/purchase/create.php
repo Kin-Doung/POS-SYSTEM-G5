@@ -18,13 +18,8 @@
         z-index: 1000;
         text-decoration: underline;
         transition: all 0.3s ease-in-out;
+        margin-right: 20px;
     }
-
-    .btn-preview:hover {
-        border-radius: 5px;
-        background: orange;
-    }
-
     #addMore,
     #submitted {
         border-radius: 50px;
@@ -104,7 +99,6 @@
     /* Image Input Styling */
     .image-add {
         display: none;
-        /* Hide the default file input */
     }
 
     .image-label {
@@ -128,12 +122,9 @@
         height: 50px;
         object-fit: cover;
         border: none;
-        /* Removed border */
         border-radius: 4px;
         display: none;
-        /* Hidden by default */
         cursor: pointer;
-        /* Make the image clickable */
     }
 
     /* Modal Styling */
@@ -144,8 +135,8 @@
     }
 
     .modal-header {
-        background-color: #1a3c34;
-        color: white;
+        background-color: #fff;
+        color: #000;
         border-bottom: none;
     }
 
@@ -176,16 +167,31 @@
         transform: translateY(-1px);
     }
 
-    .btn-primary {
-        background-color: #007bff;
+    #exportPDF {
+        background: blue; /* Blue background */
         border: none;
         padding: 8px 20px;
         border-radius: 6px;
         transition: all 0.3s ease;
+        color: white;
     }
 
-    .btn-primary:hover {
-        background-color: #0056b3;
+    #exportPDF:hover {
+        background: darkblue; /* Dark blue on hover */
+        transform: translateY(-1px);
+    }
+
+    #exportExcel {
+        background: green; /* Green background */
+        border: none;
+        padding: 8px 20px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        color: white;
+    }
+
+    #exportExcel:hover {
+        background: darkgreen; /* Dark green on hover */
         transform: translateY(-1px);
     }
 
@@ -197,6 +203,15 @@
 
     .table-responsive {
         overflow-x: auto;
+    }
+
+    /* Input Width Adjustments */
+    input[name="product_name[]"] {
+        width: 200px; /* Slightly shorter but proportionate */
+    }
+
+    input[name="barcode[]"] {
+        width: 300px; /* Longer for barcode */
     }
 </style>
 
@@ -261,8 +276,8 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="exportPDF" class="btn btn-primary">Export to PDF</button>
-                    <button type="button" id="exportExcel" class="btn btn-primary">Export to Excel</button>
+                    <button type="button" id="exportPDF" class="btn">Export to PDF</button>
+                    <button type="button" id="exportExcel" class="btn">Export to Excel</button>
                 </div>
             </div>
         </div>
@@ -421,7 +436,7 @@
 
     // Load products from localStorage when the page loads
     $(document).ready(function() {
-        loadProductsFromLocalStorage();
+        loadProductsToLocalStorage();
     });
 
     // Clear localStorage on form submission
@@ -436,7 +451,9 @@
         invoiceTableBody.empty();
 
         tableBody.find('.product-row').each(function() {
-            const imageFile = $(this).find('input[type="file"]')[0].files[0];
+            const imageFile
+
+ = $(this).find('input[type="file"]')[0].files[0];
             const imageSrc = $(this).find('.img-preview').attr('src');
             const categoryId = $(this).find('select[name="category_id[]"]').val();
             const categoryText = $(this).find('select[name="category_id[]"] option:selected').text();

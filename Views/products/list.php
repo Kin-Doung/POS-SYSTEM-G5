@@ -931,45 +931,45 @@ require_once './views/layouts/side.php';
 
             // Fetch product from backend (any page)
             fetch('/products/getProductPageByBarcode', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    barcode: barcode
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        barcode: barcode
+                    })
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.item) {
-                    const currentPage = parseInt(new URLSearchParams(window.location.search).get('page') || '1');
-                    if (data.page && data.page !== currentPage) {
-                        // Redirect to the correct page with barcode parameter
-                        window.location.href = `?page=${data.page}&barcode=${encodeURIComponent(barcode)}`;
-                    } else {
-                        // Product is on current page or page info not provided, add to cart
-                        debouncedAddToCart(data.item);
-                        resetBarcodeInput();
-                        const productCol = document.querySelector(`.product-col[data-barcode="${barcode}"]`);
-                        if (productCol) {
-                            productCol.classList.add('highlight');
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.item) {
+                        const currentPage = parseInt(new URLSearchParams(window.location.search).get('page') || '1');
+                        if (data.page && data.page !== currentPage) {
+                            // Redirect to the correct page with barcode parameter
+                            window.location.href = `?page=${data.page}&barcode=${encodeURIComponent(barcode)}`;
+                        } else {
+                            // Product is on current page or page info not provided, add to cart
+                            debouncedAddToCart(data.item);
+                            resetBarcodeInput();
+                            const productCol = document.querySelector(`.product-col[data-barcode="${barcode}"]`);
+                            if (productCol) {
+                                productCol.classList.add('highlight');
+                            }
                         }
+                    } else {
+                        resetBarcodeInput();
+                        showToast(data.message || 'Barcode not found.', 2000);
                     }
-                } else {
+                })
+                .catch(error => {
+                    console.error('Error fetching product:', error);
                     resetBarcodeInput();
-                    showToast(data.message || 'Barcode not found.', 2000);
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching product:', error);
-                resetBarcodeInput();
-                showToast('Error scanning barcode.', 2000);
-            })
-            .finally(() => {
-                isProcessingScan = false;
-                barcodeInput.disabled = false;
-                // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after fetch
-            });
+                    showToast('Error scanning barcode.', 2000);
+                })
+                .finally(() => {
+                    isProcessingScan = false;
+                    barcodeInput.disabled = false;
+                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after fetch
+                });
         }, 500);
 
         // Barcode input handling
@@ -1022,32 +1022,32 @@ require_once './views/layouts/side.php';
         submitCartBtn.addEventListener('click', function() {
             if (cartItems.length === 0) return;
             fetch('/products/submitCart', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    cartItems: cartItems.map(item => ({
-                        inventoryId: item.inventory_id,
-                        quantity: item.quantity,
-                        price: item.price
-                    }))
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        cartItems: cartItems.map(item => ({
+                            inventoryId: item.inventory_id,
+                            quantity: item.quantity,
+                            price: item.price
+                        }))
+                    })
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showToast('Order completed successfully!');
-                    clearUIState();
-                } else {
-                    showToast(data.message || 'Error submitting order.', 2000);
-                }
-                // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after submission
-            })
-            .catch(error => {
-                showToast('Error submitting order.', 2000);
-                // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after error
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast('Order completed successfully!');
+                        clearUIState();
+                    } else {
+                        showToast(data.message || 'Error submitting order.', 2000);
+                    }
+                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after submission
+                })
+                .catch(error => {
+                    showToast('Error submitting order.', 2000);
+                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after error
+                });
         });
 
         // Toggle dropdown
@@ -1077,7 +1077,9 @@ require_once './views/layouts/side.php';
         savePdfBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             if (cartItems.length === 0) return;
-            const { jsPDF } = window.jspdf;
+            const {
+                jsPDF
+            } = window.jspdf;
             const doc = new jsPDF();
             doc.text('Cart Receipt', 10, 10);
             let y = 20;
@@ -1132,28 +1134,28 @@ require_once './views/layouts/side.php';
             button.addEventListener('click', function() {
                 const inventoryId = this.dataset.id;
                 fetch('/products/deleteInventory', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        inventoryId: inventoryId
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            inventoryId: inventoryId
+                        })
                     })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        this.closest('.product-col').remove();
-                        showToast('Item deleted successfully.');
-                    } else {
-                        showToast(data.message || 'Error deleting item.', 2000);
-                    }
-                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after deleting item
-                })
-                .catch(error => {
-                    showToast('Error deleting item.', 2000);
-                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after error
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            this.closest('.product-col').remove();
+                            showToast('Item deleted successfully.');
+                        } else {
+                            showToast(data.message || 'Error deleting item.', 2000);
+                        }
+                        // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after deleting item
+                    })
+                    .catch(error => {
+                        showToast('Error deleting item.', 2000);
+                        // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after error
+                    });
             });
         });
 

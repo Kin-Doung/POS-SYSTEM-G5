@@ -15,7 +15,7 @@ class ProductController extends BaseController
     public function index()
     {
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-        $perPage = 4;
+        $perPage = 25;
         
         $inventory = $this->model->getInventoryWithProductDetails($page, $perPage);
         $totalItems = $this->model->getInventoryCount();

@@ -758,7 +758,7 @@ require_once './views/layouts/side.php';
 
         // Initialize cart UI from localStorage
         updateCartUI();
-        barcodeInput.focus();
+        // Removed: barcodeInput.focus(); // No focus on page load
 
         // Show toast notification
         function showToast(message, duration = 2000) {
@@ -786,7 +786,7 @@ require_once './views/layouts/side.php';
                 col.classList.remove('highlight');
             });
             barcodeInput.value = '';
-            barcodeInput.focus();
+            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after clearing
             const urlParams = new URLSearchParams(window.location.search);
             const page = urlParams.get('page') || '1';
             window.history.replaceState({}, document.title, `?page=${page}`);
@@ -799,7 +799,7 @@ require_once './views/layouts/side.php';
         // Reset barcode input
         function resetBarcodeInput() {
             barcodeInput.value = '';
-            barcodeInput.focus();
+            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after reset
         }
 
         // Add to cart (debounced to prevent rapid clicks)
@@ -841,7 +841,7 @@ require_once './views/layouts/side.php';
                 total += item.quantity * item.price;
             });
             grandTotal.textContent = total.toFixed(2);
-            savePdfBtn.disabled = cartItems.length === 0;
+            savePdfBtn_DISABLED = cartItems.length === 0;
             submitCartBtn.disabled = cartItems.length === 0;
             completeCartBtn.disabled = cartItems.length === 0;
 
@@ -875,7 +875,7 @@ require_once './views/layouts/side.php';
                     cartItems.splice(index, 1);
                     localStorage.setItem('cartItems', JSON.stringify(cartItems));
                     updateCartUI();
-                    barcodeInput.focus();
+                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after removing item
                 });
             });
         }
@@ -889,7 +889,7 @@ require_once './views/layouts/side.php';
                 cartSection.classList.remove('visible');
                 document.querySelector('.main-content').classList.remove('cart-visible');
             }
-            barcodeInput.focus();
+            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after toggling cart
         }
 
         // Handle barcode scan (debounced)
@@ -924,7 +924,7 @@ require_once './views/layouts/side.php';
                     resetBarcodeInput();
                     isProcessingScan = false;
                     barcodeInput.disabled = false;
-                    barcodeInput.focus();
+                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after scan
                     return;
                 }
             }
@@ -968,7 +968,7 @@ require_once './views/layouts/side.php';
             .finally(() => {
                 isProcessingScan = false;
                 barcodeInput.disabled = false;
-                barcodeInput.focus();
+                // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after fetch
             });
         }, 500);
 
@@ -1014,7 +1014,7 @@ require_once './views/layouts/side.php';
                 };
                 console.log('Button clicked for', item.inventory_product_name);
                 debouncedAddToCart(item);
-                barcodeInput.focus();
+                // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after adding to cart
             });
         });
 
@@ -1042,11 +1042,11 @@ require_once './views/layouts/side.php';
                 } else {
                     showToast(data.message || 'Error submitting order.', 2000);
                 }
-                barcodeInput.focus();
+                // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after submission
             })
             .catch(error => {
                 showToast('Error submitting order.', 2000);
-                barcodeInput.focus();
+                // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after error
             });
         });
 
@@ -1056,7 +1056,7 @@ require_once './views/layouts/side.php';
             const isVisible = optionsDropdown.classList.contains('visible');
             optionsDropdown.classList.toggle('visible', !isVisible);
             moreOptionsBtn.classList.toggle('active', !isVisible);
-            barcodeInput.focus();
+            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after toggling dropdown
         });
 
         // Close dropdown on outside click
@@ -1065,7 +1065,7 @@ require_once './views/layouts/side.php';
                 optionsDropdown.classList.remove('visible');
                 moreOptionsBtn.classList.remove('active');
             }
-            barcodeInput.focus();
+            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after closing dropdown
         });
 
         // Prevent dropdown close on inside click
@@ -1089,7 +1089,7 @@ require_once './views/layouts/side.php';
             doc.save('cart-receipt.pdf');
             optionsDropdown.classList.remove('visible');
             moreOptionsBtn.classList.remove('active');
-            barcodeInput.focus();
+            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after saving PDF
         });
 
         // Payout (triggers submitCart)
@@ -1098,7 +1098,7 @@ require_once './views/layouts/side.php';
             submitCartBtn.click();
             optionsDropdown.classList.remove('visible');
             moreOptionsBtn.classList.remove('active');
-            barcodeInput.focus();
+            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after payout
         });
 
         // Clear cart
@@ -1110,13 +1110,13 @@ require_once './views/layouts/side.php';
             toggleCart(false);
             optionsDropdown.classList.remove('visible');
             moreOptionsBtn.classList.remove('active');
-            barcodeInput.focus();
+            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after clearing cart
         });
 
         // Close cart
         document.getElementById('closeCart').addEventListener('click', () => {
             toggleCart(false);
-            barcodeInput.focus();
+            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after closing cart
         });
 
         // Kebab menu
@@ -1148,11 +1148,11 @@ require_once './views/layouts/side.php';
                     } else {
                         showToast(data.message || 'Error deleting item.', 2000);
                     }
-                    barcodeInput.focus();
+                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after deleting item
                 })
                 .catch(error => {
                     showToast('Error deleting item.', 2000);
-                    barcodeInput.focus();
+                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after error
                 });
             });
         });
@@ -1178,7 +1178,7 @@ require_once './views/layouts/side.php';
                     console.error(err);
                     showToast('Failed to access webcam.', 2000);
                     webcamScanner.style.display = 'none';
-                    barcodeInput.focus();
+                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after webcam error
                     return;
                 }
                 Quagga.start();
@@ -1191,7 +1191,7 @@ require_once './views/layouts/side.php';
                     debouncedHandleBarcodeScan(barcode);
                     Quagga.stop();
                     webcamScanner.style.display = 'none';
-                    barcodeInput.focus();
+                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after webcam scan
                 }
             });
         });

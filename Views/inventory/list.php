@@ -1,5 +1,15 @@
-<?php require_once './views/layouts/header.php' ?>
-<?php require_once './views/layouts/side.php' ?>
+<?php
+// Ensure session is started for CSRF token
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+// Generate CSRF token if not set
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+require_once './views/layouts/header.php';
+require_once './views/layouts/side.php';
+?>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
 
@@ -36,6 +46,20 @@
         padding: 10px;
         background-color: #f1f1f1;
         border-radius: 4px;
+    }
+
+    .alert-container {
+        margin-bottom: 15px;
+    }
+
+    .btn-loading::after {
+        content: " Loading...";
+        display: inline-block;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        100% { transform: rotate(360deg); }
     }
 </style>
 
@@ -126,7 +150,9 @@
                                                 data-category_id="<?= $item['category_id'] ?? '' ?>"
                                                 data-quantity="<?= $item['quantity'] ?>"
                                                 data-amount="<?= $item['amount'] ?>"
-                                                data-total_price="<?= $totalPrice ?>"
+                                                data-selling_price="<?= $item['selling_price'] ?? 0 ?>"
+                                                data-barcode="<?= htmlspecialchars($item['barcode'] ?? '') ?>"
+                                                data-expiration_date="<?= htmlspecialchars($item['expiration_date'] ?? '') ?>"
                                                 data-image="<?= htmlspecialchars($item['image'] ?? '') ?>">
                                                 <i class="fa-solid fa-pen-to-square"></i> Edit
                                             </a>
@@ -173,7 +199,7 @@
                 </tbody>
             </table>
 
-            <!-- Replace existing delete modal -->
+            <!-- Delete Modal -->
             <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -196,49 +222,6 @@
                 </div>
             </div>
 
-            <!-- JavaScript for Delete Modal -->
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const deleteModal = document.getElementById('deleteModal');
-                    if (!deleteModal) {
-                        console.error('Delete modal not found in DOM');
-                        return;
-                    }
-                    deleteModal.addEventListener('show.bs.modal', function(event) {
-                        try {
-                            const button = event.relatedTarget;
-                            const id = button.getAttribute('data-id');
-                            const productName = button.getAttribute('data-product_name');
-                            if (!id || !productName) {
-                                console.error('Missing data-id or data-product_name:', {
-                                    id,
-                                    productName
-                                });
-                                return;
-                            }
-                            deleteModal.querySelector('#deleteProductName').textContent = productName;
-                            deleteModal.querySelector('#deleteProductId').textContent = id;
-                            deleteModal.querySelector('#deleteId').value = id;
-                            const csrfToken = document.getElementById('csrfToken').value;
-                            console.log('Delete modal opened - ID:', id, 'CSRF Token:', csrfToken);
-                        } catch (error) {
-                            console.error('Error in delete modal show event:', error);
-                        }
-                    });
-
-                    const deleteForm = document.getElementById('deleteForm');
-                    if (deleteForm) {
-                        deleteForm.addEventListener('submit', function(event) {
-                            const id = document.getElementById('deleteId').value;
-                            const csrfToken = document.getElementById('csrfToken').value;
-                            console.log('Submitting delete form - ID:', id, 'CSRF Token:', csrfToken);
-                        });
-                    } else {
-                        console.error('Delete form not found in DOM');
-                    }
-                });
-            </script>
-
             <!-- Edit Modal -->
             <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
@@ -248,16 +231,17 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form id="editForm" method="POST" enctype="multipart/form-data">
-                                <input type="hidden" name="_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
+                            <div class="alert-container" id="editAlert" style="display: none;"></div>
+                            <form id="editForm" action="/inventory/update" method="POST" enctype="multipart/form-data">
+                                <input type="hidden" name="_token" id="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
                                 <input type="hidden" name="id" id="edit_id">
                                 <div class="mb-3">
-                                    <label class="form-label">Product Name</label>
+                                    <label class="form-label">Product Name <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" name="product_name" id="product_name" required>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Category</label>
+                                        <label class="form-label">Category <span class="text-danger">*</span></label>
                                         <select class="form-control" name="category_id" id="category_id" required>
                                             <option value="">Select</option>
                                             <?php foreach ($categories ?? [] as $category): ?>
@@ -266,13 +250,13 @@
                                         </select>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Quantity</label>
+                                        <label class="form-label">Quantity <span class="text-danger">*</span></label>
                                         <input type="number" class="form-control" name="quantity" id="quantity" required min="0">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">Amount</label>
+                                        <label class="form-label">Amount <span class="text-danger">*</span></label>
                                         <input type="number" class="form-control" name="amount" id="amount" required step="0.01" min="0">
                                     </div>
                                     <div class="col-md-4 mb-3">
@@ -297,13 +281,12 @@
                                     <input type="file" class="form-control" id="imageInput" name="image" accept="image/*">
                                     <img id="imagePreview" src="" alt="Product Image" class="img-fluid mt-2" style="max-width: 100px; display: none;">
                                 </div>
-                                <button type="submit" class="btn btn-primary">Update</button>
+                                <button type="submit" class="btn btn-primary" id="updateButton">Update</button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-
 
             <div class="update-quantity" id="updateQuantitySection" style="display: none;">
                 <h3>Update Quantity</h3>
@@ -315,7 +298,30 @@
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Define base URL (adjust if app is in a subdirectory, e.g., '/myapp')
+        const BASE_URL = window.location.origin;
+
         document.addEventListener('DOMContentLoaded', function() {
+            const editModal = document.getElementById('editModal');
+            const editForm = document.getElementById('editForm');
+            const updateButton = document.getElementById('updateButton');
+            const editAlert = document.getElementById('editAlert');
+
+            // Show alert in modal
+            function showAlert(message, type) {
+                editAlert.innerHTML = `
+                    <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                        ${message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                `;
+                editAlert.style.display = 'block';
+                setTimeout(() => {
+                    editAlert.style.display = 'none';
+                    editAlert.innerHTML = '';
+                }, 5000);
+            }
+
             // Edit Modal Population
             editModal.addEventListener('show.bs.modal', function(event) {
                 const button = event.relatedTarget;
@@ -324,8 +330,10 @@
                 const categoryId = button.getAttribute('data-category_id');
                 const quantity = button.getAttribute('data-quantity');
                 const amount = button.getAttribute('data-amount');
+                const sellingPrice = button.getAttribute('data-selling_price');
+                const barcode = button.getAttribute('data-barcode');
+                const expirationDate = button.getAttribute('data-expiration_date');
                 const image = button.getAttribute('data-image');
-                const expirationDate = button.getAttribute('data-expiration_date') || '';
 
                 // Populate form fields
                 editModal.querySelector('#edit_id').value = id;
@@ -333,6 +341,8 @@
                 editModal.querySelector('#category_id').value = categoryId || '';
                 editModal.querySelector('#quantity').value = quantity;
                 editModal.querySelector('#amount').value = amount;
+                editModal.querySelector('#selling_price').value = sellingPrice;
+                editModal.querySelector('#barcode').value = barcode;
                 editModal.querySelector('#expiration_date').value = expirationDate;
                 const imagePreview = editModal.querySelector('#imagePreview');
                 if (image) {
@@ -353,11 +363,11 @@
                     const amount = parseFloat(amountInput.value) || 0;
                     totalPriceDisplay.textContent = `$${(quantity * amount).toFixed(2)}`;
                 }
-                updateTotalPrice(); // Initial calculation
+                updateTotalPrice();
                 quantityInput.addEventListener('input', updateTotalPrice);
                 amountInput.addEventListener('input', updateTotalPrice);
 
-                // Preview new image if uploaded
+                // Preview new image
                 const imageInput = editModal.querySelector('#imageInput');
                 imageInput.addEventListener('change', function() {
                     const file = this.files[0];
@@ -369,6 +379,90 @@
                         };
                         reader.readAsDataURL(file);
                     }
+                });
+            });
+
+            // Handle form submission via AJAX
+            editForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                updateButton.disabled = true;
+                updateButton.classList.add('btn-loading');
+
+                // Client-side validation
+                const productName = editForm.querySelector('#product_name').value.trim();
+                const categoryId = editForm.querySelector('#category_id').value;
+                const quantity = parseInt(editForm.querySelector('#quantity').value);
+                const amount = parseFloat(editForm.querySelector('#amount').value);
+
+                if (!productName) {
+                    showAlert('Product name is required.', 'danger');
+                    updateButton.disabled = false;
+                    updateButton.classList.remove('btn-loading');
+                    return;
+                }
+                if (!categoryId) {
+                    showAlert('Please select a category.', 'danger');
+                    updateButton.disabled = false;
+                    updateButton.classList.remove('btn-loading');
+                    return;
+                }
+                if (isNaN(quantity) || quantity < 0) {
+                    showAlert('Quantity must be a non-negative number.', 'danger');
+                    updateButton.disabled = false;
+                    updateButton.classList.remove('btn-loading');
+                    return;
+                }
+                if (isNaN(amount) || amount < 0) {
+                    showAlert('Amount must be a non-negative number.', 'danger');
+                    updateButton.disabled = false;
+                    updateButton.classList.remove('btn-loading');
+                    return;
+                }
+
+                const formData = new FormData(editForm);
+                fetch(`${BASE_URL}/inventory/update`, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    console.log('Response Status:', response.status);
+                    // Log raw response for debugging
+                    response.clone().text().then(raw => {
+                        console.log('Raw Response:', raw);
+                    });
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            let errorData;
+                            try {
+                                errorData = JSON.parse(text);
+                            } catch (e) {
+                                throw new Error(`HTTP error! Status: ${response.status}, Response: ${text}`);
+                            }
+                            throw new Error(errorData.error || `HTTP error! Status: ${response.status}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        showAlert(data.message || 'Inventory updated successfully.', 'success');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        showAlert(data.error || 'Failed to update item.', 'danger');
+                        updateButton.disabled = false;
+                        updateButton.classList.remove('btn-loading');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating item:', error.message);
+                    showAlert(error.message || 'An error occurred while updating. Please try again.', 'danger');
+                    updateButton.disabled = false;
+                    updateButton.classList.remove('btn-loading');
                 });
             });
 
@@ -415,7 +509,7 @@
                 updateSection.style.display = anyChecked ? 'block' : 'none';
             }
 
-            // Update Quantities (Placeholder - Implement as needed)
+            // Update Quantities
             function updateQuantities() {
                 const selectedItems = document.querySelectorAll('.rowCheckbox:checked');
                 const data = Array.from(selectedItems).map(checkbox => ({
@@ -427,6 +521,7 @@
                     // Implement AJAX call to /inventory/bulk-update if needed
                 }
             }
+
             // Attach event listeners
             document.querySelectorAll('.rowCheckbox').forEach(checkbox => {
                 checkbox.addEventListener('change', toggleUpdateQuantitySection);

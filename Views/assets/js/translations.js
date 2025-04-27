@@ -104,7 +104,7 @@ const translations = {
         'Earnings Overview': 'ទិដ្ឋភាពចំណូល',
         'Products (Stock Status)': 'ផលិតផល (ស្ថានភាពស្តុក)',
         'Low (0-9)': 'ទាប (០-៩)',
-        'Medium (10-49)': 'មធ្យម (១ៀ-៤៩)',
+        'Medium (10-49)': 'មធ្យម (១០-៤៩)',
         'High (50+)': 'ខ្ពស់ (៥០+)',
         'Total Items': 'ធាតុសរុប',
         'Processing Complete': 'ការដំណើរការបញ្ចប់',
@@ -162,42 +162,8 @@ function applyTranslations(lang) {
         categorySelect.querySelector('option[value=""]').textContent = translations[lang]['Select Category'];
     }
 
-    // Show notification
-    showTranslationNotification(lang);
-
     // Store selected language
     localStorage.setItem('selectedLanguage', lang);
-}
-
-function showTranslationNotification(lang) {
-    // Remove any existing notification
-    const existingNotification = document.getElementById('translationNotification');
-    if (existingNotification) {
-        existingNotification.remove();
-    }
-
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.id = 'translationNotification';
-    notification.className = 'alert alert-info alert-dismissible fade show';
-    notification.style.position = 'fixed';
-    notification.style.top = '20px';
-    notification.style.right = '20px';
-    notification.style.zIndex = '10000';
-    notification.innerHTML = `
-        ${translations[lang]['Language Changed']}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    `;
-
-    // Append to body
-    document.body.appendChild(notification);
-
-    // Auto-dismiss after 3 seconds
-    setTimeout(() => {
-        notification.classList.remove('show');
-        notification.classList.add('fade');
-        setTimeout(() => notification.remove(), 150); // Wait for fade transition
-    }, 3000);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -214,5 +180,3 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
-
-

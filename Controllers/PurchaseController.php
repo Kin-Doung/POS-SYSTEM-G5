@@ -89,9 +89,9 @@ class PurchaseController extends BaseController
             error_log("Checked inventory for product_name = {$product['product_name']}, category_id = {$product['category_id']}, exists = " . ($existingItem ? 'yes' : 'no'));
 
             if ($existingItem) {
-                $newQuantity = $existingItem['quantity'] + ($product['quantity'] ?? 0); // Increment quantity, default to 1 if not provided
+                $newQuantity = $existingItem['quantity'] + ($product['quantity'] ?? 1);
                 $barcode = $product['barcode'] !== '' ? $product['barcode'] : ($existingItem['barcode'] ?? null);
-                $image = $product['image'] ?? $existingItem['image']; // Use new image if provided, else keep existing
+                $image = $product['image'] ?? $existingItem['image'];
                 error_log("Updating inventory ID {$existingItem['id']}: quantity = {$newQuantity}, barcode = " . ($barcode ?: 'empty') . ", image = " . ($image ?: 'empty'));
                 $result = $this->inventoryModel->updateInventory($existingItem['id'], [
                     'quantity' => $newQuantity,
@@ -109,7 +109,7 @@ class PurchaseController extends BaseController
                     'product_name' => $product['product_name'],
                     'category_id' => $product['category_id'],
                     'category_name' => $product['category_name'],
-                    'quantity' => $product['quantity'] ??0, // Default to 1 if not provided
+                    'quantity' => $product['quantity'] ?? 1,
                     'image' => $product['image'] ?? null,
                     'barcode' => $barcode
                 ]);
@@ -151,7 +151,8 @@ class PurchaseController extends BaseController
             }
 
             $barcode = isset($_POST['barcode'][$key]) ? htmlspecialchars(trim($_POST['barcode'][$key])) : '';
-            error_log("Received barcode for product {$productName}: " . ($barcode ?: 'empty'));
+            $quantity = isset($_POST['quantity'][$key]) ? max(1, intval($_POST['quantity'][$key])) : 1;
+            error_log("Received barcode for product {$productName}: " . ($barcode ?: 'empty') . ", quantity: $quantity");
 
             $image = $this->handleImageUpload($key);
 
@@ -161,7 +162,7 @@ class PurchaseController extends BaseController
                 'category_name' => $categoryName,
                 'image' => $image,
                 'barcode' => $barcode,
-                'quantity' => isset($_POST['quantity'][$key]) ? intval($_POST['quantity'][$key]) : 0 // Include quantity
+                'quantity' => $quantity
             ];
         }
         error_log("Processed " . count($products) . " products successfully.");
@@ -226,7 +227,8 @@ class PurchaseController extends BaseController
         $data = [
             'product_name' => htmlspecialchars(trim($_POST['product_name'])),
             'category_id' => intval($_POST['category_id']),
-            'barcode' => htmlspecialchars(trim($_POST['barcode'] ?? ''))
+            'barcode' => htmlspecialchars(trim($_POST['barcode'] ?? '')),
+            'quantity' => max(1, intval($_POST['quantity'] ?? 1))
         ];
 
         if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
@@ -280,6 +282,74 @@ class PurchaseController extends BaseController
         } catch (Exception $e) {
             $this->model->rollBackTransaction();
             echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
+    public function lookupBarcode()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
+            return;
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true);
+        $barcode = $input['barcode'] ?? '';
+
+        if (empty($barcode)) {
+            echo json_encode(['success' => false, 'message' => 'Barcode is required.']);
+            return;
+        }
+
+        try {
+            $product = $this->inventoryModel->getInventoryItemByBarcode($barcode);
+            if ($product) {
+                echo json_encode(['success' => true, 'product' => [
+                    'product_name' => $product['product_name'],
+                    'category_id' => $product['category_id'],
+                    'category_name' => $product['category_name']
+                ]]);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Product not found.']);
+            }
+        } catch (Exception $e) {
+            error_log("Barcode lookup error: " . $e->getMessage());
+            echo json_encode(['success' => false, 'message' => 'Error fetching product.']);
+        }
+    }
+    public function updateInline()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
+            return;
+        }
+
+        $id = $_POST['id'] ?? null;
+        $field = $_POST['field'] ?? null;
+        $value = $_POST['value'] ?? null;
+
+        if (!$id || !$field || $value === null) {
+            echo json_encode(['success' => false, 'message' => 'Missing required parameters.']);
+            return;
+        }
+
+        if (!in_array($field, ['product_name', 'quantity'])) {
+            echo json_encode(['success' => false, 'message' => 'Invalid field.']);
+            return;
+        }
+
+        try {
+            $purchase = $this->model->getPurchase($id);
+            if (!$purchase) {
+                echo json_encode(['success' => false, 'message' => 'Purchase not found.']);
+                return;
+            }
+
+            $data = [$field => $field === 'quantity' ? max(1, intval($value)) : htmlspecialchars(trim($value))];
+            $this->model->updatePurchase($id, array_merge($purchase, $data));
+            echo json_encode(['success' => true]);
+        } catch (Exception $e) {
+            error_log("Inline update error: " . $e->getMessage());
+            echo json_encode(['success' => false, 'message' => 'Error updating purchase.']);
         }
     }
 }

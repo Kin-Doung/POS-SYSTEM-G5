@@ -1,0 +1,59 @@
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.modal-content {
+  background-color: white;
+  width: 80%;
+  margin: 100px auto;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+.modal-header {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+.modal-body {
+  padding: 20px;
+  background-color: #f8f9fa;
+}
+.modal-body h3 {
+  color: #4CAF50;
+  margin-bottom: 15px;
+}
+.modal-footer {
+  padding: 10px;
+  text-align: right;
+}
+input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+button{
+  border: none;
+}
+#myModal:target {
+  display: block;
+}
+
+th{
+  background: lightblue !important;
+  color: #000 !important;
+  border-bottom: none;
+}
+.btn-new-product{
+  background: blue !important;
+}
+.btn-new-product:hover{
+  box-shadow: none !important;
+  background: darkblue !important;
+}
+

@@ -42,31 +42,6 @@ require_once './views/layouts/side.php';
         background: #fff;
     }
 
-    .cart-icon {
-        position: relative;
-        cursor: pointer;
-        margin-right: 20px;
-    }
-
-    .cart-count {
-        position: absolute;
-        top: -5px;
-        right: -5px;
-        background-color: #dc3545;
-        color: white;
-        border-radius: 50%;
-        width: 16px;
-        height: 16px;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        font-size: 10px;
-    }
-
-    .cart-count.visible {
-        display: flex;
-    }
-
     .container-fluid {
         width: 100%;
         padding: 0 5px;
@@ -92,17 +67,12 @@ require_once './views/layouts/side.php';
         padding: 8px;
         width: 100%;
         max-width: 180px;
-        background-color: #6c757d;
-        color: #fff;
+        color: #000;
         border: none;
         border-radius: 5px;
         cursor: pointer;
         transition: background-color 0.2s ease;
         font-size: 0.9rem;
-    }
-
-    #moreOptionsBtn:hover {
-        background-color: #5a6268;
     }
 
     #moreOptionsBtn::after {
@@ -202,7 +172,7 @@ require_once './views/layouts/side.php';
         border: none;
         padding: 5px 10px;
         border-radius: 5px;
-        width: 100%;
+        width: 50%;
         cursor: pointer;
         transition: background-color 0.3s ease;
         font-size: 0.9rem;
@@ -562,6 +532,48 @@ require_once './views/layouts/side.php';
         background-color: #f0f8ff;
     }
 
+    .container-categories {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        padding: 20px;
+        display: none;
+    }
+
+    .category {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 110px;
+        padding: 10px;
+        border-radius: 8px;
+        background-color: #fff;
+        transition: background-color 0.3s;
+        transition: all 0.3s ease-in-out;
+        cursor: pointer;
+    }
+
+    .category:hover {
+        box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+        outline: 2px solid #ccc;
+    }
+
+    .category span {
+        font-size: 24px;
+    }
+
+    .category p {
+        margin: 5px 0 0;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    .category img {
+        display: block;
+        margin: 0 auto;
+    }
+
     @media (max-width: 767px) {
         .product-col {
             width: 50%;
@@ -615,8 +627,15 @@ require_once './views/layouts/side.php';
         .cart-visible .product-col {
             width: 100%;
         }
+        
     }
 
+    @media (min-width: 576px){
+        .buy{
+            width: 53%;
+        }
+       
+    }
     h3 {
         font-family: "Poppins", sans-serif;
         font-weight: bold;
@@ -710,6 +729,41 @@ require_once './views/layouts/side.php';
                     </div>
                 </div>
 
+                <div class="container-categories">
+                    <div class="category">
+                        <span><img src="../../views/assets/icon/Kitchen.png" alt="Kitchen Tools" width="33" height="33"></span>
+                        <p>Kitchen Tools</p>
+                    </div>
+                    <div class="category">
+                        <span><img src="../../views/assets/icon/drinks.jpg" alt="Drinks & Water" width="33" height="33"></span>
+                        <p>Drinks</p>
+                    </div>
+                    <div class="category">
+                        <span><img src="../../views/assets/icon/Pot.png" alt="Cookware" width="33" height="33"></span>
+                        <p>Cookware</p>
+                    </div>
+                    <div class="category">
+                        <span><img src="../../views/assets/icon/Food.png" alt="Food Storage" width="33" height="33"></span>
+                        <p>Food Storage</p>
+                    </div>
+                    <div class="category">
+                        <span><img src="../../views/assets/icon/tableware.png" alt="Tableware" width="33" height="33"></span>
+                        <p>Tableware</p>
+                    </div>
+                    <div class="category">
+                        <span><img src="../../views/assets/icon/cutlery.png" alt="Cutlery" width="33" height="33"></span>
+                        <p>Cutlery</p>
+                    </div>
+                    <div class="category">
+                        <span><img src="../../views/assets/icon/cleaning.png" alt="Cleaning Supplies" width="33" height="33"></span>
+                        <p>Cleaning</p>
+                    </div>
+                    <div class="category">
+                        <span><img src="../../views/assets/icon/Supplier.png" alt="Small Kitchen Appliances" width="33" height="33"></span>
+                        <p>Small Kitchen</p>
+                    </div>
+                </div>
+
 
                 <div class="row" id="productGrid">
                     <?php foreach ($inventory as $item): ?>
@@ -727,15 +781,24 @@ require_once './views/layouts/side.php';
                                     <?php endif; ?>
                                 </div>
                                 <div class="card-body">
-                                    <h6 class="card-title"><?= htmlspecialchars($item['inventory_product_name']) ?></h6>
-                                    <p class="price" data-id="<?= htmlspecialchars($item['inventory_id']) ?>">
-                                        $<?= htmlspecialchars($item['selling_price'] ?? $item['amount']) ?>
-                                    </p>
-                                    <p class="quantity" data-id="<?= htmlspecialchars($item['inventory_id']) ?>" style="display: none;">
-                                        Qty: <?= htmlspecialchars($item['quantity']) ?>
-                                    </p>
-                                    <input type="hidden" name="inventory_id" value="<?= htmlspecialchars($item['inventory_id']) ?>" />
-                                    <button class="buy" data-inventory-id="<?= htmlspecialchars($item['inventory_id']) ?>">Add to Cart</button>
+                                    <div class="d-flex justify-content-between m-2">
+                                        <h6 class="card-title text-left"><?= htmlspecialchars($item['inventory_product_name']) ?></h6>
+                                        <p style="font-size: 13px;">
+                                            <i class="fa-solid fa-star"></i>
+                                            <i class="fa-solid fa-star"></i>
+                                            <i class="fa-solid fa-star-half-stroke"></i>
+                                        </p>
+                                    </div>
+                                    <div class="d-flex justify-content-between m-2 mt-n2">
+                                        <p class="price fw-bold" data-id="<?= htmlspecialchars($item['inventory_id']) ?>">
+                                            $<?= htmlspecialchars($item['selling_price'] ?? $item['amount']) ?>
+                                        </p>
+                                        <p class="quantity" data-id="<?= htmlspecialchars($item['inventory_id']) ?>" style="display: none;">
+                                            Qty: <?= htmlspecialchars($item['quantity']) ?>
+                                        </p>
+                                        <input type="hidden" name="inventory_id" value="<?= htmlspecialchars($item['inventory_id']) ?>" />
+                                        <button class="buy" data-inventory-id="<?= htmlspecialchars($item['inventory_id']) ?>">Add to Cart</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -799,7 +862,7 @@ require_once './views/layouts/side.php';
                 </div>
                 <div class="cart-footer">
                     <div class="more-options" id="moreOptionsContainer">
-                        <button class="cart-btn cart-btn-secondary" id="moreOptionsBtn">More Options</button>
+                        <button class="cart-btn cart-btn-secondary bg-transparent" id="moreOptionsBtn">More Options</button>
                         <div class="options-dropdown" id="optionsDropdown">
                             <button class="cart-btn cart-btn-info" id="savePdf">Save PDF</button>
                             <button class="cart-btn cart-btn-primary" id="completeCartBtn">Payout</button>
@@ -932,6 +995,8 @@ require_once './views/layouts/side.php';
                     image: item.image
                 });
                 console.log('Added new item:', item.inventory_product_name);
+                cartCount.textContent = cartItems.length; // Update cart count immediately
+                cartCount.classList.toggle('visible', cartItems.length > 0);
             }
             localStorage.setItem('cartItems', JSON.stringify(cartItems));
             updateCartUI();
@@ -963,6 +1028,7 @@ require_once './views/layouts/side.php';
             // Update cart count (unique products)
             cartCount.textContent = cartItems.length;
             cartCount.classList.toggle('visible', cartItems.length > 0);
+            console.log('Cart count updated:', cartItems.length, 'unique products');
             savePdfBtn.disabled = cartItems.length === 0;
             submitCartBtn.disabled = cartItems.length === 0;
             completeCartBtn.disabled = cartItems.length === 0;

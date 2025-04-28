@@ -45,6 +45,7 @@ require_once './views/layouts/side.php';
     .cart-icon {
         position: relative;
         cursor: pointer;
+        margin-right: 20px;
     }
 
     .cart-count {
@@ -120,7 +121,8 @@ require_once './views/layouts/side.php';
         padding: 0 5px;
         margin-bottom: 10px;
         opacity: 1;
-        transition: opacity 0.3s ease;
+        transition: width 0.3s ease, opacity 0.3s ease;
+        position: relative;
     }
 
     .product-col.hidden {
@@ -343,6 +345,8 @@ require_once './views/layouts/side.php';
         text-align: center;
         font-size: 0.9rem;
         background-color: #fff;
+        outline: none;
+        border: none;
     }
 
     .cart-footer {
@@ -473,19 +477,16 @@ require_once './views/layouts/side.php';
         margin-top: 15px;
         text-align: center;
         display: none;
-        /* Hidden by default, shown by Payout button */
     }
 
     .qr-section {
         display: none;
-        /* Hide all QR sections by default */
         text-align: center;
         padding: 10px;
     }
 
     .qr-section.active {
         display: block !important;
-        /* Ensure active section is visible */
     }
 
     .qr-section img {
@@ -494,8 +495,6 @@ require_once './views/layouts/side.php';
         height: 80px;
         margin-bottom: 15px;
     }
-
-
 
     .qr-buttons {
         margin-top: 10px;
@@ -578,6 +577,10 @@ require_once './views/layouts/side.php';
             margin-right: 0;
         }
 
+        .cart-visible .product-col {
+            width: 50%;
+        }
+
         .cart-btn {
             max-width: 100%;
         }
@@ -606,6 +609,10 @@ require_once './views/layouts/side.php';
 
     @media (max-width: 576px) {
         .product-col {
+            width: 100%;
+        }
+
+        .cart-visible .product-col {
             width: 100%;
         }
     }
@@ -691,15 +698,19 @@ require_once './views/layouts/side.php';
     <div class="container-fluid">
         <div class="row" id="productRow">
             <div class="product-section">
-                <h3>Order Products</h3>
-                <!-- Barcode Input -->
-                <div class="barcode-scanner" style="margin-bottom: 15px;">
-                    <input type="text" id="barcodeInput" placeholder="Scan or enter barcode" style="padding: 8px; width: 200px; border: 1px solid #ddd; border-radius: 4px;" autofocus />
-                    <button id="startWebcamScan">Scan with Webcam</button>
-                    <div id="webcamScanner" style="display: none;">
-                        <video id="scannerVideo"></video>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3>Order Products</h3>
+                    <!-- Barcode Input -->
+                    <div class="barcode-scanner" style="margin-bottom: 15px;">
+                        <input type="text" id="barcodeInput" placeholder="Scan or enter barcode" style="padding: 8px; width: 200px; border: 1px solid #ddd; border-radius: 4px;" autofocus />
+                        <button id="startWebcamScan">Scan with Webcam</button>
+                        <div id="webcamScanner" style="display: none;">
+                            <video id="scannerVideo"></video>
+                        </div>
                     </div>
                 </div>
+
+
                 <div class="row" id="productGrid">
                     <?php foreach ($inventory as $item): ?>
                         <div class="product-col" data-barcode="<?= htmlspecialchars($item['barcode'] ?? '') ?>" data-inventory-id="<?= htmlspecialchars($item['inventory_id']) ?>">
@@ -750,25 +761,27 @@ require_once './views/layouts/side.php';
         </div>
         <div class="cart-section" id="cartSection">
             <div class="cart-card">
-                <div class="cart-header">
-                    <h4>POS Payout</h4>
-                    <button class="close-cart" id="closeCart">✖</button>
+                <div class="cart-header bg-transparent">
+                    <h4 class="text-dark mt-n2">POS Payout</h4>
+                    <button class="close-cart text-dark" id="closeCart">✖</button>
                 </div>
-                <div class="cart-body">
+                <div class="cart-body mt-n4">
                     <table class="cart-table" id="cartTable">
                         <thead>
                             <tr>
-                                <th>Item</th>
+                                <th style="border-bottom-left-radius: 10px;">Item</th>
                                 <th>Qty</th>
-                                <th>Price ($)</th>
-                                <th></th>
+                                <th>Price($)</th>
+                                <th style="border-bottom-right-radius: 10px;"></th>
                             </tr>
                         </thead>
                         <tbody id="cartBody"></tbody>
                     </table>
-                    <div style="text-align: right; margin-top: 15px;">
-                        <h5 style="font-weight: bold;">Total: $<span id="grandTotal">0.00</span></h5>
+                    <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                        <h6 style="font-weight: bold; flex-grow: 1;">Total:</h5>
+                            <h6 style="font-weight: bold;">$<span id="grandTotal">20.00</span></h5>
                     </div>
+
                     <div id="qr-container" style="display: none;">
                         <div id="aclida-qr" class="qr-section active">
                             <img id="aclida-qr-img" src="../../views/assets/images/QR-AC.png" alt="ACLIDA QR Code" style="width: 80px; height: 80px; margin-bottom: 15px; cursor: pointer;" />
@@ -805,564 +818,608 @@ require_once './views/layouts/side.php';
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-    // Main cart functionality variables
-    const barcodeInput = document.getElementById('barcodeInput');
-    const cartSection = document.getElementById('cartSection');
-    const cartBody = document.getElementById('cartBody');
-    const grandTotal = document.getElementById('grandTotal');
-    const submitCartBtn = document.getElementById('submitCart');
-    const moreOptionsBtn = document.getElementById('moreOptionsBtn');
-    const optionsDropdown = document.getElementById('optionsDropdown');
-    const savePdfBtn = document.getElementById('savePdf');
-    const completeCartBtn = document.getElementById('completeCartBtn');
-    const clearCartBtn = document.getElementById('clearCart');
-    const qrContainer = document.getElementById('qr-container');
-    const qrConfirmBtn = document.getElementById('qrConfirmBtn');
-    const startWebcamScanBtn = document.getElementById('startWebcamScan');
+        // Main cart functionality variables
+        const barcodeInput = document.getElementById('barcodeInput');
+        const cartSection = document.getElementById('cartSection');
+        const cartBody = document.getElementById('cartBody');
+        const grandTotal = document.getElementById('grandTotal');
+        const submitCartBtn = document.getElementById('submitCart');
+        const moreOptionsBtn = document.getElementById('moreOptionsBtn');
+        const optionsDropdown = document.getElementById('optionsDropdown');
+        const savePdfBtn = document.getElementById('savePdf');
+        const completeCartBtn = document.getElementById('completeCartBtn');
+        const clearCartBtn = document.getElementById('clearCart');
+        const qrContainer = document.getElementById('qr-container');
+        const qrConfirmBtn = document.getElementById('qrConfirmBtn');
+        const startWebcamScanBtn = document.getElementById('startWebcamScan');
+        const cartToggle = document.createElement('span');
+        cartToggle.id = 'cartToggle';
+        cartToggle.className = 'cart-icon';
+        cartToggle.innerHTML = '<i class="fa-solid fa-cart-shopping"></i><span class="cart-count" id="cartCount">0</span>';
+        document.querySelector('.navbar').appendChild(cartToggle);
+        const cartCount = document.getElementById('cartCount');
 
-    // QR code switching variables
-    const aclidaQrImg = document.getElementById('aclida-qr-img');
-    const abaQrImg = document.getElementById('aba-qr-img');
-    const aclidaSection = document.getElementById('aclida-qr');
-    const abaSection = document.getElementById('aba-qr');
+        // QR code switching variables
+        const aclidaQrImg = document.getElementById('aclida-qr-img');
+        const abaQrImg = document.getElementById('aba-qr-img');
+        const aclidaSection = document.getElementById('aclida-qr');
+        const abaSection = document.getElementById('aba-qr');
 
-    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-    let toastTimeout = null;
-    let isProcessingScan = false;
-    let lastScanTime = 0;
+        let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        let toastTimeout = null;
+        let isProcessingScan = false;
+        let lastScanTime = 0;
 
-    // Debounce function to limit rapid calls
-    function debounce(func, wait) {
-        let timeout;
-        return function(...args) {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(this, args), wait);
-        };
-    }
-
-    // Initialize cart UI from localStorage
-    updateCartUI();
-
-    // Initialize QR code section (ACLIDA by default)
-    if (aclidaSection && abaSection) {
-        aclidaSection.classList.add('active');
-        abaSection.classList.remove('active');
-        console.log('Initialized QR: ACLIDA active');
-    } else {
-        console.error('QR sections not found: aclidaSection or abaSection is null');
-    }
-
-    // Show toast notification
-    function showToast(message, duration = 2000) {
-        const toast = document.getElementById('toast');
-        if (!toast) {
-            console.error('Toast element not found');
-            return;
+        // Debounce function to limit rapid calls
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
         }
-        console.log('Showing toast:', message);
-        if (toastTimeout) clearTimeout(toastTimeout);
-        toast.textContent = message;
-        toast.style.display = 'block';
-        toastTimeout = setTimeout(() => {
-            toast.style.display = 'none';
-            toastTimeout = null;
-        }, duration);
-    }
 
-    // Play scan sound
-    function playScanSound() {
-        const audio = new Audio('/views/assets/sounds/scan-beep.mp3');
-        audio.play().catch(err => console.error('Audio playback failed:', err));
-    }
-
-    // Clear UI state and localStorage
-    function clearUIState() {
-        document.querySelectorAll('.product-col').forEach(col => col.classList.remove('highlight'));
-        if (barcodeInput) barcodeInput.value = '';
-        const urlParams = new URLSearchParams(window.location.search);
-        const page = urlParams.get('page') || '1';
-        window.history.replaceState({}, document.title, `?page=${page}`);
-        toggleCart(false);
-        cartItems = [];
-        localStorage.removeItem('cartItems');
-        qrContainer.style.display = 'none';
+        // Initialize cart UI from localStorage
         updateCartUI();
-    }
 
-    // Reset barcode input
-    function resetBarcodeInput() {
-        if (barcodeInput) {
-            barcodeInput.value = '';
-            console.log('Barcode input reset');
-        }
-    }
-
-    // Add to cart (debounced)
-    const debouncedAddToCart = debounce(function(item) {
-        console.log('Adding to cart:', item.inventory_product_name, 'ID:', item.inventory_id);
-        const existingItem = cartItems.find(cartItem => cartItem.inventory_id === item.inventory_id);
-        if (existingItem) {
-            existingItem.quantity += 1;
-            console.log('Incremented quantity for', item.inventory_product_name, 'to', existingItem.quantity);
+        // Initialize QR code section (ACLIDA by default)
+        if (aclidaSection && abaSection) {
+            aclidaSection.classList.add('active');
+            abaSection.classList.remove('active');
+            console.log('Initialized QR: ACLIDA active');
         } else {
-            cartItems.push({
-                inventory_id: item.inventory_id,
-                name: item.inventory_product_name,
-                price: parseFloat(item.selling_price || item.amount),
-                quantity: 1,
-                image: item.image
-            });
-            console.log('Added new item:', item.inventory_product_name);
+            console.error('QR sections not found: aclidaSection or abaSection is null');
         }
-        localStorage.setItem('cartItems', JSON.stringify(cartItems));
-        updateCartUI();
-        toggleCart(true);
-        playScanSound();
-        showToast(`${item.inventory_product_name} added to cart!`);
-    }, 300);
 
-    // Update cart UI
-    function updateCartUI() {
-        if (!cartBody || !grandTotal) {
-            console.error('Cart elements missing: cartBody or grandTotal');
-            return;
+        // Show toast notification
+        function showToast(message, duration = 2000) {
+            const toast = document.getElementById('toast');
+            if (!toast) {
+                console.error('Toast element not found');
+                return;
+            }
+            console.log('Showing toast:', message);
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toast.textContent = message;
+            toast.style.display = 'block';
+            toastTimeout = setTimeout(() => {
+                toast.style.display = 'none';
+                toastTimeout = null;
+            }, duration);
         }
-        cartBody.innerHTML = '';
-        let total = 0;
-        cartItems.forEach((item, index) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
+
+        // Play scan sound
+        function playScanSound() {
+            const audio = new Audio('/views/assets/sounds/scan-beep.mp3');
+            audio.play().catch(err => console.error('Audio playback failed:', err));
+        }
+
+        // Clear UI state and localStorage
+        function clearUIState() {
+            document.querySelectorAll('.product-col').forEach(col => col.classList.remove('highlight'));
+            if (barcodeInput) barcodeInput.value = '';
+            const urlParams = new URLSearchParams(window.location.search);
+            const page = urlParams.get('page') || '1';
+            window.history.replaceState({}, document.title, `?page=${page}`);
+            toggleCart(false);
+            cartItems = [];
+            localStorage.removeItem('cartItems');
+            qrContainer.style.display = 'none';
+            updateCartUI();
+        }
+
+        // Reset barcode input
+        function resetBarcodeInput() {
+            if (barcodeInput) {
+                barcodeInput.value = '';
+                console.log('Barcode input reset');
+            }
+        }
+
+        // Add to cart (debounced)
+        const debouncedAddToCart = debounce(function(item, isScanned = false) {
+            console.log('Adding to cart:', item.inventory_product_name, 'ID:', item.inventory_id);
+            const existingItem = cartItems.find(cartItem => cartItem.inventory_id === item.inventory_id);
+            if (existingItem) {
+                existingItem.quantity += 1;
+                console.log('Incremented quantity for', item.inventory_product_name, 'to', existingItem.quantity);
+            } else {
+                cartItems.push({
+                    inventory_id: item.inventory_id,
+                    name: item.inventory_product_name,
+                    price: parseFloat(item.selling_price || item.amount),
+                    quantity: 1,
+                    image: item.image
+                });
+                console.log('Added new item:', item.inventory_product_name);
+            }
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            updateCartUI();
+            toggleCart(true);
+            playScanSound();
+            showToast(`${item.inventory_product_name} added to cart!`);
+        }, 300);
+
+        // Update cart UI
+        function updateCartUI() {
+            if (!cartBody || !grandTotal || !cartCount) {
+                console.error('Cart elements missing: cartBody, grandTotal, or cartCount');
+                return;
+            }
+            cartBody.innerHTML = '';
+            let total = 0;
+            cartItems.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
                 <td>${item.name}</td>
                 <td><input type="number" class="cart-qty" value="${item.quantity}" min="1" data-index="${index}"></td>
                 <td><input type="number" class="cart-price" value="${item.price.toFixed(2)}" step="0.01" data-index="${index}"></td>
                 <td><span class="remove-item" data-index="${index}"><i class="fa-solid fa-trash"></i></span></td>
             `;
-            cartBody.appendChild(row);
-            total += item.quantity * item.price;
-        });
-        grandTotal.textContent = total.toFixed(2);
-        savePdfBtn.disabled = cartItems.length === 0;
-        submitCartBtn.disabled = cartItems.length === 0;
-        completeCartBtn.disabled = cartItems.length === 0;
-        clearCartBtn.disabled = cartItems.length === 0;
-        if (qrConfirmBtn) qrConfirmBtn.disabled = cartItems.length === 0;
+                cartBody.appendChild(row);
+                total += item.quantity * item.price;
+            });
+            grandTotal.textContent = total.toFixed(2);
+            // Update cart count (unique products)
+            cartCount.textContent = cartItems.length;
+            cartCount.classList.toggle('visible', cartItems.length > 0);
+            savePdfBtn.disabled = cartItems.length === 0;
+            submitCartBtn.disabled = cartItems.length === 0;
+            completeCartBtn.disabled = cartItems.length === 0;
+            clearCartBtn.disabled = cartItems.length === 0;
+            if (qrConfirmBtn) qrConfirmBtn.disabled = cartItems.length === 0;
 
-        document.querySelectorAll('.cart-qty').forEach(input => {
-            input.addEventListener('change', function() {
-                const index = this.dataset.index;
-                const newQty = parseInt(this.value);
-                if (newQty > 0) {
-                    cartItems[index].quantity = newQty;
+            document.querySelectorAll('.cart-qty').forEach(input => {
+                input.addEventListener('change', function() {
+                    const index = this.dataset.index;
+                    const newQty = parseInt(this.value);
+                    if (newQty > 0) {
+                        cartItems[index].quantity = newQty;
+                        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                        updateCartUI();
+                    }
+                });
+            });
+
+            document.querySelectorAll('.cart-price').forEach(input => {
+                input.addEventListener('change', function() {
+                    const index = this.dataset.index;
+                    const newPrice = parseFloat(this.value);
+                    if (newPrice >= 0) {
+                        cartItems[index].price = newPrice;
+                        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                        updateCartUI();
+                    }
+                });
+            });
+
+            document.querySelectorAll('.remove-item').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = this.dataset.index;
+                    cartItems.splice(index, 1);
                     localStorage.setItem('cartItems', JSON.stringify(cartItems));
                     updateCartUI();
-                }
+                });
             });
-        });
-
-        document.querySelectorAll('.cart-price').forEach(input => {
-            input.addEventListener('change', function() {
-                const index = this.dataset.index;
-                const newPrice = parseFloat(this.value);
-                if (newPrice >= 0) {
-                    cartItems[index].price = newPrice;
-                    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-                    updateCartUI();
-                }
-            });
-        });
-
-        document.querySelectorAll('.remove-item').forEach(button => {
-            button.addEventListener('click', function() {
-                const index = this.dataset.index;
-                cartItems.splice(index, 1);
-                localStorage.setItem('cartItems', JSON.stringify(cartItems));
-                updateCartUI();
-            });
-        });
-    }
-
-    // Toggle cart visibility
-    function toggleCart(show) {
-        if (!cartSection || !document.querySelector('.main-content')) return;
-        if (show) {
-            cartSection.classList.add('visible');
-            document.querySelector('.main-content').classList.add('cart-visible');
-        } else {
-            cartSection.classList.remove('visible');
-            document.querySelector('.main-content').classList.remove('cart-visible');
-        }
-    }
-
-    // Handle barcode scan (debounced)
-    const debouncedHandleBarcodeScan = debounce(function(barcode) {
-        console.log('Debounced scan triggered for:', barcode);
-        if (isProcessingScan) {
-            console.log('Scan ignored: Processing in progress');
-            return;
-        }
-        const now = Date.now();
-        if (now - lastScanTime < 1000) {
-            console.log('Scan ignored: Too soon after previous scan');
-            return;
-        }
-        isProcessingScan = true;
-        lastScanTime = now;
-        if (barcodeInput) barcodeInput.disabled = true;
-
-        barcode = barcode.trim().replace(/[\r\n\t]/g, '');
-        console.log('Cleaned barcode:', barcode);
-
-        document.querySelectorAll('.product-col').forEach(col => col.classList.remove('highlight'));
-
-        const productCol = document.querySelector(`.product-col[data-barcode="${barcode}"]`);
-        console.log('Product in DOM:', productCol);
-        if (productCol) {
-            const item = {
-                inventory_id: productCol.dataset.inventoryId,
-                inventory_product_name: productCol.querySelector('.card-title').textContent,
-                selling_price: parseFloat(productCol.querySelector('.price').textContent.replace('$', '')),
-                image: productCol.querySelector('img').src,
-                quantity: 1
-            };
-            debouncedAddToCart(item);
-            productCol.classList.add('highlight');
-            resetBarcodeInput();
-            isProcessingScan = false;
-            if (barcodeInput) barcodeInput.disabled = false;
-            return;
         }
 
-        console.log('Fetching product from backend for barcode:', barcode);
-        fetch('/products/getProductPageByBarcode', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ barcode: barcode })
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Backend response:', data);
-            if (data.success && data.item) {
-                const item = {
-                    inventory_id: data.item.inventory_id,
-                    inventory_product_name: data.item.inventory_product_name,
-                    selling_price: parseFloat(data.item.selling_price || data.item.amount),
-                    image: data.item.image,
-                    quantity: 1
-                };
-                debouncedAddToCart(item);
-                resetBarcodeInput();
-                const productCol = document.querySelector(`.product-col[data-barcode="${barcode}"]`);
-                if (productCol) productCol.classList.add('highlight');
+        // Toggle cart visibility
+        function toggleCart(show) {
+            if (!cartSection || !document.querySelector('.main-content')) return;
+            if (show) {
+                cartSection.classList.add('visible');
+                document.querySelector('.main-content').classList.add('cart-visible');
             } else {
-                resetBarcodeInput();
-                showToast(data.message || 'Barcode not found.', 2000);
+                cartSection.classList.remove('visible');
+                document.querySelector('.main-content').classList.remove('cart-visible');
             }
-        })
-        .catch(error => {
-            console.error('Fetch error:', error);
-            resetBarcodeInput();
-            showToast('Error scanning barcode.', 2000);
-        })
-        .finally(() => {
-            console.log('Resetting scan state');
-            isProcessingScan = false;
-            if (barcodeInput) barcodeInput.disabled = false;
-        });
-    }, 1000);
-
-    // Barcode input handling
-    if (barcodeInput) {
-        barcodeInput.addEventListener('keypress', function(e) {
-            console.log('Barcode input keypress:', e.key, 'Value:', e.target.value);
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                const barcode = e.target.value.trim();
-                if (barcode && !isProcessingScan) {
-                    console.log('Processing barcode via Enter key:', barcode);
-                    debouncedHandleBarcodeScan(barcode);
-                } else {
-                    console.log('Scan ignored: Empty barcode or processing in progress');
-                }
-            }
-        });
-    } else {
-        console.error('Barcode input element not found');
-    }
-
-    // Handle URL barcode parameter
-    const urlParams = new URLSearchParams(window.location.search);
-    const scannedBarcode = urlParams.get('barcode');
-    if (scannedBarcode) {
-        console.log('Processing URL barcode:', scannedBarcode);
-        debouncedHandleBarcodeScan(scannedBarcode);
-        window.history.replaceState({}, document.title, `?page=${urlParams.get('page') || '1'}`);
-    }
-
-    // Add to cart button
-    document.querySelectorAll('.buy').forEach(button => {
-        button.addEventListener('click', function() {
-            const inventoryId = this.dataset.inventoryId;
-            const productCol = this.closest('.product-col');
-            const item = {
-                inventory_id: inventoryId,
-                inventory_product_name: productCol.querySelector('.card-title').textContent,
-                selling_price: parseFloat(productCol.querySelector('.price').textContent.replace('$', '')),
-                image: productCol.querySelector('img').src,
-                quantity: 1
-            };
-            console.log('Button clicked for', item.inventory_product_name);
-            debouncedAddToCart(item);
-        });
-    });
-
-    // Submit cart
-    submitCartBtn.addEventListener('click', function() {
-        if (cartItems.length === 0) return;
-        fetch('/products/submitCart', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                cartItems: cartItems.map(item => ({
-                    inventoryId: item.inventory_id,
-                    quantity: item.quantity,
-                    price: item.price
-                }))
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showToast('Order completed successfully!');
-                clearUIState();
-            } else {
-                showToast(data.message || 'Error submitting order.', 2000);
-            }
-        })
-        .catch(error => {
-            console.error('Submit cart error:', error);
-            showToast('Error submitting order.', 2000);
-        });
-    });
-
-    // Toggle dropdown
-    moreOptionsBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const isVisible = optionsDropdown.classList.contains('visible');
-        optionsDropdown.classList.toggle('visible', !isVisible);
-        moreOptionsBtn.classList.toggle('active', !isVisible);
-        console.log('Toggling dropdown, current state:', !isVisible);
-    });
-
-    // Close dropdown on outside click
-    document.addEventListener('click', function(e) {
-        if (!moreOptionsBtn.contains(e.target) && !optionsDropdown.contains(e.target)) {
-            optionsDropdown.classList.remove('visible');
-            moreOptionsBtn.classList.remove('active');
         }
-    });
 
-    // Prevent dropdown close on inside click
-    optionsDropdown.addEventListener('click', function(e) {
-        e.stopPropagation();
-    });
-
-    // Save PDF
-    function saveCartAsPDF() {
-        if (cartItems.length === 0) return;
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({
-            orientation: 'portrait',
-            unit: 'mm',
-            format: 'a4'
-        });
-
-        doc.setFontSize(16);
-        doc.setFont('helvetica', 'bold');
-        doc.text('POS Receipt', 105, 20, { align: 'center' });
-        doc.setFontSize(12);
-        doc.setFont('helvetica', 'normal');
-        doc.text('Store Name', 105, 30, { align: 'center' });
-        doc.text('123 Main Street, City, Country', 105, 35, { align: 'center' });
-        doc.text(new Date().toLocaleString(), 105, 40, { align: 'center' });
-
-        doc.setLineWidth(0.5);
-        doc.line(20, 45, 190, 45);
-
-        doc.setFontSize(10);
-        doc.setFont('helvetica', 'bold');
-        doc.text('Item', 20, 50);
-        doc.text('Qty', 120, 50);
-        doc.text('Price', 150, 50);
-        doc.text('Total', 180, 50);
-
-        doc.setLineWidth(0.2);
-        doc.line(20, 52, 190, 52);
-
-        let y = 60;
-        doc.setFont('helvetica', 'normal');
-        cartItems.forEach(item => {
-            const itemName = item.name.length > 30 ? item.name.substring(0, 27) + '...' : item.name;
-            doc.text(itemName, 20, y);
-            doc.text(item.quantity.toString(), 120, y);
-            doc.text('$' + item.price.toFixed(2), 150, y);
-            doc.text('$' + (item.quantity * item.price).toFixed(2), 180, y);
-            y += 8;
-        });
-
-        doc.setLineWidth(0.5);
-        doc.line(20, y, 190, y);
-        y += 5;
-
-        doc.setFontSize(12);
-        doc.setFont('helvetica', 'bold');
-        doc.text('Total: $' + grandTotal.textContent, 180, y, { align: 'right' });
-
-        y += 15;
-        doc.setFontSize(10);
-        doc.setFont('helvetica', 'normal');
-        doc.text('Thank you for your purchase!', 105, y, { align: 'center' });
-        doc.text('Contact: store@example.com', 105, y + 5, { align: 'center' });
-
-        doc.save('pos-receipt.pdf');
-        optionsDropdown.classList.remove('visible');
-        moreOptionsBtn.classList.remove('active');
-    }
-
-    savePdfBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        saveCartAsPDF();
-    });
-
-    // Payout (show QR code and buttons)
-    if (completeCartBtn) {
-        completeCartBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            if (cartItems.length === 0) return;
-            qrContainer.style.display = 'block';
-            optionsDropdown.classList.remove('visible');
-            moreOptionsBtn.classList.remove('active');
-            console.log('Showing QR container');
-        });
-    }
-
-    // QR Confirm (submit cart)
-    if (qrConfirmBtn) {
-        qrConfirmBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            submitCartBtn.click();
-            qrContainer.style.display = 'none';
-        });
-    }
-
-    // Clear cart
-    clearCartBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        cartItems = [];
-        localStorage.removeItem('cartItems');
-        updateCartUI();
-        toggleCart(false);
-        optionsDropdown.classList.remove('visible');
-        moreOptionsBtn.classList.remove('active');
-    });
-
-    // Close cart
-    document.getElementById('closeCart').addEventListener('click', () => {
-        toggleCart(false);
-        qrContainer.style.display = 'none';
-    });
-
-    // Kebab menu
-    document.querySelectorAll('.kebab-menu').forEach(menu => {
-        menu.addEventListener('click', function() {
-            const dropdown = this.nextElementSibling;
-            dropdown.classList.toggle('visible');
-        });
-    });
-
-    // Delete item
-    document.querySelectorAll('.delete-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const inventoryId = this.dataset.id;
-            fetch('/products/deleteInventory', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ inventoryId: inventoryId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    this.closest('.product-col').remove();
-                    showToast('Item deleted successfully.');
-                } else {
-                    showToast(data.message || 'Error deleting item.', 2000);
-                }
-            })
-            .catch(error => {
-                console.error('Delete item error:', error);
-                showToast('Error deleting item.', 2000);
-            });
-        });
-    });
-
-    // Webcam scanning
-    if (startWebcamScanBtn) {
-        startWebcamScanBtn.addEventListener('click', function() {
-            console.log('Starting webcam scan');
-            const webcamScanner = document.getElementById('webcamScanner');
-            if (!webcamScanner) {
-                console.error('Webcam scanner element not found');
-                showToast('Scanner UI not found.', 2000);
+        // Handle barcode scan (debounced)
+        const debouncedHandleBarcodeScan = debounce(function(barcode) {
+            console.log('Debounced scan triggered for:', barcode);
+            if (isProcessingScan) {
+                console.log('Scan ignored: Processing in progress');
                 return;
             }
-            webcamScanner.style.display = 'block';
-            Quagga.init({
-                inputStream: {
-                    name: "Live",
-                    type: "LiveStream",
-                    target: document.getElementById('scannerVideo'),
-                    constraints: { facingMode: "environment" }
-                },
-                decoder: { readers: ["ean_reader", "code_128_reader", "upc_reader", "code_39_reader"] }
-            }, function(err) {
-                if (err) {
-                    console.error('Quagga init error:', err);
-                    showToast('Failed to access webcam.', 2000);
-                    webcamScanner.style.display = 'none';
+            const now = Date.now();
+            if (now - lastScanTime < 1000) {
+                console.log('Scan ignored: Too soon after previous scan');
+                return;
+            }
+            isProcessingScan = true;
+            lastScanTime = now;
+            if (barcodeInput) barcodeInput.disabled = true;
+
+            barcode = barcode.trim().replace(/[\r\n\t]/g, '');
+            console.log('Cleaned barcode:', barcode);
+
+            document.querySelectorAll('.product-col').forEach(col => col.classList.remove('highlight'));
+
+            const productCol = document.querySelector(`.product-col[data-barcode="${barcode}"]`);
+            console.log('Product in DOM:', productCol);
+            if (productCol) {
+                const item = {
+                    inventory_id: productCol.dataset.inventoryId,
+                    inventory_product_name: productCol.querySelector('.card-title').textContent,
+                    selling_price: parseFloat(productCol.querySelector('.price').textContent.replace('$', '')),
+                    image: productCol.querySelector('img').src,
+                    quantity: 1
+                };
+                debouncedAddToCart(item, true);
+                productCol.classList.add('highlight');
+                resetBarcodeInput();
+                isProcessingScan = false;
+                if (barcodeInput) barcodeInput.disabled = false;
+                return;
+            }
+
+            console.log('Fetching product from backend for barcode:', barcode);
+            fetch('/products/getProductPageByBarcode', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        barcode: barcode
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Backend response:', data);
+                    if (data.success && data.item) {
+                        const item = {
+                            inventory_id: data.item.inventory_id,
+                            inventory_product_name: data.item.inventory_product_name,
+                            selling_price: parseFloat(data.item.selling_price || data.item.amount),
+                            image: data.item.image,
+                            quantity: 1
+                        };
+                        debouncedAddToCart(item, true);
+                        resetBarcodeInput();
+                        const productCol = document.querySelector(`.product-col[data-barcode="${barcode}"]`);
+                        if (productCol) productCol.classList.add('highlight');
+                    } else {
+                        resetBarcodeInput();
+                        showToast(data.message || 'Barcode not found.', 2000);
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    resetBarcodeInput();
+                    showToast('Error scanning barcode.', 2000);
+                })
+                .finally(() => {
+                    console.log('Resetting scan state');
+                    isProcessingScan = false;
+                    if (barcodeInput) barcodeInput.disabled = false;
+                });
+        }, 1000);
+
+        // Barcode input handling
+        if (barcodeInput) {
+            barcodeInput.addEventListener('keypress', function(e) {
+                console.log('Barcode input keypress:', e.key, 'Value:', e.target.value);
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const barcode = e.target.value.trim();
+                    if (barcode && !isProcessingScan) {
+                        console.log('Processing barcode via Enter key:', barcode);
+                        debouncedHandleBarcodeScan(barcode);
+                    } else {
+                        console.log('Scan ignored: Empty barcode or processing in progress');
+                    }
+                }
+            });
+        } else {
+            console.error('Barcode input element not found');
+        }
+
+        // Handle URL barcode parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const scannedBarcode = urlParams.get('barcode');
+        if (scannedBarcode) {
+            console.log('Processing URL barcode:', scannedBarcode);
+            debouncedHandleBarcodeScan(scannedBarcode);
+            window.history.replaceState({}, document.title, `?page=${urlParams.get('page') || '1'}`);
+        }
+
+        // Add to cart button
+        document.querySelectorAll('.buy').forEach(button => {
+            button.addEventListener('click', function() {
+                const inventoryId = this.dataset.inventoryId;
+                const productCol = this.closest('.product-col');
+                const item = {
+                    inventory_id: inventoryId,
+                    inventory_product_name: productCol.querySelector('.card-title').textContent,
+                    selling_price: parseFloat(productCol.querySelector('.price').textContent.replace('$', '')),
+                    image: productCol.querySelector('img').src,
+                    quantity: 1
+                };
+                console.log('Button clicked for', item.inventory_product_name);
+                debouncedAddToCart(item);
+            });
+        });
+
+        // Cart toggle button
+        cartToggle.addEventListener('click', function() {
+            toggleCart(!cartSection.classList.contains('visible'));
+        });
+
+        // Submit cart
+        submitCartBtn.addEventListener('click', function() {
+            if (cartItems.length === 0) return;
+            fetch('/products/submitCart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        cartItems: cartItems.map(item => ({
+                            inventoryId: item.inventory_id,
+                            quantity: item.quantity,
+                            price: item.price
+                        }))
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast('Order completed successfully!');
+                        clearUIState();
+                    } else {
+                        showToast(data.message || 'Error submitting order.', 2000);
+                    }
+                })
+                .catch(error => {
+                    console.error('Submit cart error:', error);
+                    showToast('Error submitting order.', 2000);
+                });
+        });
+
+        // Toggle dropdown
+        moreOptionsBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const isVisible = optionsDropdown.classList.contains('visible');
+            optionsDropdown.classList.toggle('visible', !isVisible);
+            moreOptionsBtn.classList.toggle('active', !isVisible);
+            console.log('Toggling dropdown, current state:', !isVisible);
+        });
+
+        // Close dropdown on outside click
+        document.addEventListener('click', function(e) {
+            if (!moreOptionsBtn.contains(e.target) && !optionsDropdown.contains(e.target)) {
+                optionsDropdown.classList.remove('visible');
+                moreOptionsBtn.classList.remove('active');
+            }
+        });
+
+        // Prevent dropdown close on inside click
+        optionsDropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // Save PDF
+        function saveCartAsPDF() {
+            if (cartItems.length === 0) return;
+            const {
+                jsPDF
+            } = window.jspdf;
+            const doc = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
+            });
+
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            doc.text('POS Receipt', 105, 20, {
+                align: 'center'
+            });
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Store Name', 105, 30, {
+                align: 'center'
+            });
+            doc.text('123 Main Street, City, Country', 105, 35, {
+                align: 'center'
+            });
+            doc.text(new Date().toLocaleString(), 105, 40, {
+                align: 'center'
+            });
+
+            doc.setLineWidth(0.5);
+            doc.line(20, 45, 190, 45);
+
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Item', 20, 50);
+            doc.text('Qty', 120, 50);
+            doc.text('Price', 150, 50);
+            doc.text('Total', 180, 50);
+
+            doc.setLineWidth(0.2);
+            doc.line(20, 52, 190, 52);
+
+            let y = 60;
+            doc.setFont('helvetica', 'normal');
+            cartItems.forEach(item => {
+                const itemName = item.name.length > 30 ? item.name.substring(0, 27) + '...' : item.name;
+                doc.text(itemName, 20, y);
+                doc.text(item.quantity.toString(), 120, y);
+                doc.text('$' + item.price.toFixed(2), 150, y);
+                doc.text('$' + (item.quantity * item.price).toFixed(2), 180, y);
+                y += 8;
+            });
+
+            doc.setLineWidth(0.5);
+            doc.line(20, y, 190, y);
+            y += 5;
+
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Total: $' + grandTotal.textContent, 180, y, {
+                align: 'right'
+            });
+
+            y += 15;
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Thank you for your purchase!', 105, y, {
+                align: 'center'
+            });
+            doc.text('Contact: store@example.com', 105, y + 5, {
+                align: 'center'
+            });
+
+            doc.save('pos-receipt.pdf');
+            optionsDropdown.classList.remove('visible');
+            moreOptionsBtn.classList.remove('active');
+        }
+
+        savePdfBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            saveCartAsPDF();
+        });
+
+        // Payout (show QR code and buttons)
+        if (completeCartBtn) {
+            completeCartBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (cartItems.length === 0) return;
+                qrContainer.style.display = 'block';
+                optionsDropdown.classList.remove('visible');
+                moreOptionsBtn.classList.remove('active');
+                console.log('Showing QR container');
+            });
+        }
+
+        // QR Confirm (submit cart)
+        if (qrConfirmBtn) {
+            qrConfirmBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                submitCartBtn.click();
+                qrContainer.style.display = 'none';
+            });
+        }
+
+        // Clear cart
+        clearCartBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            cartItems = [];
+            localStorage.removeItem('cartItems');
+            updateCartUI();
+            toggleCart(false);
+            optionsDropdown.classList.remove('visible');
+            moreOptionsBtn.classList.remove('active');
+        });
+
+        // Close cart
+        document.getElementById('closeCart').addEventListener('click', () => {
+            toggleCart(false);
+            qrContainer.style.display = 'none';
+        });
+
+        // Kebab menu
+        document.querySelectorAll('.kebab-menu').forEach(menu => {
+            menu.addEventListener('click', function() {
+                const dropdown = this.nextElementSibling;
+                dropdown.classList.toggle('visible');
+            });
+        });
+
+        // Delete item
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const inventoryId = this.dataset.id;
+                fetch('/products/deleteInventory', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            inventoryId: inventoryId
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            this.closest('.product-col').remove();
+                            showToast('Item deleted successfully.');
+                        } else {
+                            showToast(data.message || 'Error deleting item.', 2000);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Delete item error:', error);
+                        showToast('Error deleting item.', 2000);
+                    });
+            });
+        });
+
+        // Webcam scanning
+        if (startWebcamScanBtn) {
+            startWebcamScanBtn.addEventListener('click', function() {
+                console.log('Starting webcam scan');
+                const webcamScanner = document.getElementById('webcamScanner');
+                if (!webcamScanner) {
+                    console.error('Webcam scanner element not found');
+                    showToast('Scanner UI not found.', 2000);
                     return;
                 }
-                console.log('Quagga initialized successfully');
-                Quagga.start();
+                webcamScanner.style.display = 'block';
+                Quagga.init({
+                    inputStream: {
+                        name: "Live",
+                        type: "LiveStream",
+                        target: document.getElementById('scannerVideo'),
+                        constraints: {
+                            facingMode: "environment"
+                        }
+                    },
+                    decoder: {
+                        readers: ["ean_reader", "code_128_reader", "upc_reader", "code_39_reader"]
+                    }
+                }, function(err) {
+                    if (err) {
+                        console.error('Quagga init error:', err);
+                        showToast('Failed to access webcam.', 2000);
+                        webcamScanner.style.display = 'none';
+                        return;
+                    }
+                    console.log('Quagga initialized successfully');
+                    Quagga.start();
+                });
+
+                Quagga.onDetected(function(result) {
+                    const barcode = result.codeResult.code;
+                    console.log('Detected barcode:', barcode);
+                    if (barcode && !isProcessingScan) {
+                        debouncedHandleBarcodeScan(barcode);
+                        Quagga.stop();
+                        webcamScanner.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // QR code switching logic
+        if (aclidaQrImg && abaQrImg && aclidaSection && abaSection) {
+            aclidaQrImg.addEventListener('click', () => {
+                console.log('Switching to ABA QR');
+                aclidaSection.classList.remove('active');
+                abaSection.classList.add('active');
             });
 
-            Quagga.onDetected(function(result) {
-                const barcode = result.codeResult.code;
-                console.log('Detected barcode:', barcode);
-                if (barcode && !isProcessingScan) {
-                    debouncedHandleBarcodeScan(barcode);
-                    Quagga.stop();
-                    webcamScanner.style.display = 'none';
-                }
+            abaQrImg.addEventListener('click', () => {
+                console.log('Switching to ACLIDA QR');
+                abaSection.classList.remove('active');
+                aclidaSection.classList.add('active');
             });
-        });
-    }
-
-    // QR code switching logic
-    if (aclidaQrImg && abaQrImg && aclidaSection && abaSection) {
-        aclidaQrImg.addEventListener('click', () => {
-            console.log('Switching to ABA QR');
-            aclidaSection.classList.remove('active');
-            abaSection.classList.add('active');
-        });
-
-        abaQrImg.addEventListener('click', () => {
-            console.log('Switching to ACLIDA QR');
-            abaSection.classList.remove('active');
-            aclidaSection.classList.add('active');
-        });
-    } else {
-        console.error('QR elements not found: Check aclidaQrImg, abaQrImg, aclidaSection, or abaSection');
-    }
-});
+        } else {
+            console.error('QR elements not found: Check aclidaQrImg, abaQrImg, aclidaSection, or abaSection');
+        }
+    });
 </script>
 
 <?php require_once 'views/layouts/footer.php'; ?>

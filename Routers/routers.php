@@ -46,7 +46,9 @@ $router->get('/settings', [SettingController::class, 'index'], true);
 $router->get('/settings/create', [SettingController::class, 'create'], true);
 $router->post('/settings/store', [SettingController::class, 'store'], true);
 $router->get('/settings/edit', [SettingController::class, 'edit'], true);
-$router->put('/settings/update', [SettingController::class, 'update'], true);
+$router->get('/settings/update', [SettingController::class, 'update']);
+$router->post('/settings/update', [SettingController::class, 'update']);
+
 $router->delete('/settings/destroy', [SettingController::class, 'destroy'], true);
 
 // inventory
@@ -108,4 +110,3 @@ $router->get('/language', [LanguageController::class, 'index'], true);
 $router->get('/tracking', [TrackingController::class, 'index'], true);
 
 $router->dispatch();
-?>

@@ -626,11 +626,11 @@ require_once './views/layouts/side.php';
     <div class="container-fluid">
         <div class="row" id="productRow">
             <div class="product-section">
-                <h3>Order Products</h3>
+                <h3 data-translate-key="Order_Products">Order Products</h3>
                 <!-- Barcode Input -->
                 <div class="barcode-scanner" style="margin-bottom: 15px;">
-                    <input type="text" id="barcodeInput" placeholder="Scan or enter barcode" style="padding: 8px; width: 200px; border: 1px solid #ddd; border-radius: 4px;" autofocus />
-                    <button id="startWebcamScan">Scan with Webcam</button>
+                    <input type="text" id="barcodeInput" placeholder="Scan or enter barcode" data-translate-key="Scan_Or_Enter_Barcode" style="padding: 8px; width: 200px; border: 1px solid #ddd; border-radius: 4px;" autofocus />
+                    <button id="startWebcamScan" data-translate-key="Scan_With_Webcam" title="Scan with Webcam" aria-label="Scan with Webcam">Scan with Webcam</button>
                     <div id="webcamScanner" style="display: none;">
                         <video id="scannerVideo"></video>
                     </div>
@@ -641,7 +641,7 @@ require_once './views/layouts/side.php';
                             <div class="product-card">
                                 <i class="fa-solid fa-ellipsis-vertical kebab-menu"></i>
                                 <div class="dropdown-menu">
-                                    <p class="delete-btn" data-id="<?= htmlspecialchars($item['inventory_id']) ?>"><i class="fa-solid fa-trash"></i></p>
+                                    <p class="delete-btn" data-id="<?= htmlspecialchars($item['inventory_id']) ?>" data-translate-key="Delete" title="Delete" aria-label="Delete"><i class="fa-solid fa-trash"></i></p>
                                 </div>
                                 <div class="image-wrapper">
                                     <?php if (!empty($item['image'])): ?>
@@ -659,7 +659,7 @@ require_once './views/layouts/side.php';
                                         Qty: <?= htmlspecialchars($item['quantity']) ?>
                                     </p>
                                     <input type="hidden" name="inventory_id" value="<?= htmlspecialchars($item['inventory_id']) ?>" />
-                                    <button class="buy" data-inventory-id="<?= htmlspecialchars($item['inventory_id']) ?>">Add to Cart</button>
+                                    <button class="buy" data-inventory-id="<?= htmlspecialchars($item['inventory_id']) ?>" data-translate-key="Add_To_Cart" title="Add to Cart" aria-label="Add to Cart">Add to Cart</button>
                                 </div>
                             </div>
                         </div>
@@ -668,17 +668,17 @@ require_once './views/layouts/side.php';
 
                 <div class="pagination-controls">
                     <?php if ($currentPage > 1) : ?>
-                        <a href="?page=<?= $currentPage - 1 ?>"><i class="fa-solid fa-less-than"></i></a>
+                        <a href="?page=<?= $currentPage - 1 ?>" title="Previous Page" aria-label="Previous Page"><i class="fa-solid fa-less-than"></i></a>
                     <?php else : ?>
-                        <button disabled><i class="fa-solid fa-less-than"></i></button>
+                        <button disabled title="Previous Page" aria-label="Previous Page"><i class="fa-solid fa-less-than"></i></button>
                     <?php endif; ?>
 
                     <span>Page <?= $currentPage ?> of <?= $totalPages ?></span>
 
                     <?php if ($currentPage < $totalPages) : ?>
-                        <a href="?page=<?= $currentPage + 1 ?>"><i class="fa-solid fa-greater-than"></i></a>
+                        <a href="?page=<?= $currentPage + 1 ?>" title="Next Page" aria-label="Next Page"><i class="fa-solid fa-greater-than"></i></a>
                     <?php else : ?>
-                        <button disabled><i class="fa-solid fa-greater-than"></i></button>
+                        <button disabled title="Next Page" aria-label="Next Page"><i class="fa-solid fa-greater-than"></i></button>
                     <?php endif; ?>
                 </div>
             </div>
@@ -686,39 +686,39 @@ require_once './views/layouts/side.php';
         <div class="cart-section" id="cartSection">
             <div class="cart-card">
                 <div class="cart-header">
-                    <h4>POS Payout</h4>
-                    <button class="close-cart" id="closeCart">✖</button>
+                    <h4 data-translate-key="POS_Payout">POS Payout</h4>
+                    <button class="close-cart" id="closeCart" title="Close Cart" aria-label="Close Cart">✖</button>
                 </div>
                 <div class="cart-body">
                     <table class="cart-table" id="cartTable">
                         <thead>
                             <tr>
-                                <th>Item</th>
-                                <th>Qty</th>
-                                <th>Price ($)</th>
+                                <th data-translate-key="Item">Item</th>
+                                <th data-translate-key="Qty">Qty</th>
+                                <th data-translate-key="Price_Dollar">Price ($)</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody id="cartBody"></tbody>
                     </table>
                     <div style="text-align: right; margin-top: 15px;">
-                        <h5 style="font-weight: bold;">Total: $<span id="grandTotal">0.00</span></h5>
+                        <h5 style="font-weight: bold;" data-translate-key="Total">Total: $<span id="grandTotal">0.00</span></h5>
                     </div>
                     <div id="qr-container" style="display: none;">
                         <img id="qr-code-img" src="../../views/assets/images/QR-code.png" alt="QR Code" style="width: 80px; height: 80px; margin-bottom: 15px;" />
-                        <input type="text" id="inputField" placeholder="Enter your details" />
+                        <input type="text" id="inputField" placeholder="Enter your details" data-translate-key="Enter_Your_Details" />
                     </div>
                 </div>
                 <div class="cart-footer">
                     <div class="more-options" id="moreOptionsContainer">
-                        <button class="cart-btn cart-btn-secondary" id="moreOptionsBtn">More Options</button>
+                        <button class="cart-btn cart-btn-secondary" id="moreOptionsBtn" data-translate-key="More_Options" title="More Options" aria-label="More Options">More Options</button>
                         <div class="options-dropdown" id="optionsDropdown">
-                            <button class="cart-btn cart-btn-info" id="savePdf">Save PDF</button>
-                            <button class="cart-btn cart-btn-primary" id="completeCart">Payout</button>
-                            <button class="cart-btn cart-btn-danger" id="clearCart">Clear</button>
+                            <button class="cart-btn cart-btn-info" id="savePdf" data-translate-key="Save_PDF" title="Save PDF" aria-label="Save PDF">Save PDF</button>
+                            <button class="cart-btn cart-btn-primary" id="completeCart" data-translate-key="Payout" title="Payout" aria-label="Payout">Payout</button>
+                            <button class="cart-btn cart-btn-danger" id="clearCart" data-translate-key="Clear" title="Clear" aria-label="Clear">Clear</button>
                         </div>
                     </div>
-                    <button class="cart-btn cart-btn-success" id="submitCart">Complete order</button>
+                    <button class="cart-btn cart-btn-success" id="submitCart" data-translate-key="Complete_Order" title="Complete Order" aria-label="Complete Order">Complete order</button>
                 </div>
             </div>
         </div>
@@ -729,6 +729,12 @@ require_once './views/layouts/side.php';
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
+    // Function to get translated text
+    function getTranslation(key) {
+        const lang = localStorage.getItem('selectedLanguage') || 'en';
+        return translations[lang][key] || key;
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const barcodeInput = document.getElementById('barcodeInput');
         const cartSection = document.getElementById('cartSection');
@@ -747,6 +753,17 @@ require_once './views/layouts/side.php';
         let isProcessingScan = false;
         let lastScanTime = 0;
 
+        // Apply translations on page load
+        const savedLang = localStorage.getItem('selectedLanguage') || 'en';
+        applyTranslations(savedLang);
+
+        // Update tooltips and aria-labels dynamically
+        document.querySelectorAll('[title][data-translate-key], [aria-label][data-translate-key]').forEach(element => {
+            const key = element.getAttribute('data-translate-key');
+            element.setAttribute('title', getTranslation(key));
+            element.setAttribute('aria-label', getTranslation(key));
+        });
+
         // Debounce function to limit rapid calls
         function debounce(func, wait) {
             let timeout;
@@ -758,15 +775,14 @@ require_once './views/layouts/side.php';
 
         // Initialize cart UI from localStorage
         updateCartUI();
-        // Removed: barcodeInput.focus(); // No focus on page load
 
         // Show toast notification
-        function showToast(message, duration = 2000) {
+        function showToast(messageKey, duration = 2000) {
             const toast = document.getElementById('toast');
             if (toastTimeout) {
                 clearTimeout(toastTimeout);
             }
-            toast.textContent = message;
+            toast.textContent = getTranslation(messageKey);
             toast.style.display = 'block';
             toastTimeout = setTimeout(() => {
                 toast.style.display = 'none';
@@ -786,7 +802,6 @@ require_once './views/layouts/side.php';
                 col.classList.remove('highlight');
             });
             barcodeInput.value = '';
-            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after clearing
             const urlParams = new URLSearchParams(window.location.search);
             const page = urlParams.get('page') || '1';
             window.history.replaceState({}, document.title, `?page=${page}`);
@@ -799,7 +814,6 @@ require_once './views/layouts/side.php';
         // Reset barcode input
         function resetBarcodeInput() {
             barcodeInput.value = '';
-            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after reset
         }
 
         // Add to cart (debounced to prevent rapid clicks)
@@ -835,13 +849,13 @@ require_once './views/layouts/side.php';
                     <td>${item.name}</td>
                     <td><input type="number" class="cart-qty" value="${item.quantity}" min="1" data-index="${index}"></td>
                     <td><input type="number" class="cart-price" value="${item.price.toFixed(2)}" step="0.01" data-index="${index}"></td>
-                    <td><span class="remove-item" data-index="${index}"><i class="fa-solid fa-trash"></i></span></td>
+                    <td><span class="remove-item" data-index="${index}" title="${getTranslation('Delete')}" aria-label="${getTranslation('Delete')}"><i class="fa-solid fa-trash"></i></span></td>
                 `;
                 cartBody.appendChild(row);
                 total += item.quantity * item.price;
             });
             grandTotal.textContent = total.toFixed(2);
-            savePdfBtn_DISABLED = cartItems.length === 0;
+            savePdfBtn.disabled = cartItems.length === 0;
             submitCartBtn.disabled = cartItems.length === 0;
             completeCartBtn.disabled = cartItems.length === 0;
 
@@ -875,7 +889,6 @@ require_once './views/layouts/side.php';
                     cartItems.splice(index, 1);
                     localStorage.setItem('cartItems', JSON.stringify(cartItems));
                     updateCartUI();
-                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after removing item
                 });
             });
         }
@@ -889,7 +902,6 @@ require_once './views/layouts/side.php';
                 cartSection.classList.remove('visible');
                 document.querySelector('.main-content').classList.remove('cart-visible');
             }
-            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after toggling cart
         }
 
         // Handle barcode scan (debounced)
@@ -924,52 +936,51 @@ require_once './views/layouts/side.php';
                     resetBarcodeInput();
                     isProcessingScan = false;
                     barcodeInput.disabled = false;
-                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after scan
                     return;
                 }
             }
 
             // Fetch product from backend (any page)
             fetch('/products/getProductPageByBarcode', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        barcode: barcode
-                    })
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': '<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>'
+                },
+                body: JSON.stringify({
+                    barcode: barcode
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success && data.item) {
-                        const currentPage = parseInt(new URLSearchParams(window.location.search).get('page') || '1');
-                        if (data.page && data.page !== currentPage) {
-                            // Redirect to the correct page with barcode parameter
-                            window.location.href = `?page=${data.page}&barcode=${encodeURIComponent(barcode)}`;
-                        } else {
-                            // Product is on current page or page info not provided, add to cart
-                            debouncedAddToCart(data.item);
-                            resetBarcodeInput();
-                            const productCol = document.querySelector(`.product-col[data-barcode="${barcode}"]`);
-                            if (productCol) {
-                                productCol.classList.add('highlight');
-                            }
-                        }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.item) {
+                    const currentPage = parseInt(new URLSearchParams(window.location.search).get('page') || '1');
+                    if (data.page && data.page !== currentPage) {
+                        // Redirect to the correct page with barcode parameter
+                        window.location.href = `?page=${data.page}&barcode=${encodeURIComponent(barcode)}`;
                     } else {
+                        // Product is on current page or page info not provided, add to cart
+                        debouncedAddToCart(data.item);
                         resetBarcodeInput();
-                        showToast(data.message || 'Barcode not found.', 2000);
+                        const productCol = document.querySelector(`.product-col[data-barcode="${barcode}"]`);
+                        if (productCol) {
+                            productCol.classList.add('highlight');
+                        }
                     }
-                })
-                .catch(error => {
-                    console.error('Error fetching product:', error);
+                } else {
                     resetBarcodeInput();
-                    showToast('Error scanning barcode.', 2000);
-                })
-                .finally(() => {
-                    isProcessingScan = false;
-                    barcodeInput.disabled = false;
-                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after fetch
-                });
+                    showToast(data.message ? data.message : 'Barcode_Not_Found', 2000);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching product:', error);
+                resetBarcodeInput();
+                showToast('Error_Scanning_Barcode', 2000);
+            })
+            .finally(() => {
+                isProcessingScan = false;
+                barcodeInput.disabled = false;
+            });
         }, 500);
 
         // Barcode input handling
@@ -1014,7 +1025,6 @@ require_once './views/layouts/side.php';
                 };
                 console.log('Button clicked for', item.inventory_product_name);
                 debouncedAddToCart(item);
-                // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after adding to cart
             });
         });
 
@@ -1022,32 +1032,31 @@ require_once './views/layouts/side.php';
         submitCartBtn.addEventListener('click', function() {
             if (cartItems.length === 0) return;
             fetch('/products/submitCart', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        cartItems: cartItems.map(item => ({
-                            inventoryId: item.inventory_id,
-                            quantity: item.quantity,
-                            price: item.price
-                        }))
-                    })
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': '<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>'
+                },
+                body: JSON.stringify({
+                    cartItems: cartItems.map(item => ({
+                        inventoryId: item.inventory_id,
+                        quantity: item.quantity,
+                        price: item.price
+                    }))
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showToast('Order completed successfully!');
-                        clearUIState();
-                    } else {
-                        showToast(data.message || 'Error submitting order.', 2000);
-                    }
-                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after submission
-                })
-                .catch(error => {
-                    showToast('Error submitting order.', 2000);
-                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after error
-                });
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Order_Completed_Successfully');
+                    clearUIState();
+                } else {
+                    showToast(data.message || 'Error_Submitting_Order', 2000);
+                }
+            })
+            .catch(error => {
+                showToast('Error_Submitting_Order', 2000);
+            });
         });
 
         // Toggle dropdown
@@ -1056,7 +1065,6 @@ require_once './views/layouts/side.php';
             const isVisible = optionsDropdown.classList.contains('visible');
             optionsDropdown.classList.toggle('visible', !isVisible);
             moreOptionsBtn.classList.toggle('active', !isVisible);
-            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after toggling dropdown
         });
 
         // Close dropdown on outside click
@@ -1065,7 +1073,6 @@ require_once './views/layouts/side.php';
                 optionsDropdown.classList.remove('visible');
                 moreOptionsBtn.classList.remove('active');
             }
-            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after closing dropdown
         });
 
         // Prevent dropdown close on inside click
@@ -1077,21 +1084,18 @@ require_once './views/layouts/side.php';
         savePdfBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             if (cartItems.length === 0) return;
-            const {
-                jsPDF
-            } = window.jspdf;
+            const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            doc.text('Cart Receipt', 10, 10);
+            doc.text(getTranslation('POS_Payout'), 10, 10);
             let y = 20;
             cartItems.forEach(item => {
                 doc.text(`${item.name}: ${item.quantity} x $${item.price.toFixed(2)}`, 10, y);
                 y += 10;
             });
-            doc.text(`Total: $${grandTotal.textContent}`, 10, y);
+            doc.text(`${getTranslation('Total')}: $${grandTotal.textContent}`, 10, y);
             doc.save('cart-receipt.pdf');
             optionsDropdown.classList.remove('visible');
             moreOptionsBtn.classList.remove('active');
-            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after saving PDF
         });
 
         // Payout (triggers submitCart)
@@ -1100,7 +1104,6 @@ require_once './views/layouts/side.php';
             submitCartBtn.click();
             optionsDropdown.classList.remove('visible');
             moreOptionsBtn.classList.remove('active');
-            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after payout
         });
 
         // Clear cart
@@ -1112,13 +1115,11 @@ require_once './views/layouts/side.php';
             toggleCart(false);
             optionsDropdown.classList.remove('visible');
             moreOptionsBtn.classList.remove('active');
-            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after clearing cart
         });
 
         // Close cart
         document.getElementById('closeCart').addEventListener('click', () => {
             toggleCart(false);
-            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after closing cart
         });
 
         // Kebab menu
@@ -1134,28 +1135,27 @@ require_once './views/layouts/side.php';
             button.addEventListener('click', function() {
                 const inventoryId = this.dataset.id;
                 fetch('/products/deleteInventory', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            inventoryId: inventoryId
-                        })
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': '<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>'
+                    },
+                    body: JSON.stringify({
+                        inventoryId: inventoryId
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            this.closest('.product-col').remove();
-                            showToast('Item deleted successfully.');
-                        } else {
-                            showToast(data.message || 'Error deleting item.', 2000);
-                        }
-                        // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after deleting item
-                    })
-                    .catch(error => {
-                        showToast('Error deleting item.', 2000);
-                        // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after error
-                    });
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        this.closest('.product-col').remove();
+                        showToast('Item_Deleted_Successfully');
+                    } else {
+                        showToast(data.message || 'Error_Deleting_Item', 2000);
+                    }
+                })
+                .catch(error => {
+                    showToast('Error_Deleting_Item', 2000);
+                });
             });
         });
 
@@ -1178,9 +1178,8 @@ require_once './views/layouts/side.php';
             }, function(err) {
                 if (err) {
                     console.error(err);
-                    showToast('Failed to access webcam.', 2000);
+                    showToast('Failed_To_Access_Webcam', 2000);
                     webcamScanner.style.display = 'none';
-                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after webcam error
                     return;
                 }
                 Quagga.start();
@@ -1193,7 +1192,6 @@ require_once './views/layouts/side.php';
                     debouncedHandleBarcodeScan(barcode);
                     Quagga.stop();
                     webcamScanner.style.display = 'none';
-                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after webcam scan
                 }
             });
         });

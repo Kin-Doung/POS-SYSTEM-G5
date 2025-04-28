@@ -145,19 +145,19 @@ require_once './views/layouts/side.php';
 
     <!-- Body -->
     <div class="add-stock mr-2">
-        <h2 class="text-center head-add" style="padding-top: 10px;">Add Stock Products</h2>
+        <h2 class="text-center head-add" style="padding-top: 10px;" data-translate-key="Add_Stock_Products">Add Stock Products</h2>
 
         <div class="container mt-5">
             <div class="d-flex justify-content-end flex-column mt-n5 align-items-end gap-2 p-3 rounded">
                 <!-- Preview Invoice Button -->
                 <button type="button" id="previewInvoice" class="btn btn-primary btn-preview custom-width" data-bs-toggle="modal" data-bs-target="#invoiceModal">
-                    <i class="bi bi-eye-fill me-1"></i> Preview Invoice
+                    <i class="bi bi-eye-fill me-1"></i> <span data-translate-key="Preview_Invoice">Preview Invoice</span>
                 </button>
 
                 <!-- Input Mode Selection -->
                 <select id="inputMode" class="form-select custom-width">
-                    <option value="manual">Manual Input</option>
-                    <option value="barcode">Barcode Scan</option>
+                    <option value="manual" data-translate-key="Manual_Input">Manual Input</option>
+                    <option value="barcode" data-translate-key="Barcode_Scan">Barcode Scan</option>
                 </select>
             </div>
         </div>
@@ -171,27 +171,27 @@ require_once './views/layouts/side.php';
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th class="image-field">Product Image</th>
-                                    <th class="product-name-field">Product Name</th>
-                                    <th class="category-name-field">Category Name</th>
-                                    <th class="barcode-field">Barcode</th>
-                                    <th>Quantity</th>
-                                    <th>Price ($)</th>
-                                    <th>Selling Price ($)</th>
-                                    <th>Actions</th>
+                                    <th class="image-field" data-translate-key="Product_Image">Product Image</th>
+                                    <th class="product-name-field" data-translate-key="Product_Name">Product Name</th>
+                                    <th class="category-name-field" data-translate-key="Category_Name">Category Name</th>
+                                    <th class="barcode-field" data-translate-key="Barcode">Barcode</th>
+                                    <th data-translate-key="Quantity">Quantity</th>
+                                    <th data-translate-key="Price">Price ($)</th>
+                                    <th data-translate-key="Selling_Price">Selling Price ($)</th>
+                                    <th data-translate-key="Actions">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="productTableBody">
                                 <tr class="product-row">
                                     <td class="image-field">
-                                        <label for="image_0" class="image-label">Choose Image</label>
+                                        <label for="image_0" class="image-label" data-translate-key="Product_Image">Product Image</label>
                                         <input type="file" id="image_0" name="image[]" class="form-control image-input" accept="image/*">
                                         <img src="" alt="Product Image" class="img-preview">
                                     </td>
                                     <td class="product-name-field">
                                         <input type="hidden" name="product_id[]" class="product-id-input">
                                         <select name="product_name[]" class="form-control product-select manual-only" required>
-                                            <option value="">Select Product</option>
+                                            <option value="" data-translate-key="Select_Product">Select Product</option>
                                             <?php if (!empty($inventory)): ?>
                                                 <?php foreach ($inventory as $product): ?>
                                                     <option value="<?= htmlspecialchars($product['id']) ?>">
@@ -199,28 +199,28 @@ require_once './views/layouts/side.php';
                                                     </option>
                                                 <?php endforeach; ?>
                                             <?php else: ?>
-                                                <option disabled>No Products Found</option>
+                                                <option disabled data-translate-key="No_Products_Found">No Products Found</option>
                                             <?php endif; ?>
                                         </select>
-                                        <input type="text" name="product_name_text[]" class="form-control product-name-input barcode-only" placeholder="Product Name">
+                                        <input type="text" name="product_name_text[]" class="form-control product-name-input barcode-only" placeholder="Product Name" data-translate-key="Product_Name">
                                     </td>
                                     <td class="category-name-field">
                                         <select name="category_id[]" class="form-control category-select manual-only" required>
-                                            <option value="">Select Category</option>
+                                            <option value="" data-translate-key="Select_Category">Select Category</option>
                                             <?php foreach ($categories as $category): ?>
                                                 <option value="<?= htmlspecialchars($category['id']) ?>">
                                                     <?= htmlspecialchars($category['name']) ?>
                                                 </option>
                                             <?php endforeach; ?>
                                         </select>
-                                        <input type="text" name="category_name[]" class="form-control category-name-input barcode-only" placeholder="Category Name">
+                                        <input type="text" name="category_name[]" class="form-control category-name-input barcode-only" placeholder="Category Name" data-translate-key="Category_Name">
                                     </td>
                                     <td class="barcode-field">
-                                        <input type="text" name="barcode[]" class="form-control barcode-input" placeholder="Scan or enter barcode">
+                                        <input type="text" name="barcode[]" class="form-control barcode-input" placeholder="Scan or enter barcode" data-translate-key="Scan_or_Enter_Barcode">
                                     </td>
                                     <td>
                                         <input type="number" class="form-control quantity-input" name="quantity[]" min="1" value="1" required>
-                                        <div class="invalid-feedback">Please enter a valid quantity (1 or more).</div>
+                                        <div class="invalid-feedback" data-translate-key="Valid_Quantities_Required">Please enter a valid quantity (1 or more).</div>
                                     </td>
                                     <td>
                                         <input type="number" class="form-control amount-input" name="amount[]" min="0" step="0.01" required>
@@ -232,7 +232,7 @@ require_once './views/layouts/side.php';
                                     </td>
                                     <td>
                                         <button type="button" class="btn removeRow" style="background: none; border: none; color: red; box-shadow: none; text-decoration: underline; font-size: 15px;">
-                                            <i class="fa-solid fa-trash"></i> remove
+                                            <i class="fa-solid fa-trash"></i> <span data-translate-key="Remove">remove</span>
                                         </button>
                                     </td>
                                 </tr>
@@ -240,8 +240,8 @@ require_once './views/layouts/side.php';
                         </table>
                     </div>
                     <div class="d-flex justify-content-end align-items-center">
-                        <button type="button" id="addMore" class="add-moree">Add more</button>
-                        <button type="submit" class="btn btn-submit">Submit</button>
+                        <button type="button" id="addMore" class="add-moree" data-translate-key="Add_More">Add more</button>
+                        <button type="submit" class="btn btn-submit" data-translate-key="Submit">Submit</button>
                     </div>
                 </form>
             </div>
@@ -252,31 +252,31 @@ require_once './views/layouts/side.php';
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header" style="background:#fff; color:#000;">
-                        <h5 class="modal-title" id="invoiceModalLabel">Invoice Preview</h5>
+                        <h5 class="modal-title" id="invoiceModalLabel" data-translate-key="Invoice_Preview">Invoice Preview</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Image</th>
-                                    <th>Product Name</th>
-                                    <th>Quantity</th>
-                                    <th>Price ($)</th>
+                                    <th data-translate-key="Image">Image</th>
+                                    <th data-translate-key="Product_Name">Product Name</th>
+                                    <th data-translate-key="Quantity">Quantity</th>
+                                    <th data-translate-key="Price">Price ($)</th>
                                 </tr>
                             </thead>
                             <tbody id="invoiceTableBody"></tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="3" style="text-align: right; font-weight: bold;">Total Price:</td>
+                                    <td colspan="3" style="text-align: right; font-weight: bold;" data-translate-key="Total_Price">Total Price:</td>
                                     <td id="totalPrice" style="font-weight: bold;">$0.00</td>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="exportPDF" class="btn btn-primary" style="background: blue;">Export to PDF</button>
-                        <button type="button" id="exportExcel" class="btn btn-primary" style="background: #4CBB17;">Export to Excel</button>
+                        <button type="button" id="exportPDF" class="btn btn-primary" style="background: blue;" data-translate-key="Export_to_PDF">Export to PDF</button>
+                        <button type="button" id="exportExcel" class="btn btn-primary" style="background: #4CBB17;" data-translate-key="Export_to_Excel">Export to Excel</button>
                     </div>
                 </div>
             </div>
@@ -292,6 +292,7 @@ require_once './views/layouts/side.php';
         let barcodeBuffer = '';
         let lastInputTime = 0;
         const debounceDelay = 50; // Adjust based on scanner speed (ms)
+        const currentLang = localStorage.getItem('selectedLanguage') || 'en';
 
         // Initialize image handling for existing rows
         initImageHandling($('.product-row'));
@@ -352,12 +353,13 @@ require_once './views/layouts/side.php';
                 if ($(".product-row").length > 1) {
                     $(this).closest("tr").remove();
                 } else {
-                    alert("At least one product row is required!");
+                    alert(getTranslation('At_Least_One_Product_Required', currentLang));
                 }
             });
 
             $("#productTableBody").append(newRow);
             initImageHandling(newRow);
+            applyTranslationsToElement(newRow[0], currentLang); // Translate new row
             toggleInputMode();
             $('.barcode-input:last').focus(); // Focus new row's barcode input
         });
@@ -367,7 +369,7 @@ require_once './views/layouts/side.php';
             if ($(".product-row").length > 1) {
                 $(this).closest("tr").remove();
             } else {
-                alert("At least one product row is required!");
+                alert(getTranslation('At_Least_One_Product_Required', currentLang));
             }
         });
 
@@ -456,7 +458,7 @@ require_once './views/layouts/side.php';
                     .fail(function(error) {
                         console.error('Fetch error for product ID ' + productId + ':', error);
                         clearRowFields(row);
-                        alert('Error fetching product details.');
+                        alert(getTranslation('Error_Fetching_Product', currentLang, { barcode: productId }));
                     });
             }
         }
@@ -506,7 +508,7 @@ require_once './views/layouts/side.php';
                         } else {
                             clearRowFields(row);
                             inputElement.val(barcode); // Keep barcode on failure
-                            alert('Product not found for barcode: ' + barcode);
+                            alert(getTranslation('Product_Not_Found', currentLang, { barcode }));
                             inputElement.focus();
                         }
                     })
@@ -522,9 +524,9 @@ require_once './views/layouts/side.php';
                         clearRowFields(row);
                         inputElement.val(barcode); // Keep barcode on error
                         if (jqXHR.status === 404) {
-                            alert('Barcode endpoint not found. Please check server routing.');
+                            alert(getTranslation('Barcode_Endpoint_Not_Found', currentLang));
                         } else {
-                            alert('Error fetching product for barcode ' + barcode + '. Status: ' + jqXHR.status);
+                            alert(getTranslation('Error_Fetching_Product', currentLang, { barcode }));
                         }
                         inputElement.focus();
                     });
@@ -589,7 +591,7 @@ require_once './views/layouts/side.php';
 
             $('#totalPrice').text(`$${totalPrice.toFixed(2)}`);
             if (invoiceTableBody.children().length === 0) {
-                invoiceTableBody.append('<tr><td colspan="4">No products to preview. Please fill in all fields.</td></tr>');
+                invoiceTableBody.append(`<tr><td colspan="4" data-translate-key="No_Products_to_Preview">${getTranslation('No_Products_to_Preview', currentLang)}</td></tr>`);
                 $('#totalPrice').text('$0.00');
             }
         });
@@ -597,9 +599,7 @@ require_once './views/layouts/side.php';
         // Export to PDF
         $('#exportPDF').on('click', function() {
             try {
-                const {
-                    jsPDF
-                } = window.jspdf;
+                const { jsPDF } = window.jspdf;
                 const doc = new jsPDF({
                     orientation: 'portrait',
                     unit: 'mm',
@@ -608,9 +608,7 @@ require_once './views/layouts/side.php';
 
                 doc.setFontSize(16);
                 doc.setFont('helvetica', 'bold');
-                doc.text('Engrty Alone', 105, 20, {
-                    align: 'center'
-                });
+                doc.text('Engrty Alone', 105, 20, { align: 'center' });
 
                 doc.setFontSize(10);
                 doc.setFont('helvetica', 'normal');
@@ -622,7 +620,7 @@ require_once './views/layouts/side.php';
 
                 const table = document.querySelector('#invoiceTableBody');
                 if (!table || table.children.length === 0) {
-                    alert('No data to export. Please add products to the preview.');
+                    alert(getTranslation('No_Data_to_Export', currentLang));
                     return;
                 }
 
@@ -644,7 +642,12 @@ require_once './views/layouts/side.php';
 
                 doc.autoTable({
                     head: [
-                        ['Image', 'Product Name', 'Quantity', 'Price ($)']
+                        [
+                            getTranslation('Image', currentLang),
+                            getTranslation('Product_Name', currentLang),
+                            getTranslation('Quantity', currentLang),
+                            getTranslation('Price', currentLang)
+                        ]
                     ],
                     body: tableData,
                     startY: 50,
@@ -661,26 +664,12 @@ require_once './views/layouts/side.php';
                         fillColor: [255, 255, 255]
                     },
                     columnStyles: {
-                        0: {
-                            cellWidth: 30
-                        },
-                        1: {
-                            cellWidth: 70,
-                            halign: 'left'
-                        },
-                        2: {
-                            cellWidth: 40,
-                            halign: 'left'
-                        },
-                        3: {
-                            cellWidth: 40,
-                            halign: 'left'
-                        }
+                        0: { cellWidth: 30 },
+                        1: { cellWidth: 70, halign: 'left' },
+                        2: { cellWidth: 40, halign: 'left' },
+                        3: { cellWidth: 40, halign: 'left' }
                     },
-                    margin: {
-                        left: 14,
-                        right: 14
-                    },
+                    margin: { left: 14, right: 14 },
                     didDrawCell: function(data) {
                         if (data.column.index === 0 && data.row.index >= 0) {
                             const imageSrc = imageData[data.row.index];
@@ -698,16 +687,14 @@ require_once './views/layouts/side.php';
                 const finalY = doc.lastAutoTable.finalY || 50;
                 doc.setFontSize(10);
                 doc.setFont('helvetica', 'bold');
-                doc.text(`Total Price: $${totalPrice.toFixed(2)}`, 196, finalY + 10, {
-                    align: 'right'
-                });
+                doc.text(`${getTranslation('Total_Price', currentLang)}: $${totalPrice.toFixed(2)}`, 196, finalY + 10, { align: 'right' });
                 doc.setFont('helvetica', 'normal');
                 doc.text('Thank you', 14, finalY + 20);
 
                 doc.save('invoice.pdf');
             } catch (error) {
                 console.error('Error generating PDF:', error);
-                alert('Failed to generate PDF. Please check the console for errors.');
+                alert(getTranslation('Failed_to_Generate_PDF', currentLang));
             }
         });
 
@@ -737,7 +724,7 @@ require_once './views/layouts/side.php';
             });
 
             if (hasErrors) {
-                alert('Please enter valid quantities (1 or more) for all products.');
+                alert(getTranslation('Valid_Quantities_Required', currentLang));
                 e.preventDefault();
                 quantities.filter(':invalid').first().focus();
                 return;
@@ -746,13 +733,13 @@ require_once './views/layouts/side.php';
             if (mode === 'manual') {
                 const selectedProducts = productInputs.map((_, select) => select.value).get().filter(v => v);
                 if (selectedProducts.length === 0) {
-                    alert('Please select at least one product.');
+                    alert(getTranslation('Select_At_Least_One_Product', currentLang));
                     e.preventDefault();
                     return;
                 }
                 const uniqueProducts = new Set(selectedProducts);
                 if (uniqueProducts.size < selectedProducts.length) {
-                    if (!confirm('You selected the same product multiple times. Quantities will be summed with existing stock. Continue?')) {
+                    if (!confirm(getTranslation('Confirm_Duplicate_Products', currentLang))) {
                         e.preventDefault();
                         return;
                     }
@@ -760,7 +747,7 @@ require_once './views/layouts/side.php';
             } else {
                 const validBarcodes = barcodes.filter(b => b);
                 if (validBarcodes.length === 0) {
-                    alert('Please enter at least one valid barcode.');
+                    alert(getTranslation('Valid_Barcode_Required', currentLang));
                     e.preventDefault();
                     $('.barcode-input:first').focus();
                     return;

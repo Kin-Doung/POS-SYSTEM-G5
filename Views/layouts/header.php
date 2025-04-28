@@ -45,6 +45,7 @@
   <script src="../../views/assets/js/sciptJS/categories.js" defer></script>
   <script src="../../views/assets/js/sciptJS/active.js" defer></script>
   <script src="../../views/assets/js/sciptJS/navbar.js" defer></script>
+  
 
 
   <!-- FontAwesome -->

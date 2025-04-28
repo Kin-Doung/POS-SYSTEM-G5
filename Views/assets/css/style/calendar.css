@@ -1,3 +1,27 @@
+.button1{
+  margin-top: 20px;
+}
+.navbar{
+  margin-top: 0px;
+}
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 28px;
+  font-weight: bold;
+  color: red;         /* Always red */
+  background: none;   /* No background */
+  border: none;       /* No border */
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: red;         /* Still red when hovering */
+  background: none;   /* No background on hover */
+}
+
+
 
 body {
   font-family: 'Arial', sans-serif;
@@ -7,15 +31,91 @@ body {
   min-height: 100vh;
 }
 
-#calendar {
-    max-width: 100%;
-    margin: 0 auto;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-    padding: 15px;
-  }
+.layout-wrapper {
+  margin-top: 0px;
+}
 
+.main-content {
+  top: 0px;
+  margin-left: 250px; /* or whatever the sidebar width is */
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin-top: 0px;
+}
+
+#container {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  flex: 1;
+  
+  overflow: hidden;
+  padding: 20px;
+  box-sizing: border-box; /* Ensure padding doesn't cause overflow */
+}
+
+#calendar {
+  flex: 3; /* Calendar takes 75% width */
+  max-width: 100%;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  padding: 15px;
+  min-height: 85vh;
+  overflow: hidden; /* Prevent scrolling */
+}
+
+#eventList {
+  flex: 1; /* Event List takes 25% width */
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  padding: 15px;
+  min-height: 85vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.event-item {
+  margin-bottom: 10px;
+  border-radius: 10px;
+  box-shadow: #2d3748;
+  
+}
+
+.time-container {
+  text-align: center;
+  margin-top: 10px;
+}
+
+#todayButton {
+  background: linear-gradient(90deg, #48bb78, #2f855a);
+  color: #fff;
+  margin: 10px auto;
+  display: block;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#todayButton:hover {
+  background: linear-gradient(90deg, #2f855a, #276749);
+  transform: translateY(-2px);
+}
+
+#currentTime {
+  font-size: 16px;
+  color: #2d3748;
+  margin-left: 10px;
+  vertical-align: middle;
+}
 
 .modal-overlay {
   display: none;
@@ -27,18 +127,105 @@ body {
   background: rgba(0, 0, 0, 0.5);
   z-index: 999;
 }
+
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-    background-color: white;
-    border: 1px solid #ccc;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
-  }
+  display: none; /* Hidden by default */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+#eventModal {
+  width: 30%;
+  height: 550px;
+}
+.detail-card {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  padding: 30px 25px;
+  border-radius: 16px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  width: 360px;
+  max-width: 90%;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.card-title {
+  margin-bottom: 25px;
+  font-size: 24px;
+  color: #2d3748;
+  font-weight: 700;
+  text-align: center;
+}
+
+.detail-group {
+  margin-bottom: 15px;
+}
+
+.detail-group label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #4a5568;
+}
+
+.detail-value {
+  margin-top: 4px;
+  font-size: 16px;
+  color: #2d3748;
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+}
+
+.edit-btn, .delete-btn {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.edit-btn {
+  background: #4299e1;
+  color: #fff;
+  margin-right: 10px;
+}
+
+.edit-btn:hover {
+  background: #2b6cb0;
+  transform: translateY(-2px);
+}
+
+.delete-btn {
+  background: #f56565;
+  color: #fff;
+  margin-left: 10px;
+}
+
+.delete-btn:hover {
+  background: #c53030;
+  transform: translateY(-2px);
+}
+
 .modal, .detail-card {
   display: none;
   position: fixed;
@@ -100,7 +287,7 @@ body {
   outline: none;
 }
 
-.modal button, .detail-card button, #todayButton {
+.modal button, .detail-card button {
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
@@ -142,28 +329,37 @@ body {
   transform: translateY(-2px);
 }
 
-#todayButton {
-  background: linear-gradient(90deg, #48bb78, #2f855a);
+.edit-btn {
+  background-color: #007bff;
   color: #fff;
-  margin: 10px auto;
-  display: block;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
-#todayButton:hover {
-  background: linear-gradient(90deg, #2f855a, #276749);
+.edit-btn:hover {
+  background-color: #0056b3;
+}
+
+.delete-btn {
+  background: linear-gradient(90deg, #f56565, #c53030);
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.delete-btn:hover {
+  background: linear-gradient(90deg, #c53030, #9b2c2c);
   transform: translateY(-2px);
-}
-
-#currentTime {
-  font-size: 16px;
-  color: #2d3748;
-  margin-left: 10px;
-  vertical-align: middle;
-}
-
-.time-container {
-  text-align: center;
-  margin-top: 10px;
 }
 
 .fc-daygrid-day-number {
@@ -187,3 +383,16 @@ body {
   transform: translateY(-2px);
 }
 
+/* Ensure FullCalendar columns are visible */
+.fc-daygrid-day {
+  min-width: 100px; /* Ensure each day column has enough width */
+}
+
+.fc {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.fc-scroller {
+  overflow: hidden !important; /* Prevent internal scrolling in FullCalendar */
+}

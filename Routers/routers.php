@@ -85,6 +85,7 @@ $router->get('/purchase', [PurchaseController::class, 'index'], true);
 $router->get('/purchase/create', [PurchaseController::class, 'create'], true);
 $router->post('/purchase/store', [PurchaseController::class, 'store'], true);
 $router->get('/purchase/edit/(:num)', [PurchaseController::class, 'edit'], true);
+
 $router->post('/purchase/update/(:num)', [PurchaseController::class, 'update'], true);
 $router->post('/purchase/destroy/(:num)', [PurchaseController::class, 'destroy'], true);
 $router->post('/purchase/bulk-destroy', [PurchaseController::class, 'bulkDestroy'], true);

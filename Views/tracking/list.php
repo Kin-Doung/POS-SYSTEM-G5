@@ -17,11 +17,11 @@ require_once './views/layouts/side.php';
                 <div class="container table-inventory" style="background-color: #fff; height:auto">
                     <div class="orders">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h2 style="font-weight: bold;" class="purchase-head">Stock Tracking</h2>
+                            <h2 style="font-weight: bold;" class="purchase-head" data-translate-key="Stock tracking">Stock Tracking</h2>
                         </div>
                         <div class="input-group">
                             <select id="categorySelect" class="ms-2 selected" onchange="filterTable()" style="border-radius: 0;">
-                                <option value="">Select Category</option>
+                                <option value="" data-translate-key="Select Category">Select Category</option>
                                 <?php if (!empty($categories)): ?>
                                     <?php foreach ($categories as $category): ?>
                                         <option value="<?= htmlspecialchars($category['id']) ?>">
@@ -29,7 +29,7 @@ require_once './views/layouts/side.php';
                                         </option>
                                     <?php endforeach; ?>
                                 <?php else: ?>
-                                    <option disabled>No Categories Found</option>
+                                    <option disabled data-translate-key="No Categories Found">No Categories Found</option>
                                 <?php endif; ?>
                             </select>
                         </div>
@@ -38,44 +38,48 @@ require_once './views/layouts/side.php';
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Image</th>
-                                    <th>Product Name</th>
-                                    <th>Quantity</th>
-                                    <th>Status</th>
+                                    <th data-translate-key="Image">Image</th>
+                                    <th data-translate-key="Product Name">Product Name</th>
+                                    <th data-translate-key="Quantity">Quantity</th>
+                                    <th data-translate-key="Status">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
                                 $lowStockItems = [];
                                 foreach ($tracking as $index => $item):
-                                    $quantity = (int)$item['quantity']; // Ensure integer
+                                    $quantity = (int)$item['quantity'];
                                     $status = $quantity >= 50 ? 'High' : ($quantity >= 10 ? 'Medium' : 'Low');
                                     if ($status === 'Low') {
                                         $lowStockItems[] = [
-                                            'id' => $item['id'],
-                                            'product_name' => $item['product_name'],
+                                            'id' => $item['id'] ?? '',
+                                            'product_name' => $item['product_name'] ?? 'Unknown',
                                             'quantity' => $quantity,
-                                            'image' => $item['image'],
-                                            'category_id' => $item['category_id']
+                                            'image' => $item['image'] ?? '../../views/assets/images/default.png',
+                                            'category_id' => $item['category_id'] ?? '',
+                                            'category_name' => $item['category_name'] ?? 'N/A'
                                         ];
                                     }
                                 ?>
-                                    <tr data-category-id="<?= htmlspecialchars($item['category_id']) ?>">
+                                    <tr data-category-id="<?= htmlspecialchars($item['category_id'] ?? '') ?>">
                                         <td><?= $index + 1 ?></td>
-                                        <td><img src="<?= $item['image'] ?>" alt="Product Image" width="50" loading="lazy"></td>
-
-                                        <td><?= htmlspecialchars($item['product_name']) ?></td>
+                                        <td>
+                                            <img src="<?= htmlspecialchars($item['image'] ?? '../../views/assets/images/default.png') ?>"
+                                                 alt="Image of <?= htmlspecialchars($item['product_name'] ?? 'Unknown') ?>"
+                                                 width="50" loading="lazy">
+                                        </td>
+                                        <td><?= htmlspecialchars($item['product_name'] ?? 'Unknown') ?></td>
                                         <td><span class="quantity"><?= htmlspecialchars($quantity) ?></span></td>
                                         <td>
-                                            <span class="quantity-text <?= strtolower($status) ?>"><?= $status ?></span>
+                                            <span class="quantity-text <?= strtolower($status) ?>" data-translate-key="<?= $status ?>"><?= $status ?></span>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
                         <div class="update-quantity" id="updateQuantitySection" style="display: none;">
-                            <h3>Update Quantity</h3>
-                            <button class="btn btn-success" onclick="updateQuantities()">Update Selected Quantities</button>
+                            <h3 data-translate-key="Update Quantity">Update Quantity</h3>
+                            <button class="btn btn-success" onclick="updateQuantities()" data-translate-key="Update Selected Quantities">Update Selected Quantities</button>
                         </div>
                     </div>
                 </div>
@@ -85,7 +89,7 @@ require_once './views/layouts/side.php';
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="lowStockModalLabel">Low Stock Products</h5>
+                                <h5 class="modal-title" id="lowStockModalLabel" data-translate-key="Low Stock Products">Low Stock Products</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
@@ -94,7 +98,7 @@ require_once './views/layouts/side.php';
                                 </ul>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-translate-key="Close">Close</button>
                             </div>
                         </div>
                     </div>
@@ -140,7 +144,6 @@ require_once './views/layouts/side.php';
                         height: 22px;
                         border-radius: 50%;
                         background-color: #dc3545;
-                        /* Bootstrap danger red */
                         color: white;
                         font-size: 12px;
                         font-weight: bold;
@@ -154,20 +157,9 @@ require_once './views/layouts/side.php';
                     }
 
                     @keyframes ring {
-                        0% {
-                            transform: scale(1);
-                            opacity: 1;
-                        }
-
-                        50% {
-                            transform: scale(1.2);
-                            opacity: 0.7;
-                        }
-
-                        100% {
-                            transform: scale(1);
-                            opacity: 1;
-                        }
+                        0% { transform: scale(1); opacity: 1; }
+                        50% { transform: scale(1.2); opacity: 0.7; }
+                        100% { transform: scale(1); opacity: 1; }
                     }
 
                     .low-stock-item {
@@ -183,7 +175,6 @@ require_once './views/layouts/side.php';
                         margin-right: 10px;
                     }
 
-                    /* Handle larger counts */
                     .notification-icon[data-low-stock-count="10"]::after,
                     .notification-icon[data-low-stock-count="11"]::after,
                     .notification-icon[data-low-stock-count="12"]::after,
@@ -208,22 +199,21 @@ require_once './views/layouts/side.php';
                 </style>
 
                 <!-- JavaScript -->
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
                 <script>
                     // Pass low stock items from PHP to JavaScript
                     const lowStockItems = <?= json_encode($lowStockItems, JSON_NUMERIC_CHECK) ?>;
 
                     // Update notification count and ring effect
                     function updateNotification() {
-                        console.log('Low Stock Items:', lowStockItems); // Debug
+                        console.log('Low Stock Items:', lowStockItems);
                         const notificationIcon = document.getElementById('notification-icon');
                         const notificationCount = document.getElementById('notification-count');
                         if (!notificationIcon || !notificationCount) {
                             console.error('Notification elements not found');
                             return;
                         }
-                        const lowStockCount = lowStockItems.length; // Count of low-stock products
-                        console.log('Low Stock Count:', lowStockCount); // Debug
+                        const lowStockCount = lowStockItems.length;
+                        console.log('Low Stock Count:', lowStockCount);
                         notificationCount.textContent = lowStockCount;
                         notificationIcon.setAttribute('data-low-stock-count', lowStockCount);
                         notificationIcon.setAttribute('aria-label', `Notifications: ${lowStockCount} low stock items`);
@@ -239,7 +229,11 @@ require_once './views/layouts/side.php';
                         const lowStockList = document.getElementById('lowStockList');
                         lowStockList.innerHTML = '';
                         if (lowStockItems.length === 0) {
-                            lowStockList.innerHTML = '<li class="list-group-item">No low stock products.</li>';
+                            const li = document.createElement('li');
+                            li.className = 'list-group-item';
+                            li.setAttribute('data-translate-key', 'No low stock products');
+                            li.textContent = translations[currentLanguage]['No low stock products'] || 'No low stock products';
+                            lowStockList.appendChild(li);
                             return;
                         }
                         lowStockItems.forEach(item => {
@@ -249,8 +243,8 @@ require_once './views/layouts/side.php';
                                 <img src="${item.image}" alt="${item.product_name}">
                                 <div>
                                     <strong>${item.product_name}</strong><br>
-                                    Quantity: ${item.quantity}<br>
-                                    Category ID: ${item.category_id}
+                                    <span data-translate-key="Quantity">Quantity</span>: ${item.quantity}<br>
+                                    <span data-translate-key="Category">Category</span>: ${item.category_name}
                                 </div>
                             `;
                             lowStockList.appendChild(li);
@@ -277,7 +271,7 @@ require_once './views/layouts/side.php';
 
                     // Initialize on DOM content loaded
                     document.addEventListener('DOMContentLoaded', () => {
-                        console.log('DOM fully loaded'); // Debug
+                        console.log('DOM fully loaded');
                         updateNotification();
                         filterTable();
                     });

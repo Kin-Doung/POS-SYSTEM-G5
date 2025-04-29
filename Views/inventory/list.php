@@ -1,15 +1,5 @@
-<?php
-// Ensure session is started for CSRF token
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-// Generate CSRF token if not set
-if (!isset($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
-require_once './views/layouts/header.php';
-require_once './views/layouts/side.php';
-?>
+<?php require_once './views/layouts/header.php' ?>
+<?php require_once './views/layouts/side.php' ?>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
 <div style="margin-left: 250px;">
@@ -56,8 +46,9 @@ require_once './views/layouts/side.php';
     }
 
     /* Increase height of View Modal */
-    #viewModal<?= htmlspecialchars($item['id']) ?> .modal-content {
-        min-height: 400px; /* Taller height for view modal */
+    <?= htmlspecialchars($item['id']) ?>.modal-content {
+        min-height: 400px;
+        /* Taller height for view modal */
     }
 
     /* Style for Delete Button in Delete Modal */
@@ -70,14 +61,15 @@ require_once './views/layouts/side.php';
         color: white;
     }
 
-    #deleteModal .btn-danger:hover {
+    /express #deleteModal .btn-danger:hover {
         background: darkred;
         transform: translateY(-1px);
     }
 
     /* Increase line height for View Modal details */
     .text-start.detail p {
-        line-height: 2; /* Increased line height for better spacing */
+        line-height: 2;
+        /* Increased line height for better spacing */
     }
 
     /* Position Edit Modal closer to top */
@@ -89,7 +81,8 @@ require_once './views/layouts/side.php';
     .image-preview-container {
         display: flex;
         align-items: center;
-        min-height: 100px; /* Ensure enough space for centering */
+        min-height: 100px;
+        /* Ensure enough space for centering */
         margin-top: 10px;
     }
 
@@ -120,16 +113,16 @@ require_once './views/layouts/side.php';
     <div class="table-inventory me-4">
         <div class="orders">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 style="font-weight: bold;" class="purchase-head">Restock Products</h2>
+                <h2 style="font-weight: bold;" class="purchase-head" data-translate-key="Restock Products">Restock Products</h2>
                 <div>
                     <a href="/inventory/create" class="btn-new-product">
-                        <i class="bi-plus-lg"></i> + Add Stocks
+                        <i class="bi-plus-lg"></i> <span data-translate-key="Add Stocks">+ Add Stocks</span>
                     </a>
                 </div>
             </div>
             <div class="input-group" style="margin-left: 0px;">
                 <select id="categorySelect" class="ms-2 selected" onchange="filterTable()">
-                    <option value="">Select Category</option>
+                    <option value="" data-translate-key="Select Category">Select Category</option>
                     <?php if (!empty($categories)): ?>
                         <?php foreach ($categories as $category): ?>
                             <option value="<?= htmlspecialchars($category['id']) ?>">
@@ -137,7 +130,7 @@ require_once './views/layouts/side.php';
                             </option>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <option disabled>No Categories Found</option>
+                        <option disabled data-translate-key="No Categories Found">No Categories Found</option>
                     <?php endif; ?>
                 </select>
             </div>
@@ -145,12 +138,12 @@ require_once './views/layouts/side.php';
                 <thead>
                     <tr>
                         <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll()"></th>
-                        <th>Image</th>
-                        <th>Product Name</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th style="display: none;">Total Price</th>
-                        <th>Action</th>
+                        <th data-translate-key="Image">Image</th>
+                        <th data-translate-key="Product Name">Product Name</th>
+                        <th data-translate-key="Quantity">Quantity</th>
+                        <th data-translate-key="Price">Price</th>
+                        <th style="display: none;" data-translate-key="Total Price">Total Price</th>
+                        <th data-translate-key="Action">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -174,7 +167,7 @@ require_once './views/layouts/side.php';
                                         See more...
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item text-primary" href="#" data-bs-toggle="modal" data-bs-target="#viewModal<?= $item['id'] ?>"><i class="fa-solid fa-eye"></i> View</a></li>
+                                        <li><a class="dropdown-item text-primary" href="#" data-bs-toggle="modal" data-bs-target="#viewModal<?= $item['id'] ?>"><i class="fa-solid fa-eye"></i> <span data-translate-key="View">View</span></a></li>
                                         <li>
                                             <a class="dropdown-item text-primary" href="#"
                                                 data-bs-toggle="modal"
@@ -184,11 +177,9 @@ require_once './views/layouts/side.php';
                                                 data-category_id="<?= $item['category_id'] ?? '' ?>"
                                                 data-quantity="<?= $item['quantity'] ?>"
                                                 data-amount="<?= $item['amount'] ?>"
-                                                data-selling_price="<?= $item['selling_price'] ?? 0 ?>"
-                                                data-barcode="<?= htmlspecialchars($item['barcode'] ?? '') ?>"
-                                                data-expiration_date="<?= htmlspecialchars($item['expiration_date'] ?? '') ?>"
+                                                data-total_price="<?= $totalPrice ?>"
                                                 data-image="<?= htmlspecialchars($item['image'] ?? '') ?>">
-                                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                                                <i class="fa-solid fa-pen-to-square"></i> <span data-translate-key="Edit">Edit</span>
                                             </a>
                                         </li>
                                         <li>
@@ -197,7 +188,7 @@ require_once './views/layouts/side.php';
                                                 data-bs-target="#deleteModal"
                                                 data-id="<?= $item['id'] ?>"
                                                 data-product_name="<?= htmlspecialchars($item['product_name']) ?>">
-                                                <i class="fa-solid fa-trash"></i> Delete
+                                                <i class="fa-solid fa-trash"></i> <span data-translate-key="Delete">Delete</span>
                                             </a>
                                         </li>
                                     </ul>
@@ -207,16 +198,16 @@ require_once './views/layouts/side.php';
                                     <div class="modal-dialog">
                                         <div class="modal-content rounded-4 shadow-lg">
                                             <div class="modal-header" style="background:#add8e6; color:#000;">
-                                                <h2 class="modal-title">View Inventory Item</h2>
+                                                <h2 class="modal-title" data-translate-key="View Inventory Item">View Inventory Item</h2>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body d-flex justify-content-between align-items-center">
                                                 <div class="text-start detail">
-                                                    <p><b>Product Name:</b> <?= htmlspecialchars($item['product_name']) ?></p>
-                                                    <p><b>Category:</b> <?= !empty($item['category_name']) ? htmlspecialchars($item['category_name']) : '-' ?></p>
-                                                    <p><b>Quantity:</b> <?= htmlspecialchars($item['quantity']) ?></p>
-                                                    <p><b>Price:</b> $<?= htmlspecialchars(number_format($item['amount'], 2)) ?></p>
-                                                    <p style="display: none;"><b>Total Price:</b> $<span class="modal-total-price"><?= htmlspecialchars(number_format($totalPrice, 2)) ?></span></p>
+                                                    <p><b data-translate-key="Product Name">Product Name:</b> <?= htmlspecialchars($item['product_name']) ?></p>
+                                                    <p><b data-translate-key="Category">Category:</b> <?= !empty($item['category_name']) ? htmlspecialchars($item['category_name']) : '-' ?></p>
+                                                    <p><b data-translate-key="Quantity">Quantity:</b> <?= htmlspecialchars($item['quantity']) ?></p>
+                                                    <p><b data-translate-key="Price">Price:</b> $<?= htmlspecialchars(number_format($item['amount'], 2)) ?></p>
+                                                    <p style="display: none;"><b data-translate-key="Total Price">Total Price:</b> $<span class="modal-total-price"><?= htmlspecialchars(number_format($totalPrice, 2)) ?></span></p>
                                                 </div>
                                                 <?php if (!empty($item['image'])): ?>
                                                     <div class="mb-3">
@@ -238,17 +229,17 @@ require_once './views/layouts/side.php';
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header bg-primary">
-                            <h5 class="modal-title" id="deleteModalLabel">Delete Item</h5>
+                            <h5 class="modal-title" id="deleteModalLabel" data-translate-key="Delete Item">Delete Item</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            Are you sure you want to delete <strong id="deleteProductName"></strong> (ID: <span id="deleteProductId"></span>)?
+                            <span data-translate-key="Are you sure you want to delete">Are you sure you want to delete</span> <strong id="deleteProductName"></strong> (ID: <span id="deleteProductId"></span>)?
                         </div>
                         <div class="modal-footer">
                             <form id="deleteForm" action="/inventory/destroy" method="POST">
                                 <input type="hidden" name="id" id="deleteId">
                                 <input type="hidden" name="_token" id="csrfToken" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
-                                <button type="submit" class="btn btn-danger">Delete</button>
+                                <button type="submit" class="btn btn-danger" data-translate-key="Delete">Delete</button>
                             </form>
                         </div>
                     </div>
@@ -260,55 +251,54 @@ require_once './views/layouts/side.php';
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header" style="background:#add8e6;color:#000;">
-                            <h5 class="modal-title" id="editModalLabel">Edit Product</h5>
+                            <h5 class="modal-title" id="editModalLabel" data-translate-key="Edit Product">Edit Product</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <div class="alert-container" id="editAlert" style="display: none;"></div>
-                            <form id="editForm" action="/inventory/update" method="POST" enctype="multipart/form-data">
-                                <input type="hidden" name="_token" id="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
+                            <form id="editForm" method="POST" enctype="multipart/form-data">
+                                <input type="hidden" name="_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
                                 <input type="hidden" name="id" id="edit_id">
                                 <div class="mb-3">
-                                    <label class="form-label">Product Name <span class="text-danger">*</span></label>
+                                    <label class="form-label" data-translate-key="Product Name">Product Name</label>
                                     <input type="text" class="form-control" name="product_name" id="product_name" required>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Category <span class="text-danger">*</span></label>
+                                        <label class="form-label" data-translate-key="Category">Category</label>
                                         <select class="form-control" name="category_id" id="category_id" required>
-                                            <option value="">Select</option>
+                                            <option value="" data-translate-key="Select">Select</option>
                                             <?php foreach ($categories ?? [] as $category): ?>
                                                 <option value="<?= $category['id'] ?>"><?= htmlspecialchars($category['name']) ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Quantity <span class="text-danger">*</span></label>
+                                        <label class="form-label" data-translate-key="Quantity">Quantity</label>
                                         <input type="number" class="form-control" name="quantity" id="quantity" required min="0">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">Amount <span class="text-danger">*</span></label>
+                                        <label class="form-label" data-translate-key="Amount">Amount</label>
                                         <input type="number" class="form-control" name="amount" id="amount" required step="0.01" min="0">
                                     </div>
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">Total Price</label>
+                                        <label class="form-label" data-translate-key="Total Price">Total Price</label>
                                         <div id="total_price_display" class="form-control-plaintext">$0.00</div>
                                     </div>
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">Expiration Date</label>
+                                        <label class="form-label" data-translate-key="Expiration Date">Expiration Date</label>
                                         <input type="date" class="form-control" name="expiration_date" id="expiration_date">
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Image</label>
+                                    <label class="form-label" data-translate-key="Image">Image</label>
                                     <input type="file" class="form-control" id="imageInput" name="image" accept="image/*">
                                     <div class="image-preview-container">
                                         <img id="imagePreview" src="" alt="Product Image" class="img-fluid" style="display: none;">
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary" id="updateButton">Update</button>
+                                <button type="submit" class="btn btn-primary" data-translate-key="Update">Update</button>
                             </form>
                         </div>
                     </div>
@@ -316,8 +306,8 @@ require_once './views/layouts/side.php';
             </div>
 
             <div class="update-quantity" id="updateQuantitySection" style="display: none;">
-                <h3>Update Quantity</h3>
-                <button class="btn btn-success" onclick="updateQuantities()">Update Selected Quantities</button>
+                <h3 data-translate-key="Update Quantity">Update Quantity</h3>
+                <button class="btn btn-success" onclick="updateQuantities()" data-translate-key="Update Selected Quantities">Update Selected Quantities</button>
             </div>
         </div>
     </div>
@@ -325,9 +315,6 @@ require_once './views/layouts/side.php';
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Define base URL (adjust if app is in a subdirectory, e.g., '/myapp')
-        const BASE_URL = window.location.origin;
-
         document.addEventListener('DOMContentLoaded', function() {
             const editModal = document.getElementById('editModal');
             // Edit Modal Population
@@ -338,10 +325,8 @@ require_once './views/layouts/side.php';
                 const categoryId = button.getAttribute('data-category_id');
                 const quantity = button.getAttribute('data-quantity');
                 const amount = button.getAttribute('data-amount');
-                const sellingPrice = button.getAttribute('data-selling_price');
-                const barcode = button.getAttribute('data-barcode');
-                const expirationDate = button.getAttribute('data-expiration_date');
                 const image = button.getAttribute('data-image');
+                const expirationDate = button.getAttribute('data-expiration_date') || '';
 
                 // Populate form fields
                 editModal.querySelector('#edit_id').value = id;
@@ -349,8 +334,6 @@ require_once './views/layouts/side.php';
                 editModal.querySelector('#category_id').value = categoryId || '';
                 editModal.querySelector('#quantity').value = quantity;
                 editModal.querySelector('#amount').value = amount;
-                editModal.querySelector('#selling_price').value = sellingPrice;
-                editModal.querySelector('#barcode').value = barcode;
                 editModal.querySelector('#expiration_date').value = expirationDate;
                 const imagePreview = editModal.querySelector('#imagePreview');
                 if (image) {
@@ -371,11 +354,11 @@ require_once './views/layouts/side.php';
                     const amount = parseFloat(amountInput.value) || 0;
                     totalPriceDisplay.textContent = `$${(quantity * amount).toFixed(2)}`;
                 }
-                updateTotalPrice();
+                updateTotalPrice(); // Initial calculation
                 quantityInput.addEventListener('input', updateTotalPrice);
                 amountInput.addEventListener('input', updateTotalPrice);
 
-                // Preview new image
+                // Preview new image if uploaded
                 const imageInput = editModal.querySelector('#imageInput');
                 imageInput.addEventListener('change', function() {
                     const file = this.files[0];
@@ -387,90 +370,6 @@ require_once './views/layouts/side.php';
                         };
                         reader.readAsDataURL(file);
                     }
-                });
-            });
-
-            // Handle form submission via AJAX
-            editForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-                updateButton.disabled = true;
-                updateButton.classList.add('btn-loading');
-
-                // Client-side validation
-                const productName = editForm.querySelector('#product_name').value.trim();
-                const categoryId = editForm.querySelector('#category_id').value;
-                const quantity = parseInt(editForm.querySelector('#quantity').value);
-                const amount = parseFloat(editForm.querySelector('#amount').value);
-
-                if (!productName) {
-                    showAlert('Product name is required.', 'danger');
-                    updateButton.disabled = false;
-                    updateButton.classList.remove('btn-loading');
-                    return;
-                }
-                if (!categoryId) {
-                    showAlert('Please select a category.', 'danger');
-                    updateButton.disabled = false;
-                    updateButton.classList.remove('btn-loading');
-                    return;
-                }
-                if (isNaN(quantity) || quantity < 0) {
-                    showAlert('Quantity must be a non-negative number.', 'danger');
-                    updateButton.disabled = false;
-                    updateButton.classList.remove('btn-loading');
-                    return;
-                }
-                if (isNaN(amount) || amount < 0) {
-                    showAlert('Amount must be a non-negative number.', 'danger');
-                    updateButton.disabled = false;
-                    updateButton.classList.remove('btn-loading');
-                    return;
-                }
-
-                const formData = new FormData(editForm);
-                fetch(`${BASE_URL}/inventory/update`, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => {
-                    console.log('Response Status:', response.status);
-                    // Log raw response for debugging
-                    response.clone().text().then(raw => {
-                        console.log('Raw Response:', raw);
-                    });
-                    if (!response.ok) {
-                        return response.text().then(text => {
-                            let errorData;
-                            try {
-                                errorData = JSON.parse(text);
-                            } catch (e) {
-                                throw new Error(`HTTP error! Status: ${response.status}, Response: ${text}`);
-                            }
-                            throw new Error(errorData.error || `HTTP error! Status: ${response.status}`);
-                        });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        showAlert(data.message || 'Inventory updated successfully.', 'success');
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 1000);
-                    } else {
-                        showAlert(data.error || 'Failed to update item.', 'danger');
-                        updateButton.disabled = false;
-                        updateButton.classList.remove('btn-loading');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error updating item:', error.message);
-                    showAlert(error.message || 'An error occurred while updating. Please try again.', 'danger');
-                    updateButton.disabled = false;
-                    updateButton.classList.remove('btn-loading');
                 });
             });
 
@@ -517,7 +416,7 @@ require_once './views/layouts/side.php';
                 updateSection.style.display = anyChecked ? 'block' : 'none';
             }
 
-            // Update Quantities
+            // Update Quantities (Placeholder - Implement as needed)
             function updateQuantities() {
                 const selectedItems = document.querySelectorAll('.rowCheckbox:checked');
                 const data = Array.from(selectedItems).map(checkbox => ({
@@ -529,7 +428,6 @@ require_once './views/layouts/side.php';
                     // Implement AJAX call to /inventory/bulk-update if needed
                 }
             }
-
             // Attach event listeners
             document.querySelectorAll('.rowCheckbox').forEach(checkbox => {
                 checkbox.addEventListener('change', toggleUpdateQuantitySection);

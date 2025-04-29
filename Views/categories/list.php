@@ -4,28 +4,24 @@ require_once './views/layouts/side.php';
 ?>
 
 <div style="margin-left: 250px;">
-<?php require_once './views/layouts/nav.php' ?>
+    <?php require_once './views/layouts/nav.php' ?>
 </div>
 
 <style>
-    .main-content{
+    .main-content {
         margin-left: 250px;
     }
 </style>
 
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-    <!-- Navbar -->
-    <!-- End Navbar -->
-
     <div>
         <!-- Main Content -->
         <div id="content">
             <div class="container">
                 <div class="mt-5 d-flex justify-content-between align-items-center">
                     <a href="javascript:void(0);" class="create-ct" data-bs-toggle="modal" data-bs-target="#createCategoryModal">
-                        <i class="bi-plus-lg"></i> Add New Categories
+                        <i class="bi-plus-lg"></i> <span data-translate-key="Add New Categories">Add New Categories</span>
                     </a>
-
                 </div>
 
                 <!-- Modal to Create New Category -->
@@ -33,16 +29,16 @@ require_once './views/layouts/side.php';
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header" style="background: #1F51FF;">
-                                <h5 class="modal-title" id="createCategoryModalLabel">Create New Category</h5>
+                                <h5 class="modal-title" id="createCategoryModalLabel" data-translate-key="Create New Category">Create New Category</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <form action="/category/store" method="POST">
                                     <div class="form-group">
-                                        <label for="createCategoryName" class="form-label">Category Name:</label>
+                                        <label for="createCategoryName" class="form-label" data-translate-key="Category Name">Category Name:</label>
                                         <input type="text" name="name" id="createCategoryName" class="form-control" required>
                                     </div>
-                                    <button type="submit" class="add-categories mt-3 btn btn-primary">Add category</button>
+                                    <button type="submit" class="add-categories mt-3 btn btn-primary" data-translate-key="Add category">Add category</button>
                                 </form>
                             </div>
                         </div>
@@ -54,17 +50,15 @@ require_once './views/layouts/side.php';
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>
-                                    #
-                                </th>
-                                <th>Category Names</th>
-                                <th>Action</th>
+                                <th>#</th>
+                                <th data-translate-key="Category Names">Category Names</th>
+                                <th data-translate-key="Action">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($categories as $index => $category): ?>
                                 <tr>
-                                <td><?= $index + 1 ?></td>
+                                    <td><?= $index + 1 ?></td>
                                     <td><?= htmlspecialchars($category['name']) ?></td>
                                     <td class="text-center">
                                         <a href="javascript:void(0);" class="icon edit-icon" data-tooltip="Edit"
@@ -81,7 +75,6 @@ require_once './views/layouts/side.php';
                         </tbody>
                     </table>
                 </div>
-
             </div>
         </div>
     </div>
@@ -91,17 +84,17 @@ require_once './views/layouts/side.php';
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editCategoryModalLabel">Edit Category</h5>
+                    <h5 class="modal-title" id="editCategoryModalLabel" data-translate-key="Edit Category">Edit Category</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form action="/category/update" method="POST" id="editCategoryForm">
                         <div class="form-group">
-                            <label for="editCategoryName" class="form-label">Category Name:</label>
+                            <label for="editCategoryName" class="form-label" data-translate-key="Category Name">Category Name:</label>
                             <input type="text" id="editCategoryName" name="name" class="form-control" required>
                         </div>
                         <input type="hidden" id="editCategoryId" name="id">
-                        <button type="submit" class="update-categories mt-4 btn btn-primary">Update</button>
+                        <button type="submit" class="update-categories mt-4 btn btn-primary" data-translate-key="Update">Update</button>
                     </form>
                 </div>
             </div>
@@ -110,9 +103,13 @@ require_once './views/layouts/side.php';
     <!-- End of Edit Category Modal -->
 
     <script>
+        // Assume translations and currentLanguage are globally available
+        const translations = window.translations || {};
+        const currentLanguage = localStorage.getItem('selectedLanguage') || 'en';
+
         // Open edit modal
         function openEditModal(categoryId, categoryName) {
-            console.log('Opening edit modal - ID:', categoryId, 'Name:', categoryName); // Debug
+            console.log('Opening edit modal - ID:', categoryId, 'Name:', categoryName);
             document.getElementById('editCategoryName').value = categoryName;
             document.getElementById('editCategoryId').value = categoryId;
             try {
@@ -125,43 +122,54 @@ require_once './views/layouts/side.php';
 
         // Confirm delete
         function confirmDelete(categoryId) {
-            if (confirm('Are you sure you want to delete this category?')) {
+            const message = translations[currentLanguage]['Confirm Delete Category'] || 'Are you sure you want to delete this category?';
+            if (confirm(message)) {
                 window.location.href = '/category/delete?id=' + categoryId;
             }
         }
 
         // Confirm bulk delete
         function confirmBulkDelete() {
-            const selectedIds = document.getElementById('selectedIds').value;
+            const selectedIds = document.getElementById('selectedIds')?.value;
+            const confirmMessage = translations[currentLanguage]['Confirm Bulk Delete Categories'] || 'Are you sure you want to delete the selected categories?';
+            const alertMessage = translations[currentLanguage]['Please Select Categories'] || 'Please select categories to delete.';
             if (selectedIds) {
-                if (confirm('Are you sure you want to delete the selected categories?')) {
+                if (confirm(confirmMessage)) {
                     document.getElementById('bulkDeleteForm').submit();
                 }
             } else {
-                alert('Please select categories to delete.');
+                alert(alertMessage);
             }
         }
 
         // Handle checkbox logic
-        const checkboxes = document.querySelectorAll('.category-checkbox');
-        const selectAllCheckbox = document.getElementById('selectAllCheckbox');
-        const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
-        const selectedIdsInput = document.getElementById('selectedIds');
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkboxes = document.querySelectorAll('.category-checkbox');
+            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+            const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
+            const selectedIdsInput = document.getElementById('selectedIds');
 
-        function updateDeleteButtonVisibility() {
-            const selected = Array.from(checkboxes).filter(cb => cb.checked);
-            deleteSelectedBtn.style.display = selected.length > 0 ? 'inline-block' : 'none';
-            selectedIdsInput.value = selected.map(cb => cb.value).join(',');
-        }
+            function updateDeleteButtonVisibility() {
+                const selected = Array.from(checkboxes).filter(cb => cb.checked);
+                if (deleteSelectedBtn) {
+                    deleteSelectedBtn.style.display = selected.length > 0 ? 'inline-block' : 'none';
+                }
+                if (selectedIdsInput) {
+                    selectedIdsInput.value = selected.map(cb => cb.value).join(',');
+                }
+            }
 
-        selectAllCheckbox.addEventListener('change', () => {
-            checkboxes.forEach(cb => cb.checked = selectAllCheckbox.checked);
-            updateDeleteButtonVisibility();
-        });
+            if (selectAllCheckbox) {
+                selectAllCheckbox.addEventListener('change', () => {
+                    checkboxes.forEach(cb => cb.checked = selectAllCheckbox.checked);
+                    updateDeleteButtonVisibility();
+                });
+            }
 
-        checkboxes.forEach(cb => {
-            cb.addEventListener('change', () => {
-                updateDeleteButtonVisibility();
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', () => {
+                    updateDeleteButtonVisibility();
+                });
             });
         });
     </script>

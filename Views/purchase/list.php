@@ -7,11 +7,11 @@
             <div id="content">
                 <?php require_once './views/layouts/nav.php' ?>
                 <div class="container table-inventory">
-                    <div class="orders ">
+                    <div class="orders">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h2 style="font-weight: bold;" class="purchase-head">Purchasing Orders</h2>
+                            <h2 style="font-weight: bold;" class="purchase-head" data-translate-key="Purchasing Orders">Purchasing Orders</h2>
                             <div>
-                                <a href="/purchase/create" class="btn-new-product">
+                                <a href="/purchase/create" class="btn-new-product" data-translate-key="Add Products">
                                     <i class="bi-plus-lg"></i> + Add Products
                                 </a>
                             </div>
@@ -20,76 +20,48 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th><input type="checkbox" id="selectAll"></th>
-                                    <th>Image</th>
-                                    <th>Product Name</th>
-                                    <th>Action</th>
+                                    <th><input type="checkbox" id="selectAll" aria-label="Select all purchases" data-translate-key="Select All"></th>
+                                    <th data-translate-key="Product Image">Product Image</th>
+                                    <th data-translate-key="Product Name">Product Name</th>
+                                    <th data-translate-key="Action">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="purchasesTableBody">
                                 <?php if (!empty($purchases)): ?>
                                     <?php foreach ($purchases as $index => $item): ?>
-                                        <tr data-category-id="<?= htmlspecialchars($item['category_id']); ?>">
-                                            <td><input type="checkbox" class="selectItem" value="<?= htmlspecialchars($item['id']); ?>"></td>
-                                            <td><img src="<?= htmlspecialchars($item['image'] ?? ''); ?>" alt="Product Image" width="50" loading="lazy"></td>
+                                        <tr data-category-id="<?= htmlspecialchars($item['category_id'] ?? ''); ?>">
+                                            <td><input type="checkbox" class="selectItem" value="<?= htmlspecialchars($item['id'] ?? ''); ?>" aria-label="Select purchase"></td>
                                             <td>
-                                                <span class="editable" data-field="product_name" data-id="<?= htmlspecialchars($item['id']); ?>"> <?= htmlspecialchars($item['product_name']); ?>
+                                                <img src="<?= htmlspecialchars($item['image'] ?? '../../views/assets/images/default.png'); ?>" 
+                                                     alt="Image of <?= htmlspecialchars($item['product_name'] ?? 'Unknown'); ?>" 
+                                                     width="50" loading="lazy">
+                                            </td>
+                                            <td>
+                                                <span class="editable" data-field="product_name" data-id="<?= htmlspecialchars($item['id'] ?? ''); ?>">
+                                                    <?= htmlspecialchars($item['product_name'] ?? 'Unknown'); ?>
                                                 </span>
                                             </td>
                                             <td style="display: none;">
-                                                <span class="editable" data-field="quantity" data-id="<?= htmlspecialchars($item['id']); ?>">
+                                                <span class="editable" data-field="quantity" data-id="<?= htmlspecialchars($item['id'] ?? ''); ?>">
                                                     <?= htmlspecialchars($item['quantity'] ?? 1); ?>
                                                 </span>
                                             </td>
                                             <td class="action-column">
-                                                <a href="/purchase/edit/<?= htmlspecialchars($item['id']); ?>" class="edit-btn" title="Edit">
+                                                <a href="/purchase/edit/<?= htmlspecialchars($item['id'] ?? ''); ?>" class="edit-btn" title="Edit" aria-label="Edit purchase">
                                                     <i class="fa-solid fa-pen-to-square"></i>
                                                 </a>
-                                                <form method="POST" action="/purchase/destroy/<?= htmlspecialchars($item['id']); ?>" class="inline-form" onsubmit="return confirm('Are you sure you want to delete this item?');">
-                                                    <button type="submit" class="delete-btn" title="Delete">
+                                                <form method="POST" action="/purchase/destroy/<?= htmlspecialchars($item['id'] ?? ''); ?>" 
+                                                      class="inline-form" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                                                    <button type="submit" class="delete-btn" title="Delete" aria-label="Delete purchase">
                                                         <i class="fa-solid fa-trash"></i>
                                                     </button>
                                                 </form>
-                                                <style>
-                                                    .edit-btn {
-                                                        background: none;
-                                                    }
-
-                                                    .delete-btn {
-                                                        background: none;
-                                                        color: red;
-                                                    }
-
-                                                    .action-column {
-                                                        text-align: center;
-                                                        white-space: nowrap;
-                                                    }
-
-                                                    .inline-form {
-                                                        display: inline;
-                                                    }
-
-                                                    .btn {
-                                                        display: inline-flex;
-                                                        align-items: center;
-                                                        justify-content: center;
-                                                        padding: 6px 10px;
-                                                        margin: 0 2px;
-                                                        font-size: 14px;
-                                                        border: none;
-                                                        border-radius: 4px;
-                                                        cursor: pointer;
-                                                        text-decoration: none;
-                                                        transition: background-color 0.2s ease-in-out;
-                                                        color: white;
-                                                    }
-                                                </style>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="5">No purchases found.</td>
+                                        <td colspan="5" data-translate-key="No Purchases Found">No purchases found.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
@@ -101,32 +73,28 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="bulkDeleteModalLabel">Delete Selected Product</h5>
+                                    <h5 class="modal-title" id="bulkDeleteModalLabel" data-translate-key="Delete Selected Product">Delete Selected Product</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <div class="modal-body">
+                                <div class="modal-body" data-translate-key="Confirm Bulk Delete Message">
                                     Are you sure that you want to delete the selected all products?
                                 </div>
                                 <div class="modal-footer">
-<<<<<<< HEAD
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="button" id="confirmBulkDelete" class="btn btn-danger">Delete</button>
-=======
-                                    <button type="button" id="confirmBulkDelete" class="btn card-btn-delete btn-danger">Delete</button>
->>>>>>> main
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-translate-key="Cancel">Cancel</button>
+                                    <button type="button" id="confirmBulkDelete" class="btn card-btn-delete btn-danger" data-translate-key="Confirm Delete">Delete</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <button type="button" id="bulkDeleteBtn" class="btn btn-danger pos-btn-danger" style="display: none;">Delete Selected</button>
+                <button type="button" id="bulkDeleteBtn" class="btn btn-danger pos-btn-danger" style="display: none;" data-translate-key="Delete Selected">Delete Selected</button>
 
                 <style>
                     .purchase-head {
                         color: #1a3c34;
                         font-size: 24px;
                         margin-bottom: 0;
-                        font-family: "Poppins", sans-serif; 
+                        font-family: "Poppins", sans-serif;
                     }
 
                     .btn-new-product {
@@ -188,7 +156,7 @@
                     }
 
                     .modal-header {
-                        background-color: red;
+                        background-color: #1a3c34;
                         color: white;
                         border-bottom: none;
                     }
@@ -229,16 +197,16 @@
                     }
 
                     .card-btn-delete {
-                        background: red; /* Updated to red */
+                        background: red;
                         border: none;
                         padding: 8px 20px;
                         border-radius: 6px;
                         transition: all 0.3s ease;
-                        color: white; /* Ensure text is white */
+                        color: white;
                     }
 
                     .card-btn-delete:hover {
-                        background: darkred; /* Dark red on hover for consistency */
+                        background: darkred;
                         transform: translateY(-1px);
                     }
 
@@ -301,7 +269,6 @@
                         color: white;
                     }
                 </style>
-
             </div>
         </div>
     </div>
@@ -326,11 +293,12 @@
                 input.focus();
 
                 input.addEventListener('blur', function() {
-                    const newValue = this.value;
+                    const newValue = this.value.trim();
                     const parent = this.parentElement;
-                    parent.textContent = newValue;
+                    parent.textContent = newValue || originalValue;
 
-                    fetch('/purchase/update-inline', {
+                    if (newValue && newValue !== originalValue) {
+                        fetch('/purchase/update-inline', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -340,14 +308,16 @@
                         .then(response => response.json())
                         .then(data => {
                             if (!data.success) {
-                                alert('Update failed: ' + data.message);
+                                alert('Update failed: ' + (data.message || 'Unknown error'));
                                 parent.textContent = originalValue;
                             }
                         })
                         .catch(error => {
-                            console.error('Error:', error);
+                            console.error('Error updating purchase:', error);
+                            alert('An error occurred while updating. Please try again.');
                             parent.textContent = originalValue;
                         });
+                    }
                 });
             });
         });
@@ -378,23 +348,30 @@
             const selectedIds = Array.from(document.querySelectorAll('.selectItem:checked'))
                 .map(checkbox => checkbox.value);
 
+            if (selectedIds.length === 0) {
+                alert('No items selected for deletion.');
+                return;
+            }
+
             fetch('/purchase/bulk-destroy', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        ids: selectedIds
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        location.reload();
-                    } else {
-                        alert('Bulk delete failed: ' + data.message);
-                    }
-                });
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ ids: selectedIds })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Bulk delete failed: ' + (data.message || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting purchases:', error);
+                alert('An error occurred while deleting. Please try again.');
+            });
         });
     </script>
 </body>

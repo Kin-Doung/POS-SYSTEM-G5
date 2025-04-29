@@ -51,7 +51,7 @@ class Profit_LossController extends BaseController
                 'Result_Type' => $_POST['Result_Type'] ?? '',
                 'Sale_Date' => $_POST['Sale_Date'] ?? date('Y-m-d'),
                 'product_id' => $_POST['product_id'] ?? 0,
-                'report_id' => $_POST['report_id'] ?? 0, // Added report_id
+                'report_id' => $_POST['report_id'] ?? 0,
                 'inventory_id' => $_POST['inventory_id'] ?? 0,
                 'image' => $imagePath
             ];
@@ -65,7 +65,6 @@ class Profit_LossController extends BaseController
         $profit_loss = $this->model->getProfit_Loss_By_Id($id);
         $this->views('profit_loss/edit', ['Profit_Loss' => $profit_loss]);
     }
-
     function destroy($id)
     {
         header('Content-Type: application/json');
@@ -73,11 +72,11 @@ class Profit_LossController extends BaseController
         error_log("Controller: Request headers: " . json_encode(getallheaders()));
         error_log("Controller: Session CSRF token: " . ($_SESSION['csrf_token'] ?? 'none'));
 
-        // CSRF disabled for testing
+        // Temporarily disable CSRF
         /*
         if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_SERVER['HTTP_X_CSRF_TOKEN']) || $_SERVER['HTTP_X_CSRF_TOKEN'] !== ($_SESSION['csrf_token'] ?? '')) {
             error_log("Controller: Invalid request for single delete - Method: {$_SERVER['REQUEST_METHOD']}, CSRF: " . ($_SERVER['HTTP_X_CSRF_TOKEN'] ?? 'none'));
-            echo json_encode(['success' => false, 'message' => 'Invalid request']);
+            echo json_encode(['success' => false, 'message' => 'Invalid CSRF token']);
             exit;
         }
         */
@@ -105,37 +104,46 @@ class Profit_LossController extends BaseController
         error_log("Controller: destroy_multiple called");
         error_log("Controller: Request headers: " . json_encode(getallheaders()));
         error_log("Controller: Session CSRF token: " . ($_SESSION['csrf_token'] ?? 'none'));
-
+    
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             error_log("Controller: Invalid request method for bulk delete: {$_SERVER['REQUEST_METHOD']}");
             header('Content-Type: application/json');
             echo json_encode(['success' => false, 'message' => 'Invalid request method']);
             exit;
         }
-
+    
+        // Temporarily disable CSRF
+        /*
+        if (!isset($_SERVER['HTTP_X_CSRF_TOKEN']) || $_SERVER['HTTP_X_CSRF_TOKEN'] !== ($_SESSION['csrf_token'] ?? '')) {
+            error_log("Controller: Invalid CSRF token for bulk delete");
+            echo json_encode(['success' => false, 'message' => 'Invalid CSRF token']);
+            exit;
+        }
+        */
+    
         $input = json_decode(file_get_contents('php://input'), true);
         error_log("Controller: Bulk delete input: " . json_encode($input));
         $ids = isset($input['ids']) ? (array) $input['ids'] : [];
-
+    
         header('Content-Type: application/json');
-
+    
         if (empty($ids)) {
             error_log("Controller: No IDs received for deletion");
             echo json_encode(['success' => false, 'message' => 'No items selected']);
             exit;
         }
-
+    
         $ids = array_filter($ids, fn($id) => is_numeric($id) && $id > 0);
         $ids = array_map('intval', $ids);
-
+    
         if (empty($ids)) {
             error_log("Controller: No valid IDs after filtering: " . json_encode($input['ids']));
             echo json_encode(['success' => false, 'message' => 'No valid items selected']);
             exit;
         }
-
+    
         error_log("Controller: Attempting to delete IDs: " . implode(',', $ids));
-
+    
         try {
             $result = $this->model->deleteProfit_Loss($ids);
             echo json_encode([

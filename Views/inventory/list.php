@@ -61,7 +61,7 @@
         color: white;
     }
 
-    /express #deleteModal .btn-danger:hover {
+    #deleteModal .btn-danger:hover {
         background: darkred;
         transform: translateY(-1px);
     }

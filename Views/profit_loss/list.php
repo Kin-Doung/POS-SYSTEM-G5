@@ -216,6 +216,10 @@ require_once './views/layouts/side.php';
         margin-top: 10px;
     }
 
+    .delete-btn.show {
+        display: block;
+    }
+
     .delete-btn:hover {
         background: linear-gradient(45deg, #cc0000, #ff4d4d);
         transform: translateY(-2px);
@@ -566,7 +570,7 @@ require_once './views/layouts/side.php';
             border-radius: none;
         }
 
-        .search-containerr {
+        .search-container {
             width: 100%;
         }
 
@@ -773,7 +777,6 @@ require_once './views/layouts/side.php';
         console.log('Base URL:', baseUrl);
 
         const selectAllCheckbox = document.getElementById('select-all');
-        const selectItemCheckboxes = document.querySelectorAll('.select-item');
         const deleteButton = document.getElementById('delete-selected');
         const confirmModal = document.getElementById('confirm-modal');
         const confirmYes = document.getElementById('confirm-yes');
@@ -821,8 +824,15 @@ require_once './views/layouts/side.php';
         }
 
         function updateDeleteButton() {
-            const checkedBoxes = document.querySelectorAll('.select-item:checked');
+            const checkedBoxes = document.querySelectorAll('#purchase-table tr:not([style*="display: none"]) .select-item:checked');
+            console.log('Checked boxes in visible rows:', checkedBoxes.length);
             deleteButton.classList.toggle('show', checkedBoxes.length > 0);
+        }
+
+        function attachCheckboxListeners() {
+            document.querySelectorAll('.select-item').forEach(checkbox => {
+                checkbox.addEventListener('change', updateDeleteButton);
+            });
         }
 
         function calculateTotals() {
@@ -897,6 +907,7 @@ require_once './views/layouts/side.php';
                 }
             });
             calculateTotals();
+            updateDeleteButton();
         }
 
         searchInput.addEventListener('input', function() {
@@ -906,6 +917,7 @@ require_once './views/layouts/side.php';
                 row.style.display = productName?.includes(query) ? '' : 'none';
             });
             calculateTotals();
+            updateDeleteButton();
         });
 
         deleteButton.addEventListener('click', function(e) {
@@ -928,7 +940,7 @@ require_once './views/layouts/side.php';
                     confirmModal.classList.remove('show');
                     return;
                 }
-                fetch(`${baseUrl}profit_loss/destroy_multiple`, {
+                fetch(`${baseUrl}/profit_loss/destroy_multiple`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -940,7 +952,7 @@ require_once './views/layouts/side.php';
                         })
                     })
                     .then(response => {
-                        console.log('Bulk delete response status:', response.status);
+                        console.log('Bulk delete response status:', response.status, 'URL:', `${baseUrl}/profit_loss/destroy_multiple`);
                         if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
                         return response.json();
                     })
@@ -952,6 +964,7 @@ require_once './views/layouts/side.php';
                             });
                             showMessage(idsToDelete.length > 1 ? 'Records_Deleted_Successfully' : 'Record_Deleted_Successfully');
                             calculateTotals();
+                            updateDeleteButton();
                         } else {
                             showMessage('Deletion_Failed', data.message || '');
                         }
@@ -961,7 +974,6 @@ require_once './views/layouts/side.php';
                         showMessage('Deletion_Failed', error.message);
                     });
                 confirmModal.classList.remove('show');
-                updateDeleteButton();
             };
         });
 
@@ -976,7 +988,7 @@ require_once './views/layouts/side.php';
                 confirmModal.querySelector('p').textContent = getTranslation('Confirm_Delete_Single_Item');
                 confirmModal.classList.add('show');
                 confirmYes.onclick = function() {
-                    fetch(`${baseUrl}profit_loss/destroy/${id}`, {
+                    fetch(`${baseUrl}/profit_loss/destroy/${id}`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -985,7 +997,7 @@ require_once './views/layouts/side.php';
                             }
                         })
                         .then(response => {
-                            console.log('Single delete response status:', response.status);
+                            console.log('Single delete response status:', response.status, 'URL:', `${baseUrl}/profit_loss/destroy/${id}`);
                             if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
                             return response.json();
                         })
@@ -995,6 +1007,7 @@ require_once './views/layouts/side.php';
                                 button.closest('tr').remove();
                                 showMessage('Record_Deleted_Successfully');
                                 calculateTotals();
+                                updateDeleteButton();
                             } else {
                                 showMessage('Deletion_Failed', data.message || '');
                             }
@@ -1004,7 +1017,6 @@ require_once './views/layouts/side.php';
                             showMessage('Deletion_Failed', error.message);
                         });
                     confirmModal.classList.remove('show');
-                    updateDeleteButton();
                 };
             });
         });
@@ -1014,7 +1026,7 @@ require_once './views/layouts/side.php';
         });
 
         selectAllCheckbox.addEventListener('change', function() {
-            selectItemCheckboxes.forEach(checkbox => {
+            document.querySelectorAll('.select-item').forEach(checkbox => {
                 if (checkbox.closest('tr').style.display !== 'none') {
                     checkbox.checked = this.checked;
                 }
@@ -1022,14 +1034,11 @@ require_once './views/layouts/side.php';
             updateDeleteButton();
         });
 
-        selectItemCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', updateDeleteButton);
-        });
-
         filterDropdown.addEventListener('change', function() {
             filterTable(this.value);
         });
 
+        attachCheckboxListeners();
         updateDeleteButton();
         filterTable('all');
     });

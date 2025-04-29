@@ -537,8 +537,11 @@ require_once './views/layouts/side.php';
         text-transform: capitalize !important;
     }
 </style>
+<?php
+require_once './views/layouts/header.php';
+require_once './views/layouts/side.php';
+?>
 
-<!-- Include Flatpickr CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 <div style="margin-left: 250px;">
@@ -550,20 +553,20 @@ require_once './views/layouts/side.php';
         <div class="filter-date-wrapper">
             <div class="filter-dropdown-container">
                 <select class="filter-dropdown" id="filter-dropdown">
-                    <option value="all" selected>Filter all</option>
-                    <option value="today">Today</option>
-                    <option value="this-week">This Week</option>
-                    <option value="last-week">Last Week</option>
-                    <option value="this-month">This Month</option>
-                    <option value="last-month">Last Month</option>
+                    <option value="all" selected data-translate-key="Filter_All">Filter all</option>
+                    <option value="today" data-translate-key="Today">Today</option>
+                    <option value="this-week" data-translate-key="This Week">This Week</option>
+                    <option value="last-week" data-translate-key="Last_Week">Last Week</option>
+                    <option value="this-month" data-translate-key="This Month">This Month</option>
+                    <option value="last-month" data-translate-key="Last_Month">Last Month</option>
                 </select>
             </div>
             <div class="date-filter">
-                <label for="date-range">Date Range:</label>
-                <input type="text" id="date-range" placeholder="Select date range...">
+                <label for="date-range" data-translate-key="Date_Range">Date Range:</label>
+                <input type="text" id="date-range" data-translate-key="Select_Date_Range" placeholder="Select date range...">
             </div>
             <div class="search-containerr">
-                <input type="text" id="search-input" placeholder="search...">
+                <input type="text" id="search-input" data-translate-key="Search_Placeholder" placeholder="search...">
             </div>
         </div>
     </div>
@@ -572,20 +575,20 @@ require_once './views/layouts/side.php';
         <table>
             <thead>
                 <tr>
-                    <th><input type="checkbox" id="select-all" title="Select All" aria-label="Select all items"></th>
-                    <th>Image</th>
-                    <th>Product Name</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Total Price</th>
-                    <th>Date of Sale</th>
-                    <th>Action</th>
+                    <th><input type="checkbox" id="select-all" title="Select All" aria-label="Select All" data-translate-key="Select_All"></th>
+                    <th data-translate-key="Image">Image</th>
+                    <th data-translate-key="Product Name">Product Name</th>
+                    <th data-translate-key="Quantity">Quantity</th>
+                    <th data-translate-key="Price">Price</th>
+                    <th data-translate-key="Total Price">Total Price</th>
+                    <th data-translate-key="Date_of_Sale">Date of Sale</th>
+                    <th data-translate-key="Action">Action</th>
                 </tr>
             </thead>
             <tbody id="purchase-table">
                 <?php foreach ($reports as $report) : ?>
                     <tr data-date="<?= $report['created_at'] ? date('Y-m-d', strtotime($report['created_at'])) : 'N/A' ?>">
-                        <td><input type="checkbox" class="select-item" data-id="<?= $report['id'] ?>"></td>
+                        <td><input type="checkbox" class="select-item" R data-id="<?= $report['id'] ?>" title="Select Item" aria-label="Select Item"></td>
                         <td><img src="<?= $report['image'] ?>" alt="Product Image" width="50" loading="lazy"></td>
                         <td><?= htmlspecialchars($report['product_name']) ?></td>
                         <td><?= $report['quantity'] ?></td>
@@ -593,8 +596,8 @@ require_once './views/layouts/side.php';
                         <td><?= number_format($report['total_price'], 2) ?>$</td>
                         <td><?= $report['created_at'] ? date('Y-m-d', strtotime($report['created_at'])) : 'N/A' ?></td>
                         <td>
-                            <button style="display: none;" class="edit-btn" data-id="<?= $report['id'] ?>">Edit</button>
-                            <button class="remove-btn" data-id="<?= $report['id'] ?>"><i class="fa-solid fa-trash"></i></button>
+                            <button style="display: none;" class="edit-btn" data-id="<?= $report['id'] ?>" data-translate-key="Edit" title="Edit" aria-label="Edit">Edit</button>
+                            <button class="remove-btn" data-id="<?= $report['id'] ?>" data-translate-key="Delete" title="Delete" aria-label="Delete"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 <?php endforeach ?>
@@ -602,30 +605,30 @@ require_once './views/layouts/side.php';
         </table>
         <div class="pagination">
             <?php if ($currentPage > 1): ?>
-                <button class="page-btn" data-page="<?= $currentPage - 1 ?>"><i class="fa-solid fa-less-than"></i></button>
+                <button class="page-btn" data-page="<?= $currentPage - 1 ?>" data-translate-key="Previous_Page" title="Previous Page" aria-label="Previous Page"><i class="fa-solid fa-less-than"></i></button>
             <?php endif; ?>
             <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                <button class="page-btn <?= $i == $currentPage ? 'active' : '' ?>" data-page="<?= $i ?>"><?= $i ?></button>
+                <button class="page-btn <?= $i == $currentPage ? 'active' : '' ?>" data-page="<?= $i ?>" title="Page <?= $i ?>" aria-label="Page <?= $i ?>"><?= $i ?></button>
             <?php endfor; ?>
             <?php if ($currentPage < $totalPages): ?>
-                <button class="page-btn" data-page="<?= $currentPage + 1 ?>"><i class="fa-solid fa-greater-than"></i></button>
+                <button class="page-btn" data-page="<?= $currentPage + 1 ?>" data-translate-key="Next_Page" title="Next Page" aria-label="Next Page"><i class="fa-solid fa-greater-than"></i></button>
             <?php endif; ?>
         </div>
     </div>
 
     <!-- Delete Button (Hidden by Default) -->
-    <button class="delete-btn" id="delete-selected">Delete Selected</button>
+    <button class="delete-btn" id="delete-selected" data-translate-key="Delete_Selected" title="Delete Selected" aria-label="Delete Selected">Delete Selected</button>
 
     <!-- Custom Message Element -->
-    <div class="message" id="delete-message">Item deleted</div>
+    <div class="message" id="delete-message" data-translate-key="Item_Deleted_Successfully">Item deleted</div>
 
     <!-- Custom Confirmation Modal for Deletion -->
     <div class="confirm-modal" id="confirm-modal">
         <div class="confirm-modal-content">
-            <p>Are you sure you want to delete the selected items?</p>
+            <p data-translate-key="Confirm_Delete_Items">Are you sure you want to delete the selected items?</p>
             <div class="confirm-modal-buttons">
-                <button id="confirm-yes">Yes</button>
-                <button id="confirm-no">No</button>
+                <button id="confirm-yes" data-translate-key="Yes" title="Yes" aria-label="Yes">Yes</button>
+                <button id="confirm-no" data-translate-key="No" title="No" aria-label="No">No</button>
             </div>
         </div>
     </div>
@@ -633,32 +636,32 @@ require_once './views/layouts/side.php';
     <!-- Custom Edit Modal -->
     <div class="confirm-modal" id="edit-modal">
         <div class="confirm-modal-content">
-            <p>Edit Product</p>
+            <p data-translate-key="Edit Product">Edit Product</p>
             <form id="edit-form">
                 <input type="hidden" name="id" id="edit-id">
                 <div>
-                    <label>Product Name:</label>
+                    <label data-translate-key="Product Name">Product Name:</label>
                     <input type="text" name="product_name" id="edit-product-name" required>
                 </div>
                 <div>
-                    <label>Quantity:</label>
+                    <label data-translate-key="Quantity">Quantity:</label>
                     <input type="number" name="quantity" id="edit-quantity" min="1" required>
                 </div>
                 <div>
-                    <label>Price:</label>
+                    <label data-translate-key="Price">Price:</label>
                     <input type="number" name="price" id="edit-price" step="0.01" min="0" required>
                 </div>
                 <div>
-                    <label>Date:</label>
+                    <label data-translate-key="Date_of_Sale">Date:</label>
                     <input type="date" name="created_at" id="edit-created-at" required>
                 </div>
                 <div>
-                    <label>Image:</label>
+                    <label data-translate-key="Image">Image:</label>
                     <input type="file" name="image" id="edit-image" accept="image/*">
                 </div>
                 <div class="confirm-modal-buttons">
-                    <button type="submit" id="save-edit">Save</button>
-                    <button type="button" id="cancel-edit">Cancel</button>
+                    <button type="submit" id="save-edit" data-translate-key="Save" title="Save" aria-label="Save">Save</button>
+                    <button type="button" id="cancel-edit" data-translate-key="Cancel" title="Cancel" aria-label="Cancel">Cancel</button>
                 </div>
             </form>
         </div>
@@ -666,19 +669,32 @@ require_once './views/layouts/side.php';
 
     <!-- Total Price Display -->
     <div class="total-price">
-        Total Price: <span>$</span>
+        <span data-translate-key="Total Price">Total Price:</span> <span>$</span>
     </div>
 </div>
 
 <!-- Include Flatpickr JS -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
+    // Function to get translated text
+    function getTranslation(key) {
+        const lang = localStorage.getItem('selectedLanguage') || 'en';
+        return translations[lang][key] || key;
+    }
+
     // Initialize Flatpickr for date range
     flatpickr("#date-range", {
         mode: "range",
         dateFormat: "Y-m-d",
         defaultDate: ["<?= date('Y-m-d', strtotime('-1 month')) ?>", "<?= date('Y-m-d') ?>"],
         minDate: "2025-01-01",
+        locale: {
+            rangeSeparator: ' to ',
+            firstDayOfWeek: 1
+        },
+        onReady: function(selectedDates, dateStr, instance) {
+            instance.input.placeholder = getTranslation('Select_Date_Range');
+        },
         onChange: function(selectedDates) {
             if (selectedDates.length === 2) {
                 const startDate = selectedDates[0].toISOString().split('T')[0];
@@ -702,7 +718,7 @@ require_once './views/layouts/side.php';
     const filterDropdownContainer = document.querySelector('.filter-dropdown-container');
     const searchInput = document.getElementById('search-input');
     const tableBody = document.getElementById('purchase-table');
-    const totalPriceSpan = document.querySelector('.total-price span');
+    const totalPriceSpan = document.querySelector('.total-price span:last-child');
     const modal = document.getElementById('confirm-modal');
     const confirmYes = document.getElementById('confirm-yes');
     const confirmNo = document.getElementById('confirm-no');
@@ -716,6 +732,17 @@ require_once './views/layouts/side.php';
     const csrfToken = '<?= isset($_SESSION["csrf_token"]) ? $_SESSION["csrf_token"] : "" ?>';
     let currentPage = <?= $currentPage ?: 1 ?>;
 
+    // Apply translations on page load
+    const savedLang = localStorage.getItem('selectedLanguage') || 'en';
+    applyTranslations(savedLang);
+
+    // Update tooltips and aria-labels dynamically
+    document.querySelectorAll('[title][data-translate-key], [aria-label][data-translate-key]').forEach(element => {
+        const key = element.getAttribute('data-translate-key');
+        element.setAttribute('title', getTranslation(key));
+        element.setAttribute('aria-label', getTranslation(key));
+    });
+
     // Add interactivity to dropdown
     filterDropdown.addEventListener('focus', () => {
         filterDropdownContainer.classList.add('active');
@@ -725,8 +752,8 @@ require_once './views/layouts/side.php';
     });
 
     // Show Message with Dynamic Text
-    function showMessage(text) {
-        deleteMessage.textContent = text;
+    function showMessage(messageKey, dynamicText = '') {
+        deleteMessage.textContent = dynamicText ? `${dynamicText} ${getTranslation(messageKey)}` : getTranslation(messageKey);
         deleteMessage.classList.add('show');
         setTimeout(() => deleteMessage.classList.remove('show'), 3000);
     }
@@ -774,7 +801,7 @@ require_once './views/layouts/side.php';
                 if (data.success) {
                     tableBody.innerHTML = data.reports.length > 0 ? data.reports.map(report => `
                     <tr data-date="${report.created_at}">
-                        <td><input type="checkbox" class="select-item" data-id="${report.id}"></td>
+                        <td><input type="checkbox" class="select-item" data-id="${report.id}" title="${getTranslation('Select')}"></td>
                         <td><img src="${report.image}" alt="Product Image" width="50" loading="lazy"></td>
                         <td>${report.product_name}</td>
                         <td>${report.quantity}</td>
@@ -782,11 +809,11 @@ require_once './views/layouts/side.php';
                         <td>${parseFloat(report.total_price).toFixed(2)}$</td>
                         <td>${new Date(report.created_at).toISOString().split('T')[0]}</td>
                         <td>
-                            <button style="display: none;" class="edit-btn" data-id="${report.id}">Edit</button>
-                            <button class="remove-btn" data-id="${report.id}"><i class="fa-solid fa-trash"></i></button>
+                            <button style="display: none;" class="edit-btn" data-id="${report.id}" data-translate-key="Edit" title="${getTranslation('Edit')}" aria-label="${getTranslation('Edit')}">Edit</button>
+                            <button class="remove-btn" data-id="${report.id}" data-translate-key="Delete" title="${getTranslation('Delete')}" aria-label="${getTranslation('Delete')}"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
-                `).join('') : '<tr><td colspan="8">No records found</td></tr>';
+                `).join('') : `<tr><td colspan="8" data-translate-key="No_Records_Found">${getTranslation('No_Records_Found')}</td></tr>`;
                     totalPriceSpan.textContent = `$${parseFloat(data.total_price).toFixed(2)}`;
                     currentPage = data.currentPage;
                     updatePagination(data.currentPage, data.totalPages);
@@ -794,12 +821,12 @@ require_once './views/layouts/side.php';
                     attachEditListeners();
                     attachCheckboxListeners();
                 } else {
-                    alert('Failed to fetch data: ' + (data.error || 'Unknown error'));
+                    showMessage('Failed_To_Fetch_Data', data.error || '');
                 }
             })
             .catch(error => {
                 tableBody.classList.remove('loading');
-                alert('Error fetching data: ' + error.message);
+                showMessage('Error_Fetching_Data', error.message);
             });
     }
 
@@ -807,15 +834,21 @@ require_once './views/layouts/side.php';
     function updatePagination(currentPage, totalPages) {
         let paginationHTML = '';
         if (currentPage > 1) {
-            paginationHTML += `<button class="page-btn" data-page="${currentPage - 1}"><i class="fa-solid fa-less-than"></i></button>`;
+            paginationHTML += `<button class="page-btn" data-page="${currentPage - 1}" data-translate-key="Previous_Page" title="${getTranslation('Previous_Page')}" aria-label="${getTranslation('Previous_Page')}"><i class="fa-solid fa-less-than"></i></button>`;
         }
         for (let i = 1; i <= totalPages; i++) {
-            paginationHTML += `<button class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+            paginationHTML += `<button class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}" title="${getTranslation('Page')} ${i}" aria-label="${getTranslation('Page')} ${i}">${i}</button>`;
         }
         if (currentPage < totalPages) {
-            paginationHTML += `<button class="page-btn" data-page="${currentPage + 1}"><i class="fa-solid fa-greater-than"></i></button>`;
+            paginationHTML += `<button class="page-btn" data-page="${currentPage + 1}" data-translate-key="Next_Page" title="${getTranslation('Next_Page')}" aria-label="${getTranslation('Next_Page')}"><i class="fa-solid fa-greater-than"></i></button>`;
         }
         paginationContainer.innerHTML = paginationHTML;
+        // Update pagination button attributes for translation
+        document.querySelectorAll('.page-btn[data-translate-key]').forEach(button => {
+            const key = button.getAttribute('data-translate-key');
+            button.setAttribute('title', getTranslation(key));
+            button.setAttribute('aria-label', getTranslation(key));
+        });
         attachPageListeners();
     }
 
@@ -852,7 +885,7 @@ require_once './views/layouts/side.php';
     function handleRemoveClick() {
         const id = this.getAttribute('data-id');
         const row = this.closest('tr');
-        modal.querySelector('p').textContent = 'Are you sure you want to delete this item?';
+        modal.querySelector('p').textContent = getTranslation('Confirm_Delete_Single_Item');
         modal.classList.add('show');
         confirmYes.onclick = () => {
             tableBody.classList.add('loading');
@@ -874,18 +907,18 @@ require_once './views/layouts/side.php';
                     tableBody.classList.remove('loading');
                     if (data.success) {
                         row.remove();
-                        showMessage('Product deleted successfully');
+                        showMessage('Product_Deleted_Successfully');
                         modal.classList.remove('show');
                         fetchTableData({
                             page: currentPage
                         });
                     } else {
-                        alert('Failed to delete: ' + (data.error || 'Unknown error'));
+                        showMessage('Failed_To_Delete', data.error || '');
                     }
                 })
                 .catch(error => {
                     tableBody.classList.remove('loading');
-                    alert('Error deleting item: ' + error.message);
+                    showMessage('Error_Deleting_Item', error.message);
                 });
         };
         confirmNo.onclick = () => modal.classList.remove('show');
@@ -918,10 +951,10 @@ require_once './views/layouts/side.php';
                     document.getElementById('edit-image').value = '';
                     editModal.classList.add('show');
                 } else {
-                    alert('Failed to fetch record: ' + (data.error || 'Unknown error'));
+                    showMessage('Failed_To_Fetch_Record', data.error || '');
                 }
             })
-            .catch(error => alert('Error: ' + error.message));
+            .catch(error => showMessage('Error_Fetching_Data', error.message));
     }
 
     editForm.addEventListener('submit', function(e) {
@@ -938,16 +971,16 @@ require_once './views/layouts/side.php';
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showMessage('Product updated successfully');
+                    showMessage('Product_Updated_Successfully');
                     editModal.classList.remove('show');
                     fetchTableData({
                         page: currentPage
                     });
                 } else {
-                    alert('Failed to update: ' + (data.error || 'Unknown error'));
+                    showMessage('Failed_To_Update', data.error || '');
                 }
             })
-            .catch(error => alert('Error: ' + error.message));
+            .catch(error => showMessage('Failed_To_Update', error.message));
     });
 
     cancelEdit.addEventListener('click', () => {
@@ -959,10 +992,10 @@ require_once './views/layouts/side.php';
         const checkboxes = document.querySelectorAll('.select-item:checked');
         const ids = [...checkboxes].map(cb => cb.getAttribute('data-id'));
         if (ids.length === 0) {
-            alert('Please select at least one item to delete.');
+            showMessage('Please_Select_At_Least_One_Item');
             return;
         }
-        modal.querySelector('p').textContent = `Are you sure you want to delete ${ids.length} item${ids.length > 1 ? 's' : ''}?`;
+        modal.querySelector('p').textContent = getTranslation('Confirm_Delete_Items').replace('{count}', ids.length);
         modal.classList.add('show');
         confirmYes.onclick = () => {
             tableBody.classList.add('loading');
@@ -984,18 +1017,18 @@ require_once './views/layouts/side.php';
                     tableBody.classList.remove('loading');
                     if (data.success) {
                         checkboxes.forEach(cb => cb.closest('tr').remove());
-                        showMessage(`${ids.length} item${ids.length > 1 ? 's' : ''} deleted successfully`);
+                        showMessage('Items_Deleted_Successfully', `${ids.length}`);
                         modal.classList.remove('show');
                         fetchTableData({
                             page: currentPage
                         });
                     } else {
-                        alert('Failed to delete: ' + (data.error || 'Unknown error'));
+                        showMessage('Failed_To_Delete', data.error || '');
                     }
                 })
                 .catch(error => {
                     tableBody.classList.remove('loading');
-                    alert('Error deleting items: ' + error.message);
+                    showMessage('Error_Deleting_Item', error.message);
                 });
         };
         confirmNo.onclick = () => modal.classList.remove('show');
@@ -1055,6 +1088,4 @@ require_once './views/layouts/side.php';
     });
 </script>
 
-<?php
-require_once './views/layouts/footer.php';
-?>
+<?php require_once 'views/layouts/footer.php'; ?>

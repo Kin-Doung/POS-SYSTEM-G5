@@ -21,6 +21,7 @@ require_once './views/layouts/side.php';
         gap: 20px;
         margin-top: 20px;
     }
+
     .total-price {
         margin-top: 20px;
         padding: 15px;
@@ -31,20 +32,25 @@ require_once './views/layouts/side.php';
         color: #1e293b;
         text-align: right;
     }
+
     #profit-total span {
         color: #16a34a;
     }
+
     #loss-total span {
         color: #dc2626;
     }
+
     .profit {
         color: green;
         font-weight: bold;
     }
+
     .loss {
         color: red;
         font-weight: bold;
     }
+
     .pagination-controls {
         margin-top: 20px;
         display: flex;
@@ -53,6 +59,7 @@ require_once './views/layouts/side.php';
         gap: 15px;
         font-family: Arial, sans-serif;
     }
+
     .pagination-controls a,
     .pagination-controls button {
         padding: 8px 16px;
@@ -62,24 +69,27 @@ require_once './views/layouts/side.php';
         cursor: pointer;
         transition: background-color 0.3s ease;
     }
+
     .pagination-controls a {
         background-color: #007bff;
         color: white;
         text-decoration: none;
     }
+
     .pagination-controls a:hover {
         background-color: #0056b3;
     }
+
     .pagination-controls button {
         background-color: #ccc;
         color: #fff;
         cursor: not-allowed;
     }
+
     .pagination-controls span {
         font-weight: bold;
     }
 
-    /* Main content wrapper to account for sidebar */
     .main-content {
         margin-left: 250px;
         padding: 20px;
@@ -151,7 +161,8 @@ require_once './views/layouts/side.php';
         height: auto;
     }
 
-    .remove-btn, .delete-single {
+    .remove-btn,
+    .delete-single {
         background: none;
         color: red;
         border: none;
@@ -163,7 +174,8 @@ require_once './views/layouts/side.php';
         transition: all 0.3s ease;
     }
 
-    .remove-btn:hover, .delete-single:hover {
+    .remove-btn:hover,
+    .delete-single:hover {
         background: none;
         transform: translateY(-2px);
     }
@@ -203,10 +215,8 @@ require_once './views/layouts/side.php';
         margin-top: 10px;
     }
 
-    .delete-btn:hover {
-        background: linear-gradient(45deg, #cc0000, #ff4d4d);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(255, 77, 77, 0.4);
+    .delete-btn.show {
+        display: inline-block;
     }
 
     input[type="checkbox"] {
@@ -217,7 +227,6 @@ require_once './views/layouts/side.php';
         border-radius: 4px;
     }
 
-    /* Filter and Search Styles */
     .filter-search-container {
         display: flex;
         flex-direction: column;
@@ -325,7 +334,6 @@ require_once './views/layouts/side.php';
         outline: none;
     }
 
-    /* Custom Message Styles */
     .message {
         position: fixed;
         top: 20px;
@@ -344,7 +352,6 @@ require_once './views/layouts/side.php';
         opacity: 1;
     }
 
-    /* Custom Confirmation Modal Styles */
     .confirm-modal {
         display: none;
         position: fixed;
@@ -379,28 +386,6 @@ require_once './views/layouts/side.php';
         margin-bottom: 20px;
     }
 
-    .confirm-modal-content form div {
-        margin-bottom: 15px;
-        text-align: left;
-    }
-
-    .confirm-modal-content label {
-        display: block;
-        font-size: 14px;
-        font-weight: 500;
-        color: #1e293b;
-        margin-bottom: 5px;
-    }
-
-    .confirm-modal-content input {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        font-size: 14px;
-        outline: none;
-    }
-
     .confirm-modal-buttons {
         display: flex;
         justify-content: center;
@@ -417,33 +402,28 @@ require_once './views/layouts/side.php';
         transition: all 0.3s ease;
     }
 
-    .confirm-modal-buttons #confirm-yes,
-    .confirm-modal-buttons #save-edit {
+    .confirm-modal-buttons #confirm-yes {
         background: #5cbacc;
         color: white;
     }
 
-    .confirm-modal-buttons #confirm-yes:hover,
-    .confirm-modal-buttons #save-edit:hover {
+    .confirm-modal-buttons #confirm-yes:hover {
         background: #4a9bb0;
         transform: translateY(-2px);
         box-shadow: 0 2px 5px rgba(92, 186, 204, 0.3);
     }
 
-    .confirm-modal-buttons #confirm-no,
-    .confirm-modal-buttons #cancel-edit {
+    .confirm-modal-buttons #confirm-no {
         background: linear-gradient(45deg, #ff4d4d, #ff7878);
         color: white;
     }
 
-    .confirm-modal-buttons #confirm-no:hover,
-    .confirm-modal-buttons #cancel-edit:hover {
+    .confirm-modal-buttons #confirm-no:hover {
         background: linear-gradient(45deg, #cc0000, #ff4d4d);
         transform: translateY(-2px);
         box-shadow: 0 2px 5px rgba(255, 77, 77, 0.3);
     }
 
-    /* Pagination Styles */
     .pagination {
         display: flex;
         gap: 10px;
@@ -470,7 +450,6 @@ require_once './views/layouts/side.php';
         font-weight: bold;
     }
 
-    /* Loading State */
     .loading {
         position: relative;
         opacity: 0.7;
@@ -495,13 +474,13 @@ require_once './views/layouts/side.php';
         0% {
             transform: translate(-50%, -50%) rotate(0deg);
         }
+
         100% {
             transform: translate(-50%, -50%) rotate(360deg);
         }
     }
 
-    /* Empty Table State */
-    tbody tr td[colspan="8"] {
+    tbody tr td[colspan="7"] {
         text-align: center;
         padding: 40px;
         color: #6b7280;
@@ -510,7 +489,6 @@ require_once './views/layouts/side.php';
         background-color: #f8f9fa;
     }
 
-    /* Responsive adjustments */
     @media (max-width: 768px) {
         .main-content {
             margin-left: 0;
@@ -549,12 +527,12 @@ require_once './views/layouts/side.php';
 
         .date-filter input[type="text"] {
             width: 200px;
-            border-radius: none;
         }
 
-        .search-containerr {
+        .search-container {
             width: 100%;
         }
+
         .message {
             top: 10px;
             right: 10px;
@@ -597,20 +575,20 @@ require_once './views/layouts/side.php';
         <div class="filter-date-wrapper">
             <div class="filter-dropdown-container">
                 <select class="filter-dropdown" id="filter-dropdown">
-                    <option value="all" selected>Filter all</option>
-                    <option value="today">Today</option>
-                    <option value="this-week">This Week</option>
-                    <option value="last-week">Last Week</option>
-                    <option value="this-month">This Month</option>
-                    <option value="last-month">Last Month</option>
+                    <option value="all" data-translate-key="Filter_All">Filter all</option>
+                    <option value="today" data-translate-key="Today">Today</option>
+                    <option value="this-week" data-translate-key="This_Week">This Week</option>
+                    <option value="last-week" data-translate-key="Last_Week">Last Week</option>
+                    <option value="this-month" data-translate-key="This_Month">This Month</option>
+                    <option value="last-month" data-translate-key="Last_Month">Last Month</option>
                 </select>
             </div>
             <div class="date-filter">
-                <label for="date-range">Date Range:</label>
-                <input type="text" id="date-range" placeholder="Select date range...">
+                <label for="date-range" data-translate-key="Date_Range">Date Range:</label>
+                <input type="text" id="date-range" placeholder="Select date range..." data-translate-key="Select_Date_Range">
             </div>
-            <div class="search-containerr">
-                <input type="text" id="search-input" placeholder="search...">
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="search..." data-translate-key="Search_Placeholder">
             </div>
         </div>
     </div>
@@ -618,13 +596,13 @@ require_once './views/layouts/side.php';
         <table>
             <thead>
                 <tr>
-                    <th><input type="checkbox" id="select-all" title="Select All" aria-label="Select all items"></th>
-                    <th>Image</th>
-                    <th>Product Name</th>
-                    <th>Profit Loss</th>
-                    <th>Result Type</th>
-                    <th>Date of Sale</th>
-                    <th>Action</th>
+                    <th><input type="checkbox" id="select-all" title="Select All" data-translate-key="Select_All" aria-label="Select all items"></th>
+                    <th data-translate-key="Image">Image</th>
+                    <th data-translate-key="Product_Name">Product Name</th>
+                    <th data-translate-key="Profit_Loss">Profit Loss</th>
+                    <th data-translate-key="Result_Type">Result Type</th>
+                    <th data-translate-key="Date_of_Sale">Date of Sale</th>
+                    <th data-translate-key="Action">Action</th>
                 </tr>
             </thead>
             <tbody id="purchase-table">
@@ -634,18 +612,19 @@ require_once './views/layouts/side.php';
                     foreach ($Profit_Loss as $profit_loss) {
                         if (!isset($profit_loss['ID']) || !is_numeric($profit_loss['ID'])) {
                             error_log("list.php: Invalid or missing ID in record: " . json_encode($profit_loss));
+                            continue;
                         }
                 ?>
                         <tr data-date="<?= isset($profit_loss['Sale_Date']) ? htmlspecialchars($profit_loss['Sale_Date']) : '' ?>">
                             <td><input type="checkbox" class="select-item" data-id="<?= isset($profit_loss['ID']) ? htmlspecialchars($profit_loss['ID']) : '' ?>" aria-label="Select item"></td>
                             <td>
                                 <?php if (isset($profit_loss['image']) && !empty($profit_loss['image']) && file_exists($profit_loss['image'])) : ?>
-                                    <img src="<?= htmlspecialchars($profit_loss['image']) ?>" alt="Product Image" width="50">
+                                    <img src="<?= htmlspecialchars($profit_loss['image']) ?>" alt="Product Image" width="50" data-translate-key="Image">
                                 <?php else : ?>
-                                    <img src="/assets/images/default-image.jpg" alt="No Image" width="50">
+                                    <img src="/assets/images/default-image.jpg" alt="No Image" width="50" data-translate-key="No_Image">
                                 <?php endif; ?>
                             </td>
-                            <td><?= isset($profit_loss['Product_Name']) ? htmlspecialchars($profit_loss['Product_Name']) : 'N/A' ?></td>
+                            <td data-translate-key="Product_Name"><?= isset($profit_loss['Product_Name']) ? htmlspecialchars($profit_loss['Product_Name']) : 'N/A' ?></td>
                             <td>
                                 <?php
                                 $profit_loss_value = isset($profit_loss['Profit_Loss']) ? floatval($profit_loss['Profit_Loss']) : 0;
@@ -655,7 +634,7 @@ require_once './views/layouts/side.php';
                                 <span class="<?= $class ?>"><?= number_format($profit_loss_value, 2) ?></span>
                                 <span class="numeric-value" style="display: none;"><?= $profit_loss_value ?></span>
                             </td>
-                            <td><span class="<?= $class ?>"><?= htmlspecialchars($result_type) ?></span></td>
+                            <td><span class="<?= $class ?>" data-translate-key="<?= htmlspecialchars($result_type) ?>"><?= htmlspecialchars($result_type) ?></span></td>
                             <td>
                                 <?= isset($profit_loss['Sale_Date']) && strtotime($profit_loss['Sale_Date']) !== false ? date('Y-m-d', strtotime($profit_loss['Sale_Date'])) : 'N/A' ?>
                             </td>
@@ -669,7 +648,7 @@ require_once './views/layouts/side.php';
                     error_log("list.php: Profit_Loss is empty or not an array");
                     ?>
                     <tr>
-                        <td colspan="7" style="text-align: center;">No profit/loss data found.</td>
+                        <td colspan="7" data-translate-key="No_Profit_Loss_Data_Found">No profit/loss data found.</td>
                     </tr>
                 <?php } ?>
             </tbody>
@@ -681,7 +660,7 @@ require_once './views/layouts/side.php';
             <?php else : ?>
                 <button disabled><i class="fa-solid fa-less-than"></i></button>
             <?php endif; ?>
-            <span>Page <?= $currentPage ?> of <?= $totalPages ?></span>
+            <span data-translate-key="Page_Of">Page <?= $currentPage ?> of <?= $totalPages ?></span>
             <?php if ($currentPage < $totalPages) : ?>
                 <a href="?page=<?= $currentPage + 1 ?>"><i class="fa-solid fa-greater-than"></i></a>
             <?php else : ?>
@@ -690,21 +669,21 @@ require_once './views/layouts/side.php';
         </div>
     </div>
 
-    <div class="total-values">
-        <div class="total-price" id="profit-total">Total Profit: <span>0.00</span></div>
-        <div class="total-price" id="loss-total">Total Loss: <span>0.00</span></div>
+    <div class="total-values" style="display: none;">
+        <div class="total-price" id="profit-total" data-translate-key="Total_Profit">Total Profit: <span>0.00</span></div>
+        <div class="total-price" id="loss-total" data-translate-key="Total_Loss">Total Loss: <span>0.00</span></div>
     </div>
 
-    <button class="delete-btn" id="delete-selected">Delete Selected</button>
+    <button class="delete-btn" id="delete-selected" data-translate-key="Delete_Selected">Delete Selected</button>
 
     <div class="message" id="delete-message"></div>
 
     <div class="confirm-modal" id="confirm-modal" role="dialog" aria-labelledby="confirm-modal-title">
         <div class="confirm-modal-content">
-            <p id="confirm-modal-title">Are you sure you want to delete?</p>
+            <p id="confirm-modal-title" data-translate-key="Confirm_Delete_Items">Are you sure you want to delete?</p>
             <div class="confirm-modal-buttons">
-                <button id="confirm-yes">Yes</button>
-                <button id="confirm-no">No</button>
+                <button id="confirm-yes" data-translate-key="Yes">Yes</button>
+                <button id="confirm-no" data-translate-key="No">No</button>
             </div>
         </div>
     </div>
@@ -730,7 +709,9 @@ require_once './views/layouts/side.php';
 
     document.addEventListener('DOMContentLoaded', function() {
         const baseUrl = '<?= BASE_URL ?>';
+        const currentLang = localStorage.getItem('selectedLanguage') || 'en';
         console.log('Base URL:', baseUrl);
+        console.log('Current Language:', currentLang);
 
         const selectAllCheckbox = document.getElementById('select-all');
         const selectItemCheckboxes = document.querySelectorAll('.select-item');
@@ -748,8 +729,11 @@ require_once './views/layouts/side.php';
 
         console.log('CSRF Token:', csrfToken || 'Not found');
 
+        // Apply translations on page load
+        applyTranslations(currentLang);
+
         if (!csrfToken) {
-            deleteMessage.textContent = 'CSRF token missing. Please refresh the page.';
+            deleteMessage.textContent = getTranslation('CSRF_Token_Missing', currentLang);
             deleteMessage.classList.add('show');
             setTimeout(() => deleteMessage.classList.remove('show'), 5000);
         }
@@ -782,14 +766,19 @@ require_once './views/layouts/side.php';
             document.querySelectorAll('#purchase-table tr:not([style*="display: none"])').forEach(row => {
                 const numericValue = parseFloat(row.querySelector('.numeric-value')?.textContent) || 0;
                 const resultType = row.querySelector('td:nth-child(5) span')?.textContent.trim();
-                if (resultType === 'Profit') {
+                // Compare with translated values to support language switching
+                if (resultType === getTranslation('Profit', currentLang)) {
                     profitTotal += numericValue;
-                } else if (resultType === 'Loss') {
+                } else if (resultType === getTranslation('Loss', currentLang)) {
                     lossTotal += numericValue;
                 }
             });
+            // Update the UI with formatted totals
             profitTotalSpan.textContent = profitTotal.toFixed(2);
             lossTotalSpan.textContent = lossTotal.toFixed(2);
+            // Re-apply translations to ensure labels are correct
+            applyTranslationsToElement(document.querySelector('#profit-total'), currentLang);
+            applyTranslationsToElement(document.querySelector('#loss-total'), currentLang);
         }
 
         function filterTable(filterType, customStartDate = null, customEndDate = null) {
@@ -863,12 +852,13 @@ require_once './views/layouts/side.php';
             e.preventDefault();
             const checkedBoxes = document.querySelectorAll('.select-item:checked');
             if (checkedBoxes.length === 0) {
-                deleteMessage.textContent = 'Please select at least one item';
+                deleteMessage.textContent = getTranslation('Please_Select_At_Least_One_Item', currentLang);
                 deleteMessage.classList.add('show');
                 setTimeout(() => deleteMessage.classList.remove('show'), 3000);
                 return;
             }
             confirmModal.classList.add('show');
+            applyTranslationsToElement(confirmModal, currentLang);
             confirmYes.onclick = function() {
                 const idsToDelete = Array.from(checkedBoxes)
                     .map(cb => cb.dataset.id)
@@ -876,13 +866,14 @@ require_once './views/layouts/side.php';
                     .map(Number);
                 console.log('Bulk delete IDs:', idsToDelete);
                 if (idsToDelete.length === 0) {
-                    deleteMessage.textContent = 'No valid items selected';
+                    deleteMessage.textContent = getTranslation('No_Valid_Items_Selected', currentLang);
                     deleteMessage.classList.add('show');
                     setTimeout(() => deleteMessage.classList.remove('show'), 3000);
                     confirmModal.classList.remove('show');
                     return;
                 }
-                fetch(`${baseUrl}profit_loss/destroy_multiple`, {
+                document.body.classList.add('loading');
+                fetch(`${baseUrl}/profit_loss/destroy_multiple`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -899,24 +890,28 @@ require_once './views/layouts/side.php';
                         return response.json();
                     })
                     .then(data => {
+                        document.body.classList.remove('loading');
                         console.log('Bulk delete response:', data);
                         if (data.success) {
                             checkedBoxes.forEach(checkbox => {
                                 checkbox.closest('tr').remove();
                             });
-                            deleteMessage.textContent = idsToDelete.length > 1 ? 'Records deleted successfully' : 'Record deleted successfully';
+                            deleteMessage.textContent = idsToDelete.length > 1 ?
+                                getTranslation('Records_Deleted_Successfully', currentLang) :
+                                getTranslation('Record_Deleted_Successfully', currentLang);
                             deleteMessage.classList.add('show');
                             setTimeout(() => deleteMessage.classList.remove('show'), 3000);
                             calculateTotals();
                         } else {
-                            deleteMessage.textContent = `Deletion failed: ${data.message || 'Unknown error'}`;
+                            deleteMessage.textContent = getTranslation('Deletion_Failed', currentLang) + `: ${data.message || 'Unknown error'}`;
                             deleteMessage.classList.add('show');
                             setTimeout(() => deleteMessage.classList.remove('show'), 3000);
                         }
                     })
                     .catch(error => {
+                        document.body.classList.remove('loading');
                         console.error('Bulk delete error:', error);
-                        deleteMessage.textContent = `Error: ${error.message}`;
+                        deleteMessage.textContent = getTranslation('Error_Network', currentLang);
                         deleteMessage.classList.add('show');
                         setTimeout(() => deleteMessage.classList.remove('show'), 3000);
                     });
@@ -930,14 +925,16 @@ require_once './views/layouts/side.php';
                 const id = Number(this.dataset.id);
                 console.log('Single delete ID:', id);
                 if (!id || isNaN(id)) {
-                    deleteMessage.textContent = 'Invalid item selected';
+                    deleteMessage.textContent = getTranslation('Invalid_Item_Selected', currentLang);
                     deleteMessage.classList.add('show');
                     setTimeout(() => deleteMessage.classList.remove('show'), 3000);
                     return;
                 }
                 confirmModal.classList.add('show');
+                applyTranslationsToElement(confirmModal, currentLang);
                 confirmYes.onclick = function() {
-                    fetch(`${baseUrl}profit_loss/destroy/${id}`, {
+                    document.body.classList.add('loading');
+                    fetch(`${baseUrl}/profit_loss/destroy/${id}`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -951,22 +948,24 @@ require_once './views/layouts/side.php';
                             return response.json();
                         })
                         .then(data => {
+                            document.body.classList.remove('loading');
                             console.log('Single delete response:', data);
                             if (data.success) {
                                 button.closest('tr').remove();
-                                deleteMessage.textContent = 'Record deleted successfully';
+                                deleteMessage.textContent = getTranslation('Record_Deleted_Successfully', currentLang);
                                 deleteMessage.classList.add('show');
                                 setTimeout(() => deleteMessage.classList.remove('show'), 3000);
                                 calculateTotals();
                             } else {
-                                deleteMessage.textContent = `Deletion failed: ${data.message || 'Unknown error'}`;
+                                deleteMessage.textContent = getTranslation('Deletion_Failed', currentLang) + `: ${data.message || 'Unknown error'}`;
                                 deleteMessage.classList.add('show');
                                 setTimeout(() => deleteMessage.classList.remove('show'), 3000);
                             }
                         })
                         .catch(error => {
+                            document.body.classList.remove('loading');
                             console.error('Single delete error:', error);
-                            deleteMessage.textContent = `Error: ${error.message}`;
+                            deleteMessage.textContent = getTranslation('Error_Network', currentLang);
                             deleteMessage.classList.add('show');
                             setTimeout(() => deleteMessage.classList.remove('show'), 3000);
                         });
@@ -997,6 +996,7 @@ require_once './views/layouts/side.php';
             filterTable(this.value);
         });
 
+        // Initial setup
         updateDeleteButton();
         filterTable('all');
     });

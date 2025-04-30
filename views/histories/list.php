@@ -171,7 +171,7 @@ require_once './views/layouts/side.php';
         display: flex;
         flex-wrap: nowrap;
         align-items: center;
-        gap: 125px;
+        gap: 135px;
         overflow-x: auto;
         white-space: nowrap;
         margin-bottom: -30px;
@@ -672,9 +672,29 @@ require_once './views/layouts/side.php';
 
 <!-- Include Flatpickr JS -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<!-- Existing HTML remains unchanged -->
 <script>
-    // UI Elements (unchanged)
+    // Initialize Flatpickr for date range
+    flatpickr("#date-range", {
+        mode: "range",
+        dateFormat: "Y-m-d",
+        defaultDate: ["<?= date('Y-m-d', strtotime('-1 month')) ?>", "<?= date('Y-m-d') ?>"],
+        minDate: "2025-01-01",
+        onChange: function(selectedDates) {
+            if (selectedDates.length === 2) {
+                const startDate = selectedDates[0].toISOString().split('T')[0];
+                const endDate = selectedDates[1].toISOString().split('T')[0];
+                fetchTableData({
+                    filter: document.getElementById('filter-dropdown').value,
+                    startDate,
+                    endDate,
+                    search: searchInput.value,
+                    page: 1
+                });
+            }
+        }
+    });
+
+    // UI Elements
     const selectAll = document.getElementById('select-all');
     const deleteBtn = document.getElementById('delete-selected');
     const deleteMessage = document.getElementById('delete-message');
@@ -691,50 +711,38 @@ require_once './views/layouts/side.php';
     const cancelEdit = document.getElementById('cancel-edit');
     const paginationContainer = document.querySelector('.pagination');
 
-    // Base URL for AJAX requests (unchanged)
+    // Base URL for AJAX requests
     const baseUrl = '<?= defined('BASE_URL') ? BASE_URL : '' ?>';
     const csrfToken = '<?= isset($_SESSION["csrf_token"]) ? $_SESSION["csrf_token"] : "" ?>';
     let currentPage = <?= $currentPage ?: 1 ?>;
 
-    // Store the selected date range
-    let selectedStartDate = null; // Initially null, no custom date range
-    let selectedEndDate = null;   // Initially null, no custom date range
-
-    // Initialize Flatpickr for date range
-    flatpickr("#date-range", {
-        mode: "range",
-        dateFormat: "Y-m-d",
-        defaultDate: ["<?= date('Y-m-d') ?>", "<?= date('Y-m-d', strtotime('+7 days')) ?>"], // Today to 7 days from now
-        minDate: null, // Allow past dates to include yesterday (2025-04-28)
-        onChange: function(selectedDates) {
-            if (selectedDates.length === 2) {
-                selectedStartDate = selectedDates[0].toISOString().split('T')[0];
-                selectedEndDate = selectedDates[1].toISOString().split('T')[0];
-                fetchTableData({
-                    filter: document.getElementById('filter-dropdown').value,
-                    startDate: selectedStartDate,
-                    endDate: selectedEndDate,
-                    search: searchInput.value,
-                    page: 1
-                });
-            } else {
-                // If the date range is cleared or incomplete, reset the dates
-                selectedStartDate = null;
-                selectedEndDate = null;
-                fetchTableData({
-                    filter: document.getElementById('filter-dropdown').value,
-                    search: searchInput.value,
-                    page: 1
-                });
-            }
-        }
+    // Add interactivity to dropdown
+    filterDropdown.addEventListener('focus', () => {
+        filterDropdownContainer.classList.add('active');
+    });
+    filterDropdown.addEventListener('blur', () => {
+        filterDropdownContainer.classList.remove('active');
     });
 
-    // Fetch Table Data (modified to prioritize date range)
+    // Show Message with Dynamic Text
+    function showMessage(text) {
+        deleteMessage.textContent = text;
+        deleteMessage.classList.add('show');
+        setTimeout(() => deleteMessage.classList.remove('show'), 3000);
+    }
+
+    // Toggle Delete Button Visibility
+    function updateDeleteButtonVisibility() {
+        const checkboxes = document.querySelectorAll('.select-item');
+        const anyChecked = [...checkboxes].some(checkbox => checkbox.checked);
+        deleteBtn.style.display = anyChecked ? 'block' : 'none';
+    }
+
+    // Fetch Table Data
     function fetchTableData({
         filter = 'all',
-        startDate = selectedStartDate,
-        endDate = selectedEndDate,
+        startDate = null,
+        endDate = null,
         search = '',
         page = currentPage
     } = {}) {
@@ -744,9 +752,7 @@ require_once './views/layouts/side.php';
             search,
             page
         };
-
-        // Always include start_date and end_date if they are set
-        if (startDate && endDate) {
+        if (filter === 'all' && startDate && endDate) {
             payload.start_date = startDate;
             payload.end_date = endDate;
         }
@@ -797,7 +803,7 @@ require_once './views/layouts/side.php';
             });
     }
 
-    // Update Pagination (unchanged)
+    // Update Pagination
     function updatePagination(currentPage, totalPages) {
         let paginationHTML = '';
         if (currentPage > 1) {
@@ -813,7 +819,7 @@ require_once './views/layouts/side.php';
         attachPageListeners();
     }
 
-    // Attach Page Listeners (use stored dates)
+    // Attach Page Listeners
     function attachPageListeners() {
         const pageButtons = document.querySelectorAll('.page-btn');
         pageButtons.forEach(button => {
@@ -827,53 +833,15 @@ require_once './views/layouts/side.php';
         if (!isNaN(page)) {
             fetchTableData({
                 filter: filterDropdown.value,
-                startDate: selectedStartDate,
-                endDate: selectedEndDate,
+                startDate: document.getElementById('date-range').value.split(' to ')[0],
+                endDate: document.getElementById('date-range').value.split(' to ')[1],
                 search: searchInput.value,
                 page
             });
         }
     }
 
-    // Search Input (Debounced, use stored dates)
-    let searchTimeout;
-    searchInput.addEventListener('input', () => {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            fetchTableData({
-                filter: filterDropdown.value,
-                startDate: selectedStartDate,
-                endDate: selectedEndDate,
-                search: searchInput.value,
-                page: 1
-            });
-        }, 300);
-    });
-
-    // Filter Dropdown Change (use stored dates)
-    filterDropdown.addEventListener('change', function() {
-        fetchTableData({
-            filter: this.value,
-            startDate: selectedStartDate,
-            endDate: selectedEndDate,
-            search: searchInput.value,
-            page: 1
-        });
-    });
-
-    // Other functions remain unchanged
-    function showMessage(text) {
-        deleteMessage.textContent = text;
-        deleteMessage.classList.add('show');
-        setTimeout(() => deleteMessage.classList.remove('show'), 3000);
-    }
-
-    function updateDeleteButtonVisibility() {
-        const checkboxes = document.querySelectorAll('.select-item');
-        const anyChecked = [...checkboxes].some(checkbox => checkbox.checked);
-        deleteBtn.style.display = anyChecked ? 'block' : 'none';
-    }
-
+    // Handle Single Delete
     function attachRemoveListeners() {
         document.querySelectorAll('.remove-btn').forEach(button => {
             button.removeEventListener('click', handleRemoveClick);
@@ -923,6 +891,7 @@ require_once './views/layouts/side.php';
         confirmNo.onclick = () => modal.classList.remove('show');
     }
 
+    // Handle Edit
     function attachEditListeners() {
         document.querySelectorAll('.edit-btn').forEach(button => {
             button.removeEventListener('click', handleEditClick);
@@ -985,6 +954,7 @@ require_once './views/layouts/side.php';
         editModal.classList.remove('show');
     });
 
+    // Handle Bulk Delete
     deleteBtn.addEventListener('click', () => {
         const checkboxes = document.querySelectorAll('.select-item:checked');
         const ids = [...checkboxes].map(cb => cb.getAttribute('data-id'));
@@ -1031,6 +1001,7 @@ require_once './views/layouts/side.php';
         confirmNo.onclick = () => modal.classList.remove('show');
     });
 
+    // Checkbox Listeners
     function attachCheckboxListeners() {
         const checkboxes = document.querySelectorAll('.select-item');
         selectAll.removeEventListener('change', handleSelectAllChange);
@@ -1053,11 +1024,28 @@ require_once './views/layouts/side.php';
         updateDeleteButtonVisibility();
     }
 
-    filterDropdown.addEventListener('focus', () => {
-        filterDropdownContainer.classList.add('active');
+    // Filter Dropdown Change
+    filterDropdown.addEventListener('change', function() {
+        fetchTableData({
+            filter: this.value,
+            search: searchInput.value,
+            page: 1
+        });
     });
-    filterDropdown.addEventListener('blur', () => {
-        filterDropdownContainer.classList.remove('active');
+
+    // Search Input (Debounced)
+    let searchTimeout;
+    searchInput.addEventListener('input', () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            fetchTableData({
+                filter: filterDropdown.value,
+                startDate: document.getElementById('date-range').value.split(' to ')[0],
+                endDate: document.getElementById('date-range').value.split(' to ')[1],
+                search: searchInput.value,
+                page: 1
+            });
+        }, 300);
     });
 
     // Initial Load

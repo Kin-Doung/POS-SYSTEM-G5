@@ -200,10 +200,10 @@ document.addEventListener('DOMContentLoaded', function() {
           <i class="fas fa-ellipsis-v menu-icon"></i>
           <div class="dropdown-menu">
             <div class="dropdown-item edit-btn" data-id="${event.id}">
-              <i class="fas fa-pen-fancy"></i> Edit
+              <i class="fas fa-pen-fancy"></i>
             </div>
             <div class="dropdown-item delete-btn" data-id="${event.id}">
-              <i class="fas fa-trash-alt"></i> Delete
+              <i class="fas fa-trash-alt"></i>
             </div>
           </div>
         </div>
@@ -357,7 +357,7 @@ document.addEventListener('DOMContentLoaded', function() {
       font-size: 24px;
       font-weight: bold;
       margin-bottom: 15px;
-      color: #343a40;
+      color:#495057;
       text-transform: uppercase;
     }
     .event-item {
@@ -411,42 +411,9 @@ document.addEventListener('DOMContentLoaded', function() {
     .dropdown-menu.show {
       display: block;
       margin-left: -10px; /* Adjusted as requested */
+      z-index:1001;
     }
-    .dropdown-item {
-      padding: 8px 15px;
-      font-size: 14px;
-      color: #343a40;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      transition: background 0.3s ease, color 0.3s ease;
-    }
-    .dropdown-item:hover {
-      background: #f1f3f5;
-      color: #007bff;
-    }
-    .dropdown-item i {
-      margin-right: 8px;
-      font-size: 16px;
-      background: none !important; /* Remove any background */
-      padding: 0; /* Remove any padding that might create a background */
-      transition: transform 0.3s ease, color 0.3s ease;
-    }
-    .dropdown-item:hover i {
-      transform: scale(1.2); /* Slight zoom effect on hover */
-    }
-    .dropdown-item.edit-btn i {
-      color: #007bff; /* Blue for edit */
-    }
-    .dropdown-item.delete-btn i {
-      color: #dc3545; /* Red for delete */
-    }
-    .dropdown-item.edit-btn:hover i {
-      color: #0056b3; /* Darker blue on hover */
-    }
-    .dropdown-item.delete-btn:hover i {
-      color: #a71d2a; /* Darker red on hover */
-    }
+    
     hr {
       border: 0;
       border-top: 1px solid #e9ecef;

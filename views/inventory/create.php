@@ -133,6 +133,12 @@ require_once './views/layouts/side.php';
         display: none;
         margin: 0 auto;
     }
+    .amount-input{
+        width: 80px;
+    }
+    .table-responsive{
+        overflow: hidden;
+    }
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>

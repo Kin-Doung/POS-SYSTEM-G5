@@ -6,6 +6,18 @@ require_once './views/layouts/side.php';
 <link rel="stylesheet" href="../../views/assets//css/style/calendar.css">
 <script src="../../views/assets/js/sciptJS/calendar.js" defer></script>
 
+<style>
+  #container{
+    margin-top: -30px;
+  }
+  #eventList h2 {
+    font-family: 'Poppins', sans-serif;
+}
+#fc-dom-1{
+  font-family: 'Poppins', sans-serif;
+  font-weight: bold;
+}
+</style>
 <div class="layout-wrapper ">
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
   <!-- Navbar -->
@@ -79,7 +91,7 @@ require_once './views/layouts/side.php';
       </div>
       <button id='saveEdit'>Save</button>
       <button id='deleteEvent'>Delete</button>
-      <span id="closeDetail" class="close-button ">&times;</span>
+      <span id="closeDetail" class="close-button bg-transparent">&times;</span>
 
     </div>
 

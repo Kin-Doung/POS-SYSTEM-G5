@@ -6,11 +6,13 @@ require_once './views/layouts/side.php';
 <link rel="stylesheet" href="../../views/assets//css/style/calendar.css">
 <script src="../../views/assets/js/sciptJS/calendar.js" defer></script>
 
-
 <div class="layout-wrapper ">
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
   <!-- Navbar -->
-  <?php require_once './views/layouts/nav.php' ?>
+   <div style="display: none;">
+   <?php require_once './views/layouts/nav.php' ?>
+
+   </div>
   <!-- End Navbar -->
   <body>
 

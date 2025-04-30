@@ -72,14 +72,14 @@
                     <span class="nav-link-text ms-1" data-translate-key="Categories">Categories</span>
                 </a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link text-dark" href="/notifications">
                     <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="fas fa-bell opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1" data-translate-key="Notifications">Notifications</span>
                 </a>
-            </li>
+            </li> -->
             <li class="nav-item">
                 <a class="nav-link text-dark" href="/calendar">
                     <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">

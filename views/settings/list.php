@@ -2,47 +2,31 @@
 <?php require_once './views/layouts/side.php' ?>
 <?php require_once './Databases/database.php' ?>
 
-
+<style>
+    h2 {
+        font-family: "Poppins", sans-serif;
+        font-size: 25px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        margin-top: -7px;
+    }
+    .account-card-header {
+        height: 50px;
+    }
+</style>
 <body id="page-top">
     <!-- Page Wrapper -->
     <div id="wrapper" style="margin-left: 250px;">
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
-
             <!-- Main Content -->
             <div id="content">
-                <nav class="navbar ml-4 mb-5">
-                    <div class="search-container">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Search...">
-                    </div>
-                    <div class="icons">
-                        <i class="fas fa-globe icon-btn"></i>
-                        <div class="icon-btn" id="notification-icon">
-                            <i class="fas fa-bell"></i>
-                            <span class="notification-badge" id="notification-count">8</span>
-                        </div>
-                    </div>
-                    <div class="profile" id="profile">
-                        <img src="../../views/assets/images/image.png" alt="User">
-                        <div class="profile-info">
-                            <span id="profile-name">Eng Ly</span>
-                            <span class="store-name" id="store-name">Owner Store</span>
-                        </div>
-                        <ul class="menu" id="menu">
-                            <li><a href="/settings" class="item">Account</a></li>
-                            <li><a href="/settings" class="item">Setting</a></li>
-                            <li><a href="/logout" class="item">Logout</a></li>
-                        </ul>
-                        <link rel="stylesheet" href="../../views/assets/css/settings/list.css">
-                        <script src="../../views/assets/js/setting.js"></script>
-                    </div>
-                </nav>
+              <?php require_once './views/layouts/nav.php' ?>
                 <!-- Modal structure -->
-                <div class="container mt-5">
+                <div class="container">
                     <div class="account-card">
                         <div class="account-card-header">
-                            <h2>Personal Account</h2>
+                            <h2>Account Setting</h2>
                         </div>
                         <div class="account-details">
                             <?php if (!empty($admins)) : ?>
@@ -51,7 +35,7 @@
                                         <div class="account-left">
                                             <div class="account-field">
                                                 <h6><strong>Profile:</strong></h6>
-                                                <div>
+                                                <div class="profile-container">
                                                     <?php if (!empty($admin['store_logo'])) : ?>
                                                         <img src="data:image/jpeg;base64,<?= base64_encode($admin['store_logo']) ?>"
                                                             class="profile-img" alt="Store Logo">
@@ -59,10 +43,6 @@
                                                         <span class="no-logo">No Logo</span>
                                                     <?php endif; ?>
                                                 </div>
-                                            </div>
-                                            <div class="account-field">
-                                                <h6><strong>Language:</strong></h6>
-                                                <p><?= htmlspecialchars($admin['language']) ?></p>
                                             </div>
                                         </div>
                                         <div class="account-right">
@@ -74,17 +54,21 @@
                                                 <h6><strong>Store Name:</strong></h6>
                                                 <p><?= htmlspecialchars($admin['store_name']) ?></p>
                                             </div>
-                                            <div class="account-field">
+                                            <div class="account-field password-field">
                                                 <h6><strong>Password:</strong></h6>
-                                                <p>********</p>
+                                                <div class="password-container">
+                                                    <!-- Use type="text" to control display; show asterisks by default -->
+                                                    <input type="text" class="password-input" value="*********" readonly data-password="engly@123">
+                                                    <i class="fas fa-eye-slash toggle-password"></i>
+                                                </div>
+                                            </div>
+                                            <div class="account-field">
+                                                <h6><strong>Email:</strong></h6>
+                                                <p><?= htmlspecialchars($admin['email']) ?></p>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="account-field">
-                                        <h6><strong>Email:</strong></h6>
-                                        <p><?= htmlspecialchars($admin['email']) ?></p>
-                                    </div>
-                                    <div class="edit text-end mt-3">
+                                    <div class="text-right mt-3">
                                         <a href="settings/edit?id=<?= $admin['id'] ?>" class="edit-button">Edit</a>
                                     </div>
                                 <?php endforeach; ?>
@@ -99,7 +83,7 @@
 
                 <style>
                     .account-card {
-                        max-width: 800px;
+                        max-width: 100%;
                         margin: 0 auto;
                         border: none;
                         border-radius: 15px;
@@ -132,13 +116,22 @@
                         min-width: 250px;
                     }
 
+                    .profile-container {
+                        display: flex;
+                        justify-content: center; /* Center horizontally */
+                        align-items: center; /* Center vertically */
+                        width: 100%; /* Ensure it takes full width of parent */
+                        height: 300px; /* Increased to accommodate the larger image */
+                    }
+
                     .profile-img {
-                        width: 150px;
-                        height: 150px;
-                        object-fit: cover;
+                        width: 250px;
+                        height: 250px;
+                        object-fit: contain;
                         border-radius: 50%;
                         border: 3px solid #e9ecef;
                         transition: transform 0.3s ease;
+                        /* Removed margin-top: 200px to prevent overflow */
                     }
 
                     .profile-img:hover {
@@ -177,6 +170,30 @@
                         font-size: 16px;
                     }
 
+                    .password-field .password-container {
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                    }
+
+                    .password-field .password-input {
+                        width: 100%;
+                        padding: 10px 30px 10px 10px;
+                        background: #f8f9fa;
+                        border: none;
+                        border-radius: 5px;
+                        color: #495057;
+                        font-size: 16px;
+                        font-family: monospace;
+                    }
+
+                    .password-field .toggle-password {
+                        position: absolute;
+                        right: 10px;
+                        cursor: pointer;
+                        color: #6c757d;
+                    }
+
                     .edit-button {
                         display: inline-block;
                         padding: 10px 20px;
@@ -206,6 +223,22 @@
             </div>
         </div>
     </div>
+    <script>
+        document.querySelectorAll('.toggle-password').forEach(icon => {
+            icon.addEventListener('click', function () {
+                const input = this.previousElementSibling;
+                const actualPassword = input.getAttribute('data-password');
+                if (input.value === '*********') {
+                    input.value = actualPassword;
+                    this.classList.remove('fa-eye-slash');
+                    this.classList.add('fa-eye');
+                } else {
+                    input.value = '*********';
+                    this.classList.remove('fa-eye');
+                    this.classList.add('fa-eye-slash');
+                }
+            });
+        });
+    </script>
     <script src="../../views/assets/js/demo/chart-area-demo.js"></script>
-
-</body>
+</body> 

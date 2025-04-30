@@ -314,7 +314,7 @@ require_once './views/layouts/side.php';
     }
 
     #search-input {
-        width: 149%;
+        width: 100%;
         border: 1px solid #ccc;
         border-radius: 10px;
         font-size: 14px;

@@ -55,45 +55,31 @@ foreach ($tracking as $item) {
                 <span class="notification-badge" id="notification-count">0</span>
             </div>
             <div class="dropdown-menu dropdown-menu-end low-stock-card" aria-labelledby="notification-icon">
-                <div class="card">
+                <div class="card mt-n2" style="box-shadow: none; border:none">
                     <div class="card-header">
                         <h5 class="card-title" data-translate-key="Low Stock Alerts">Low Stock Alerts</h5>
                     </div>
                     <div class="card-body">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Image</th>
-                                    <th>Product Name</th>
-                                    <th style="display: none;">Category</th>
-                                    <th>Quantity</th>
-                                </tr>
-                            </thead>
-                            <tbody id="lowStockTableBody">
-                                <?php
-                                if (!empty($lowStockItems)) {
-                                    foreach ($lowStockItems as $index => $item):
-                                ?>
-                                        <tr>
-                                            <td><?= $index + 1 ?></td>
-                                            <td>
-                                                <img src="<?= htmlspecialchars($item['image'] ?? '../../views/assets/images/default.png') ?>"
-                                                    alt="Image of <?= htmlspecialchars($item['product_name'] ?? 'Unknown') ?>"
-                                                    style="width: 40px; height: 40px; border-radius: 100%;">
-                                            </td>
-                                            <td><?= htmlspecialchars($item['product_name'] ?? 'Unknown') ?></td>
-                                            <td style="display: none;"><?= htmlspecialchars($item['category_id'] ?? 'N/A') ?></td>
-                                            <td class="low-quantity"><?= htmlspecialchars($item['quantity'] ?? 0) ?></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php } else { ?>
-                                    <tr>
-                                        <td colspan="5" style="text-align: center;">No low stock items.</td>
-                                    </tr>
-                                <?php } ?>
-                            </tbody>
-                        </table>
+                    <div class="low-stock-messages">
+    <?php if (!empty($lowStockItems)) { ?>
+        <?php foreach ($lowStockItems as $item): ?>
+            <div class="low-stock-message">
+                <img src="<?= htmlspecialchars($item['image'] ?? '../../views/assets/images/default.png') ?>"
+                     alt="Image of <?= htmlspecialchars($item['product_name'] ?? 'Unknown') ?>"
+                     style="width: 40px; height: 40px; border-radius: 100%; vertical-align: middle; margin-right: 10px;">
+                <span class="text-danger">
+                    Low Stock Alert: 
+                    <strong><?= htmlspecialchars($item['product_name'] ?? 'Unknown') ?></strong> 
+                    - Only <strong><?= htmlspecialchars($item['quantity'] ?? 0) ?></strong> left!
+                </span>
+            </div>
+        <?php endforeach; ?>
+    <?php } else { ?>
+        <div class="no-items-message">
+            No low stock items.
+        </div>
+    <?php } ?>
+</div>
                     </div>
                 </div>
             </div>
@@ -336,5 +322,51 @@ foreach ($tracking as $item) {
         color: red;
         font-weight: bold;
     }
+
+    .low-stock-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between messages */
+    padding: 10px;
+    width: 400px;
+}
+
+.low-stock-message {
+    display: flex;
+    align-items: center; /* Vertically center image and text */
+    background-color: #fff; /* White background for contrast */
+    border: 1px solid #f8d7da; /* Light red border for danger theme */
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+}
+
+.text-danger {
+    color: #dc3545; /* Bootstrap's danger color (red) */
+}
+
+.no-items-message {
+    text-align: center;
+    color: #6c757d; /* Gray color for neutral message */
+    padding: 20px;
+    font-size: 16px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .low-stock-message {
+        flex-direction: column; /* Stack image and text on small screens */
+        text-align: center;
+    }
+
+    .low-stock-message img {
+        margin-right: 0;
+        margin-bottom: 10px; /* Space between image and text when stacked */
+    }
+
+    .low-stock-message span {
+        font-size: 12px; /* Smaller font on mobile */
+    }
+}
 </style>
 <!-- END ADDITION -->

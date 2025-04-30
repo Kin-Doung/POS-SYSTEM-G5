@@ -2,9 +2,11 @@
 require_once './views/layouts/header.php';
 require_once './views/layouts/side.php';
 ?>
+
 <!-- Add Font Awesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+
 <style>
     .sidebar {
         width: 250px;
@@ -40,30 +42,6 @@ require_once './views/layouts/side.php';
         background: #fff;
     }
 
-    .cart-icon {
-        position: relative;
-        cursor: pointer;
-    }
-
-    .cart-count {
-        position: absolute;
-        top: -5px;
-        right: -5px;
-        background-color: #dc3545;
-        color: white;
-        border-radius: 50%;
-        width: 16px;
-        height: 16px;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        font-size: 10px;
-    }
-
-    .cart-count.visible {
-        display: flex;
-    }
-
     .container-fluid {
         width: 100%;
         padding: 0 5px;
@@ -82,11 +60,19 @@ require_once './views/layouts/side.php';
     }
 
     #submitCart {
-        padding: 10px;
+        padding: 8px;
     }
 
     #moreOptionsBtn {
-        padding: 10px;
+        padding: 8px;
+        width: 100%;
+        max-width: 180px;
+        color: #000;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        font-size: 0.9rem;
     }
 
     #moreOptionsBtn::after {
@@ -105,7 +91,8 @@ require_once './views/layouts/side.php';
         padding: 0 5px;
         margin-bottom: 10px;
         opacity: 1;
-        transition: opacity 0.3s ease;
+        transition: width 0.3s ease, opacity 0.3s ease;
+        position: relative;
     }
 
     .product-col.hidden {
@@ -183,11 +170,12 @@ require_once './views/layouts/side.php';
         background-color: #007bff;
         color: #fff;
         border: none;
-        padding: 6px 12px;
+        padding: 5px 10px;
         border-radius: 5px;
-        width: 100%;
+        width: 50%;
         cursor: pointer;
         transition: background-color 0.3s ease;
+        font-size: 0.9rem;
     }
 
     .buy:hover {
@@ -327,6 +315,8 @@ require_once './views/layouts/side.php';
         text-align: center;
         font-size: 0.9rem;
         background-color: #fff;
+        outline: none;
+        border: none;
     }
 
     .cart-footer {
@@ -337,22 +327,21 @@ require_once './views/layouts/side.php';
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
         position: relative;
         z-index: 900;
     }
 
     .cart-btn {
-        padding: 12px 24px;
+        padding: 8px 16px;
         border: none;
         border-radius: 5px;
         color: #fff;
         cursor: pointer;
-        font-size: 1rem;
+        font-size: 0.9rem;
         transition: background-color 0.2s ease, transform 0.1s ease;
         width: 100%;
-        max-width: 200px;
-        pointer-events: auto;
+        max-width: 180px;
     }
 
     .cart-btn:disabled {
@@ -361,65 +350,62 @@ require_once './views/layouts/side.php';
     }
 
     .cart-btn-success {
-        padding: 14px 28px;
-        font-size: 1.1rem;
-        max-width: 220px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        max-width: 200px;
         background-color: #28a745;
     }
 
     .cart-btn-success:hover:not(:disabled) {
         background-color: #218838;
+        transform: scale(1.05);
     }
 
     .more-options {
         position: relative;
         width: 100%;
-        max-width: 200px;
-        overflow: visible;
+        max-width: 180px;
     }
 
     .cart-btn-secondary {
         background-color: #6c757d;
     }
 
-    .cart-btn-secondary:hover {
+    .cart-btn-secondary:hover:not(:disabled) {
         background-color: #5a6268;
     }
 
     .options-dropdown {
         display: none;
         position: absolute;
-        top: calc(100% + 5px);
-        left: 50%;
-        transform: translateX(-50%);
+        bottom: calc(100% + 5px);
+        left: 0;
         background-color: #fff;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.15);
         border-radius: 6px;
-        z-index: 1001;
+        z-index: 1002;
         width: 100%;
-        max-width: 200px;
-        flex-direction: column;
+        max-width: 180px;
         padding: 5px;
         border: 1px solid #eee;
     }
 
     .options-dropdown.visible {
         display: flex;
+        flex-direction: column;
     }
 
     .options-dropdown button {
         width: 100%;
         border: none;
         margin: 2px 0;
-        padding: 12px;
-        font-size: 0.95rem;
+        padding: 10px;
+        font-size: 0.9rem;
         color: #fff;
         text-align: center;
         transition: all 0.2s ease;
         border-radius: 4px;
         font-weight: 500;
-        letter-spacing: 0.5px;
-        pointer-events: auto;
         cursor: pointer;
     }
 
@@ -457,30 +443,135 @@ require_once './views/layouts/side.php';
         background-color: #0056b3;
     }
 
-    .cart-btn:hover:not(:disabled) {
-        transform: scale(1.05);
-    }
-
     #qr-container {
         margin-top: 15px;
         text-align: center;
+        display: none;
     }
 
-    #qr-container .cart-btn {
+    .qr-section {
+        display: none;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .qr-section.active {
+        display: block !important;
+    }
+
+    .qr-section img {
+        cursor: pointer;
+        width: 80px;
+        height: 80px;
+        margin-bottom: 15px;
+    }
+
+    .qr-buttons {
+        margin-top: 10px;
+    }
+
+    .qr-buttons .cart-btn {
         margin: 5px auto;
     }
 
-    #qr-container #inputField {
-        margin-bottom: 15px;
-        padding: 8px;
-        width: 100%;
-        max-width: 200px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
+    #qr-container .cart-btn-confirm {
+        background-color: #28a745;
+    }
+
+    #qr-container .cart-btn-confirm:hover:not(:disabled) {
+        background-color: #218838;
+    }
+
+    #qr-container .cart-btn-alt {
+        background-color: #17a2b8;
+    }
+
+    #qr-container .cart-btn-alt:hover:not(:disabled) {
+        background-color: #138496;
     }
 
     #cartToggle {
         font-size: 20px;
+    }
+
+    #startWebcamScan {
+        padding: 8px;
+        margin-left: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        display: none;
+    }
+
+    #startWebcamScan:hover {
+        background-color: #0056b3;
+    }
+
+    .barcode-scanner {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-bottom: 15px;
+        gap: 10px;
+    }
+
+    .barcode-scanner input {
+        padding: 8px;
+        width: 200px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .barcode-scanner input:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+        background-color: #f0f8ff;
+    }
+
+    .container-categories {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        padding: 20px;
+        display: none;
+    }
+
+    .category {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 110px;
+        padding: 10px;
+        border-radius: 8px;
+        background-color: #fff;
+        transition: background-color 0.3s;
+        transition: all 0.3s ease-in-out;
+        cursor: pointer;
+    }
+
+    .category:hover {
+        box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+        outline: 2px solid #ccc;
+    }
+
+    .category span {
+        font-size: 24px;
+    }
+
+    .category p {
+        margin: 5px 0 0;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    .category img {
+        display: block;
+        margin: 0 auto;
     }
 
     @media (max-width: 767px) {
@@ -498,13 +589,17 @@ require_once './views/layouts/side.php';
             margin-right: 0;
         }
 
+        .cart-visible .product-col {
+            width: 50%;
+        }
+
         .cart-btn {
             max-width: 100%;
         }
 
         .cart-btn-success {
-            padding: 12px 24px;
-            font-size: 1rem;
+            padding: 8px 16px;
+            font-size: 0.9rem;
             max-width: 100%;
         }
 
@@ -515,13 +610,12 @@ require_once './views/layouts/side.php';
         .options-dropdown {
             max-width: 100%;
             left: 0;
-            transform: none;
-            top: calc(100% + 5px);
+            bottom: calc(100% + 5px);
         }
 
         .options-dropdown button {
-            padding: 12px;
-            font-size: 1rem;
+            padding: 10px;
+            font-size: 0.9rem;
         }
     }
 
@@ -529,8 +623,19 @@ require_once './views/layouts/side.php';
         .product-col {
             width: 100%;
         }
+
+        .cart-visible .product-col {
+            width: 100%;
+        }
+        
     }
 
+    @media (min-width: 576px){
+        .buy{
+            width: 53%;
+        }
+       
+    }
     h3 {
         font-family: "Poppins", sans-serif;
         font-weight: bold;
@@ -549,7 +654,7 @@ require_once './views/layouts/side.php';
 
     .pagination-controls a,
     .pagination-controls button {
-        padding: 8px 16px;
+        padding: 6px 12px;
         border: none;
         border-radius: 6px;
         font-size: 14px;
@@ -604,20 +709,6 @@ require_once './views/layouts/side.php';
         width: 100%;
         max-width: 300px;
     }
-
-    #startWebcamScan {
-        padding: 8px;
-        margin-left: 10px;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    #startWebcamScan:hover {
-        background-color: #0056b3;
-    }
 </style>
 
 <?php require_once './views/layouts/nav.php' ?>
@@ -626,15 +717,54 @@ require_once './views/layouts/side.php';
     <div class="container-fluid">
         <div class="row" id="productRow">
             <div class="product-section">
-                <h3>Order Products</h3>
-                <!-- Barcode Input -->
-                <div class="barcode-scanner" style="margin-bottom: 15px;">
-                    <input type="text" id="barcodeInput" placeholder="Scan or enter barcode" style="padding: 8px; width: 200px; border: 1px solid #ddd; border-radius: 4px;" autofocus />
-                    <button id="startWebcamScan">Scan with Webcam</button>
-                    <div id="webcamScanner" style="display: none;">
-                        <video id="scannerVideo"></video>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3>Order Products</h3>
+                    <!-- Barcode Input -->
+                    <div class="barcode-scanner" style="margin-bottom: 15px;">
+                        <input type="text" id="barcodeInput" placeholder="Scan or enter barcode" style="padding: 8px; width: 200px; border: 1px solid #ddd; border-radius: 4px;" autofocus />
+                        <button id="startWebcamScan">Scan with Webcam</button>
+                        <div id="webcamScanner" style="display: none;">
+                            <video id="scannerVideo"></video>
+                        </div>
                     </div>
                 </div>
+
+                <div class="container-categories">
+                    <div class="category">
+                        <span><img src="../../views/assets/icon/Kitchen.png" alt="Kitchen Tools" width="33" height="33"></span>
+                        <p>Kitchen Tools</p>
+                    </div>
+                    <div class="category">
+                        <span><img src="../../views/assets/icon/drinks.jpg" alt="Drinks & Water" width="33" height="33"></span>
+                        <p>Drinks</p>
+                    </div>
+                    <div class="category">
+                        <span><img src="../../views/assets/icon/Pot.png" alt="Cookware" width="33" height="33"></span>
+                        <p>Cookware</p>
+                    </div>
+                    <div class="category">
+                        <span><img src="../../views/assets/icon/Food.png" alt="Food Storage" width="33" height="33"></span>
+                        <p>Food Storage</p>
+                    </div>
+                    <div class="category">
+                        <span><img src="../../views/assets/icon/tableware.png" alt="Tableware" width="33" height="33"></span>
+                        <p>Tableware</p>
+                    </div>
+                    <div class="category">
+                        <span><img src="../../views/assets/icon/cutlery.png" alt="Cutlery" width="33" height="33"></span>
+                        <p>Cutlery</p>
+                    </div>
+                    <div class="category">
+                        <span><img src="../../views/assets/icon/cleaning.png" alt="Cleaning Supplies" width="33" height="33"></span>
+                        <p>Cleaning</p>
+                    </div>
+                    <div class="category">
+                        <span><img src="../../views/assets/icon/Supplier.png" alt="Small Kitchen Appliances" width="33" height="33"></span>
+                        <p>Small Kitchen</p>
+                    </div>
+                </div>
+
+
                 <div class="row" id="productGrid">
                     <?php foreach ($inventory as $item): ?>
                         <div class="product-col" data-barcode="<?= htmlspecialchars($item['barcode'] ?? '') ?>" data-inventory-id="<?= htmlspecialchars($item['inventory_id']) ?>">
@@ -651,15 +781,24 @@ require_once './views/layouts/side.php';
                                     <?php endif; ?>
                                 </div>
                                 <div class="card-body">
-                                    <h6 class="card-title"><?= htmlspecialchars($item['inventory_product_name']) ?></h6>
-                                    <p class="price" data-id="<?= htmlspecialchars($item['inventory_id']) ?>">
-                                        $<?= htmlspecialchars($item['selling_price'] ?? $item['amount']) ?>
-                                    </p>
-                                    <p class="quantity" data-id="<?= htmlspecialchars($item['inventory_id']) ?>" style="display: none;">
-                                        Qty: <?= htmlspecialchars($item['quantity']) ?>
-                                    </p>
-                                    <input type="hidden" name="inventory_id" value="<?= htmlspecialchars($item['inventory_id']) ?>" />
-                                    <button class="buy" data-inventory-id="<?= htmlspecialchars($item['inventory_id']) ?>">Add to Cart</button>
+                                    <div class="d-flex justify-content-between m-2">
+                                        <h6 class="card-title text-left"><?= htmlspecialchars($item['inventory_product_name']) ?></h6>
+                                        <p style="font-size: 13px;">
+                                            <i class="fa-solid fa-star"></i>
+                                            <i class="fa-solid fa-star"></i>
+                                            <i class="fa-solid fa-star-half-stroke"></i>
+                                        </p>
+                                    </div>
+                                    <div class="d-flex justify-content-between m-2 mt-n2">
+                                        <p class="price fw-bold" data-id="<?= htmlspecialchars($item['inventory_id']) ?>">
+                                            $<?= htmlspecialchars($item['selling_price'] ?? $item['amount']) ?>
+                                        </p>
+                                        <p class="quantity" data-id="<?= htmlspecialchars($item['inventory_id']) ?>" style="display: none;">
+                                            Qty: <?= htmlspecialchars($item['quantity']) ?>
+                                        </p>
+                                        <input type="hidden" name="inventory_id" value="<?= htmlspecialchars($item['inventory_id']) ?>" />
+                                        <button class="buy" data-inventory-id="<?= htmlspecialchars($item['inventory_id']) ?>">Add to Cart</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -685,36 +824,48 @@ require_once './views/layouts/side.php';
         </div>
         <div class="cart-section" id="cartSection">
             <div class="cart-card">
-                <div class="cart-header">
-                    <h4>POS Payout</h4>
-                    <button class="close-cart" id="closeCart">✖</button>
+                <div class="cart-header bg-transparent">
+                    <h4 class="text-dark mt-n2">POS Payout</h4>
+                    <button class="close-cart text-dark" id="closeCart">✖</button>
                 </div>
-                <div class="cart-body">
+                <div class="cart-body mt-n4">
                     <table class="cart-table" id="cartTable">
                         <thead>
                             <tr>
-                                <th>Item</th>
+                                <th style="border-bottom-left-radius: 10px;">Item</th>
                                 <th>Qty</th>
-                                <th>Price ($)</th>
-                                <th></th>
+                                <th>Price($)</th>
+                                <th style="border-bottom-right-radius: 10px;"></th>
                             </tr>
                         </thead>
                         <tbody id="cartBody"></tbody>
                     </table>
-                    <div style="text-align: right; margin-top: 15px;">
-                        <h5 style="font-weight: bold;">Total: $<span id="grandTotal">0.00</span></h5>
+                    <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                        <h6 style="font-weight: bold; flex-grow: 1;">Total:</h5>
+                            <h6 style="font-weight: bold;">$<span id="grandTotal">20.00</span></h5>
                     </div>
+
                     <div id="qr-container" style="display: none;">
-                        <img id="qr-code-img" src="../../views/assets/images/QR-code.png" alt="QR Code" style="width: 80px; height: 80px; margin-bottom: 15px;" />
-                        <input type="text" id="inputField" placeholder="Enter your details" />
+                        <div id="aclida-qr" class="qr-section active">
+                            <img id="aclida-qr-img" src="../../views/assets/images/QR-AC.png" alt="ACLIDA QR Code" style="width: 80px; height: 80px; margin-bottom: 15px; cursor: pointer;" />
+                            <p>ACLIDA PAY</p>
+                        </div>
+                        <div id="aba-qr" class="qr-section">
+                            <img id="aba-qr-img" src="../../views/assets/images/QR-code.png" alt="ABA QR Code" style="width: 80px; height: 80px; margin-bottom: 15px; cursor: pointer;" />
+                            <p>ABA PAY</p>
+                        </div>
+                        <div class="qr-buttons">
+                            <button class="cart-btn cart-btn-confirm" id="qrConfirmBtn">Complete</button>
+                            <button class="cart-btn cart-btn-alt" id="savePdf">Save PDF</button>
+                        </div>
                     </div>
                 </div>
                 <div class="cart-footer">
                     <div class="more-options" id="moreOptionsContainer">
-                        <button class="cart-btn cart-btn-secondary" id="moreOptionsBtn">More Options</button>
+                        <button class="cart-btn cart-btn-secondary bg-transparent" id="moreOptionsBtn">More Options</button>
                         <div class="options-dropdown" id="optionsDropdown">
                             <button class="cart-btn cart-btn-info" id="savePdf">Save PDF</button>
-                            <button class="cart-btn cart-btn-primary" id="completeCart">Payout</button>
+                            <button class="cart-btn cart-btn-primary" id="completeCartBtn">Payout</button>
                             <button class="cart-btn cart-btn-danger" id="clearCart">Clear</button>
                         </div>
                     </div>
@@ -730,6 +881,7 @@ require_once './views/layouts/side.php';
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Main cart functionality variables
         const barcodeInput = document.getElementById('barcodeInput');
         const cartSection = document.getElementById('cartSection');
         const cartBody = document.getElementById('cartBody');
@@ -738,10 +890,24 @@ require_once './views/layouts/side.php';
         const moreOptionsBtn = document.getElementById('moreOptionsBtn');
         const optionsDropdown = document.getElementById('optionsDropdown');
         const savePdfBtn = document.getElementById('savePdf');
-        const completeCartBtn = document.getElementById('completeCart');
+        const completeCartBtn = document.getElementById('completeCartBtn');
         const clearCartBtn = document.getElementById('clearCart');
-        const productGrid = document.getElementById('productGrid');
+        const qrContainer = document.getElementById('qr-container');
+        const qrConfirmBtn = document.getElementById('qrConfirmBtn');
         const startWebcamScanBtn = document.getElementById('startWebcamScan');
+        const cartToggle = document.createElement('span');
+        cartToggle.id = 'cartToggle';
+        cartToggle.className = 'cart-icon';
+        cartToggle.innerHTML = '<i class="fa-solid fa-cart-shopping"></i><span class="cart-count" id="cartCount">0</span>';
+        document.querySelector('.navbar').appendChild(cartToggle);
+        const cartCount = document.getElementById('cartCount');
+
+        // QR code switching variables
+        const aclidaQrImg = document.getElementById('aclida-qr-img');
+        const abaQrImg = document.getElementById('aba-qr-img');
+        const aclidaSection = document.getElementById('aclida-qr');
+        const abaSection = document.getElementById('aba-qr');
+
         let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
         let toastTimeout = null;
         let isProcessingScan = false;
@@ -758,14 +924,25 @@ require_once './views/layouts/side.php';
 
         // Initialize cart UI from localStorage
         updateCartUI();
-        // Removed: barcodeInput.focus(); // No focus on page load
+
+        // Initialize QR code section (ACLIDA by default)
+        if (aclidaSection && abaSection) {
+            aclidaSection.classList.add('active');
+            abaSection.classList.remove('active');
+            console.log('Initialized QR: ACLIDA active');
+        } else {
+            console.error('QR sections not found: aclidaSection or abaSection is null');
+        }
 
         // Show toast notification
         function showToast(message, duration = 2000) {
             const toast = document.getElementById('toast');
-            if (toastTimeout) {
-                clearTimeout(toastTimeout);
+            if (!toast) {
+                console.error('Toast element not found');
+                return;
             }
+            console.log('Showing toast:', message);
+            if (toastTimeout) clearTimeout(toastTimeout);
             toast.textContent = message;
             toast.style.display = 'block';
             toastTimeout = setTimeout(() => {
@@ -777,33 +954,33 @@ require_once './views/layouts/side.php';
         // Play scan sound
         function playScanSound() {
             const audio = new Audio('/views/assets/sounds/scan-beep.mp3');
-            audio.play().catch(() => console.log('Audio playback failed'));
+            audio.play().catch(err => console.error('Audio playback failed:', err));
         }
 
         // Clear UI state and localStorage
         function clearUIState() {
-            document.querySelectorAll('.product-col').forEach(col => {
-                col.classList.remove('highlight');
-            });
-            barcodeInput.value = '';
-            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after clearing
+            document.querySelectorAll('.product-col').forEach(col => col.classList.remove('highlight'));
+            if (barcodeInput) barcodeInput.value = '';
             const urlParams = new URLSearchParams(window.location.search);
             const page = urlParams.get('page') || '1';
             window.history.replaceState({}, document.title, `?page=${page}`);
             toggleCart(false);
             cartItems = [];
             localStorage.removeItem('cartItems');
+            qrContainer.style.display = 'none';
             updateCartUI();
         }
 
         // Reset barcode input
         function resetBarcodeInput() {
-            barcodeInput.value = '';
-            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after reset
+            if (barcodeInput) {
+                barcodeInput.value = '';
+                console.log('Barcode input reset');
+            }
         }
 
-        // Add to cart (debounced to prevent rapid clicks)
-        const debouncedAddToCart = debounce(function(item) {
+        // Add to cart (debounced)
+        const debouncedAddToCart = debounce(function(item, isScanned = false) {
             console.log('Adding to cart:', item.inventory_product_name, 'ID:', item.inventory_id);
             const existingItem = cartItems.find(cartItem => cartItem.inventory_id === item.inventory_id);
             if (existingItem) {
@@ -818,32 +995,45 @@ require_once './views/layouts/side.php';
                     image: item.image
                 });
                 console.log('Added new item:', item.inventory_product_name);
+                cartCount.textContent = cartItems.length; // Update cart count immediately
+                cartCount.classList.toggle('visible', cartItems.length > 0);
             }
             localStorage.setItem('cartItems', JSON.stringify(cartItems));
             updateCartUI();
             toggleCart(true);
             playScanSound();
+            showToast(`${item.inventory_product_name} added to cart!`);
         }, 300);
 
         // Update cart UI
         function updateCartUI() {
+            if (!cartBody || !grandTotal || !cartCount) {
+                console.error('Cart elements missing: cartBody, grandTotal, or cartCount');
+                return;
+            }
             cartBody.innerHTML = '';
             let total = 0;
             cartItems.forEach((item, index) => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${item.name}</td>
-                    <td><input type="number" class="cart-qty" value="${item.quantity}" min="1" data-index="${index}"></td>
-                    <td><input type="number" class="cart-price" value="${item.price.toFixed(2)}" step="0.01" data-index="${index}"></td>
-                    <td><span class="remove-item" data-index="${index}"><i class="fa-solid fa-trash"></i></span></td>
-                `;
+                <td>${item.name}</td>
+                <td><input type="number" class="cart-qty" value="${item.quantity}" min="1" data-index="${index}"></td>
+                <td><input type="number" class="cart-price" value="${item.price.toFixed(2)}" step="0.01" data-index="${index}"></td>
+                <td><span class="remove-item" data-index="${index}"><i class="fa-solid fa-trash"></i></span></td>
+            `;
                 cartBody.appendChild(row);
                 total += item.quantity * item.price;
             });
             grandTotal.textContent = total.toFixed(2);
-            savePdfBtn_DISABLED = cartItems.length === 0;
+            // Update cart count (unique products)
+            cartCount.textContent = cartItems.length;
+            cartCount.classList.toggle('visible', cartItems.length > 0);
+            console.log('Cart count updated:', cartItems.length, 'unique products');
+            savePdfBtn.disabled = cartItems.length === 0;
             submitCartBtn.disabled = cartItems.length === 0;
             completeCartBtn.disabled = cartItems.length === 0;
+            clearCartBtn.disabled = cartItems.length === 0;
+            if (qrConfirmBtn) qrConfirmBtn.disabled = cartItems.length === 0;
 
             document.querySelectorAll('.cart-qty').forEach(input => {
                 input.addEventListener('change', function() {
@@ -875,13 +1065,13 @@ require_once './views/layouts/side.php';
                     cartItems.splice(index, 1);
                     localStorage.setItem('cartItems', JSON.stringify(cartItems));
                     updateCartUI();
-                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after removing item
                 });
             });
         }
 
         // Toggle cart visibility
         function toggleCart(show) {
+            if (!cartSection || !document.querySelector('.main-content')) return;
             if (show) {
                 cartSection.classList.add('visible');
                 document.querySelector('.main-content').classList.add('cart-visible');
@@ -889,47 +1079,48 @@ require_once './views/layouts/side.php';
                 cartSection.classList.remove('visible');
                 document.querySelector('.main-content').classList.remove('cart-visible');
             }
-            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after toggling cart
         }
 
         // Handle barcode scan (debounced)
         const debouncedHandleBarcodeScan = debounce(function(barcode) {
+            console.log('Debounced scan triggered for:', barcode);
             if (isProcessingScan) {
                 console.log('Scan ignored: Processing in progress');
                 return;
             }
             const now = Date.now();
-            if (now - lastScanTime < 500) {
+            if (now - lastScanTime < 1000) {
                 console.log('Scan ignored: Too soon after previous scan');
                 return;
             }
             isProcessingScan = true;
             lastScanTime = now;
-            barcodeInput.disabled = true;
+            if (barcodeInput) barcodeInput.disabled = true;
 
             barcode = barcode.trim().replace(/[\r\n\t]/g, '');
-            console.log('Scanned barcode:', barcode);
+            console.log('Cleaned barcode:', barcode);
 
-            document.querySelectorAll('.product-col').forEach(col => {
-                col.classList.remove('highlight');
-            });
+            document.querySelectorAll('.product-col').forEach(col => col.classList.remove('highlight'));
 
-            // Check current page first
             const productCol = document.querySelector(`.product-col[data-barcode="${barcode}"]`);
+            console.log('Product in DOM:', productCol);
             if (productCol) {
+                const item = {
+                    inventory_id: productCol.dataset.inventoryId,
+                    inventory_product_name: productCol.querySelector('.card-title').textContent,
+                    selling_price: parseFloat(productCol.querySelector('.price').textContent.replace('$', '')),
+                    image: productCol.querySelector('img').src,
+                    quantity: 1
+                };
+                debouncedAddToCart(item, true);
                 productCol.classList.add('highlight');
-                const buyButton = productCol.querySelector('.buy');
-                if (buyButton) {
-                    buyButton.click();
-                    resetBarcodeInput();
-                    isProcessingScan = false;
-                    barcodeInput.disabled = false;
-                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after scan
-                    return;
-                }
+                resetBarcodeInput();
+                isProcessingScan = false;
+                if (barcodeInput) barcodeInput.disabled = false;
+                return;
             }
 
-            // Fetch product from backend (any page)
+            console.log('Fetching product from backend for barcode:', barcode);
             fetch('/products/getProductPageByBarcode', {
                     method: 'POST',
                     headers: {
@@ -941,66 +1132,65 @@ require_once './views/layouts/side.php';
                 })
                 .then(response => response.json())
                 .then(data => {
+                    console.log('Backend response:', data);
                     if (data.success && data.item) {
-                        const currentPage = parseInt(new URLSearchParams(window.location.search).get('page') || '1');
-                        if (data.page && data.page !== currentPage) {
-                            // Redirect to the correct page with barcode parameter
-                            window.location.href = `?page=${data.page}&barcode=${encodeURIComponent(barcode)}`;
-                        } else {
-                            // Product is on current page or page info not provided, add to cart
-                            debouncedAddToCart(data.item);
-                            resetBarcodeInput();
-                            const productCol = document.querySelector(`.product-col[data-barcode="${barcode}"]`);
-                            if (productCol) {
-                                productCol.classList.add('highlight');
-                            }
-                        }
+                        const item = {
+                            inventory_id: data.item.inventory_id,
+                            inventory_product_name: data.item.inventory_product_name,
+                            selling_price: parseFloat(data.item.selling_price || data.item.amount),
+                            image: data.item.image,
+                            quantity: 1
+                        };
+                        debouncedAddToCart(item, true);
+                        resetBarcodeInput();
+                        const productCol = document.querySelector(`.product-col[data-barcode="${barcode}"]`);
+                        if (productCol) productCol.classList.add('highlight');
                     } else {
                         resetBarcodeInput();
                         showToast(data.message || 'Barcode not found.', 2000);
                     }
                 })
                 .catch(error => {
-                    console.error('Error fetching product:', error);
+                    console.error('Fetch error:', error);
                     resetBarcodeInput();
                     showToast('Error scanning barcode.', 2000);
                 })
                 .finally(() => {
+                    console.log('Resetting scan state');
                     isProcessingScan = false;
-                    barcodeInput.disabled = false;
-                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after fetch
+                    if (barcodeInput) barcodeInput.disabled = false;
                 });
-        }, 500);
+        }, 1000);
 
         // Barcode input handling
-        barcodeInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                const barcode = e.target.value.trim();
-                if (barcode && !isProcessingScan) {
-                    console.log('Processing barcode via Enter key');
-                    debouncedHandleBarcodeScan(barcode);
+        if (barcodeInput) {
+            barcodeInput.addEventListener('keypress', function(e) {
+                console.log('Barcode input keypress:', e.key, 'Value:', e.target.value);
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const barcode = e.target.value.trim();
+                    if (barcode && !isProcessingScan) {
+                        console.log('Processing barcode via Enter key:', barcode);
+                        debouncedHandleBarcodeScan(barcode);
+                    } else {
+                        console.log('Scan ignored: Empty barcode or processing in progress');
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            console.error('Barcode input element not found');
+        }
 
         // Handle URL barcode parameter
         const urlParams = new URLSearchParams(window.location.search);
         const scannedBarcode = urlParams.get('barcode');
         if (scannedBarcode) {
-            const productCol = document.querySelector(`.product-col[data-barcode="${scannedBarcode}"]`);
-            if (productCol) {
-                productCol.classList.add('highlight');
-                const buyButton = productCol.querySelector('.buy');
-                if (buyButton) {
-                    buyButton.click();
-                    resetBarcodeInput();
-                    window.history.replaceState({}, document.title, `?page=${urlParams.get('page') || '1'}`);
-                }
-            }
+            console.log('Processing URL barcode:', scannedBarcode);
+            debouncedHandleBarcodeScan(scannedBarcode);
+            window.history.replaceState({}, document.title, `?page=${urlParams.get('page') || '1'}`);
         }
 
-        // Add to cart button (with debouncing)
+        // Add to cart button
         document.querySelectorAll('.buy').forEach(button => {
             button.addEventListener('click', function() {
                 const inventoryId = this.dataset.inventoryId;
@@ -1014,8 +1204,12 @@ require_once './views/layouts/side.php';
                 };
                 console.log('Button clicked for', item.inventory_product_name);
                 debouncedAddToCart(item);
-                // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after adding to cart
             });
+        });
+
+        // Cart toggle button
+        cartToggle.addEventListener('click', function() {
+            toggleCart(!cartSection.classList.contains('visible'));
         });
 
         // Submit cart
@@ -1042,11 +1236,10 @@ require_once './views/layouts/side.php';
                     } else {
                         showToast(data.message || 'Error submitting order.', 2000);
                     }
-                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after submission
                 })
                 .catch(error => {
+                    console.error('Submit cart error:', error);
                     showToast('Error submitting order.', 2000);
-                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after error
                 });
         });
 
@@ -1056,7 +1249,7 @@ require_once './views/layouts/side.php';
             const isVisible = optionsDropdown.classList.contains('visible');
             optionsDropdown.classList.toggle('visible', !isVisible);
             moreOptionsBtn.classList.toggle('active', !isVisible);
-            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after toggling dropdown
+            console.log('Toggling dropdown, current state:', !isVisible);
         });
 
         // Close dropdown on outside click
@@ -1065,7 +1258,6 @@ require_once './views/layouts/side.php';
                 optionsDropdown.classList.remove('visible');
                 moreOptionsBtn.classList.remove('active');
             }
-            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after closing dropdown
         });
 
         // Prevent dropdown close on inside click
@@ -1074,34 +1266,108 @@ require_once './views/layouts/side.php';
         });
 
         // Save PDF
-        savePdfBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
+        function saveCartAsPDF() {
             if (cartItems.length === 0) return;
             const {
                 jsPDF
             } = window.jspdf;
-            const doc = new jsPDF();
-            doc.text('Cart Receipt', 10, 10);
-            let y = 20;
-            cartItems.forEach(item => {
-                doc.text(`${item.name}: ${item.quantity} x $${item.price.toFixed(2)}`, 10, y);
-                y += 10;
+            const doc = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
             });
-            doc.text(`Total: $${grandTotal.textContent}`, 10, y);
-            doc.save('cart-receipt.pdf');
+
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            doc.text('POS Receipt', 105, 20, {
+                align: 'center'
+            });
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Store Name', 105, 30, {
+                align: 'center'
+            });
+            doc.text('123 Main Street, City, Country', 105, 35, {
+                align: 'center'
+            });
+            doc.text(new Date().toLocaleString(), 105, 40, {
+                align: 'center'
+            });
+
+            doc.setLineWidth(0.5);
+            doc.line(20, 45, 190, 45);
+
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Item', 20, 50);
+            doc.text('Qty', 120, 50);
+            doc.text('Price', 150, 50);
+            doc.text('Total', 180, 50);
+
+            doc.setLineWidth(0.2);
+            doc.line(20, 52, 190, 52);
+
+            let y = 60;
+            doc.setFont('helvetica', 'normal');
+            cartItems.forEach(item => {
+                const itemName = item.name.length > 30 ? item.name.substring(0, 27) + '...' : item.name;
+                doc.text(itemName, 20, y);
+                doc.text(item.quantity.toString(), 120, y);
+                doc.text('$' + item.price.toFixed(2), 150, y);
+                doc.text('$' + (item.quantity * item.price).toFixed(2), 180, y);
+                y += 8;
+            });
+
+            doc.setLineWidth(0.5);
+            doc.line(20, y, 190, y);
+            y += 5;
+
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Total: $' + grandTotal.textContent, 180, y, {
+                align: 'right'
+            });
+
+            y += 15;
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Thank you for your purchase!', 105, y, {
+                align: 'center'
+            });
+            doc.text('Contact: store@example.com', 105, y + 5, {
+                align: 'center'
+            });
+
+            doc.save('pos-receipt.pdf');
             optionsDropdown.classList.remove('visible');
             moreOptionsBtn.classList.remove('active');
-            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after saving PDF
+        }
+
+        savePdfBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            saveCartAsPDF();
         });
 
-        // Payout (triggers submitCart)
-        completeCartBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            submitCartBtn.click();
-            optionsDropdown.classList.remove('visible');
-            moreOptionsBtn.classList.remove('active');
-            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after payout
-        });
+        // Payout (show QR code and buttons)
+        if (completeCartBtn) {
+            completeCartBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (cartItems.length === 0) return;
+                qrContainer.style.display = 'block';
+                optionsDropdown.classList.remove('visible');
+                moreOptionsBtn.classList.remove('active');
+                console.log('Showing QR container');
+            });
+        }
+
+        // QR Confirm (submit cart)
+        if (qrConfirmBtn) {
+            qrConfirmBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                submitCartBtn.click();
+                qrContainer.style.display = 'none';
+            });
+        }
 
         // Clear cart
         clearCartBtn.addEventListener('click', function(e) {
@@ -1112,13 +1378,12 @@ require_once './views/layouts/side.php';
             toggleCart(false);
             optionsDropdown.classList.remove('visible');
             moreOptionsBtn.classList.remove('active');
-            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after clearing cart
         });
 
         // Close cart
         document.getElementById('closeCart').addEventListener('click', () => {
             toggleCart(false);
-            // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after closing cart
+            qrContainer.style.display = 'none';
         });
 
         // Kebab menu
@@ -1150,53 +1415,76 @@ require_once './views/layouts/side.php';
                         } else {
                             showToast(data.message || 'Error deleting item.', 2000);
                         }
-                        // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after deleting item
                     })
                     .catch(error => {
+                        console.error('Delete item error:', error);
                         showToast('Error deleting item.', 2000);
-                        // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after error
                     });
             });
         });
 
         // Webcam scanning
-        startWebcamScanBtn.addEventListener('click', function() {
-            const webcamScanner = document.getElementById('webcamScanner');
-            webcamScanner.style.display = 'block';
-            Quagga.init({
-                inputStream: {
-                    name: "Live",
-                    type: "LiveStream",
-                    target: document.getElementById('scannerVideo'),
-                    constraints: {
-                        facingMode: "environment"
-                    }
-                },
-                decoder: {
-                    readers: ["ean_reader", "code_128_reader", "upc_reader"]
-                }
-            }, function(err) {
-                if (err) {
-                    console.error(err);
-                    showToast('Failed to access webcam.', 2000);
-                    webcamScanner.style.display = 'none';
-                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after webcam error
+        if (startWebcamScanBtn) {
+            startWebcamScanBtn.addEventListener('click', function() {
+                console.log('Starting webcam scan');
+                const webcamScanner = document.getElementById('webcamScanner');
+                if (!webcamScanner) {
+                    console.error('Webcam scanner element not found');
+                    showToast('Scanner UI not found.', 2000);
                     return;
                 }
-                Quagga.start();
+                webcamScanner.style.display = 'block';
+                Quagga.init({
+                    inputStream: {
+                        name: "Live",
+                        type: "LiveStream",
+                        target: document.getElementById('scannerVideo'),
+                        constraints: {
+                            facingMode: "environment"
+                        }
+                    },
+                    decoder: {
+                        readers: ["ean_reader", "code_128_reader", "upc_reader", "code_39_reader"]
+                    }
+                }, function(err) {
+                    if (err) {
+                        console.error('Quagga init error:', err);
+                        showToast('Failed to access webcam.', 2000);
+                        webcamScanner.style.display = 'none';
+                        return;
+                    }
+                    console.log('Quagga initialized successfully');
+                    Quagga.start();
+                });
+
+                Quagga.onDetected(function(result) {
+                    const barcode = result.codeResult.code;
+                    console.log('Detected barcode:', barcode);
+                    if (barcode && !isProcessingScan) {
+                        debouncedHandleBarcodeScan(barcode);
+                        Quagga.stop();
+                        webcamScanner.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // QR code switching logic
+        if (aclidaQrImg && abaQrImg && aclidaSection && abaSection) {
+            aclidaQrImg.addEventListener('click', () => {
+                console.log('Switching to ABA QR');
+                aclidaSection.classList.remove('active');
+                abaSection.classList.add('active');
             });
 
-            Quagga.onDetected(function(result) {
-                const barcode = result.codeResult.code;
-                if (barcode && !isProcessingScan) {
-                    console.log('Webcam scan:', barcode);
-                    debouncedHandleBarcodeScan(barcode);
-                    Quagga.stop();
-                    webcamScanner.style.display = 'none';
-                    // Removed: barcodeInput.focus(); // Optional: Keep if you want focus after webcam scan
-                }
+            abaQrImg.addEventListener('click', () => {
+                console.log('Switching to ACLIDA QR');
+                abaSection.classList.remove('active');
+                aclidaSection.classList.add('active');
             });
-        });
+        } else {
+            console.error('QR elements not found: Check aclidaQrImg, abaQrImg, aclidaSection, or abaSection');
+        }
     });
 </script>
 

@@ -166,7 +166,7 @@ require_once './views/layouts/side.php';
                     <!-- Cart Section -->
                     <div class="row">
                         <div class="col-12">
-                            <div class="card shadow mb-4">
+                            <div class="card mb-4"  style="display: none;">
                                 <div class="card-body">
                                     <?php if (empty($Cart)): ?>
                                     <?php else: ?>

@@ -131,36 +131,26 @@ class Profit_LossModel
                     error_log("Model: No valid IDs after filtering: " . json_encode($id));
                     return false;
                 }
-                error_log("Model: Deleting multiple IDs: " . implode(',', $id));
+                error_log("Model: Updating multiple IDs: " . implode(',', $id));
                 $placeholders = implode(',', array_fill(0, count($id), '?'));
-                $checkStmt = $this->pdo->prepare("SELECT ID FROM sales_data WHERE ID IN ($placeholders)");
-                $checkStmt->execute($id);
-                $existingIds = $checkStmt->fetchAll(PDO::FETCH_COLUMN);
-                error_log("Model: Existing IDs: " . implode(',', $existingIds));
-                if (empty($existingIds)) {
-                    error_log("Model: No matching records found for deletion");
-                    $this->pdo->commit();
-                    return false;
-                }
-                $sql = "DELETE FROM sales_data WHERE ID IN ($placeholders)";
-                $stmt = $this->pdo->prepare($sql);
+                $updateStmt = $this->pdo->prepare("UPDATE sales_data SET inventory_id = NULL, product_id = NULL WHERE ID IN ($placeholders)");
+                $updateStmt->execute($id);
+                error_log("Model: Update query executed, rows affected: " . $updateStmt->rowCount());
+                $stmt = $this->pdo->prepare("DELETE FROM sales_data WHERE ID IN ($placeholders)");
                 $stmt->execute($id);
+                error_log("Model: Delete query executed, rows affected: " . $stmt->rowCount());
             } else {
                 if (!is_numeric($id) || $id <= 0) {
                     error_log("Model: Invalid ID: " . $id);
                     return false;
                 }
-                error_log("Model: Deleting single ID: " . $id);
-                $checkStmt = $this->pdo->prepare("SELECT ID FROM sales_data WHERE ID = ?");
-                $checkStmt->execute([$id]);
-                if (!$checkStmt->fetch()) {
-                    error_log("Model: ID $id not found in sales_data");
-                    $this->pdo->commit();
-                    return false;
-                }
-                $sql = "DELETE FROM sales_data WHERE ID = ?";
-                $stmt = $this->pdo->prepare($sql);
+                error_log("Model: Updating single ID: " . $id);
+                $updateStmt = $this->pdo->prepare("UPDATE sales_data SET inventory_id = NULL, product_id = NULL WHERE ID = ?");
+                $updateStmt->execute([$id]);
+                error_log("Model: Update query executed, rows affected: " . $updateStmt->rowCount());
+                $stmt = $this->pdo->prepare("DELETE FROM sales_data WHERE ID = ?");
                 $stmt->execute([$id]);
+                error_log("Model: Delete query executed, rows affected: " . $stmt->rowCount());
             }
             $rowCount = $stmt->rowCount();
             $this->pdo->commit();
@@ -169,10 +159,9 @@ class Profit_LossModel
         } catch (PDOException $e) {
             $this->pdo->rollBack();
             error_log("Model: Delete error: " . $e->getMessage());
-            return false;
+            throw $e; // Throw to catch in controller
         }
     }
-
     function testConnection()
     {
         try {

@@ -46,8 +46,9 @@
     }
 
     /* Increase height of View Modal */
-    #viewModal<?= htmlspecialchars($item['id']) ?> .modal-content {
-        min-height: 400px; /* Taller height for view modal */
+    <?= htmlspecialchars($item['id']) ?>.modal-content {
+        min-height: 400px;
+        /* Taller height for view modal */
     }
 
     /* Style for Delete Button in Delete Modal */
@@ -67,7 +68,8 @@
 
     /* Increase line height for View Modal details */
     .text-start.detail p {
-        line-height: 2; /* Increased line height for better spacing */
+        line-height: 2;
+        /* Increased line height for better spacing */
     }
 
     /* Position Edit Modal closer to top */
@@ -79,7 +81,8 @@
     .image-preview-container {
         display: flex;
         align-items: center;
-        min-height: 100px; /* Ensure enough space for centering */
+        min-height: 100px;
+        /* Ensure enough space for centering */
         margin-top: 10px;
     }
 
@@ -110,16 +113,16 @@
     <div class="table-inventory me-4">
         <div class="orders">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 style="font-weight: bold;" class="purchase-head">Restock Products</h2>
+                <h2 style="font-weight: bold;" class="purchase-head" data-translate-key="Restock Products">Restock Products</h2>
                 <div>
                     <a href="/inventory/create" class="btn-new-product">
-                        <i class="bi-plus-lg"></i> + Add Stocks
+                        <i class="bi-plus-lg"></i> <span data-translate-key="Add Stocks">+ Add Stocks</span>
                     </a>
                 </div>
             </div>
             <div class="input-group" style="margin-left: 0px;">
                 <select id="categorySelect" class="ms-2 selected" onchange="filterTable()">
-                    <option value="">Select Category</option>
+                    <option value="" data-translate-key="Select Category">Select Category</option>
                     <?php if (!empty($categories)): ?>
                         <?php foreach ($categories as $category): ?>
                             <option value="<?= htmlspecialchars($category['id']) ?>">
@@ -127,7 +130,7 @@
                             </option>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <option disabled>No Categories Found</option>
+                        <option disabled data-translate-key="No Categories Found">No Categories Found</option>
                     <?php endif; ?>
                 </select>
             </div>
@@ -135,12 +138,12 @@
                 <thead>
                     <tr>
                         <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll()"></th>
-                        <th>Image</th>
-                        <th>Product Name</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th style="display: none;">Total Price</th>
-                        <th>Action</th>
+                        <th data-translate-key="Image">Image</th>
+                        <th data-translate-key="Product Name">Product Name</th>
+                        <th data-translate-key="Quantity">Quantity</th>
+                        <th data-translate-key="Price">Price</th>
+                        <th style="display: none;" data-translate-key="Total Price">Total Price</th>
+                        <th data-translate-key="Action">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -164,7 +167,7 @@
                                         See more...
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item text-primary" href="#" data-bs-toggle="modal" data-bs-target="#viewModal<?= $item['id'] ?>"><i class="fa-solid fa-eye"></i> View</a></li>
+                                        <li><a class="dropdown-item text-primary" href="#" data-bs-toggle="modal" data-bs-target="#viewModal<?= $item['id'] ?>"><i class="fa-solid fa-eye"></i> <span data-translate-key="View">View</span></a></li>
                                         <li>
                                             <a class="dropdown-item text-primary" href="#"
                                                 data-bs-toggle="modal"
@@ -176,7 +179,7 @@
                                                 data-amount="<?= $item['amount'] ?>"
                                                 data-total_price="<?= $totalPrice ?>"
                                                 data-image="<?= htmlspecialchars($item['image'] ?? '') ?>">
-                                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                                                <i class="fa-solid fa-pen-to-square"></i> <span data-translate-key="Edit">Edit</span>
                                             </a>
                                         </li>
                                         <li>
@@ -185,7 +188,7 @@
                                                 data-bs-target="#deleteModal"
                                                 data-id="<?= $item['id'] ?>"
                                                 data-product_name="<?= htmlspecialchars($item['product_name']) ?>">
-                                                <i class="fa-solid fa-trash"></i> Delete
+                                                <i class="fa-solid fa-trash"></i> <span data-translate-key="Delete">Delete</span>
                                             </a>
                                         </li>
                                     </ul>
@@ -195,16 +198,16 @@
                                     <div class="modal-dialog">
                                         <div class="modal-content rounded-4 shadow-lg">
                                             <div class="modal-header" style="background:#add8e6; color:#000;">
-                                                <h2 class="modal-title">View Inventory Item</h2>
+                                                <h2 class="modal-title" data-translate-key="View Inventory Item">View Inventory Item</h2>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body d-flex justify-content-between align-items-center">
                                                 <div class="text-start detail">
-                                                    <p><b>Product Name:</b> <?= htmlspecialchars($item['product_name']) ?></p>
-                                                    <p><b>Category:</b> <?= !empty($item['category_name']) ? htmlspecialchars($item['category_name']) : '-' ?></p>
-                                                    <p><b>Quantity:</b> <?= htmlspecialchars($item['quantity']) ?></p>
-                                                    <p><b>Price:</b> $<?= htmlspecialchars(number_format($item['amount'], 2)) ?></p>
-                                                    <p style="display: none;"><b>Total Price:</b> $<span class="modal-total-price"><?= htmlspecialchars(number_format($totalPrice, 2)) ?></span></p>
+                                                    <p><b data-translate-key="Product Name">Product Name:</b> <?= htmlspecialchars($item['product_name']) ?></p>
+                                                    <p><b data-translate-key="Category">Category:</b> <?= !empty($item['category_name']) ? htmlspecialchars($item['category_name']) : '-' ?></p>
+                                                    <p><b data-translate-key="Quantity">Quantity:</b> <?= htmlspecialchars($item['quantity']) ?></p>
+                                                    <p><b data-translate-key="Price">Price:</b> $<?= htmlspecialchars(number_format($item['amount'], 2)) ?></p>
+                                                    <p style="display: none;"><b data-translate-key="Total Price">Total Price:</b> $<span class="modal-total-price"><?= htmlspecialchars(number_format($totalPrice, 2)) ?></span></p>
                                                 </div>
                                                 <?php if (!empty($item['image'])): ?>
                                                     <div class="mb-3">
@@ -226,72 +229,29 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header bg-primary">
-                            <h5 class="modal-title" id="deleteModalLabel">Delete Item</h5>
+                            <h5 class="modal-title" id="deleteModalLabel" data-translate-key="Delete Item">Delete Item</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            Are you sure you want to delete <strong id="deleteProductName"></strong> (ID: <span id="deleteProductId"></span>)?
+                            <span data-translate-key="Are you sure you want to delete">Are you sure you want to delete</span> <strong id="deleteProductName"></strong> (ID: <span id="deleteProductId"></span>)?
                         </div>
                         <div class="modal-footer">
                             <form id="deleteForm" action="/inventory/destroy" method="POST">
                                 <input type="hidden" name="id" id="deleteId">
                                 <input type="hidden" name="_token" id="csrfToken" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
-                                <button type="submit" class="btn btn-danger">Delete</button>
+                                <button type="submit" class="btn btn-danger" data-translate-key="Delete">Delete</button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- JavaScript for Delete Modal -->
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const deleteModal = document.getElementById('deleteModal');
-                    if (!deleteModal) {
-                        console.error('Delete modal not found in DOM');
-                        return;
-                    }
-                    deleteModal.addEventListener('show.bs.modal', function(event) {
-                        try {
-                            const button = event.relatedTarget;
-                            const id = button.getAttribute('data-id');
-                            const productName = button.getAttribute('data-product_name');
-                            if (!id || !productName) {
-                                console.error('Missing data-id or data-product_name:', {
-                                    id,
-                                    productName
-                                });
-                                return;
-                            }
-                            deleteModal.querySelector('#deleteProductName').textContent = productName;
-                            deleteModal.querySelector('#deleteProductId').textContent = id;
-                            deleteModal.querySelector('#deleteId').value = id;
-                            const csrfToken = document.getElementById('csrfToken').value;
-                            console.log('Delete modal opened - ID:', id, 'CSRF Token:', csrfToken);
-                        } catch (error) {
-                            console.error('Error in delete modal show event:', error);
-                        }
-                    });
-
-                    const deleteForm = document.getElementById('deleteForm');
-                    if (deleteForm) {
-                        deleteForm.addEventListener('submit', function(event) {
-                            const id = document.getElementById('deleteId').value;
-                            const csrfToken = document.getElementById('csrfToken').value;
-                            console.log('Submitting delete form - ID:', id, 'CSRF Token:', csrfToken);
-                        });
-                    } else {
-                        console.error('Delete form not found in DOM');
-                    }
-                });
-            </script>
-
             <!-- Edit Modal -->
             <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header" style="background:#add8e6;color:#000;">
-                            <h5 class="modal-title" id="editModalLabel">Edit Product</h5>
+                            <h5 class="modal-title" id="editModalLabel" data-translate-key="Edit Product">Edit Product</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -299,46 +259,46 @@
                                 <input type="hidden" name="_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
                                 <input type="hidden" name="id" id="edit_id">
                                 <div class="mb-3">
-                                    <label class="form-label">Product Name</label>
+                                    <label class="form-label" data-translate-key="Product Name">Product Name</label>
                                     <input type="text" class="form-control" name="product_name" id="product_name" required>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Category</label>
+                                        <label class="form-label" data-translate-key="Category">Category</label>
                                         <select class="form-control" name="category_id" id="category_id" required>
-                                            <option value="">Select</option>
+                                            <option value="" data-translate-key="Select">Select</option>
                                             <?php foreach ($categories ?? [] as $category): ?>
                                                 <option value="<?= $category['id'] ?>"><?= htmlspecialchars($category['name']) ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Quantity</label>
+                                        <label class="form-label" data-translate-key="Quantity">Quantity</label>
                                         <input type="number" class="form-control" name="quantity" id="quantity" required min="0">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">Amount</label>
+                                        <label class="form-label" data-translate-key="Amount">Amount</label>
                                         <input type="number" class="form-control" name="amount" id="amount" required step="0.01" min="0">
                                     </div>
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">Total Price</label>
+                                        <label class="form-label" data-translate-key="Total Price">Total Price</label>
                                         <div id="total_price_display" class="form-control-plaintext">$0.00</div>
                                     </div>
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">Expiration Date</label>
+                                        <label class="form-label" data-translate-key="Expiration Date">Expiration Date</label>
                                         <input type="date" class="form-control" name="expiration_date" id="expiration_date">
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Image</label>
+                                    <label class="form-label" data-translate-key="Image">Image</label>
                                     <input type="file" class="form-control" id="imageInput" name="image" accept="image/*">
                                     <div class="image-preview-container">
                                         <img id="imagePreview" src="" alt="Product Image" class="img-fluid" style="display: none;">
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Update</button>
+                                <button type="submit" class="btn btn-primary" data-translate-key="Update">Update</button>
                             </form>
                         </div>
                     </div>
@@ -346,8 +306,8 @@
             </div>
 
             <div class="update-quantity" id="updateQuantitySection" style="display: none;">
-                <h3>Update Quantity</h3>
-                <button class="btn btn-success" onclick="updateQuantities()">Update Selected Quantities</button>
+                <h3 data-translate-key="Update Quantity">Update Quantity</h3>
+                <button class="btn btn-success" onclick="updateQuantities()" data-translate-key="Update Selected Quantities">Update Selected Quantities</button>
             </div>
         </div>
     </div>

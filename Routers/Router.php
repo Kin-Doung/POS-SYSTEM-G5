@@ -21,43 +21,24 @@ class Router {
     public function dispatch() {
         $method = $_SERVER['REQUEST_METHOD'];
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-
-        // Prevent redirect loop
-        if ($uri === '/' && isset($_SESSION['redirect_count']) && $_SESSION['redirect_count'] > 3) {
-            error_log("Redirect loop detected for /, clearing session");
-            $_SESSION = [];
-            session_destroy();
-            header('Location: /');
-            exit();
-        }
-
-        // Track redirects
-        $_SESSION['redirect_count'] = ($_SESSION['redirect_count'] ?? 0) + 1;
-
         foreach ($this->routes[$method] ?? [] as $path => $route) {
             $pattern = preg_replace('/\{id\}|\(:num\)/', '([0-9]+)', $path);
             $pattern = str_replace('/', '\/', $pattern);
             if (preg_match("/^$pattern$/", $uri, $matches)) {
                 array_shift($matches);
-
-                // Check if route is protected
                 if ($route['protected'] && !$this->isAuthenticated()) {
                     $_SESSION['error'] = 'Please log in to access this page.';
                     error_log("Unauthenticated access to $uri, redirecting to /");
                     header('Location: /');
                     exit();
                 }
-
-                // Reset redirect count on successful route match
                 $_SESSION['redirect_count'] = 0;
-
                 $callback = $route['callback'];
                 $controller = new $callback[0]();
                 call_user_func_array([$controller, $callback[1]], $matches);
                 return;
             }
         }
-
         error_log("404 Not Found for $uri");
         http_response_code(404);
         echo "404 Not Found";

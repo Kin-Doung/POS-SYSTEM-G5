@@ -124,125 +124,58 @@ class InventoryController extends BaseController
     }
     public function update()
     {
-        // Detect AJAX request
-        $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
-
-        error_log("Entering update: isAjax=$isAjax");
-
-        // Clear output buffer to prevent stray output
-        ob_clean();
-
-        // Set JSON header early
-        header('Content-Type: application/json', true);
-
         try {
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                error_log("Invalid request method for update: " . $_SERVER['REQUEST_METHOD']);
-                http_response_code(405);
-                echo json_encode(['error' => 'Invalid request method.']);
-                exit;
+                $_SESSION['error'] = 'Invalid request method.';
+                $this->redirect('/inventory');
             }
-
-            error_log("Update POST: " . print_r($_POST, true));
-            error_log("Update FILES: " . print_r($_FILES, true));
-            error_log("Session CSRF Token: " . ($_SESSION['csrf_token'] ?? 'none'));
-            error_log("Received CSRF Token: " . ($_POST['_token'] ?? 'none'));
 
             $id = $_POST['id'] ?? null;
             if (!$id || !is_numeric($id)) {
-                error_log("Invalid or missing ID for update: " . ($id ?? 'null'));
-                http_response_code(400);
-                echo json_encode(['error' => 'Invalid item ID.']);
-                exit;
+                $_SESSION['error'] = 'Invalid item ID.';
+                $this->redirect('/inventory');
             }
 
             if (!isset($_POST['_token']) || $_POST['_token'] !== ($_SESSION['csrf_token'] ?? '')) {
-                error_log("CSRF token validation failed for update id $id");
-                http_response_code(403);
-                echo json_encode(['error' => 'Invalid CSRF token.']);
-                exit;
+                $_SESSION['error'] = 'Invalid CSRF token.';
+                $this->redirect('/inventory');
             }
 
             $inventory = $this->model->getInventoryById($id);
             if (!$inventory) {
-                error_log("Inventory item not found for update: id = $id");
-
-                echo json_encode(['error' => 'Inventory item not found.']);
-                exit;
+                $_SESSION['error'] = 'Inventory item not found.';
+                $this->redirect('/inventory');
             }
 
             $productName = trim($_POST['product_name'] ?? '');
             if (empty($productName)) {
-                error_log("Product name is empty for update id $id");
-                http_response_code(400);
-                echo json_encode(['error' => 'Product name is required.']);
-                exit;
+                $_SESSION['error'] = 'Product name is required.';
+                $this->redirect('/inventory');
             }
 
             $categoryId = $_POST['category_id'] ?? null;
             $category = $categoryId ? $this->categories->getCategoryById($categoryId) : null;
-            if ($categoryId && !$category) {
-                error_log("Invalid category_id for update: " . ($categoryId ?? 'null'));
-                http_response_code(400);
-                echo json_encode(['error' => 'Invalid category selected.']);
-                exit;
-            }
-            if (!$categoryId) {
-                error_log("Category ID is required for update id $id");
-                http_response_code(400);
-                echo json_encode(['error' => 'Category is required.']);
-                exit;
+            if (!$categoryId || !$category) {
+                $_SESSION['error'] = 'Invalid or missing category.';
+                $this->redirect('/inventory');
             }
 
             $quantity = isset($_POST['quantity']) ? (int)$_POST['quantity'] : $inventory['quantity'];
-            if ($quantity < 0) {
-                error_log("Invalid quantity for update id $id: $quantity");
-                http_response_code(400);
-                echo json_encode(['error' => 'Quantity cannot be negative.']);
-                exit;
-            }
-
             $amount = isset($_POST['amount']) ? (float)$_POST['amount'] : $inventory['amount'];
-            if ($amount < 0) {
-                error_log("Invalid amount for update id $id: $amount");
-                http_response_code(400);
-                echo json_encode(['error' => 'Amount cannot be negative.']);
-                exit;
-            }
-
             $sellingPrice = isset($_POST['selling_price']) ? (float)$_POST['selling_price'] : $inventory['selling_price'];
-            if ($sellingPrice < 0) {
-                error_log("Invalid selling price for update id $id: $sellingPrice");
-                http_response_code(400);
-                echo json_encode(['error' => 'Selling price cannot be negative.']);
-                exit;
+            if ($quantity < 0 || $amount < 0 || $sellingPrice < 0) {
+                $_SESSION['error'] = 'Quantity, amount, or selling price cannot be negative.';
+                $this->redirect('/inventory');
             }
 
             $imagePath = $inventory['image'];
             if (isset($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $allowedTypes = ['image/jpeg', 'image/png'];
-                $maxSize = 2 * 1024 * 1024;
-                if (!in_array($_FILES['image']['type'], $allowedTypes)) {
-                    error_log("Invalid image type for update id $id: {$_FILES['image']['type']}");
-                    http_response_code(400);
-                    echo json_encode(['error' => 'Only JPEG or PNG images allowed.']);
-                    exit;
-                }
-                if ($_FILES['image']['size'] > $maxSize) {
-                    error_log("Image size exceeds 2MB for update id $id: {$_FILES['image']['size']}");
-                    http_response_code(400);
-                    echo json_encode(['error' => 'Image size must not exceed 2MB.']);
-                    exit;
-                }
                 $imagePath = $this->handleImageUpload(null, $inventory['image']);
                 if (!$imagePath) {
-                    error_log("Image upload failed for update id $id");
-                    http_response_code(400);
-                    echo json_encode(['error' => 'Failed to upload image.']);
-                    exit;
+                    $_SESSION['error'] = 'Failed to upload image.';
+                    $this->redirect('/inventory');
                 }
             }
-            error_log("Image path: " . ($imagePath ?? 'none'));
 
             $data = [
                 'category_id' => $categoryId,
@@ -257,27 +190,18 @@ class InventoryController extends BaseController
                 'barcode' => $_POST['barcode'] ?? $inventory['barcode']
             ];
 
-            error_log("Attempting to update inventory id=$id with data: " . json_encode($data));
             $updateResult = $this->model->updateInventory($id, $data);
-            error_log("Update result for id=$id: " . json_encode($updateResult));
-
             if (isset($updateResult['success']) && $updateResult['success']) {
-                error_log("Updated inventory id $id successfully.");
-                http_response_code(200);
-                echo json_encode(['success' => true, 'message' => 'Inventory updated successfully.']);
-                exit;
+                $_SESSION['success'] = 'Inventory updated successfully.';
+                $this->redirect('/inventory');
             }
 
-            $errorMessage = $updateResult['error'] ?? 'Failed to update inventory. Please try again.';
-            error_log("Failed to update inventory id $id: $errorMessage");
-            http_response_code(400);
-            echo json_encode(['error' => $errorMessage]);
-            exit;
+            $_SESSION['error'] = $updateResult['error'] ?? 'Failed to update inventory.';
+            $this->redirect('/inventory');
         } catch (Exception $e) {
-            error_log("Unexpected error in update id $id: " . $e->getMessage() . " at " . $e->getFile() . ":" . $e->getLine());
-            http_response_code(500);
-            echo json_encode(['error' => 'Server error occurred. Please try again later.']);
-            exit;
+            error_log("Unexpected error in update id $id: " . $e->getMessage());
+            $_SESSION['error'] = 'Server error occurred. Please try again later.';
+            $this->redirect('/inventory');
         }
     }
     public function destroy()
@@ -366,7 +290,7 @@ class InventoryController extends BaseController
         $allowedTypes = ['image/jpeg', 'image/png'];
         $maxSize = 2 * 1024 * 1024; // 2MB
         $targetDir = "Uploads/";
-    
+
         // Ensure directory exists and is writable
         if (!is_dir($targetDir)) {
             if (!mkdir($targetDir, 0755, true)) {
@@ -378,7 +302,7 @@ class InventoryController extends BaseController
             error_log("Uploads directory is not writable");
             return $existingImage;
         }
-    
+
         // Handle array-based image upload (for multiple rows)
         if ($index !== null && isset($_FILES['image']['name'][$index]) && $_FILES['image']['error'][$index] === UPLOAD_ERR_OK) {
             if (!in_array($_FILES['image']['type'][$index], $allowedTypes) || $_FILES['image']['size'][$index] > $maxSize) {
@@ -413,7 +337,7 @@ class InventoryController extends BaseController
                 return $existingImage;
             }
         }
-    
+
         // Return existing image if no new upload
         return $existingImage;
     }

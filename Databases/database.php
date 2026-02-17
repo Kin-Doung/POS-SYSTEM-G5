@@ -5,15 +5,21 @@ class Database
 
     public function __construct()
     {
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "vc1_pos_system";
+        // Get database configuration from environment variables
+        $servername = getenv('DB_HOST') ?: 'localhost';
+        $username = getenv('DB_USER') ?: 'root';
+        $password = getenv('DB_PASS') ?: '';
+        $dbname = getenv('DB_NAME') ?: 'vc1_pos_system';
+        $port = getenv('DB_PORT') ?: '3306';
 
         try {
-            $this->pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            error_log("Database connection established to $dbname");
+            $dsn = "mysql:host=$servername;port=$port;dbname=$dbname;charset=utf8mb4";
+            $this->pdo = new PDO($dsn, $username, $password, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES => false,
+            ]);
+            error_log("Database connection established to $dbname on $servername:$port");
         } catch (PDOException $e) {
             error_log("Database connection failed: " . $e->getMessage());
             http_response_code(500);

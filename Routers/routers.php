@@ -1,9 +1,16 @@
 <?php
 // File: routes.php
 // Set session ini settings before starting session
-ini_set('session.cookie_secure', 1); // Enforce HTTPS in production
+$appEnv = getenv('APP_ENV') ?: 'development';
+
+if ($appEnv === 'production') {
+    ini_set('session.cookie_secure', 1); // Enforce HTTPS in production
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.cookie_samesite', 'Strict');
+}
+
 ini_set('session.use_only_cookies', 1);
-ini_set('session.cookie_httponly', 1);
+ini_set('session.gc_maxlifetime', 3600); // 1 hour session lifetime
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
